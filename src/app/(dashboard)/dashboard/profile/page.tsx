@@ -69,7 +69,12 @@ export default function ProfileEditor() {
       return;
     }
 
-    const form = e.currentTarget as HTMLFormElement;
+    const form = document.getElementById('profile-form') as HTMLFormElement;
+    if (!form) {
+      setStatus({ type: 'error', msg: 'Form not found' });
+      setIsSaving(false);
+      return;
+    }
     const formData = new FormData(form);
     
     const profileData: any = {
@@ -92,6 +97,8 @@ export default function ProfileEditor() {
       license: formData.get('license'),
       agency_name: formData.get('agency_name'),
       license_code: formData.get('license_code'),
+      id_proof_url: profile?.id_proof_url || null,
+      license_proof_url: profile?.license_proof_url || null,
       social_links: {
         instagram: formData.get('social_instagram'),
         facebook: formData.get('social_facebook'),
@@ -167,7 +174,7 @@ export default function ProfileEditor() {
 
         {/* Editor Main Content */}
         <div className="flex-1">
-          <form className="bg-white rounded-[40px] border border-gray-100 shadow-sm overflow-hidden p-8 md:p-12 space-y-12">
+          <form id="profile-form" className="bg-white rounded-[40px] border border-gray-100 shadow-sm overflow-hidden p-8 md:p-12 space-y-12">
             
             {activeTab === 'Basic Info' && (
               <div className="space-y-10 animate-in fade-in duration-500">
@@ -214,6 +221,43 @@ export default function ProfileEditor() {
                       <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
                       <input name="country" type="text" defaultValue={profile?.country} className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
                     </div>
+                  </div>
+                </div>
+
+                {/* Admin Doubly-Verified Identity Proof Section */}
+                <div className="p-8 bg-red-50/20 border border-red-100/50 rounded-3xl space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <h4 className="text-[10px] font-black uppercase text-gray-900 tracking-widest">Official Nationality Verification</h4>
+                      <p className="text-[9px] text-gray-500 font-bold uppercase mt-0.5">Required by Admin to prevent false citizenship reporting</p>
+                    </div>
+                    <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest self-start sm:self-center ${profile?.id_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                      {profile?.id_proof_url ? 'Pending Verification' : 'Proof Required'}
+                    </span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
+                    <input 
+                      type="file" 
+                      id="id_proof_file" 
+                      className="hidden" 
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setProfile({ ...profile, id_proof_url: URL.createObjectURL(file) });
+                          setStatus({ type: 'success', msg: 'Nationality verification document uploaded! Click Save Changes above to commit.' });
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById('id_proof_file')?.click()}
+                      className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                    >
+                      Upload Passport / ID Card
+                    </button>
+                    {profile?.id_proof_url && (
+                      <span className="text-[10px] text-green-600 font-bold uppercase">✓ ID File Loaded & Ready</span>
+                    )}
                   </div>
                 </div>
 
@@ -283,35 +327,113 @@ export default function ProfileEditor() {
                     </div>
                   </div>
                 ) : role === 'coach' ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Preferred Formation</label>
-                      <select name="formation" defaultValue={profile?.formation} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
-                        <option value="4-3-3" className="text-black">4-3-3 Offensive</option>
-                        <option value="4-4-2" className="text-black">4-4-2 Classic</option>
-                        <option value="3-5-2" className="text-black">3-5-2 Wingbacks</option>
-                        <option value="4-2-3-1" className="text-black">4-2-3-1 Modern</option>
-                      </select>
+                  <div className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Preferred Formation</label>
+                        <select name="formation" defaultValue={profile?.formation} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
+                          <option value="4-3-3" className="text-black">4-3-3 Offensive</option>
+                          <option value="4-4-2" className="text-black">4-4-2 Classic</option>
+                          <option value="3-5-2" className="text-black">3-5-2 Wingbacks</option>
+                          <option value="4-2-3-1" className="text-black">4-2-3-1 Modern</option>
+                        </select>
+                      </div>
+                      <div className="space-y-4">
+                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Technical License</label>
+                        <select name="license" defaultValue={profile?.license} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
+                          <option value="UEFA Pro" className="text-black">UEFA Pro</option>
+                          <option value="UEFA A" className="text-black">UEFA A</option>
+                          <option value="UEFA B" className="text-black">UEFA B</option>
+                          <option value="CAF A" className="text-black">CAF A</option>
+                        </select>
+                      </div>
                     </div>
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Technical License</label>
-                      <select name="license" defaultValue={profile?.license} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
-                        <option value="UEFA Pro" className="text-black">UEFA Pro</option>
-                        <option value="UEFA A" className="text-black">UEFA A</option>
-                        <option value="UEFA B" className="text-black">UEFA B</option>
-                        <option value="CAF A" className="text-black">CAF A</option>
-                      </select>
+
+                    {/* Technical Coach License Verification */}
+                    <div className="p-8 bg-red-50/20 border border-red-100/50 rounded-3xl space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                          <h4 className="text-[10px] font-black uppercase text-gray-900 tracking-widest">Coaching License Verification</h4>
+                          <p className="text-[9px] text-gray-500 font-bold uppercase mt-0.5">Required by Admin to verify technical credentials and coaching experience</p>
+                        </div>
+                        <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest self-start sm:self-center ${profile?.license_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                          {profile?.license_proof_url ? 'Pending Verification' : 'Proof Required'}
+                        </span>
+                      </div>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
+                        <input 
+                          type="file" 
+                          id="license_proof_file" 
+                          className="hidden" 
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setProfile({ ...profile, license_proof_url: URL.createObjectURL(file) });
+                              setStatus({ type: 'success', msg: 'Technical coaching license document uploaded! Click Save Changes above to commit.' });
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('license_proof_file')?.click()}
+                          className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                        >
+                          Upload Coaching Certificate
+                        </button>
+                        {profile?.license_proof_url && (
+                          <span className="text-[10px] text-green-600 font-bold uppercase">✓ Certificate Loaded & Ready</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Agency Name</label>
-                      <input name="agency_name" type="text" defaultValue={profile?.agency_name} placeholder="Global Talent Management" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" />
+                  <div className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Agency Name</label>
+                        <input name="agency_name" type="text" defaultValue={profile?.agency_name} placeholder="Global Talent Management" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" />
+                      </div>
+                      <div className="space-y-4">
+                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">FIFA License Code</label>
+                        <input name="license_code" type="text" defaultValue={profile?.license_code} placeholder="FL-XXXXXXXX" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none font-mono text-black placeholder:text-gray-900" />
+                      </div>
                     </div>
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">FIFA License Code</label>
-                      <input name="license_code" type="text" defaultValue={profile?.license_code} placeholder="FL-XXXXXXXX" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none font-mono text-black placeholder:text-gray-900" />
+
+                    {/* FIFA Agent License Verification */}
+                    <div className="p-8 bg-red-50/20 border border-red-100/50 rounded-3xl space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                          <h4 className="text-[10px] font-black uppercase text-gray-900 tracking-widest">FIFA Agent License Verification</h4>
+                          <p className="text-[9px] text-gray-500 font-bold uppercase mt-0.5">Required by Admin to authorize legal player transfers and representing rights</p>
+                        </div>
+                        <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest self-start sm:self-center ${profile?.license_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                          {profile?.license_proof_url ? 'Pending Verification' : 'Proof Required'}
+                        </span>
+                      </div>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
+                        <input 
+                          type="file" 
+                          id="agent_proof_file" 
+                          className="hidden" 
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setProfile({ ...profile, license_proof_url: URL.createObjectURL(file) });
+                              setStatus({ type: 'success', msg: 'FIFA agent license document uploaded! Click Save Changes above to commit.' });
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('agent_proof_file')?.click()}
+                          className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                        >
+                          Upload FIFA Agent License
+                        </button>
+                        {profile?.license_proof_url && (
+                          <span className="text-[10px] text-green-600 font-bold uppercase">✓ FIFA Document Loaded & Ready</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}

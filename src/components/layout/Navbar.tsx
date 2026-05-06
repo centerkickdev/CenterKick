@@ -38,6 +38,20 @@ export function Navbar({ content }: { content?: any }) {
   };
 
   useEffect(() => {
+    // Instantly remove PKCE authorization codes or tokens from the URL for security
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('code') || url.searchParams.has('token_hash') || url.searchParams.has('error')) {
+        url.searchParams.delete('code');
+        url.searchParams.delete('token_hash');
+        url.searchParams.delete('error');
+        url.searchParams.delete('error_code');
+        url.searchParams.delete('error_description');
+        url.searchParams.delete('sb');
+        window.history.replaceState({}, document.title, url.pathname + url.search);
+      }
+    }
+
     const getSettings = async () => {
        const { data } = await supabase
          .from('site_content')
@@ -98,6 +112,9 @@ export function Navbar({ content }: { content?: any }) {
   const brandName = siteSettings?.siteTitle || navContent.brand;
   const logoUrl = resolveUrl(siteSettings?.logoUrl);
 
+  const adminRoles = ['superadmin', 'admin', 'blogger', 'operations', 'finance'];
+  const dashboardHref = user ? (adminRoles.includes(userRole) ? "/admin" : "/dashboard") : "/login";
+
   return (
     <nav className="fixed w-full z-50 top-0 start-0 bg-white border-b border-gray-100 shadow-sm">
       <div className="max-w-[1400px] flex flex-wrap items-center justify-between mx-auto p-4 sm:px-6 lg:px-8 h-20">
@@ -128,8 +145,8 @@ export function Navbar({ content }: { content?: any }) {
               onClick={() => setIsOpen(!isOpen)} 
               className="inline-flex items-center p-2 w-10 h-10 justify-center text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none"
            >
-             <span className="sr-only">Open main menu</span>
-             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <span className="sr-only">Open main menu</span>
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
            </button>
          </div>
 
@@ -142,7 +159,7 @@ export function Navbar({ content }: { content?: any }) {
                       <>
                         <button 
                            onClick={() => toggleDropdown(link.label)}
-                           className={`flex items-center justify-between w-full py-4 md:py-2 ${link.dropdown.some((d: any) => pathname.includes(d.href)) ? 'text-[#b50a0a]' : 'text-gray-700 hover:text-[#b50a0a]'} transition-colors gap-1`}
+                           className={`flex items-center justify-between w-full py-4 md:py-2 ${link.dropdown.some((d: any) => pathname.includes(d.href)) ? 'text-[#b50a0a]' : 'text-gray-700 hover:text-[#b50a0a] transition-colors gap-1'}`}
                         >
                            {link.label} <ChevronDown className={`w-3 h-3 transition-transform ${activeDropdown === link.label ? 'rotate-180' : ''}`} />
                         </button>
@@ -160,38 +177,8 @@ export function Navbar({ content }: { content?: any }) {
                 </li>
              ))}
 
-             {user && (
-               <li className="relative group/drop">
-                  <button 
-                     onClick={() => toggleDropdown('user')}
-                     className="flex items-center justify-between w-full py-4 md:py-2 text-gray-700 hover:text-[#b50a0a] transition-colors gap-2"
-                  >
-                     <User className="w-4 h-4" /> <span className="md:hidden">Profile</span> <ChevronDown className={`w-3 h-3 transition-transform ${activeDropdown === 'user' ? 'rotate-180' : ''}`} />
-                  </button>
-                  <div className={`${activeDropdown === 'user' ? 'block' : 'hidden'} md:group-hover/drop:block md:absolute top-full right-0 bg-white md:shadow-xl md:border border-gray-100 rounded-xl md:min-w-[200px] overflow-hidden z-[100] transition-all animate-in fade-in slide-in-from-top-2 duration-300`}>
-                     <div className="flex flex-col md:py-2">
-                        <div className="px-6 py-3 border-b border-gray-50">
-                           <p className="text-[9px] text-gray-400 font-bold uppercase truncate">{user.email}</p>
-                        </div>
-                        <Link
-                          href={userRole === 'superadmin' ? '/admin' : '/dashboard'}
-                          className="px-6 py-3 hover:bg-gray-50 text-gray-700 hover:text-[#b50a0a] transition-colors border-l-4 border-transparent hover:border-[#b50a0a]"
-                        >
-                          Dashboard
-                        </Link>
-                        <button 
-                           onClick={() => signout()}
-                           className="flex items-center gap-2 px-6 py-3 hover:bg-red-50 text-red-600 transition-colors border-l-4 border-transparent hover:border-red-600 text-left"
-                        >
-                           <LogOut className="w-3 h-3" /> Sign Out
-                        </button>
-                     </div>
-                  </div>
-               </li>
-             )}
-
              <li className="md:hidden mt-8">
-                <Link href={user ? (userRole === 'superadmin' ? "/admin" : "/dashboard") : "/login"} className="block w-full text-center text-white bg-[#b50a0a] hover:bg-[#990000] font-black rounded-lg text-xs px-6 py-4 transition-all">
+                <Link href={dashboardHref} className="block w-full text-center text-white bg-[#b50a0a] hover:bg-[#990000] font-black rounded-lg text-xs px-6 py-4 transition-all">
                    {user ? 'Dashboard' : 'Get Started'}
                 </Link>
              </li>
@@ -200,7 +187,7 @@ export function Navbar({ content }: { content?: any }) {
 
          {/* CTA BUTTON */}
           <div className="hidden md:flex order-3">
-            <Link href={user ? (userRole === 'superadmin' ? "/admin" : "/dashboard") : "/login"}>
+            <Link href={dashboardHref}>
               <button type="button" className="text-white bg-[#b50a0a] hover:bg-[#990000] font-black rounded-lg text-[10px] tracking-widest uppercase px-8 py-3.5 shadow-md transition-all hover:shadow-xl transform active:scale-95">
                 {user ? 'Dashboard' : 'Get Started'}
               </button>

@@ -38,14 +38,46 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/login?error=No authentication code or token found. Available params: ${params || 'none'}`)
   }
 
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  let finalNext = next
+  if (user) {
+    const { data: userRecord } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('status')
+      .eq('user_id', user.id)
+      .single()
+
+    const role = userRecord?.role || 'player'
+    const adminRoles = ['superadmin', 'admin', 'blogger', 'operations', 'finance']
+
+    if (adminRoles.includes(role)) {
+      finalNext = '/admin'
+    } else if (userRecord && profile) {
+      if (profile.status === 'active') {
+        finalNext = '/dashboard'
+      } else {
+        finalNext = '/dashboard/subscription'
+      }
+    } else {
+      finalNext = '/register/google-onboarding'
+    }
+  }
+
   const forwardedHost = request.headers.get('x-forwarded-host') // i.e. localhost:3000
   const isLocalEnv = process.env.NODE_ENV === 'development'
   if (isLocalEnv) {
-    // we can be sure that origin is http://localhost:3000
-    return NextResponse.redirect(`${origin}${next}`)
+    return NextResponse.redirect(`${origin}${finalNext}`)
   } else if (forwardedHost) {
-    return NextResponse.redirect(`https://${forwardedHost}${next}`)
+    return NextResponse.redirect(`https://${forwardedHost}${finalNext}`)
   } else {
-    return NextResponse.redirect(`${origin}${next}`)
+    return NextResponse.redirect(`${origin}${finalNext}`)
   }
 }
