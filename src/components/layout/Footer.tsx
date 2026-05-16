@@ -4,8 +4,19 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
-export function Footer({ content }: { content?: any }) {
-  const [siteSettings, setSiteSettings] = useState<any>(null);
+interface FooterColumn {
+  title: string;
+  links?: { label: string; href: string }[];
+  details?: { icon: string; text: string; href?: string }[];
+}
+
+interface FooterContent {
+  description: string;
+  columns: FooterColumn[];
+}
+
+export function Footer({ content }: { content?: FooterContent }) {
+  const [siteSettings, setSiteSettings] = useState<{ footerLogoUrl?: string; logoUrl?: string; siteTitle?: string } | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -19,9 +30,9 @@ export function Footer({ content }: { content?: any }) {
        if (data?.content) setSiteSettings(data.content);
     };
     getSettings();
-  }, []);
+  }, [supabase]);
 
-  const resolveUrl = (url: string) => {
+  const resolveUrl = (url: string | undefined) => {
     if (!url) return '';
     if (url.startsWith('http')) return url;
     const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -100,18 +111,18 @@ export function Footer({ content }: { content?: any }) {
           </div>
           
           {/* Columns */}
-          {footerContent.columns.map((col: any, idx: number) => (
+          {footerContent.columns.map((col: FooterColumn, idx: number) => (
              <div key={idx} className="w-full lg:w-auto">
                 <h3 className="mb-5 text-[14px] font-bold text-white tracking-wide uppercase">{col.title}</h3>
                 {col.links ? (
                    <ul className="text-white/80 space-y-3 text-[12px] font-light">
-                      {col.links.map((link: any, lIdx: number) => (
+                      {col.links.map((link: { label: string; href: string }, lIdx: number) => (
                          <li key={lIdx}><Link href={link.href} className="hover:text-white transition-colors uppercase tracking-widest">{link.label}</Link></li>
                       ))}
                    </ul>
                 ) : col.details ? (
                    <ul className="text-white/80 space-y-3 text-[12px] font-light">
-                      {col.details.map((detail: any, dIdx: number) => (
+                      {col.details.map((detail: { icon: string; text: string; href?: string }, dIdx: number) => (
                          <li key={dIdx} className="flex items-start gap-2">
                             {detail.href ? (
                                <a href={detail.href} className="hover:text-white transition-colors">{detail.text}</a>

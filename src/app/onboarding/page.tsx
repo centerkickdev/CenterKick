@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Trophy, Users, Briefcase, ChevronRight, 
   MapPin, Phone, Calendar, ArrowRight, User, AlertCircle,
-  Search, Building, ShieldCheck, CreditCard, CheckCircle2
+  Search, Building, ShieldCheck, CreditCard, CheckCircle2, ArrowLeft
 } from 'lucide-react';
 import { saveOnboarding } from './actions';
 import { createClient } from '@/lib/supabase/client';
@@ -26,7 +28,7 @@ export default function OnboardingPage() {
   const [country, setCountry] = useState('');
   const [paymentRef, setPaymentRef] = useState('');
 
-  const [paymentSettings, setPaymentSettings] = useState<any>({ paymentLink: 'https://paystack.com/pay/centerkick-pro' });
+  const [paymentSettings, setPaymentSettings] = useState<{ paymentLink: string }>({ paymentLink: 'https://paystack.com/pay/centerkick-pro' });
 
   // Persistence logic
   useEffect(() => {
@@ -126,8 +128,8 @@ export default function OnboardingPage() {
         setError(res.error || 'Failed to save profile.');
         setIsLoading(false);
       }
-    } catch (err: any) {
-      setError('An unexpected error occurred.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
       setIsLoading(false);
     }
   };
@@ -154,10 +156,12 @@ export default function OnboardingPage() {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
          <div className="absolute inset-0 bg-slate-950/80 z-10 backdrop-blur-sm"></div>
-         <img 
+         <Image 
             src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1920&q=80" 
             alt="Stadium Background" 
-            className="w-full h-full object-cover"
+            fill
+            priority
+            className="object-cover"
          />
       </div>
 

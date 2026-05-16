@@ -61,7 +61,7 @@ export default async function DashboardLayout({
     .single();
   
   const siteSettings = siteSettingsData?.content || {};
-  const resolveUrl = (url: string) => {
+  const resolveUrl = (url: string | undefined) => {
     if (!url) return '';
     if (url.startsWith('http')) return url;
     const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

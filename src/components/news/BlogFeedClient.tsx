@@ -1,17 +1,41 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, Filter, Calendar as CalendarIcon, Newspaper, Star, ArrowRight, Tag } from "lucide-react";
+import { Search, Calendar as CalendarIcon, Newspaper, Star, ArrowRight, Tag as TagIcon } from "lucide-react";
 import { DateDisplay } from '@/components/common/DateDisplay';
 import Link from 'next/link';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
+
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  cover_image_url?: string;
+  published_at: string;
+  is_draft: boolean;
+  category_id?: string;
+  category?: { name: string };
+  post_tags?: { tag_id: string }[];
+}
+
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Tag {
+  id: string;
+  name: string;
+}
+
 interface BlogFeedClientProps {
   layout: string[];
-  siteContent: Record<string, any>;
-  initialPosts: any[];
-  categories: any[];
-  tags: any[];
+  siteContent: Record<string, { title: string; subtitle: string }>;
+  initialPosts: BlogPost[];
+  categories: Category[];
+  tags: Tag[];
   navContent?: any;
   footerContent?: any;
 }
@@ -26,7 +50,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
       const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                            post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = !selectedCategory || post.category_id === selectedCategory;
-      const matchesTag = !selectedTag || post.post_tags?.some((pt: any) => pt.tag_id === selectedTag);
+      const matchesTag = !selectedTag || post.post_tags?.some((pt: { tag_id: string }) => pt.tag_id === selectedTag);
       
       return matchesSearch && matchesCategory && matchesTag && !post.is_draft;
     });
@@ -95,9 +119,9 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                   </div>
                   <div className="flex items-center gap-3 mt-4 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden">
                      <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest shrink-0">Popular Tags:</span>
-                     {tags.map(tag => (
+                     {tags.map((tag: Tag) => (
                         <button key={tag.id} onClick={() => { setSelectedTag(selectedTag === tag.id ? null : tag.id); setSelectedCategory(null); }} className={`text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border transition-all whitespace-nowrap flex items-center gap-1 ${selectedTag === tag.id ? 'bg-black border-black text-white' : 'bg-white border-gray-100 text-gray-400 hover:border-gray-300'}`}>
-                           <Tag className="w-2.5 h-2.5" /> {tag.name}
+                           <TagIcon className="w-2.5 h-2.5" /> {tag.name}
                         </button>
                      ))}
                   </div>

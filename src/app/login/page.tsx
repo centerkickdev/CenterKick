@@ -97,7 +97,7 @@ function LoginContent() {
                   name="password"
                   label="Password"
                   rightElement={
-                     <Link href="/forgot-password" size="sm" className="text-[10px] font-black text-[#a20000] uppercase tracking-widest hover:underline">Forgot Password?</Link>
+                     <Link href="/forgot-password" className="text-[10px] font-black text-[#a20000] uppercase tracking-widest hover:underline">Forgot Password?</Link>
                   }
                />
 

@@ -2,17 +2,32 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ChevronDown, User, LogOut } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { Menu, X, ChevronDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { signout } from '@/app/login/actions';
 
-export function Navbar({ content }: { content?: any }) {
+interface NavLink {
+  label: string;
+  href?: string;
+  dropdown?: { label: string; href: string }[];
+}
+
+interface NavbarContent {
+  brand: string;
+  links: NavLink[];
+}
+
+interface SiteSettings {
+  siteTitle?: string;
+  logoUrl?: string;
+}
+
+export function Navbar({ content }: { content?: NavbarContent }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>(null); // Supabase User type is complex, keeping any for now but could use User from @supabase/supabase-js
   const [userRole, setUserRole] = useState<string>('player');
-  const [siteSettings, setSiteSettings] = useState<any>(null);
+  const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const pathname = usePathname();
   const supabase = createClient();
 
@@ -77,7 +92,7 @@ export function Navbar({ content }: { content?: any }) {
     };
     getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: any, session: any) => {
        setUser(session?.user ?? null);
        if (session?.user) {
           const { data } = await supabase
@@ -90,9 +105,9 @@ export function Navbar({ content }: { content?: any }) {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [supabase]);
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string | undefined) => pathname === path;
 
   const toggleDropdown = (name: string) => {
     if (activeDropdown === name) {
@@ -102,7 +117,7 @@ export function Navbar({ content }: { content?: any }) {
     }
   };
 
-  const resolveUrl = (url: string) => {
+  const resolveUrl = (url: string | undefined) => {
     if (!url) return '';
     if (url.startsWith('http')) return url;
     const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -152,27 +167,27 @@ export function Navbar({ content }: { content?: any }) {
 
          {/* NAVIGATION LINKS */}
          <div className={`items-center justify-center w-full md:flex md:w-auto md:order-1 ${isOpen ? 'block' : 'hidden'} absolute md:relative top-20 md:top-0 left-0 bg-white md:bg-transparent shadow-lg md:shadow-none border-t md:border-0 border-gray-100 max-h-[calc(100vh-80px)] overflow-y-auto md:overflow-visible`}>
-           <ul className="flex flex-col p-6 md:p-0 mt-0 font-medium md:space-x-8 rtl:space-x-reverse md:flex-row text-sm uppercase tracking-widest text-[11px] font-black">
-             {navContent.links.map((link: any, idx: number) => (
+            <ul className="flex flex-col p-6 md:p-0 mt-0 font-medium md:space-x-8 rtl:space-x-reverse md:flex-row text-sm uppercase tracking-widest text-[11px] font-black">
+              {navContent.links.map((link: NavLink, idx: number) => (
                 <li key={idx} className={link.dropdown ? "relative group/drop" : ""}>
                    {link.dropdown ? (
                       <>
-                        <button 
-                           onClick={() => toggleDropdown(link.label)}
-                           className={`flex items-center justify-between w-full py-4 md:py-2 ${link.dropdown.some((d: any) => pathname.includes(d.href)) ? 'text-[#b50a0a]' : 'text-gray-700 hover:text-[#b50a0a] transition-colors gap-1'}`}
-                        >
+                         <button 
+                            onClick={() => toggleDropdown(link.label)}
+                            className={`flex items-center justify-between w-full py-4 md:py-2 ${link.dropdown.some((d: { label: string; href: string }) => pathname.includes(d.href)) ? 'text-[#b50a0a]' : 'text-gray-700 hover:text-[#b50a0a] transition-colors gap-1'}`}
+                         >
                            {link.label} <ChevronDown className={`w-3 h-3 transition-transform ${activeDropdown === link.label ? 'rotate-180' : ''}`} />
                         </button>
                         <div className={`${activeDropdown === link.label ? 'block' : 'hidden'} md:group-hover/drop:block md:absolute top-full left-0 bg-white md:shadow-xl md:border border-gray-100 rounded-xl md:min-w-[200px] overflow-hidden z-[100] transition-all animate-in fade-in slide-in-from-top-2 duration-300`}>
                            <div className="flex flex-col md:py-2">
-                              {link.dropdown.map((d: any, dIdx: number) => (
-                                 <Link key={dIdx} href={d.href} className="px-6 py-4 md:py-3 hover:bg-gray-50 text-gray-700 hover:text-[#b50a0a] transition-colors border-l-4 border-transparent hover:border-[#b50a0a]">{d.label}</Link>
-                              ))}
+                               {link.dropdown.map((d: { label: string; href: string }, dIdx: number) => (
+                                  <Link key={dIdx} href={d.href} className="px-6 py-4 md:py-3 hover:bg-gray-50 text-gray-700 hover:text-[#b50a0a] transition-colors border-l-4 border-transparent hover:border-[#b50a0a]">{d.label}</Link>
+                               ))}
                            </div>
                         </div>
                       </>
                    ) : (
-                      <Link href={link.href} className={`block py-4 md:py-2 ${isActive(link.href) ? 'text-[#b50a0a]' : 'text-gray-700 hover:text-[#b50a0a] transition-colors'}`}>{link.label}</Link>
+                      <Link href={link.href || '#'} className={`block py-4 md:py-2 ${isActive(link.href) ? 'text-[#b50a0a]' : 'text-gray-700 hover:text-[#b50a0a] transition-colors'}`}>{link.label}</Link>
                    )}
                 </li>
              ))}
