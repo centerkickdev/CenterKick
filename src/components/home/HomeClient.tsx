@@ -2,14 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { PlayCircle, ArrowRight, ArrowLeft, Star, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { PlayCircle, ArrowRight, Star, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { useState, useEffect } from 'react';
 import { DateDisplay } from '@/components/common/DateDisplay';
 
-// Live content types
-// Live content types
 interface Post {
   id: string;
   title: string;
@@ -26,13 +24,19 @@ interface Testimonial {
   text: string;
 }
 
+interface Player {
+  img: string;
+  num: string;
+  name: string;
+}
+
 interface HomeClientProps {
   layout: string[];
   heroPosts: Post[];
   storyPosts: Post[];
-  dummyPlayers: any[];
+  dummyPlayers: Player[];
   highlightPosts: Post[];
-  siteContent: Record<string, any>;
+  siteContent: any;
   navContent?: any;
   footerContent?: any;
 }
@@ -289,7 +293,6 @@ export function HomeClient({ layout, heroPosts, storyPosts, dummyPlayers, highli
                </section>
             );
          case 'testimonials':
-            const highlightsIntro = siteContent.highlights_intro || {};
             return (
                <section key={key} className="w-full lg:col-span-12 mt-24">
                   <div className="flex items-center justify-between mb-10">

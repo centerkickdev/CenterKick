@@ -5,29 +5,27 @@ import { Footer } from "@/components/layout/Footer";
 import { 
    Mail, 
    Briefcase, 
-   Megaphone, 
-   MapPin, 
    Send,
    ChevronDown,
    MessageSquare,
    Globe,
    Instagram,
    Twitter,
-   Facebook,
-   ShieldCheck,
-   ArrowRight
+   Facebook
 } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
+
+interface ContactContent {
+  header?: { title: string; description: string };
+  faqs?: { q: string; a: string }[];
+}
 
 interface ContactClientProps {
   layout: string[];
-  content: Record<string, any>;
-  navContent?: any;
-  footerContent?: any;
+  content: ContactContent;
 }
 
-export function ContactClient({ layout, content, navContent, footerContent }: ContactClientProps) {
+export function ContactClient({ layout, content }: ContactClientProps) {
    const [openFaq, setOpenFaq] = useState<number | null>(0);
 
    const renderSection = (key: string) => {
