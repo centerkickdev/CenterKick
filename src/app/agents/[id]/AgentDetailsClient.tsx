@@ -11,10 +11,12 @@ import {
    Share2,
    Mail,
    CheckCircle2,
-   Award
+   Award,
+   ChevronLeft
 } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface AgentDetailsClientProps {
   profile: Record<string, any>;
@@ -23,6 +25,7 @@ interface AgentDetailsClientProps {
 
 export default function AgentDetailsClient({ profile, managedClients }: AgentDetailsClientProps) {
    const [activeTab, setActiveTab] = useState("Bio");
+   const router = useRouter();
 
    // Metrics can be derived from managedClients if available
    const metrics = {
@@ -36,7 +39,19 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
       <div className="min-h-screen bg-white">
          <Navbar />
 
-         <main className="pt-20">
+         <main className="pt-32">
+            {/* Back Button Bar */}
+            <div className="bg-white border-b border-gray-100 py-4">
+               <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
+                  <button 
+                     onClick={() => router.back()}
+                     className="group inline-flex items-center gap-2 text-gray-500 hover:text-black font-bold text-xs uppercase tracking-widest transition-colors"
+                  >
+                     <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> 
+                     Back
+                  </button>
+               </div>
+            </div>
             {/* Header / Hero Section */}
             <div className="relative h-[500px] w-full bg-[#0a0a0a] overflow-hidden">
                <div className="absolute inset-0 opacity-10">
@@ -109,7 +124,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
             </div>
 
             {/* Tabs Navigation */}
-            <div className="bg-white border-b border-gray-100 sticky top-20 z-40 shadow-sm overflow-x-auto no-scrollbar">
+            <div className="bg-white border-b border-gray-100 sticky top-32 z-40 shadow-sm overflow-x-auto no-scrollbar">
                <div className="max-w-[1200px] mx-auto flex items-center gap-12 h-20 px-4 lg:px-0">
                   {["Bio", "Portfolio"].map((tab) => (
                      <button
@@ -149,7 +164,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                               return (
                                  <Link 
                                     key={client.id} 
-                                    href={`/${roleUrl}/${client.id}`}
+                                    href={`/${roleUrl}/${client.slug}`}
                                     className="group bg-white border border-gray-100 rounded-3xl overflow-hidden hover:shadow-2xl transition-all hover:-translate-y-2"
                                  >
                                     <div className="aspect-[4/5] relative overflow-hidden bg-gray-100">

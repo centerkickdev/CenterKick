@@ -120,7 +120,7 @@ export function AgentsClient({
   };
 
    const handleOpenProfile = (agent: Record<string, any>) => {
-    router.push(`/admin/agents/${agent.slug || agent.id}`);
+    router.push(`/admin/agents/${agent.slug}`);
   };
 
   const handleDelete = async (id: string) => {

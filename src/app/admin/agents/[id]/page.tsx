@@ -6,11 +6,13 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
   const { id } = await params;
   const supabase = await createClient();
 
-  // Fetch Agent Data
-  // Support both ID and Slug lookups
   const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  if (isUUID) {
+    return notFound();
+  }
   
-  let query = supabase
+  // Fetch Agent Data by slug
+  const { data: agent, error } = await supabase
     .from('profiles')
     .select(`
       *,
@@ -23,18 +25,12 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
         )
       )
     `)
-    .eq('role', 'agent');
-
-  if (isUUID) {
-    query = query.or(`id.eq.${id},slug.eq.${id}`);
-  } else {
-    query = query.eq('slug', id);
-  }
-
-  const { data: agent, error } = await query.single();
+    .eq('role', 'agent')
+    .eq('slug', id)
+    .single();
 
   if (error || !agent) {
-    notFound();
+    return notFound();
   }
 
   // Fetch Linked Talent (Players and Coaches)

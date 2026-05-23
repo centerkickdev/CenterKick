@@ -307,7 +307,7 @@ export default function ResultsPage() {
       <div className="min-h-screen bg-[#e5e5e5]">
          <Navbar />
 
-         <main className="pt-20">
+         <main className="pt-32">
             {/* Page Header */}
             <div className="bg-[#383838] py-8">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">

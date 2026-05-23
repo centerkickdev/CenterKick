@@ -143,7 +143,7 @@ export function ContactClient({ layout, content, navContent, footerContent, site
    return (
       <div className="min-h-screen bg-white flex flex-col font-sans selection:bg-[#b50a0a] selection:text-white">
          <Navbar content={navContent} settings={siteSettings} />
-         <main className="flex-grow pt-[104px]">
+         <main className="flex-grow pt-32">
             {layout.includes('header') && renderSection('header')}
             {(layout.includes('info') || layout.includes('form')) && (
                <div className="max-w-[1200px] mx-auto px-6 py-24 md:py-32">

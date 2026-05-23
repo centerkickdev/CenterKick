@@ -3,32 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
 import { getCachedData } from '@/lib/redis';
 
-// Dummy profiles for carousel (8 items)
-const DUMMY_PLAYERS = [
-   { name: 'Bamidele\nAdeniyi', num: "16", img: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=600&q=80" },
-   { name: 'Yemi Daniel\nOlanrewaju', num: "24", img: "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?auto=format&fit=crop&w=600&q=80" },
-   { name: 'Akere\nSamuel', num: "16", img: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=600&q=80" },
-   { name: 'Chinedu\nOkonkwo', num: "9", img: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=600&q=80" },
-   { name: 'Ibrahim\nMusa', num: "7", img: "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?auto=format&fit=crop&w=600&q=80" },
-   { name: 'Olumide\nAjayi', num: "10", img: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=600&q=80" },
-   { name: 'Tunde\nBello', num: "11", img: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=600&q=80" },
-   { name: 'Emeka\nUche', num: "4", img: "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?auto=format&fit=crop&w=600&q=80" }
-];
-
 export default async function Home() {
    const supabase = await createClient();
    const { navContent, footerContent, siteSettings } = await getGlobalCMSData();
-
-   // Fetch layout from cache
-   const layout = await getCachedData('home_layout', async () => {
-      const { data: pageData } = await supabase
-         .from('site_pages')
-         .select('*')
-         .eq('slug', '/')
-         .single();
-      const defaultLayout = ["hero", "stories", "players", "coach_agents", "testimonials", "highlights", "cta"];
-      return pageData?.layout || defaultLayout;
-   }, 3600);
    
    // Fetch all site content for this page from cache
    const siteContentData = await getCachedData('home_site_content', async () => {
@@ -39,75 +16,112 @@ export default async function Home() {
       return data || [];
    }, 1800);
 
-   const getSectionContent = (section: string) => siteContentData?.find((c: any) => c.section === section)?.content || {};
-
-   // Fetch posts from cache
-   const heroContent = getSectionContent('hero');
-   const heroPosts = await getCachedData(`home_hero_posts:${heroContent.category_id || 'default'}`, async () => {
-      const { data } = await supabase
-         .from('cms_posts')
-         .select('*')
-         .eq('is_draft', false)
-         .eq('category_id', heroContent.category_id || '999d1e43-1e43-1e43-1e43-1e431e431e43') 
-         .order('published_at', { ascending: false })
-         .limit(3);
-      
-      if (!data || data.length === 0) {
-        const { data: fallback } = await supabase
-          .from('cms_posts')
-          .select('*')
-          .eq('is_draft', false)
-          .order('published_at', { ascending: false })
-          .limit(3);
-        return fallback || [];
-      }
-      return data;
-   }, 600);
-
-   const storyPosts = await getCachedData('home_story_posts', async () => {
+   // Fetch latest 10 news posts (is_draft = false)
+   const latestNews = await getCachedData('home_latest_news_10', async () => {
       const { data } = await supabase
          .from('cms_posts')
          .select('*')
          .eq('is_draft', false)
          .order('published_at', { ascending: false })
-         .limit(9);
+         .limit(10);
       return data || [];
-   }, 600);
+   }, 300);
 
-   const highlightPosts = await getCachedData('home_highlight_posts', async () => {
-      const { data } = await supabase
-         .from('cms_posts')
-         .select('*')
-         .eq('is_draft', false)
-         .order('published_at', { ascending: false })
-         .limit(4);
-      return data || [];
-   }, 600);
-
-   const activeProfiles = await getCachedData('home_active_profiles', async () => {
+   // Fetch active players
+   const playersList = await getCachedData('home_players_list', async () => {
       const { data } = await supabase
          .from('profiles')
-         .select('id, full_name, avatar_url')
-         .eq('status', 'active')
-         .limit(8);
+         .select('*')
+         .eq('role', 'player')
+         .eq('status', 'active');
+      console.log('Fetched players from DB count:', data?.length || 0);
       return data || [];
-   }, 1800);
+   }, 600);
 
-   const playersForCarousel = activeProfiles?.map(p => ({
-     id: p.id,
-     name: p.full_name || 'CenterKick Player',
-     num: "0",
-     img: p.avatar_url || "https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=600&q=80"
-   })) || DUMMY_PLAYERS;
+   // Fetch active coaches
+   const coachesList = await getCachedData('home_coaches_list', async () => {
+      const { data } = await supabase
+         .from('profiles')
+         .select('*')
+         .eq('role', 'coach')
+         .eq('status', 'active');
+      return data || [];
+   }, 600);
+
+   // Fetch active agents and scouts
+   const agentsScoutsList = await getCachedData('home_agents_scouts_list', async () => {
+      const { data } = await supabase
+         .from('profiles')
+         .select('*')
+         .in('role', ['agent', 'scout'])
+         .eq('status', 'active');
+      return data || [];
+   }, 600);
+
+   // Fetch active organizations
+   const organizationsList = await getCachedData('home_organizations_list', async () => {
+      const { data } = await supabase
+         .from('profiles')
+         .select('*')
+         .eq('role', 'organization')
+         .eq('status', 'active');
+      return data || [];
+   }, 600);
+
+   // Fetch 5 most recent football video highlights (tagged with "HighLights" or "highlights" case-insensitively)
+   const highlightPosts = await getCachedData('home_highlight_posts_5', async () => {
+      const { data, error } = await supabase
+         .from('cms_posts')
+         .select('*, post_tags!inner(tag:blog_tags!inner(name))')
+         .eq('is_draft', false)
+         .ilike('post_tags.tag.name', 'highlights')
+         .order('published_at', { ascending: false })
+         .limit(5);
+
+      if (error || !data || data.length === 0) {
+         // Fallback to recent posts if no highlights tag found or matches
+         const { data: fallback } = await supabase
+            .from('cms_posts')
+            .select('*')
+            .eq('is_draft', false)
+            .order('published_at', { ascending: false })
+            .limit(5);
+         return fallback || [];
+      }
+      return data;
+   }, 300);
+
+   // Deterministic hash function to shuffle profiles purely without Math.random()
+   const hashString = (str: string): number => {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+         hash = (hash << 5) - hash + str.charCodeAt(i);
+         hash |= 0; // Convert to 32bit integer
+      }
+      return hash;
+   };
+
+   const pseudoShuffle = <T extends { id: string }>(array: T[]): T[] => {
+      return [...array].sort((a, b) => {
+         return hashString(a.id) - hashString(b.id);
+      });
+   };
+
+   // Shuffle and pass profiles (capped at 10 items per section)
+   const selectedPlayers = pseudoShuffle(playersList).slice(0, 10);
+   const selectedCoaches = pseudoShuffle(coachesList).slice(0, 10);
+   const selectedAgentsScouts = pseudoShuffle(agentsScoutsList).slice(0, 10);
+   const selectedOrganizations = pseudoShuffle(organizationsList).slice(0, 10);
 
    return (
       <HomeClient 
-        layout={layout}
-        heroPosts={heroPosts}
-        storyPosts={storyPosts || []}
-        highlightPosts={highlightPosts || []}
-        dummyPlayers={playersForCarousel}
-        siteContent={Object.fromEntries(siteContentData?.map((c: any) => [c.section, c.content]) || [])}
+        latestNews={latestNews}
+        players={selectedPlayers}
+        coaches={selectedCoaches}
+        agentsScouts={selectedAgentsScouts}
+        organizations={selectedOrganizations}
+        highlights={highlightPosts}
+        siteContent={Object.fromEntries((siteContentData as { section: string; content: unknown }[] | null)?.map((c) => [c.section, c.content]) || [])}
         navContent={navContent}
         footerContent={footerContent}
         siteSettings={siteSettings}

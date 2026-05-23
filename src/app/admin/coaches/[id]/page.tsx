@@ -7,9 +7,12 @@ export default async function CoachProfilePage({ params }: { params: Promise<{ i
   const supabase = await createClient();
 
   const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  if (isUUID) {
+    return notFound();
+  }
 
-  // Fetch Coach Data from profiles
-  let coachQuery = supabase
+  // Fetch Coach Data from profiles by slug
+  const { data: coach, error } = await supabase
     .from('profiles')
     .select(`
       *,
@@ -21,15 +24,9 @@ export default async function CoachProfilePage({ params }: { params: Promise<{ i
           status
         )
       )
-    `);
-
-  if (isUUID) {
-    coachQuery = coachQuery.or(`id.eq.${id},slug.eq.${id}`);
-  } else {
-    coachQuery = coachQuery.eq('slug', id);
-  }
-
-  const { data: coach, error } = await coachQuery.single();
+    `)
+    .eq('slug', id)
+    .single();
 
   if (error || !coach) {
     return notFound();

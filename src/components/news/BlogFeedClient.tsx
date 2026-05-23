@@ -166,7 +166,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
    return (
     <div className="space-y-0 min-h-screen bg-white selection:bg-red-50">
       <Navbar content={navContent} settings={siteSettings} />
-      <div className="pt-20">
+      <div className="pt-32">
          {layout.map(key => renderSection(key))}
       </div>
       <Footer content={footerContent} settings={siteSettings} />

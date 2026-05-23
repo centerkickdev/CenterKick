@@ -145,7 +145,7 @@ export function CoachesClient({
   };
 
   const handleOpenProfile = (coach: Coach) => {
-    router.push(`/admin/coaches/${coach.slug || coach.id}`);
+    router.push(`/admin/coaches/${coach.slug}`);
   };
 
   const handleDelete = async (id: string) => {

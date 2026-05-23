@@ -11,9 +11,11 @@ import {
    Settings2, 
    ArrowRight,
    Share2,
-   Mail
+   Mail,
+   ChevronLeft
 } from "lucide-react";
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface CoachDetailsClientProps {
   profile: any;
@@ -21,6 +23,7 @@ interface CoachDetailsClientProps {
 
 export default function CoachDetailsClient({ profile }: CoachDetailsClientProps) {
    const [activeTab, setActiveTab] = useState("Profile");
+   const router = useRouter();
 
    // Mock stats if not in database (for UI completeness as per landing page request)
    const stats = profile.stats || {
@@ -37,7 +40,19 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
       <div className="min-h-screen bg-white">
          <Navbar />
 
-         <main className="pt-20">
+         <main className="pt-32">
+            {/* Back Button Bar */}
+            <div className="bg-white border-b border-gray-100 py-4">
+               <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
+                  <button 
+                     onClick={() => router.back()}
+                     className="group inline-flex items-center gap-2 text-gray-500 hover:text-black font-bold text-xs uppercase tracking-widest transition-colors"
+                  >
+                     <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> 
+                     Back
+                  </button>
+               </div>
+            </div>
             {/* Hero Section / Banner */}
             <div className="relative h-[450px] w-full bg-gray-900 overflow-hidden">
                <img 
@@ -65,7 +80,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
             </div>
 
             {/* Tab Navigation Section */}
-            <div className="bg-white border-b border-gray-100 shadow-sm sticky top-20 z-40">
+            <div className="bg-white border-b border-gray-100 shadow-sm sticky top-32 z-40">
                <div className="max-w-[1000px] mx-auto flex items-center justify-between px-4 lg:px-0">
                   <div className="flex overflow-x-auto no-scrollbar py-1">
                      {["Profile", "Bio", "Statistics"].map((tab) => (

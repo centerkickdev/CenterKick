@@ -177,7 +177,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
    return (
       <div className="min-h-screen bg-white flex flex-col font-sans selection:bg-[#b50a0a] selection:text-white">
          <Navbar content={navContent} />
-         <main className="flex-grow pt-20">
+         <main className="flex-grow pt-32">
             {layout.map(key => renderSection(key))}
          </main>
          <Footer content={footerContent} />

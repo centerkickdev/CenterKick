@@ -229,7 +229,7 @@ export function PlayersClient({
   };
 
   const handleOpenProfile = (player: Player) => {
-    router.push(`/admin/players/${player.slug || player.id}`);
+    router.push(`/admin/players/${player.slug}`);
   };
   
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -301,7 +301,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
           <div className="flex items-center gap-3">
             <Link 
-              href={`/agents/${agent.slug || agent.id}`} 
+              href={`/agents/${agent.slug}`} 
               target="_blank"
               className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all border border-slate-100"
             >
@@ -598,7 +598,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                                 </div>
                                 <div className="min-w-0">
                                   <Link 
-                                    href={`/admin/${client.role === 'coach' ? 'coaches' : 'players'}/${client.slug || client.id}`}
+                                    href={`/admin/${client.role === 'coach' ? 'coaches' : 'players'}/${client.slug}`}
                                     className="font-black text-slate-900 text-xs leading-none mb-1 truncate block hover:text-[#b50a0a] transition-colors"
                                   >
                                     {client.first_name} {client.last_name}
@@ -631,7 +631,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                             <td className="px-8 py-4 text-right">
                               <div className="flex items-center justify-end gap-2">
                                 <Link 
-                                  href={`/admin/${client.role === 'coach' ? 'coaches' : 'players'}/${client.slug || client.id}`}
+                                  href={`/admin/${client.role === 'coach' ? 'coaches' : 'players'}/${client.slug}`}
                                   className="p-2.5 bg-slate-900 text-white rounded-xl hover:bg-[#b50a0a] transition-all shadow-lg shadow-black/5"
                                   title="View Full Profile"
                                 >

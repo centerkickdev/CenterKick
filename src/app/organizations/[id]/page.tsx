@@ -1,9 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
-import CoachDetailsClient from './CoachDetailsClient';
+import OrgDetailsClient from './OrgDetailsClient';
 
-export default async function CoachPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function OrgPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = await params;
    const supabaseUser = await createClient();
    const supabaseAdmin = createAdminClient();
@@ -16,12 +16,12 @@ export default async function CoachPage({ params }: { params: Promise<{ id: stri
 
    const { data: profile, error } = await supabaseAdmin
       .from('profiles')
-      .select('*, users!profiles_user_id_fkey!inner(role), agent:users!profiles_agent_id_fkey(id, profiles!profiles_user_id_fkey(*))')
+      .select('*, users!profiles_user_id_fkey!inner(role)')
       .eq('slug', id)
       .single();
 
    if (error || !profile) {
-      if (error) console.error('Coach fetch database error:', error.message);
+      if (error) console.error('Org fetch database error:', error.message);
       notFound();
    }
 
@@ -31,7 +31,6 @@ export default async function CoachPage({ params }: { params: Promise<{ id: stri
    const isAdmin = (profile.users as any)?.role === 'superadmin';
 
    if (profile.status !== 'active' && !isOwner && !isAdmin) {
-      // Check if current user is admin correctly
       const { data: currentUser } = await supabaseAdmin
          .from('users')
          .select('role')
@@ -43,5 +42,5 @@ export default async function CoachPage({ params }: { params: Promise<{ id: stri
       }
    }
 
-   return <CoachDetailsClient profile={profile} />;
+   return <OrgDetailsClient profile={profile} />;
 }

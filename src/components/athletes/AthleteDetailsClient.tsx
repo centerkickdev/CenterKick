@@ -2,9 +2,10 @@
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Facebook, Instagram, Twitter, Settings2 } from "lucide-react";
+import { Facebook, Instagram, Twitter, Settings2, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface AthleteDetailsClientProps {
   athlete: any;
@@ -12,12 +13,30 @@ interface AthleteDetailsClientProps {
 
 export function AthleteDetailsClient({ athlete }: AthleteDetailsClientProps) {
    const [activeTab, setActiveTab] = useState("Profile");
+   const router = useRouter();
+   const displayName = athlete.full_name || `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Anonymous Player';
+   const nameParts = displayName.split(' ');
+   const firstName = nameParts[0];
+   const restOfName = nameParts.slice(1).join(' ');
 
    return (
       <div className="min-h-screen bg-white">
          <Navbar />
 
-         <main className="pt-20">
+         <main className="pt-32">
+            {/* Back Button Bar */}
+            <div className="bg-white border-b border-gray-100 py-4">
+               <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
+                  <button 
+                     onClick={() => router.back()}
+                     className="group inline-flex items-center gap-2 text-gray-500 hover:text-black font-bold text-xs uppercase tracking-widest transition-colors"
+                  >
+                     <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> 
+                     Back
+                  </button>
+               </div>
+            </div>
+
             {/* Premium Custom Player Header */}
             <div className="relative w-full h-[350px] md:h-[450px] bg-[#0a0a0b] flex overflow-hidden group">
                <div className="absolute inset-0 z-0">
@@ -36,7 +55,7 @@ export function AthleteDetailsClient({ athlete }: AthleteDetailsClientProps) {
                      <div className="absolute bottom-0 w-[120%] h-[80%] bg-[#b50a0a]/20 blur-[100px] rounded-full"></div>
                      <img
                         src={athlete.avatar_url || "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=600&auto=format&fit=crop"}
-                        alt={athlete.full_name}
+                        alt={displayName}
                         className="h-[105%] w-auto object-cover object-top drop-shadow-[0_20px_50px_rgba(181,10,10,0.3)] relative z-10 transition-transform duration-500 hover:scale-105"
                      />
                   </div>
@@ -45,8 +64,8 @@ export function AthleteDetailsClient({ athlete }: AthleteDetailsClientProps) {
                      <div className="flex flex-col mb-8">
                         <span className="text-[#ff4d4d] font-bold tracking-[0.4em] uppercase mb-3 text-xs md:text-sm drop-shadow-sm">{athlete.position || 'Elite Player'}</span>
                         <h1 className="flex flex-col leading-none drop-shadow-2xl">
-                           <span className="text-4xl md:text-7xl font-black uppercase tracking-tight">{athlete.full_name?.split(' ')[0]}</span>
-                           <span className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white">{athlete.full_name?.split(' ').slice(1).join(' ')}</span>
+                           <span className="text-4xl md:text-7xl font-black uppercase tracking-tight">{firstName}</span>
+                           <span className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white">{restOfName}</span>
                         </h1>
                      </div>
 
@@ -100,7 +119,7 @@ export function AthleteDetailsClient({ athlete }: AthleteDetailsClientProps) {
             </div>
 
             {/* Integrated Navigation */}
-            <div className="sticky top-20 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm">
+            <div className="sticky top-32 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm">
                <div className="max-w-[700px] mx-auto px-4 lg:px-0">
                   <div className="flex items-center justify-between overflow-x-auto [&::-webkit-scrollbar]:hidden pt-5 pb-0">
                      {["Profile", "Career Stat.", "Gallery", "News", "Shop"].map((tab) => (

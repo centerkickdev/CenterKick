@@ -1,25 +1,76 @@
+'use client';
+
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Search, ChevronDown, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ChevronDown, ArrowRight } from "lucide-react";
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { useState, useEffect, useMemo } from 'react';
+import { createClient } from '@/lib/supabase/client';
 
-export default async function CoachesPage() {
-   const supabase = await createClient();
+export default function CoachesPage() {
+   const [coaches, setCoaches] = useState<any[]>([]);
+   const [loading, setLoading] = useState(true);
+   const [searchQuery, setSearchQuery] = useState('');
+   const [selectedCountry, setSelectedCountry] = useState('');
 
-   // Fetch active coach profiles through users join
-   const { data: coaches, error } = await supabase
-      .from('profiles')
-      .select('*, users!inner(role)')
-      .eq('users.role', 'coach')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false });
+   const supabase = createClient();
+
+   useEffect(() => {
+      async function fetchCoaches() {
+         try {
+            const { data, error } = await supabase
+               .from('profiles')
+               .select('*')
+               .eq('role', 'coach')
+               .eq('status', 'active')
+               .not('role', 'in', '("admin","superadmin")')
+               .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setCoaches(data || []);
+         } catch (err) {
+            console.error('Error fetching coaches:', err);
+         } finally {
+            setLoading(false);
+         }
+      }
+      fetchCoaches();
+   }, []);
+
+   // Get unique list of countries for filter dropdown
+   const availableCountries = useMemo(() => {
+      const countriesSet = new Set<string>();
+      coaches.forEach(c => {
+         if (c.country) {
+            countriesSet.add(c.country.trim());
+         }
+      });
+      return Array.from(countriesSet).sort();
+   }, [coaches]);
+
+   // Filter coaches based on search and country
+   const filteredCoaches = useMemo(() => {
+      return coaches.filter(c => {
+         if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            const fullName = `${c.first_name || ''} ${c.last_name || ''} ${c.full_name || ''}`.toLowerCase();
+            const position = (c.position || '').toLowerCase();
+            if (!fullName.includes(query) && !position.includes(query)) {
+               return false;
+            }
+         }
+         if (selectedCountry && c.country !== selectedCountry) {
+            return false;
+         }
+         return true;
+      });
+   }, [coaches, searchQuery, selectedCountry]);
 
    return (
       <div className="min-h-screen bg-white">
          <Navbar />
 
-         <main className="pt-20">
+         <main className="pt-32">
             {/* Split Hero Section */}
             <div className="bg-gray-50 py-16">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0 flex flex-col lg:flex-row items-center gap-12">
@@ -32,9 +83,11 @@ export default async function CoachesPage() {
                      <p className="text-gray-900 text-lg leading-relaxed mb-8 max-w-lg">
                         Connect with top-tier football coaches and technical directors. Our verified network of professionals is dedicated to scouting and developing the next generation of football stars.
                      </p>
-                     <button className="bg-[#a20000] hover:bg-[#8a0000] text-white px-8 py-4 rounded-lg font-bold uppercase tracking-widest text-xs transition-all transform hover:scale-105 shadow-xl">
-                        Join Our Program
-                     </button>
+                     <Link href="/register">
+                        <button className="bg-[#a20000] hover:bg-[#8a0000] text-white px-8 py-4 rounded-lg font-bold uppercase tracking-widest text-xs transition-all transform hover:scale-105 shadow-xl">
+                           Join Our Program
+                        </button>
+                     </Link>
                   </div>
 
                   <div className="w-full lg:w-1/2 grid grid-cols-2 gap-4 h-[500px]">
@@ -70,34 +123,69 @@ export default async function CoachesPage() {
 
             {/* Coaches Grid Section */}
             <div className="max-w-[1200px] mx-auto px-4 lg:px-0 py-24">
-               <div className="flex items-center justify-between mb-12">
-                  <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">Verified Coaches</h2>
-                   <div className="flex items-center gap-2 text-sm font-bold text-gray-900 uppercase tracking-widest">
-                      Filter By <ChevronDown className="w-4 h-4" />
-                   </div>
+               {/* Interactive Filter Bar */}
+               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 border-b border-gray-100 pb-8">
+                  <div>
+                     <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">Verified Coaches</h2>
+                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Spot elite technical staff</p>
+                  </div>
+                  
+                  <div className="flex flex-wrap items-center gap-4">
+                     {/* Search Input */}
+                     <div className="relative">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <input
+                           type="text"
+                           placeholder="Search coaches..."
+                           value={searchQuery}
+                           onChange={(e) => setSearchQuery(e.target.value)}
+                           className="pl-11 pr-6 py-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold uppercase tracking-wider text-gray-900 focus:outline-none focus:border-[#a20000] focus:ring-1 focus:ring-[#a20000] w-64 transition-all"
+                        />
+                     </div>
+
+                     {/* Country Selector */}
+                     <div className="relative">
+                        <select
+                           value={selectedCountry}
+                           onChange={(e) => setSelectedCountry(e.target.value)}
+                           className="appearance-none pl-6 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold uppercase tracking-wider text-gray-900 focus:outline-none focus:border-[#a20000] focus:ring-1 focus:ring-[#a20000] min-w-[200px] transition-all cursor-pointer"
+                        >
+                           <option value="">All Countries</option>
+                           {availableCountries.map((c) => (
+                              <option key={c} value={c}>{c}</option>
+                           ))}
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                     </div>
+                  </div>
                </div>
 
-                {!coaches || coaches.length === 0 ? (
-                   <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                      <p className="text-gray-900 font-bold uppercase tracking-widest">No active coaches found.</p>
-                   </div>
+               {loading ? (
+                  <div className="text-center py-20">
+                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a20000] mx-auto"></div>
+                     <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-4">Loading coaches...</p>
+                  </div>
+               ) : !filteredCoaches || filteredCoaches.length === 0 ? (
+                  <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                     <p className="text-gray-900 font-bold uppercase tracking-widest">No matching coaches found.</p>
+                  </div>
                ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                     {coaches.map((coach) => (
+                     {filteredCoaches.map((coach) => (
                         <Link 
-                           href={`/coaches/${coach.id}`} 
+                           href={`/coaches/${coach.slug}`} 
                            key={coach.id} 
                            className="group relative h-[400px] rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 bg-gray-200 block"
                         >
                            <img 
                               src={coach.avatar_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=800&auto=format&fit=crop"} 
-                              alt={coach.full_name} 
+                              alt={coach.full_name || `${coach.first_name || ''} ${coach.last_name || ''}`.trim()} 
                               className="absolute inset-0 w-full h-full object-cover grayscale-0 group-hover:scale-110 transition-transform duration-700" 
                            />
                            <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/10 to-transparent"></div>
                            <div className="absolute bottom-8 left-8 right-8">
                               <h3 className="text-2xl font-black text-white leading-tight mb-2 drop-shadow-md">
-                                 {coach.full_name}
+                                 {coach.full_name || `${coach.first_name || ''} ${coach.last_name || ''}`.trim() || 'Anonymous Coach'}
                               </h3>
                               <div className="h-0.5 bg-[#a20000] w-12 group-hover:w-full transition-all duration-500 mb-4 px-0"></div>
                               <div className="flex items-center justify-between">

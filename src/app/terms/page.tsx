@@ -8,7 +8,7 @@ export default function TermsOfServicePage() {
       <div className="min-h-screen bg-white">
          <Navbar />
 
-         <main className="pt-20">
+         <main className="pt-32">
             {/* Split Hero Section */}
             <div className="bg-gray-50 py-16">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0 flex flex-col lg:flex-row items-center justify-between gap-12">
