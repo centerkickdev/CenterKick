@@ -100,3 +100,13 @@ build_error_*.log
 # debug directories
 /src/app/test-agents/
 /src/app/debug-schema/
+
+# AI developer / build scratch folders and logs
+/artifacts/
+/scratch/
+/scripts/
+build_log_ui.txt
+check_users.js
+tmp_tournaments.sql
+lint_output.txt
+quiet_errors.txt

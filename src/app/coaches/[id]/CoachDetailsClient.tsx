@@ -40,7 +40,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
       <div className="min-h-screen bg-white">
          <Navbar />
 
-         <main className="pt-20 sm:pt-32">
+         <main className="pt-32 sm:pt-40">
             {/* Back Button Bar */}
             <div className="bg-white border-b border-gray-100 py-4">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">

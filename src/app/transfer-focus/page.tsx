@@ -223,7 +223,7 @@ export default function TransferFocusPage() {
       <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
          <Navbar />
 
-         <main className="flex-grow pt-20 sm:pt-32">
+         <main className="flex-grow pt-32 sm:pt-40">
             {/* Dark Hero Header */}
             <div className="bg-[#1a1a1a] py-8 sm:py-14 px-4 border-b-4 border-[#b50a0a]">
                <div className="max-w-[1200px] mx-auto text-white flex flex-col items-center md:items-start text-center md:text-left">

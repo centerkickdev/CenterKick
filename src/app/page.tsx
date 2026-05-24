@@ -31,41 +31,57 @@ export default async function Home() {
    const playersList = await getCachedData('home_players_list', async () => {
       const { data } = await supabase
          .from('profiles')
-         .select('*')
+         .select('*, users:users!profiles_user_id_fkey(role)')
          .eq('role', 'player')
          .eq('status', 'active');
-      console.log('Fetched players from DB count:', data?.length || 0);
-      return data || [];
+      const filtered = (data || []).filter(p => {
+         const userRole = (p.users as any)?.role;
+         return userRole !== 'admin' && userRole !== 'superadmin';
+      });
+      console.log('Fetched players from DB count:', filtered.length);
+      return filtered;
    }, 600);
 
    // Fetch active coaches
    const coachesList = await getCachedData('home_coaches_list', async () => {
       const { data } = await supabase
          .from('profiles')
-         .select('*')
+         .select('*, users:users!profiles_user_id_fkey(role)')
          .eq('role', 'coach')
          .eq('status', 'active');
-      return data || [];
+      const filtered = (data || []).filter(p => {
+         const userRole = (p.users as any)?.role;
+         return userRole !== 'admin' && userRole !== 'superadmin';
+      });
+      return filtered;
    }, 600);
 
    // Fetch active agents and scouts
    const agentsScoutsList = await getCachedData('home_agents_scouts_list', async () => {
       const { data } = await supabase
          .from('profiles')
-         .select('*')
+         .select('*, users:users!profiles_user_id_fkey(role)')
          .in('role', ['agent', 'scout'])
          .eq('status', 'active');
-      return data || [];
+      const filtered = (data || []).filter(p => {
+         const userRole = (p.users as any)?.role;
+         return userRole !== 'admin' && userRole !== 'superadmin';
+      });
+      return filtered;
    }, 600);
 
    // Fetch active organizations
    const organizationsList = await getCachedData('home_organizations_list', async () => {
       const { data } = await supabase
          .from('profiles')
-         .select('*')
+         .select('*, users:users!profiles_user_id_fkey(role)')
          .eq('role', 'organization')
          .eq('status', 'active');
-      return data || [];
+      const filtered = (data || []).filter(p => {
+         const userRole = (p.users as any)?.role;
+         return userRole !== 'admin' && userRole !== 'superadmin';
+      });
+      return filtered;
    }, 600);
 
    // Fetch 5 most recent football video highlights (tagged with "HighLights" or "highlights" case-insensitively)

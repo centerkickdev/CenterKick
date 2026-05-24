@@ -57,6 +57,7 @@ interface ProfileCarouselProps {
   renderItem: (item: any, idx: number) => React.ReactNode;
 }
 
+// Mobile: CSS snap scroll showing 1 card + peek. Desktop: JS carousel.
 export function ProfileCarousel({ items, renderItem }: ProfileCarouselProps) {
   if (!items || items.length === 0) {
     return (
@@ -68,75 +69,57 @@ export function ProfileCarousel({ items, renderItem }: ProfileCarouselProps) {
     );
   }
 
-  // Ensure we have enough items to fill the carousel viewport (at least 5 unique items by duplicating)
-  let baseItems = [...items];
-  if (baseItems.length > 0) {
-    while (baseItems.length < 5) {
-      baseItems = [...baseItems, ...items];
-    }
-  }
+  return (
+    <>
+      {/* ---- MOBILE: CSS snap scroll ---- */}
+      <div className="hidden max-sm:flex overflow-x-auto gap-4 snap-x snap-mandatory scroll-smooth pb-4 -mx-4 px-4
+                      [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        {items.map((item, idx) => (
+          <div key={idx} className="shrink-0 w-[80vw] snap-center">
+            {renderItem(item, idx)}
+          </div>
+        ))}
+      </div>
 
-  // Triple the base items to support infinite scroll wrap-around
+      {/* ---- DESKTOP: JS infinite carousel ---- */}
+      <div className="hidden sm:block">
+        <DesktopCarousel items={items} renderItem={renderItem} />
+      </div>
+    </>
+  );
+}
+
+function DesktopCarousel({ items, renderItem }: ProfileCarouselProps) {
+  let baseItems = [...items];
+  while (baseItems.length < 5) baseItems = [...baseItems, ...items];
   const list = [...baseItems, ...baseItems, ...baseItems];
 
-  const [currentIndex, setCurrentIndex] = useState(baseItems.length); // Start at the first item of the second copy
+  const [currentIndex, setCurrentIndex] = useState(baseItems.length);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [itemsPerView, setItemsPerView] = useState(5);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Resize handler to adjust items visible per screen size
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        setItemsPerView(5);
-      } else if (window.innerWidth >= 640) {
-        setItemsPerView(2);
-      } else {
-        setItemsPerView(1);
-      }
-    };
+    const handleResize = () => setItemsPerView(window.innerWidth >= 1024 ? 5 : 2);
     window.addEventListener('resize', handleResize);
     handleResize();
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const next = () => {
-    setIsTransitioning(true);
-    setCurrentIndex((prev) => prev + 1);
-  };
+  const next = () => { setIsTransitioning(true); setCurrentIndex(p => p + 1); };
+  const prev = () => { setIsTransitioning(true); setCurrentIndex(p => p - 1); };
 
-  const prev = () => {
-    setIsTransitioning(true);
-    setCurrentIndex((prev) => prev - 1);
-  };
-
-  // Check and perform instant wrap-around jump when reaching the boundaries
   const handleTransitionEnd = () => {
-    const originalLen = baseItems.length;
-    // When we scroll too far right, jump back to the middle copy
-    if (currentIndex >= originalLen * 2) {
-      setIsTransitioning(false);
-      setCurrentIndex(currentIndex - originalLen);
-    } 
-    // When we scroll too far left, jump forward to the middle copy
-    else if (currentIndex < originalLen) {
-      setIsTransitioning(false);
-      setCurrentIndex(currentIndex + originalLen);
-    }
+    const len = baseItems.length;
+    if (currentIndex >= len * 2) { setIsTransitioning(false); setCurrentIndex(currentIndex - len); }
+    else if (currentIndex < len) { setIsTransitioning(false); setCurrentIndex(currentIndex + len); }
   };
 
-  // Clean transition resetting
   useEffect(() => {
-    if (!isTransitioning) {
-      if (containerRef.current) {
-        const _ = containerRef.current.offsetHeight;
-      }
-      setIsTransitioning(true);
-    }
+    if (!isTransitioning) { if (containerRef.current) { const _ = containerRef.current.offsetHeight; } setIsTransitioning(true); }
   }, [isTransitioning]);
 
-  // Auto-play scrolling
   useEffect(() => {
     if (isHovered || items.length <= 1) return;
     const interval = setInterval(next, 3000);
@@ -147,44 +130,22 @@ export function ProfileCarousel({ items, renderItem }: ProfileCarouselProps) {
   const shiftPx = 24 / itemsPerView;
 
   return (
-    <div 
-      className="relative w-full overflow-hidden group touch-pan-y"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div 
-        ref={containerRef}
-        onTransitionEnd={handleTransitionEnd}
-        className={`flex gap-6 pb-6 pt-2 px-1 ${
-          isTransitioning ? 'transition-transform duration-500 ease-out' : ''
-        }`}
-        style={{
-          transform: `translateX(calc(-${currentIndex} * (${shiftPercent}% + ${shiftPx}px)))`
-        }}
-      >
+    <div className="relative w-full overflow-hidden group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+      <div ref={containerRef} onTransitionEnd={handleTransitionEnd}
+        className={`flex gap-6 pb-6 pt-2 px-1 ${isTransitioning ? 'transition-transform duration-500 ease-out' : ''}`}
+        style={{ transform: `translateX(calc(-${currentIndex} * (${shiftPercent}% + ${shiftPx}px)))` }}>
         {list.map((item, idx) => (
-          <div 
-            key={idx} 
-            className="shrink-0 w-[calc(100%-8px)] sm:w-[calc(50%-12px)] lg:w-[calc(20%-20px)] min-w-[245px]"
-          >
+          <div key={idx} className="shrink-0 w-[calc(50%-12px)] lg:w-[calc(20%-20px)]">
             {renderItem(item, idx % baseItems.length)}
           </div>
         ))}
       </div>
-
-      {/* Navigation Buttons (only if we have items) */}
       {items.length > 1 && (
         <div className="absolute top-1/2 -translate-y-1/2 -left-3 -right-3 flex justify-between pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <button 
-            onClick={prev}
-            className="w-11 h-11 rounded-full bg-white border border-gray-100 flex items-center justify-center text-gray-800 shadow-xl hover:bg-gray-50 hover:scale-105 active:scale-95 transition-all pointer-events-auto"
-          >
+          <button onClick={prev} className="w-11 h-11 rounded-full bg-white border border-gray-100 flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all pointer-events-auto">
             <ChevronLeft className="w-5 h-5 text-gray-900" />
           </button>
-          <button 
-            onClick={next}
-            className="w-11 h-11 rounded-full bg-white border border-gray-100 flex items-center justify-center text-gray-800 shadow-xl hover:bg-gray-50 hover:scale-105 active:scale-95 transition-all pointer-events-auto"
-          >
+          <button onClick={next} className="w-11 h-11 rounded-full bg-white border border-gray-100 flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all pointer-events-auto">
             <ChevronRight className="w-5 h-5 text-gray-900" />
           </button>
         </div>
@@ -194,6 +155,7 @@ export function ProfileCarousel({ items, renderItem }: ProfileCarouselProps) {
 }
 
 const getDisplayName = (profile: any) => {
+
   if (!profile) return '';
   return profile.full_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Anonymous';
 };
@@ -226,7 +188,7 @@ export function HomeClient({
     <div className="min-h-screen bg-[#fafafa] font-sans text-gray-900 selection:bg-[#b50a0a]/10 selection:text-[#b50a0a]">
       <Navbar content={navContent} settings={siteSettings} />
 
-      <main className="pt-20 sm:pt-32 pb-24 overflow-hidden">
+      <main className="pt-32 sm:pt-40 pb-24 overflow-hidden">
         
         {/* ==================== A. HERO GRID SECTION ==================== */}
         <section className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-20">

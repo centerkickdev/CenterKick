@@ -86,7 +86,7 @@ export default async function PostPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="pt-28 pb-32">
+      <main className="pt-36 pb-32">
         <article className="max-w-4xl mx-auto px-4 lg:px-0">
           {/* Article Header */}
           <header className="mb-12 space-y-8 text-center lg:text-left">

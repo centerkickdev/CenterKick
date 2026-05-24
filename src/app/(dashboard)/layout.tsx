@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { SignOutButton } from '@/components/dashboard/SignOutButton';
 import { BannerManager } from '@/components/dashboard/BannerManager';
 import { DashboardSidebarNav } from '@/components/dashboard/DashboardSidebarNav';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 
 import { ToastProvider } from '@/context/ToastContext';
 
@@ -104,27 +105,12 @@ export default async function DashboardLayout({
           <BannerManager status={status} />
 
           {/* Top Header */}
-          <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-8 shadow-sm relative z-10">
-            <button className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
-              <Menu className="w-6 h-6" />
-            </button>
-            
-            <div className="flex items-center gap-6 ml-auto">
-              <button className="p-2 text-gray-400 hover:text-primary transition-colors relative">
-                <Bell className="w-6 h-6" />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-[#b50a0a] rounded-full border-2 border-white"></span>
-              </button>
-              <div className="flex items-center gap-3 pl-6 border-l border-gray-100">
-                <div className="text-right hidden sm:block">
-                  <span className="text-gray-900 font-bold text-xs truncate max-w-[150px]">{user?.email}</span>
-                  <p className="text-[10px] font-bold text-[#b50a0a] uppercase tracking-widest">{role}</p>
-                </div>
-                <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white shadow-lg text-xs">
-                  {user?.email?.[0].toUpperCase()}
-                </div>
-              </div>
-            </div>
-          </header>
+          <DashboardHeader 
+            role={role}
+            email={user?.email}
+            sidebarLogoUrl={sidebarLogoUrl}
+            brandName={brandName}
+          />
 
           {/* Page Content */}
           <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-8">
