@@ -29,6 +29,8 @@ interface Post {
   cover_image_url: string;
   excerpt: string;
   published_at: string;
+  category?: any;
+  author?: any;
 }
 
 interface HomeClientProps {
