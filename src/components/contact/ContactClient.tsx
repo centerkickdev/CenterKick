@@ -107,7 +107,18 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                </div>
             );
          case 'faqs':
-            const faqs = content.faqs || [{ q: "What is CenterKick?", a: "CenterKick is a football media platform." }];
+            const faqs = content.faqs || [
+               { q: "What is CenterKick?", a: "CenterKick is a football media and talent exposure platform that helps players, coaches, clubs, agents, and scouts connect through professional e-profiles, football news, and scouting visibility." },
+               { q: "Who can create a profile on CenterKick?", a: "Footballers (male and female), coaches, clubs, academies, agents, and football organizations can create profiles on CenterKick." },
+               { q: "Is CenterKick only for professional footballers?", a: "No. CenterKick works with both amateur and professional footballers at all levels, including grassroots and youth players." },
+               { q: "How does the player e-profile work?", a: "A player e-profile showcases your football information such as bio, career history, stats, photos, videos, and availability status. It can be shared directly with scouts, agents, and clubs." },
+               { q: "Can scouts and agents find players on CenterKick?", a: "Yes. Scouts and agents can explore player profiles, add players to their watchlist, and receive updates when profiles are updated." },
+               { q: "Do I need to pay to use CenterKick?", a: "Some features may require a subscription, especially for profile management, visibility, and premium tools. Details are available during signup." },
+               { q: "Does CenterKick help with transfers or trials?", a: "CenterKick does not directly sign players to clubs, but we provide the visibility, tools, and platform that help players connect with the right football decision-makers." },
+               { q: "Can CenterKick promote my club, event, or tournament?", a: "Yes. CenterKick offers media and PR services for clubs, academies, leagues, tournaments, and football events." },
+               { q: "How do I contact support?", a: "You can reach us via email or through the contact form on this page. Our team will respond as quickly as possible." },
+               { q: "Is CenterKick active on social media?", a: "Yes. CenterKick is active across multiple platforms where we share football news, player features, highlights, and exclusive content." }
+            ];
             return (
                <div key={key} className="w-full bg-gray-50 py-32 px-6 border-y border-gray-200">
                   <div className="max-w-[800px] mx-auto">

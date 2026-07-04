@@ -448,6 +448,23 @@ function renderFields(section: string, content: any, onChange: (f: string, v: an
            <p className="text-[9px] font-black text-gray-900 uppercase tracking-widest italic mt-4">Navigation links are currently managed via JSON in the database for version 1.</p>
         </div>
       );
+    case 'faqs':
+      return (
+        <div className="space-y-6">
+           <ArrayEditor 
+              label="Frequently Asked Questions" 
+              items={content['faqs']}
+              onChange={(v) => onChange('faqs', v)}
+              itemTemplate={{ q: '', a: '' }}
+              renderItemForm={(item: any, updateField: any) => (
+                <div className="space-y-3 pt-4 pr-6">
+                   <TextInput label="Question" field="q" itemValue={item.q} onItemChange={(v: any) => updateField('q', v)} placeholder="What is CenterKick?" />
+                   <TextInput label="Answer" field="a" itemValue={item.a} onItemChange={(v: any) => updateField('a', v)} placeholder="CenterKick is a football media..." multiline />
+                </div>
+              )}
+           />
+        </div>
+      );
     case 'footer':
       return (
         <div className="space-y-6">
