@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -150,8 +151,8 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
     <>
       <nav className={`fixed z-50 left-0 right-0 mx-auto transition-all duration-500 ease-out backdrop-blur-xl ${
         isScrolled 
-          ? 'top-3 md:top-4 w-[calc(100%-1.5rem)] md:w-[calc(100%-2rem)] max-w-[1300px] bg-white/95 border border-gray-200/50 shadow-2xl py-1.5 md:py-2 rounded-full' 
-          : 'top-0 w-full bg-white md:bg-white/95 border-b border-gray-100 shadow-sm py-3 md:py-3.5 rounded-none'
+          ? 'top-3 lg:top-4 w-[calc(100%-1.5rem)] lg:w-[calc(100%-2rem)] max-w-[1300px] bg-white/95 border border-gray-200/50 shadow-2xl py-1.5 lg:py-2 rounded-full' 
+          : 'top-0 w-full bg-white lg:bg-white/95 border-b border-gray-100 shadow-sm py-3 lg:py-3.5 rounded-none'
       }`}>
         <div className="max-w-[1200px] mx-auto flex items-center justify-between px-6 sm:px-8 h-12">
            
@@ -175,8 +176,8 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
              )}
            </Link>
 
-           {/* MOBILE MENU BUTTON */}
-           <div className="flex md:hidden">
+           {/* MOBILE & TABLET MENU BUTTON */}
+           <div className="flex lg:hidden">
              <button 
                 onClick={() => setIsOpen(!isOpen)} 
                 className="inline-flex items-center p-2 w-10 h-10 justify-center text-gray-500 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
@@ -187,7 +188,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
            </div>
 
            {/* NAVIGATION LINKS */}
-           <div className="hidden md:flex items-center justify-center">
+           <div className="hidden lg:flex items-center justify-center">
               <ul className="flex flex-row space-x-7 text-[10px] font-black tracking-[0.2em] uppercase text-gray-600">
                 {navContent.links.map((link: NavLink, idx: number) => (
                   <li key={idx} className="relative group/drop py-2">
@@ -237,7 +238,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
            </div>
 
            {/* CTA BUTTON */}
-           <div className="hidden md:flex items-center gap-4">
+           <div className="hidden lg:flex items-center gap-4">
              {user ? (
                <Link href={dashboardHref}>
                  <button type="button" className="text-white bg-[#b50a0a] hover:bg-black font-black rounded-full text-[9px] tracking-[0.2em] uppercase px-8 py-3 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-[1px] active:scale-95">
@@ -263,8 +264,8 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
         </div>
       </nav>
 
-      {/* MOBILE NAV — FULL SCREEN OVERLAY */}
-      <div className={`md:hidden fixed inset-0 z-[200] transition-all duration-300 ${
+      {/* MOBILE & TABLET NAV — FULL SCREEN OVERLAY */}
+      <div className={`lg:hidden fixed inset-0 z-[200] transition-all duration-300 ${
         isOpen ? 'visible' : 'invisible pointer-events-none'
       }`}>
         {/* Backdrop */}
@@ -278,8 +279,8 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
           <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 shrink-0">
             <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center group">
               {logoUrl ? (
-                <div className="relative h-7 w-auto min-w-[2rem] flex items-center justify-center transition-all group-hover:scale-105">
-                  <img src={logoUrl} alt={brandName} className="h-full w-auto object-contain" />
+                <div className="relative h-7 w-[120px] sm:w-[150px] flex items-center justify-start transition-all group-hover:scale-105">
+                  <Image src={logoUrl} alt={brandName} fill className="object-contain object-left" priority sizes="(max-width: 1024px) 120px, 150px" />
                 </div>
               ) : (
                 <div className="flex items-center gap-3">

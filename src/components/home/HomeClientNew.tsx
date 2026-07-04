@@ -56,6 +56,8 @@ interface ProfileCarouselProps {
 
 // Unified Native CSS Carousel
 export function ProfileCarousel({ items, renderItem }: ProfileCarouselProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   if (!items || items.length === 0) {
     return (
       <div className="w-full py-16 bg-white border border-dashed border-gray-200 rounded-[2.5rem] text-center shadow-sm">
@@ -66,7 +68,6 @@ export function ProfileCarousel({ items, renderItem }: ProfileCarouselProps) {
     );
   }
 
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   const next = () => {
     if (scrollRef.current) {
@@ -166,7 +167,7 @@ export function HomeClient({
         <section className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-12">
           <div className="flex items-center gap-3 mb-6">
             <span className="w-8 h-[2px] bg-[#b50a0a]"></span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#b50a0a]">Featured News</span>
+            <span suppressHydrationWarning className="text-[10px] font-black uppercase tracking-[0.3em] text-[#b50a0a]">Featured News</span>
           </div>
 
           {mainNews ? (

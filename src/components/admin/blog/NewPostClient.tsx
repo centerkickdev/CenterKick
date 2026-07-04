@@ -106,6 +106,39 @@ const LinkPreviewExtension = Node.create({
   },
 });
 
+function ImageCaptionInput({ editor }: { editor: any }) {
+  const [caption, setCaption] = useState(editor?.getAttributes('image').alt || '');
+  
+  useEffect(() => {
+    setCaption(editor?.getAttributes('image').alt || '');
+  }, [editor?.getAttributes('image').alt]);
+
+  return (
+    <input
+      type="text"
+      placeholder="Image Caption / Photo Credit..."
+      className="px-3 py-1.5 bg-gray-50 rounded-xl text-[10px] font-bold text-black border border-gray-100 focus:ring-0 focus:border-[#b50a0a]/30 w-44"
+      value={caption}
+      onChange={(e) => setCaption(e.target.value)}
+      onBlur={() => {
+        editor?.chain().focus().updateAttributes('image', {
+          alt: caption,
+          title: caption
+        }).run();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          editor?.chain().focus().updateAttributes('image', {
+            alt: caption,
+            title: caption
+          }).run();
+        }
+      }}
+    />
+  );
+}
+
 interface NewPostClientProps {
   categories: Record<string, any>[];
   tags: Record<string, any>[];
@@ -684,18 +717,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                           Replace
                         </button>
                         <div className="w-px h-4 bg-gray-100 self-center shrink-0"></div>
-                        <input
-                          type="text"
-                          placeholder="Image Caption..."
-                          className="px-3 py-1.5 bg-gray-50 rounded-xl text-[10px] font-bold text-black border border-gray-100 focus:ring-0 focus:border-[#b50a0a]/30 w-44"
-                          value={editor?.getAttributes('image').alt || ''}
-                          onChange={(e) => {
-                            editor?.chain().focus().updateAttributes('image', {
-                              alt: e.target.value,
-                              title: e.target.value
-                            }).run();
-                          }}
-                        />
+                        <ImageCaptionInput editor={editor} />
                         <div className="w-px h-4 bg-gray-100 self-center shrink-0"></div>
                         <button 
                           onClick={() => editor?.chain().focus().deleteSelection().run()}
