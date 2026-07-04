@@ -87,7 +87,7 @@ export default async function PostPage({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
          />
 
-         <main className="pt-56 sm:pt-64 lg:pt-72 pb-32">
+         <main className="pt-32 lg:pt-40 pb-32">
             <article className="max-w-4xl mx-auto px-4 lg:px-0">
                {/* Article Header */}
                <header className="mb-12 space-y-8 text-center lg:text-left">
@@ -96,21 +96,21 @@ export default async function PostPage({ params }: Props) {
                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-[#b50a0a] transition-all group mb-4"
                   >
                      <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                     Platform Newsroom
+                     All News
                   </Link>
 
                   <div className="space-y-4">
-                     {post.category && (
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#b50a0a] bg-red-50 px-4 py-1.5 rounded-full inline-block">
-                           {post.category.name}
-                        </span>
-                     )}
                      <h1 className="text-4xl lg:text-6xl font-black text-gray-900 uppercase italic tracking-tighter leading-[0.9] lg:leading-[0.85]">
                         {post.title}
                      </h1>
                      <p className="text-lg lg:text-xl text-gray-500 font-bold leading-relaxed lg:max-w-3xl italic">
                         {post.excerpt}
                      </p>
+                     {post.category && (
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#b50a0a] bg-red-50 px-4 py-1.5 rounded-full inline-block">
+                           {post.category.name}
+                        </span>
+                     )}
                   </div>
 
                   <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-4 border-t border-gray-50">
@@ -137,7 +137,7 @@ export default async function PostPage({ params }: Props) {
                         <button className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-black hover:text-white transition-all">
                            <Share2 className="w-4 h-4" />
                         </button>
-                      </div>
+                     </div>
                   </div>
                </header>
 
