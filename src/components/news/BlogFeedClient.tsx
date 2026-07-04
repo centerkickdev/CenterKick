@@ -84,7 +84,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
   const renderSection = (key: string) => {
     switch (key) {
       case 'header':
-        const header = siteContent.header || { title: "Platform Newsroom", subtitle: "Exclusive updates, transfer focus, and match highlights." };
+        const header = siteContent.header || { title: "Centerkick News", subtitle: "Exclusive updates, transfer focus, and match highlights." };
         return (
           <div key={key} className="bg-gradient-to-b from-gray-50 to-white py-16 lg:py-24 border-b border-gray-100 relative overflow-hidden">
              <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-gray-100/50 to-transparent pointer-events-none" />
