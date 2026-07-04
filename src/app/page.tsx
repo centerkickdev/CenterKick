@@ -84,20 +84,28 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_highlight_posts_5', async () => {
+      getCachedData('home_highlight_posts_v2', async () => {
          const { data, error } = await supabase
             .from('cms_posts')
-            .select('*, post_tags!inner(tag:blog_tags!inner(name))')
+            .select('*, category:blog_categories(name), post_tags(tag:blog_tags(name))')
             .eq('is_draft', false)
-            .ilike('post_tags.tag.name', 'highlights')
             .order('published_at', { ascending: false })
-            .limit(5);
+            .limit(100);
 
          if (error) {
             console.error('Highlights query error:', error);
             return [];
          }
-         return data || [];
+         
+         const filtered = (data || []).filter(post => {
+            const catName = (post.category as any)?.name?.toLowerCase() || '';
+            const tags = (post.post_tags as any[])?.map(pt => pt.tag?.name?.toLowerCase()) || [];
+            const isHighlight = catName.includes('highlight') || tags.some((t: string) => t?.includes('highlight'));
+            const hasVideoLink = post.excerpt?.startsWith('http') || post.excerpt?.includes('youtube.com');
+            return isHighlight && hasVideoLink;
+         });
+         
+         return filtered.slice(0, 5);
       }, 300)
    ]);
 

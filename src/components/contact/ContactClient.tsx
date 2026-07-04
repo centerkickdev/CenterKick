@@ -38,7 +38,7 @@ export function ContactClient({ layout, content, navContent, footerContent, site
             return (
                <div key={key} className="w-full bg-gray-50 py-24 md:py-32 relative overflow-hidden border-b border-gray-100">
                   <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#b50a0a]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-                  <div className="max-w-[1200px] mx-auto px-6 text-center relative z-10">
+                  <div className="max-w-[1200px] mx-auto px-4 lg:px-0 text-center relative z-10">
                      <span className="text-[#b50a0a] font-bold tracking-[0.2em] uppercase mb-4 block text-sm">Contact Us</span>
                      <h1 className="text-5xl md:text-7xl font-black text-gray-900 uppercase tracking-tighter mb-8 drop-shadow-sm">
                         {header.title?.split(' ').map((word: string, i: number) => (
@@ -146,7 +146,7 @@ export function ContactClient({ layout, content, navContent, footerContent, site
          <main className="flex-grow pt-32">
             {layout.includes('header') && renderSection('header')}
             {(layout.includes('info') || layout.includes('form')) && (
-               <div className="max-w-[1200px] mx-auto px-6 py-24 md:py-32">
+               <div className="max-w-[1200px] mx-auto px-4 lg:px-0 py-24 md:py-32">
                   <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
                      {layout.includes('info') && renderSection('info')}
                      {layout.includes('form') && renderSection('form')}

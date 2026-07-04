@@ -65,7 +65,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
         const header = siteContent.header || { title: "Platform Newsroom", subtitle: "Exclusive updates, transfer focus, and match highlights." };
         return (
           <div key={key} className="bg-[#383838] py-12">
-            <div className="max-w-full max-w-[1200px] mx-auto px-4 lg:px-0">
+            <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                <h1 className="text-white text-5xl font-black tracking-tighter uppercase italic">{header.title?.split(' ')[0]} <span className="text-[#b50a0a]">{header.title?.split(' ').slice(1).join(' ')}</span></h1>
                <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.3em] mt-3">{header.subtitle}</p>
             </div>
@@ -74,12 +74,12 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
       case 'featured':
         if (latestPosts.length === 0 || selectedTag || selectedCategory) return null;
         return (
-          <section key={key} className="max-w-full max-w-[1200px] mx-auto px-4 lg:px-0 mb-16 animate-in fade-in duration-1000 mt-12">
+          <section key={key} className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-16 animate-in fade-in duration-1000 mt-12">
              <div className="flex items-center gap-4 mb-10">
                 <div className="w-10 h-10 rounded-full bg-[#b50a0a] flex items-center justify-center shadow-lg shadow-red-900/10"><Star className="w-5 h-5 text-white" /></div>
                 <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight">Featured Stories</h2>
              </div>
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 md:grid-cols-3 gap-4 md:p-8">
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:p-8">
                 {latestPosts.map((post) => (
                    <Link href={`/news/${post.slug}`} key={post.id} className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full">
                       <div className="h-64 overflow-hidden relative">
@@ -105,7 +105,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
         return (
           <div key={key} className="space-y-12">
             <div className="sticky top-20 z-40 bg-white/80 backdrop-blur-md py-6 border-b border-gray-100">
-               <div className="max-w-full max-w-[1200px] mx-auto px-4 lg:px-0">
+               <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                   <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
                      <div className="flex items-center gap-4 overflow-x-auto pb-2 md:pb-0 [&::-webkit-scrollbar]:hidden w-full md:w-auto">
                         <button onClick={() => { setSelectedCategory(null); setSelectedTag(null); }} className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full transition-all whitespace-nowrap ${!selectedCategory && !selectedTag ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-400 hover:text-black'}`}>All Feed</button>
@@ -128,11 +128,11 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                   </div>
                </div>
             </div>
-            <div className="max-w-full max-w-[1200px] mx-auto px-4 lg:px-0 pb-20">
+            <div className="max-w-[1200px] mx-auto px-4 lg:px-0 pb-20">
                <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight mb-10">
                   {selectedCategory ? `${categories.find(c => c.id === selectedCategory)?.name} Archive` : selectedTag ? `Tag: ${tags.find(t => t.id === selectedTag)?.name}` : 'Latest Feed'}
                </h2>
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 md:grid-cols-3 gap-4 md:p-8">
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:p-8">
                   {filteredPosts.length === 0 ? (
                      <div className="col-span-1 md:col-span-3 py-20 text-center bg-gray-50 rounded-[40px] border border-gray-100">
                         <Newspaper className="w-12 h-12 text-gray-200 mx-auto mb-4" />

@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { 
-  PlayCircle, 
-  ArrowRight, 
-  ChevronLeft, 
-  ChevronRight, 
-  MapPin, 
-  Activity, 
+import {
+  PlayCircle,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  MapPin,
+  Activity,
   Video,
   ExternalLink,
   ShieldCheck,
@@ -54,7 +54,7 @@ interface ProfileCarouselProps {
   renderItem: (item: any, idx: number) => React.ReactNode;
 }
 
-// Mobile: CSS snap scroll showing 1 card + peek. Desktop: JS carousel.
+// Unified Native CSS Carousel
 export function ProfileCarousel({ items, renderItem }: ProfileCarouselProps) {
   if (!items || items.length === 0) {
     return (
@@ -66,81 +66,62 @@ export function ProfileCarousel({ items, renderItem }: ProfileCarouselProps) {
     );
   }
 
-  return <DesktopCarousel items={items} renderItem={renderItem} />;
-}
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-function DesktopCarousel({ items, renderItem }: ProfileCarouselProps) {
-  let baseItems = [...items];
-  while (baseItems.length < 5) baseItems = [...baseItems, ...items];
-  const list = [...baseItems, ...baseItems, ...baseItems];
-
-  const [currentIndex, setCurrentIndex] = useState(baseItems.length);
-  const [isTransitioning, setIsTransitioning] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
-  const [itemsPerView, setItemsPerView] = useState(3.8);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        setItemsPerView(3.8);
-      } else if (window.innerWidth >= 640) {
-        setItemsPerView(2.5);
-      } else {
-        setItemsPerView(1.2);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const next = () => { setIsTransitioning(true); setCurrentIndex(p => p + 1); };
-  const prev = () => { setIsTransitioning(true); setCurrentIndex(p => p - 1); };
-
-  const handleTransitionEnd = () => {
-    const len = baseItems.length;
-    if (currentIndex >= len * 2) { setIsTransitioning(false); setCurrentIndex(currentIndex - len); }
-    else if (currentIndex < len) { setIsTransitioning(false); setCurrentIndex(currentIndex + len); }
+  const next = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: scrollRef.current.clientWidth, behavior: 'smooth' });
+    }
+  };
+  const prev = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -scrollRef.current.clientWidth, behavior: 'smooth' });
+    }
   };
 
-  useEffect(() => {
-    if (!isTransitioning) { if (containerRef.current) { const _ = containerRef.current.offsetHeight; } setIsTransitioning(true); }
-  }, [isTransitioning]);
-
-  useEffect(() => {
-    if (isHovered || items.length <= 1) return;
-    const interval = setInterval(next, 3000);
-    return () => clearInterval(interval);
-  }, [isHovered, items.length, currentIndex]);
-
-  const shiftPercent = 100 / itemsPerView;
-  const shiftPx = 24 / itemsPerView;
-
   return (
-    <div className="relative w-full overflow-hidden group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-      <div ref={containerRef} onTransitionEnd={handleTransitionEnd}
-        className={`flex gap-6 pb-6 pt-2 px-1 ${isTransitioning ? 'transition-transform duration-500 ease-out' : ''}`}
-        style={{ transform: `translateX(calc(-${currentIndex} * (${shiftPercent}% + ${shiftPx}px)))` }}>
-        {list.map((item, idx) => (
-          <div 
-            key={idx} 
-            className="shrink-0"
-            style={{ width: `calc(${100 / itemsPerView}% - ${(24 * (itemsPerView - 1)) / itemsPerView}px)` }}
-          >
-            {renderItem(item, idx % baseItems.length)}
+    <div className="relative w-full group">
+      {/* Mobile/Tablet: Vertical Stack / Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:hidden pb-6">
+        {items.map((item, idx) => (
+          <div key={idx} className="w-full">
+            {renderItem(item, idx)}
           </div>
         ))}
       </div>
-      {items.length > 1 && (
-        <div className="absolute top-1/2 -translate-y-1/2 -left-3 -right-3 flex justify-between pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <button onClick={prev} className="w-11 h-11 rounded-full bg-white border border-gray-100 flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all pointer-events-auto">
-            <ChevronLeft className="w-5 h-5 text-gray-900" />
+
+      {/* Desktop: Carousel */}
+      <div
+        ref={scrollRef}
+        className="hidden lg:flex gap-6 pb-6 pt-2 overflow-x-auto snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {items.map((item, idx) => (
+          <div
+            key={idx}
+            className="snap-start shrink-0"
+            style={{ width: 'calc(25% - 18px)' }}
+          >
+            {renderItem(item, idx)}
+          </div>
+        ))}
+      </div>
+
+      {items.length > 4 && (
+        <>
+          <button 
+            onClick={prev} 
+            className="hidden lg:flex absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2 w-12 h-12 rounded-full bg-white border border-gray-100 items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all opacity-0 group-hover:opacity-100 z-30 text-[#b50a0a]"
+          >
+            <ChevronLeft className="w-6 h-6" />
           </button>
-          <button onClick={next} className="w-11 h-11 rounded-full bg-white border border-gray-100 flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all pointer-events-auto">
-            <ChevronRight className="w-5 h-5 text-gray-900" />
+          <button 
+            onClick={next} 
+            className="hidden lg:flex absolute top-1/2 -translate-y-1/2 right-0 translate-x-1/2 w-12 h-12 rounded-full bg-white border border-gray-100 items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all opacity-0 group-hover:opacity-100 z-30 text-[#b50a0a]"
+          >
+            <ChevronRight className="w-6 h-6" />
           </button>
-        </div>
+        </>
       )}
     </div>
   );
@@ -151,17 +132,17 @@ const getDisplayName = (profile: any) => {
   return profile.full_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Anonymous';
 };
 
-export function HomeClient({ 
-  latestNews, 
-  players, 
-  coaches, 
-  agentsScouts, 
-  organizations, 
-  highlights, 
-  siteContent: _siteContent, 
-  navContent, 
-  footerContent, 
-  siteSettings 
+export function HomeClient({
+  latestNews,
+  players,
+  coaches,
+  agentsScouts,
+  organizations,
+  highlights,
+  siteContent: _siteContent,
+  navContent,
+  footerContent,
+  siteSettings
 }: HomeClientProps) {
 
   // Fetch real data directly from Supabase DB props
@@ -173,43 +154,40 @@ export function HomeClient({
   // News components separation
   const mainNews = latestNews[0] || null;
   const stackedNews = latestNews.slice(1, 6);
-  const carouselNews = latestNews.slice(6, 16);
+  const carouselNews = latestNews.slice(6, 10);
 
   return (
     <div className="min-h-screen bg-[#fafafa] font-sans text-gray-900 selection:bg-[#b50a0a]/10 selection:text-[#b50a0a]">
       <Navbar content={navContent} settings={siteSettings} />
 
       <main className="pt-24 sm:pt-28 lg:pt-32 pb-24 overflow-hidden">
-        
+
         {/* ==================== A. HERO GRID SECTION ==================== */}
         <section className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-12">
           <div className="flex items-center gap-3 mb-6">
             <span className="w-8 h-[2px] bg-[#b50a0a]"></span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#b50a0a]">Global Updates</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#b50a0a]">Featured News</span>
           </div>
-          
+
           {mainNews ? (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-              
+
               {/* Row 1 Col 1: Main News Card (60%) */}
               <div className="lg:col-span-7 h-[400px] lg:h-[500px]">
-                <Link 
-                  href={`/news/${mainNews.slug}`} 
+                <Link
+                  href={`/news/${mainNews.slug}`}
                   className="group block relative w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl"
                 >
-                  <img 
-                    src={mainNews.cover_image_url || IMG_HERO_DEFAULT} 
-                    alt={mainNews.title} 
+                  <img
+                    src={mainNews.cover_image_url || IMG_HERO_DEFAULT}
+                    alt={mainNews.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90 group-hover:opacity-100 transition-opacity" />
-                  
+
                   <div className="absolute top-6 left-6 z-20 flex gap-2">
-                    <span className="bg-[#b50a0a] text-white text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
-                      Featured News
-                    </span>
                     {mainNews.category && (
-                      <span className="bg-white/20 backdrop-blur-md border border-white/30 text-white text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
+                      <span className="bg-[#b50a0a] text-white text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg">
                         {(mainNews.category as any)?.name || 'Update'}
                       </span>
                     )}
@@ -234,19 +212,19 @@ export function HomeClient({
               </div>
 
               {/* Row 1 Col 2: Stacked news lists (40%) */}
-              <div className="lg:col-span-5 h-[400px] lg:h-[500px]">
+              <div className="lg:col-span-5 h-auto min-h-[400px] lg:h-[500px]">
                 <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl p-8 flex flex-col h-full justify-between">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xs font-black uppercase tracking-widest text-[#b50a0a] flex items-center gap-2">
                       <Activity className="w-4 h-4 text-[#b50a0a]" /> Trending Stories
                     </h3>
                   </div>
-                  
+
                   <div className="flex flex-col flex-1 justify-center gap-4 lg:gap-6">
                     {stackedNews.map((news) => (
-                      <Link 
-                        key={news.id} 
-                        href={`/news/${news.slug}`} 
+                      <Link
+                        key={news.id}
+                        href={`/news/${news.slug}`}
                         className="group block pl-5 py-2 border-l border-[#b50a0a] hover:pl-6 transition-all duration-300"
                       >
                         <h4 className="text-sm lg:text-base font-black text-gray-900 leading-snug tracking-tight uppercase group-hover:text-[#b50a0a] transition-colors line-clamp-2">
@@ -277,69 +255,45 @@ export function HomeClient({
         {/* Row 2: More stories (carousel on desktop/tablet, vertical stack on mobile) */}
         {carouselNews.length > 0 && (
           <section className="mt-12 mb-20 w-full overflow-hidden">
-            <div className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-6">
+            <div className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-6 flex items-center justify-between">
               <h4 className="text-xs font-black tracking-widest uppercase text-gray-400 text-left">More Recent Stories</h4>
+              <Link href="/news" className="text-[10px] font-black text-[#b50a0a] uppercase tracking-widest hover:text-black transition-colors flex items-center gap-1.5">
+                Read More <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
-            
-            {/* Desktop/Tablet Carousel */}
-            <div className="hidden md:block px-4">
-              <ProfileCarousel 
-                items={carouselNews}
-                  renderItem={(news) => (
-                    <Link 
-                      href={`/news/${news.slug}`} 
-                      className="group flex flex-col bg-white rounded-[1.8rem] overflow-hidden border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 h-full"
-                    >
-                      {/* Image Area */}
-                      <div className="relative w-full aspect-[16/9] overflow-hidden bg-black shrink-0">
-                        <Image 
-                          src={news.cover_image_url || IMG_NEWS_DEFAULT} 
-                          alt={news.title} 
-                          fill
-                          sizes="256px"
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      </div>
-                      {/* Text Area */}
-                      <div className="p-4 flex-1 flex flex-col justify-between text-left">
-                        <DateDisplay date={news.published_at} className="text-gray-400 text-[8px] font-bold uppercase tracking-widest mb-1.5 block" />
-                        <h5 className="text-xs font-black text-gray-900 leading-snug uppercase line-clamp-3 group-hover:text-[#b50a0a] transition-colors">
-                          {news.title}
-                        </h5>
-                      </div>
-                    </Link>
-                  )}
-                />
-              </div>
 
-              {/* Mobile Vertical Stack */}
-              <div className="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-[1200px] mx-auto px-4 lg:px-0">
-                {carouselNews.map((news) => (
-                  <Link 
-                    key={news.id}
-                    href={`/news/${news.slug}`} 
-                    className="group flex flex-col bg-white rounded-[1.8rem] overflow-hidden border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300"
+            {/* Responsive Profile Carousel */}
+            <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
+              <ProfileCarousel
+                items={carouselNews}
+                renderItem={(news) => (
+                  <Link
+                    href={`/news/${news.slug}`}
+                    className="group flex flex-col bg-white rounded-[1.8rem] overflow-hidden border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 h-full"
                   >
                     {/* Image Area */}
                     <div className="relative w-full aspect-[16/9] overflow-hidden bg-black shrink-0">
-                      <Image 
-                        src={news.cover_image_url || IMG_NEWS_DEFAULT} 
-                        alt={news.title} 
+                      <Image
+                        src={news.cover_image_url || IMG_NEWS_DEFAULT}
+                        alt={news.title}
                         fill
-                        sizes="100vw"
+                        sizes="256px"
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     </div>
                     {/* Text Area */}
-                    <div className="p-5 text-left">
-                      <DateDisplay date={news.published_at} className="text-gray-400 text-[8px] font-bold uppercase tracking-widest mb-2 block" />
-                      <h5 className="text-sm font-black text-gray-900 leading-snug uppercase line-clamp-3 group-hover:text-[#b50a0a] transition-colors">
-                        {news.title}
-                      </h5>
+                    <div className="p-5 text-left flex-1 flex flex-col justify-between">
+                      <div>
+                        <DateDisplay date={news.published_at} className="text-gray-400 text-[8px] font-bold uppercase tracking-widest mb-2 block" />
+                        <h5 className="text-sm font-black text-gray-900 leading-snug uppercase line-clamp-3 group-hover:text-[#b50a0a] transition-colors">
+                          {news.title}
+                        </h5>
+                      </div>
                     </div>
                   </Link>
-                ))}
-              </div>
+                )}
+              />
+            </div>
           </section>
         )}
 
@@ -352,30 +306,30 @@ export function HomeClient({
                 <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#b50a0a]">TALENT DISCOVERY</span>
               </div>
               <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter italic">
-                Players <span className="text-[#b50a0a] font-black">Profiles</span>
+                Player's <span className="text-[#b50a0a] font-black">Profiles</span>
               </h2>
             </div>
-            <Link 
-              href="/athletes" 
+            <Link
+              href="/athletes"
               className="group/link inline-flex items-center gap-2 text-xs font-black text-[#b50a0a] uppercase tracking-widest hover:text-black transition-colors"
             >
-              Explore All Players <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
+              View More <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
           </div>
 
-          <ProfileCarousel 
+          <ProfileCarousel
             items={playersData}
             renderItem={(player) => (
               <Link href={`/athletes/${player.slug}`} className="group relative block aspect-[4/5] rounded-3xl overflow-hidden bg-black shadow-lg border border-gray-100">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10" />
-                <Image 
-                  src={player.avatar_url || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop"} 
-                  alt={getDisplayName(player)} 
+                <Image
+                  src={player.avatar_url || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop"}
+                  alt={getDisplayName(player)}
                   fill
                   sizes="(max-width:640px) 90vw, (max-width:1024px) 50vw, 256px"
                   className="object-cover transition-all duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105 opacity-85"
                 />
-                
+
                 <div className="absolute top-4 right-4 z-20 bg-black/40 backdrop-blur-md rounded-full px-3 py-1 border border-white/10">
                   <span className="text-[8px] font-black text-white tracking-wider uppercase">Active</span>
                 </div>
@@ -402,19 +356,19 @@ export function HomeClient({
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               <div className="max-w-xl">
                 <span className="bg-[#b50a0a]/10 border border-[#b50a0a]/20 text-[#ff4d4d] text-[8px] font-black uppercase tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
-                  Athlete Management
+                  Player's Management
                 </span>
                 <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">
                   Take Your Football Career <span className="text-[#b50a0a]">To The Next Level</span>
                 </h3>
                 <p className="text-gray-400 text-sm font-medium leading-relaxed">
-                  Register your profile to build a digital football portfolio, showcase match tapes, record certified statistics, and match with verified agents and academy scouts.
+                  Join now to build a digital football portfolio, showcase your skills and match reels, record certified statistics, and match with verified agents and academy scouts.
                 </p>
               </div>
               <div className="flex flex-wrap gap-4 shrink-0">
                 <Link href="/register">
                   <button className="bg-[#b50a0a] hover:bg-white text-white hover:text-black font-black text-[10px] tracking-[0.2em] uppercase px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
-                    Register Profile <ArrowRight className="w-4 h-4" />
+                    Create Profile <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
               </div>
@@ -434,27 +388,27 @@ export function HomeClient({
                 Coaches <span className="text-[#b50a0a] font-black">Profiles</span>
               </h2>
             </div>
-            <Link 
-              href="/coaches" 
+            <Link
+              href="/coaches"
               className="group/link inline-flex items-center gap-2 text-xs font-black text-[#b50a0a] uppercase tracking-widest hover:text-black transition-colors"
             >
-              Explore All Coaches <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
+              View More <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
           </div>
 
-          <ProfileCarousel 
+          <ProfileCarousel
             items={coachesData}
             renderItem={(coach) => (
               <Link href={`/coaches/${coach.slug}`} className="group relative block aspect-[4/5] rounded-3xl overflow-hidden bg-white shadow-lg border border-gray-100 hover:border-[#b50a0a]/30 transition-colors">
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/10 to-transparent z-10" />
-                <Image 
-                  src={coach.avatar_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=600&auto=format&fit=crop"} 
-                  alt={getDisplayName(coach)} 
+                <Image
+                  src={coach.avatar_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=600&auto=format&fit=crop"}
+                  alt={getDisplayName(coach)}
                   fill
                   sizes="(max-width:640px) 90vw, (max-width:1024px) 50vw, 256px"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                
+
                 <div className="absolute top-4 left-4 z-20">
                   <span className="bg-white/95 text-gray-900 text-[8px] font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
                     <ShieldCheck className="w-3 h-3 text-[#b50a0a]" /> Certified
@@ -483,19 +437,19 @@ export function HomeClient({
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               <div className="max-w-xl">
                 <span className="bg-white/10 border border-white/20 text-white text-[8px] font-black uppercase tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
-                  Staff Recruitment
+                  Professional Coaches
                 </span>
                 <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">
-                  Join Our Global <span className="underline decoration-white/20 underline-offset-8">Coaching Registry</span>
+                  Join Our Global <span className="underline decoration-white/20 underline-offset-8">Coaching Directory</span>
                 </h3>
                 <p className="text-white/80 text-sm font-medium leading-relaxed">
-                  Connect with football academies, colleges, and clubs looking for technical managers, athletic trainers, and tactical staff globally.
+                  Connect with football academies, colleges, clubs and countries looking for technical managers, athletic trainers, and tactical staff globally.
                 </p>
               </div>
               <div className="flex flex-wrap gap-4 shrink-0">
                 <Link href="/register">
                   <button className="bg-white hover:bg-black text-black hover:text-white font-black text-[10px] tracking-[0.2em] uppercase px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
-                    Create Coach Profile <ArrowRight className="w-4 h-4" />
+                    Create Profile <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
               </div>
@@ -509,41 +463,40 @@ export function HomeClient({
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#b50a0a]">REPRESENTATION NETWORK</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#b50a0a]">SCOUTING NETWORK</span>
               </div>
               <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter italic">
                 Agents & Scouts <span className="text-[#b50a0a] font-black">Profiles</span>
               </h2>
             </div>
-            <Link 
-              href="/agents" 
+            <Link
+              href="/agents"
               className="group/link inline-flex items-center gap-2 text-xs font-black text-[#b50a0a] uppercase tracking-widest hover:text-black transition-colors"
             >
-              Explore All Representatives <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
+              View More <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
           </div>
 
-          <ProfileCarousel 
+          <ProfileCarousel
             items={agentsData}
             renderItem={(agent) => (
               <div className="group bg-white border border-gray-100 rounded-[2rem] p-6 shadow-md hover:shadow-xl transition-all duration-500 h-full flex flex-col justify-between">
                 <div>
                   <div className="relative w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-4 border border-gray-100">
-                    <Image 
-                      src={agent.avatar_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"} 
-                      alt={getDisplayName(agent)} 
+                    <Image
+                      src={agent.avatar_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"}
+                      alt={getDisplayName(agent)}
                       fill
                       sizes="80px"
                       className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                     />
                   </div>
-                  
+
                   <div className="text-center mb-4">
-                    <span className={`inline-block text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full mb-2 ${
-                      (agent.users?.role === 'scout') 
-                        ? 'bg-blue-50 text-blue-600 border border-blue-100' 
-                        : 'bg-[#b50a0a]/5 text-[#b50a0a] border border-[#b50a0a]/10'
-                    }`}>
+                    <span className={`inline-block text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full mb-2 ${(agent.users?.role === 'scout')
+                      ? 'bg-blue-50 text-blue-600 border border-blue-100'
+                      : 'bg-[#b50a0a]/5 text-[#b50a0a] border border-[#b50a0a]/10'
+                      }`}>
                       {agent.users?.role === 'scout' ? 'Scout' : 'Agent'}
                     </span>
                     <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight line-clamp-1 group-hover:text-[#b50a0a] transition-colors">
@@ -574,19 +527,19 @@ export function HomeClient({
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               <div className="max-w-xl">
                 <span className="bg-white/5 border border-white/10 text-white/90 text-[8px] font-black uppercase tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
-                  Recruit Talent
+                  Recruit Talents
                 </span>
                 <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter mb-4 leading-tight">
-                  Access Premium <span className="text-blue-400">Scouting Intelligence</span>
+                  Access Premium <span className="text-blue-400">Scouting Network</span>
                 </h3>
                 <p className="text-gray-400 text-sm font-medium leading-relaxed">
-                  Join as an agent or scout to view athlete catalogs, inspect verify-stamped athletic metrics, request player trials, and contact academy networks directly.
+                  Join as an agent or scout to view player's and coaches profiles, verified metrics and statistics, request player trials, and contact academy networks directly.
                 </p>
               </div>
               <div className="flex flex-wrap gap-4 shrink-0">
                 <Link href="/register">
                   <button className="bg-white hover:bg-[#b50a0a] text-black hover:text-white font-black text-[10px] tracking-[0.2em] uppercase px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
-                    Join As Scout / Agent <ArrowRight className="w-4 h-4" />
+                    Create Profile <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
               </div>
@@ -600,21 +553,21 @@ export function HomeClient({
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#b50a0a]">DEVELOPMENT CENTERS</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#b50a0a]">SPORT ORGANIZATIONS</span>
               </div>
               <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter italic">
-                Organizations <span className="text-[#b50a0a] font-black">Profiles</span>
+                CLUBS AND ACADEMY <span className="text-[#b50a0a] font-black">Profiles</span>
               </h2>
             </div>
-            <Link 
-              href="/register" 
+            <Link
+              href="/organizations"
               className="group/link inline-flex items-center gap-2 text-xs font-black text-[#b50a0a] uppercase tracking-widest hover:text-black transition-colors"
             >
-              Partner Academies <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
+              View More <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
           </div>
 
-          <ProfileCarousel 
+          <ProfileCarousel
             items={organizationsData}
             renderItem={(org) => (
               <div className="group bg-white border border-gray-100 rounded-3xl p-6 shadow-md hover:shadow-xl hover:border-amber-500/10 transition-all duration-500 h-full flex flex-col justify-between">
@@ -622,11 +575,8 @@ export function HomeClient({
                   <div className="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4 border border-amber-100 group-hover:scale-105 transition-transform">
                     <Building className="w-6 h-6 text-amber-600" />
                   </div>
-                  
+
                   <div className="text-center mb-4">
-                    <span className="inline-block bg-amber-50 text-amber-600 border border-amber-100 text-[8px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full mb-2">
-                      Academy Partner
-                    </span>
                     <h3 className="text-base font-black text-gray-900 uppercase tracking-tight line-clamp-1 group-hover:text-amber-600 transition-colors">
                       {getDisplayName(org)}
                     </h3>
@@ -655,19 +605,19 @@ export function HomeClient({
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               <div className="max-w-xl">
                 <span className="bg-amber-50 border border-amber-100 text-amber-700 text-[8px] font-black uppercase tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
-                  Academy Development
+                  CLUBS AND ACADEMY
                 </span>
                 <h3 className="text-2xl md:text-3xl font-black text-gray-900 uppercase tracking-tighter mb-4 leading-tight">
-                  List Your Academy <span className="text-amber-600">On CenterKick</span>
+                  List Your Clubs and Academies <span className="text-amber-600">On CenterKick</span>
                 </h3>
                 <p className="text-gray-500 text-sm font-medium leading-relaxed">
-                  Manage youth squads, create official tryouts announcements, verify player metrics, and establish direct channels with international scouting departments.
+                  Manage clubs and academy talents, get your talents verified, and establish direct channels with scouting agents.
                 </p>
               </div>
               <div className="flex flex-wrap gap-4 shrink-0">
                 <Link href="/register">
                   <button className="bg-gray-900 hover:bg-amber-600 text-white font-black text-[10px] tracking-[0.2em] uppercase px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
-                    Register Organisation <ArrowRight className="w-4 h-4" />
+                    Create Profile <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
               </div>
@@ -680,40 +630,40 @@ export function HomeClient({
         <section className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-28">
           <div className="flex items-center gap-3 mb-2">
             <span className="w-8 h-[2px] bg-[#b50a0a]"></span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#b50a0a]">Skill Showreel</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#b50a0a]">Talents Reels</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter italic">
               Featured <span className="text-[#b50a0a]">Highlights</span>
             </h2>
-            <Link 
-              href="https://www.youtube.com/@CenterKick" 
+            <Link
+              href="https://www.youtube.com/@CenterKick"
               target="_blank"
               rel="noopener noreferrer"
               className="group/link inline-flex items-center gap-2 text-xs font-black text-[#b50a0a] uppercase tracking-widest hover:text-black transition-colors"
             >
-              Browse All Reels <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
+              View More <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {highlights.map((post) => (
-              <Link 
-                href={post.excerpt || '#'} 
+              <Link
+                href={post.excerpt || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
-                key={post.id} 
+                key={post.id}
                 className="group relative rounded-2xl overflow-hidden aspect-video sm:aspect-[4/5] bg-black border border-gray-100 shadow-md block"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-10" />
-                <Image 
-                  src={post.cover_image_url || IMG_NEWS_DEFAULT} 
-                  alt={post.title} 
+                <Image
+                  src={post.cover_image_url || IMG_NEWS_DEFAULT}
+                  alt={post.title}
                   fill
                   sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 20vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80"
                 />
-                
+
                 {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center z-20 opacity-90 group-hover:opacity-100 transition-all duration-300">
                   <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center group-hover:scale-110 group-hover:bg-[#b50a0a] group-hover:border-[#b50a0a] transition-all shadow-lg">
@@ -731,11 +681,11 @@ export function HomeClient({
                 </div>
               </Link>
             ))}
-            
+
             {highlights.length === 0 && (
               <div className="col-span-full py-16 text-center bg-white border border-dashed border-gray-200 rounded-[2rem] p-8">
                 <PlayCircle className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest">No highlight clips currently active.</h4>
+                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest">No highlight clips currently.</h4>
               </div>
             )}
           </div>
@@ -746,22 +696,18 @@ export function HomeClient({
         <section className="max-w-[1200px] mx-auto px-4 lg:px-0">
           <div className="bg-gradient-to-br from-[#b50a0a] via-[#900000] to-black rounded-[3rem] p-10 md:p-20 text-center relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_bottom_right,#b50a0a_0%,transparent_60%)] opacity-30 pointer-events-none"></div>
-            
+
             <div className="flex flex-col items-center relative z-10">
               <div className="w-14 h-14 bg-white/10 rounded-full flex items-center justify-center mb-6 backdrop-blur-md border border-white/20">
                 <Trophy className="w-6 h-6 text-white" />
               </div>
-              
-              <span className="text-white/80 text-[10px] md:text-xs font-black uppercase tracking-[0.4em] mb-4">
-                Corporate & Sponsorship Network
-              </span>
-              
+
               <h2 className="text-3xl md:text-5xl font-black text-white leading-tight uppercase tracking-tighter italic mb-8 max-w-3xl">
                 Partner with CenterKick to <span className="underline decoration-white/20 underline-offset-8">Grow Football Talents</span>
               </h2>
-              
+
               <p className="text-white/80 text-sm md:text-base font-medium leading-relaxed max-w-2xl mb-12">
-                We work alongside corporate sponsors, state sports organizations, scouts associations, and global media outlets to provide premium scouting systems and athlete logistics.
+                We work with organizations, clubs, academies, sponsors, scouts, agents, and media outlets to identify and manage the next generation of global football talents.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
@@ -772,12 +718,12 @@ export function HomeClient({
                 </Link>
                 <Link href="/about">
                   <button className="w-full sm:w-auto bg-transparent text-white border-2 border-white/20 hover:bg-white/10 px-12 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:-translate-y-0.5 active:scale-95">
-                    View Partnership Deck
+                    About Us
                   </button>
                 </Link>
               </div>
             </div>
-            
+
             {/* Ambient Lighting elements */}
             <div className="absolute inset-0 opacity-20 pointer-events-none">
               <div className="absolute top-0 left-0 w-80 h-80 bg-white rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2"></div>

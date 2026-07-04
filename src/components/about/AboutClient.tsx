@@ -54,7 +54,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center z-0 overflow-hidden pointer-events-none">
                      <h1 className="text-[15vw] font-black uppercase tracking-tighter text-transparent stroke-text opacity-10 leading-none">CENTERKICK</h1>
                   </div>
-                  <div className="relative z-10 max-w-[1200px] mx-auto px-6 text-center mt-20">
+                  <div className="relative z-10 max-w-[1200px] mx-auto px-4 lg:px-0 text-center mt-20">
                      <div className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 mb-8 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                         <span className="w-2 h-2 rounded-full bg-[#ff3333] animate-pulse"></span>
                         <span className="text-white font-bold text-xs uppercase tracking-widest">{hero.subtitle}</span>
@@ -72,7 +72,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
          case 'mission':
             const mission = content.mission || { title: "Empowering Talent", description: "To empower footballers at all levels." };
             return (
-               <div key={key} className="max-w-[1200px] mx-auto px-6 py-16 border-t border-gray-100">
+               <div key={key} className="max-w-[1200px] mx-auto px-4 lg:px-0 py-16 border-t border-gray-100">
                   <div className="flex flex-col lg:flex-row items-center gap-16">
                      <div className="w-full lg:w-1/2">
                         <div className="relative rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.08)] aspect-[4/3] group">
@@ -94,7 +94,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
          case 'vision':
             const vision = content.vision || { title: "Leading Agency", description: "To become the leading Sports Marketing Agency." };
             return (
-               <div key={key} className="max-w-[1200px] mx-auto px-6 py-16">
+               <div key={key} className="max-w-[1200px] mx-auto px-4 lg:px-0 py-16">
                   <div className="flex flex-col lg:flex-row-reverse items-center gap-16">
                      <div className="w-full lg:w-1/2">
                         <div className="relative rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.08)] aspect-[4/3] group">
@@ -140,7 +140,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
          case 'services':
             return (
                <div key={key} className="w-full bg-white py-32">
-                  <div className="max-w-[1200px] mx-auto px-6">
+                  <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                      <div className="text-center mb-24 relative">
                         <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-gray-50 uppercase tracking-tighter w-full pointer-events-none select-none">WHAT WE DO</h2>
                      </div>
