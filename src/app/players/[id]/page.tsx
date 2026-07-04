@@ -1,4 +1,4 @@
-import { AthleteDetailsClient } from '@/components/players/AthleteDetailsClient';
+import { PlayerDetailsClient } from '@/components/players/PlayerDetailsClient';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 
@@ -33,5 +33,5 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
       return notFound();
    }
 
-   return <AthleteDetailsClient athlete={athlete} />;
+   return <PlayerDetailsClient athlete={athlete} />;
 }

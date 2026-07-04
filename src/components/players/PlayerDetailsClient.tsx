@@ -8,11 +8,11 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-interface AthleteDetailsClientProps {
+interface PlayerDetailsClientProps {
   athlete: any;
 }
 
-export function AthleteDetailsClient({ athlete }: AthleteDetailsClientProps) {
+export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
    const [activeTab, setActiveTab] = useState("Profile");
    const router = useRouter();
    const displayName = athlete.full_name || `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Anonymous Player';
