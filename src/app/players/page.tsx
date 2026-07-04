@@ -1,22 +1,22 @@
 import { createClient } from '@/lib/supabase/server';
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import AthletesClient from './AthletesClient';
+import PlayersClient from './PlayersClient';
 
-export default async function AthletesPage() {
+export default async function PlayersPage() {
    const supabase = await createClient();
-   const { data: athletes, error } = await supabase
+   const { data: players, error } = await supabase
       .from('profiles')
       .select('id, slug, first_name, last_name, avatar_url, position, country, status, role, users:users!profiles_user_id_fkey(role)')
       .eq('role', 'player')
       .order('created_at', { ascending: false });
 
-   const filteredAthletes = (athletes || []).filter(athlete => {
+   const filteredPlayers = (players || []).filter(athlete => {
       const userRole = (athlete.users as any)?.role;
       return userRole !== 'admin' && userRole !== 'superadmin';
    });
 
-   if (error) console.error('[AthletesPage] fetch error:', error.message);
+   if (error) console.error('[PlayersPage] fetch error:', error.message);
 
    return (
       <div className="min-h-screen bg-white">
@@ -29,11 +29,11 @@ export default async function AthletesPage() {
                      Discover <span className="text-[#a20000]">Talent</span>
                   </h1>
                   <p className="text-gray-400 text-sm sm:text-base leading-relaxed max-w-lg mx-auto sm:mx-0">
-                     Explore our database of verified rising stars. Connect with elite athletes across Africa and beyond.
+                     Explore our database of verified rising stars. Connect with elite players across Africa and beyond.
                   </p>
                </div>
             </div>
-            <AthletesClient athletes={filteredAthletes || []} />
+            <PlayersClient players={filteredPlayers || []} />
          </main>
          <Footer />
       </div>

@@ -30,8 +30,8 @@ export async function updateProfileStatus(profileId: string, status: 'active' | 
   });
 
   revalidatePath('/dashboard/admin/moderation');
-  revalidatePath('/athletes');
-  revalidatePath(`/athletes/${profileId}`);
+  revalidatePath('/players');
+  revalidatePath(`/players/${profileId}`);
 
   return { success: true, data };
 }

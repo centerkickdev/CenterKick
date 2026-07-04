@@ -39,7 +39,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
      links: [
         { label: "Home", href: "/" },
         { label: "Profiles", dropdown: [
-           { label: "Athletes", href: "/athletes" },
+           { label: "Athletes", href: "/players" },
            { label: "Coaches", href: "/coaches" },
            { label: "Agents", href: "/agents" },
            { label: "Scouts", href: "/scouts" },

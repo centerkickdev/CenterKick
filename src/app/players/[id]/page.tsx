@@ -1,4 +1,4 @@
-import { AthleteDetailsClient } from '@/components/athletes/AthleteDetailsClient';
+import { AthleteDetailsClient } from '@/components/players/AthleteDetailsClient';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 

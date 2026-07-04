@@ -311,7 +311,7 @@ export function HomeClient({
               </h2>
             </div>
             <Link
-              href="/athletes"
+              href="/players"
               className="group/link inline-flex items-center gap-2 text-xs font-black text-[#b50a0a] uppercase tracking-widest hover:text-black transition-colors"
             >
               View More <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
@@ -321,7 +321,7 @@ export function HomeClient({
           <ProfileCarousel
             items={playersData}
             renderItem={(player) => (
-              <Link href={`/athletes/${player.slug}`} className="group relative block aspect-[4/5] rounded-3xl overflow-hidden bg-black shadow-lg border border-gray-100">
+              <Link href={`/players/${player.slug}`} className="group relative block aspect-[4/5] rounded-3xl overflow-hidden bg-black shadow-lg border border-gray-100">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10" />
                 <Image
                   src={player.avatar_url || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop"}

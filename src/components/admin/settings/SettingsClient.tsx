@@ -99,6 +99,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
     { title: 'Mail & SMTP Settings', label: 'Infrastructure', icon: Mail },
     { title: 'Security & Access', label: 'System', icon: Shield },
     { title: 'Banners & Assets', label: 'Branding', icon: Layers },
+    { title: 'Social Links', label: 'Marketing', icon: Layers },
   ];
 
   const handleSave = async () => {
@@ -157,7 +158,8 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
       'Global Configuration': ['siteTitle', 'allowReg', 'publicSearch', 'maintenanceMode'],
       'Mail & SMTP Settings': ['resendKey', 'fromEmail'],
       'Security & Access': ['enable2fa', 'strictPass', 'sessionTimeout'],
-      'Banners & Assets': ['logoUrl', 'faviconUrl', 'ogImage']
+      'Banners & Assets': ['logoUrl', 'faviconUrl', 'ogImage'],
+      'Social Links': ['facebookUrl', 'instagramUrl', 'twitterUrl', 'youtubeUrl']
     };
 
     const keysToReset = sectionKeys[activeSection] || [];
@@ -527,7 +529,68 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                       className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
                     >
                       <Save className="w-4 h-4 text-[#b50a0a]" />
-                      {isSaving ? 'Saving...' : 'Save Asset Settings'}
+                      {isSaving ? 'Saving...' : 'Save Assets Configuration'}
+                    </button>
+                 </div>
+              </div>
+            )}
+
+            {activeSection === 'Social Links' && (
+              <div className="space-y-10 animate-in slide-in-from-bottom-2 duration-300">
+                <div className="flex items-center justify-between border-b border-gray-50 pb-6">
+                   <div>
+                      <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Social Profiles</h3>
+                      <p className="text-[10px] text-gray-900 font-bold mt-1 uppercase">Manage platform social handles</p>
+                   </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                   <div className="space-y-2">
+                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Facebook URL</label>
+                     <input 
+                       className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
+                       placeholder="https://facebook.com/..."
+                       value={settings.facebookUrl || '#'}
+                       onChange={(e) => updateSetting('facebookUrl', e.target.value)}
+                     />
+                   </div>
+                   <div className="space-y-2">
+                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Instagram URL</label>
+                     <input 
+                       className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
+                       placeholder="https://instagram.com/..."
+                       value={settings.instagramUrl || '#'}
+                       onChange={(e) => updateSetting('instagramUrl', e.target.value)}
+                     />
+                   </div>
+                   <div className="space-y-2">
+                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">X (Twitter) URL</label>
+                     <input 
+                       className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
+                       placeholder="https://twitter.com/..."
+                       value={settings.twitterUrl || '#'}
+                       onChange={(e) => updateSetting('twitterUrl', e.target.value)}
+                     />
+                   </div>
+                   <div className="space-y-2">
+                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">YouTube URL</label>
+                     <input 
+                       className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
+                       placeholder="https://youtube.com/..."
+                       value={settings.youtubeUrl || '#'}
+                       onChange={(e) => updateSetting('youtubeUrl', e.target.value)}
+                     />
+                   </div>
+                </div>
+
+                 <div className="mt-10 pt-10 border-t border-gray-50 flex justify-end">
+                    <button 
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
+                    >
+                      <Save className="w-4 h-4 text-[#b50a0a]" />
+                      {isSaving ? 'Saving...' : 'Save Social Links'}
                     </button>
                  </div>
               </div>

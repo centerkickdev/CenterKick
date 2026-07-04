@@ -4,11 +4,11 @@ import { Search, ChevronDown } from "lucide-react";
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 
-interface AthletesClientProps {
+interface PlayersClientProps {
    athletes: any[];
 }
 
-export default function AthletesClient({ athletes }: AthletesClientProps) {
+export default function PlayersClient({ athletes }: PlayersClientProps) {
    const [searchQuery, setSearchQuery] = useState('');
    const [selectedCountry, setSelectedCountry] = useState('');
 
@@ -74,7 +74,7 @@ export default function AthletesClient({ athletes }: AthletesClientProps) {
                   const name = athlete.full_name || `${athlete.first_name||''} ${athlete.last_name||''}`.trim() || 'Athlete';
                   return (
                      <Link
-                        href={`/athletes/${athlete.slug}`}
+                        href={`/players/${athlete.slug}`}
                         key={athlete.id}
                         className="relative aspect-[4/5] rounded-2xl overflow-hidden group bg-gray-900 block shadow-md hover:shadow-xl transition-all duration-300"
                      >
