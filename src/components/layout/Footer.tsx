@@ -33,12 +33,12 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
                .in('page', ['settings', 'footer']);
             
             if (data) {
-               const sysSettings = data.find(d => d.page === 'settings' && d.section === 'system')?.content;
+               const sysSettings = data.find((d: any) => d.page === 'settings' && d.section === 'system')?.content;
                if (sysSettings) setSiteSettings(sysSettings);
                
                // Combine footer sections
                const fContent: any = {};
-               data.filter(d => d.page === 'footer').forEach(d => {
+               data.filter((d: any) => d.page === 'footer').forEach((d: any) => {
                   fContent[d.section] = d.content;
                });
                setFooterContent(fContent);
