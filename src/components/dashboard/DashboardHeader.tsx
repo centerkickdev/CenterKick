@@ -20,10 +20,10 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName, notifi
 
   return (
     <>
-      <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-4 md:px-8 shadow-sm relative z-10">
+      <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8 shadow-sm relative z-10">
         <button 
           onClick={() => setIsOpen(true)}
-          className="md:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+          className="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
         >
           <Menu className="w-6 h-6" />
         </button>
@@ -42,8 +42,8 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName, notifi
         </div>
       </header>
 
-      {/* MOBILE DASHBOARD MENU OVERLAY */}
-      <div className={`md:hidden fixed inset-0 z-[999] transition-all duration-300 ${
+      {/* MOBILE/TABLET DASHBOARD MENU OVERLAY */}
+      <div className={`lg:hidden fixed inset-0 z-[999] transition-all duration-300 ${
  isOpen ? 'visible' : 'invisible pointer-events-none'
  }`}>
         {/* Backdrop */}

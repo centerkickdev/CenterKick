@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { SignOutButton } from '@/components/dashboard/SignOutButton';
 import { BannerManager } from '@/components/dashboard/BannerManager';
-import { DashboardSidebarNav } from '@/components/dashboard/DashboardSidebarNav';
+import { DesktopSidebar } from '@/components/dashboard/DesktopSidebar';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 
 import { ToastProvider } from '@/context/ToastContext';
@@ -95,30 +95,13 @@ export default async function DashboardLayout({
   return (
     <ToastProvider>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
-        {/* Sidebar */}
-        <aside className="w-72 bg-gray-900 hidden md:flex flex-col text-gray-300">
-          <div className="h-20 flex items-center px-4 md:px-8 border-b border-gray-800">
-            <Link href="/" className="flex items-center gap-3 w-full">
-              {sidebarLogoUrl ? (
-                 <div className="relative h-7 w-auto max-w-full flex items-center justify-start overflow-hidden">
-                    <img src={sidebarLogoUrl} alt={brandName} className="h-full w-auto object-contain" />
-                 </div>
-              ) : (
-                 <>
-                    <div className="w-10 h-10 rounded-xl bg-[#b50a0a] flex items-center justify-center shadow-lg shadow-red-900/40">
-                      <span className="text-white font-black text-xl">C</span>
-                    </div>
-                    <span className="text-2xl font-black text-white tracking-tighter underline underline-offset-4 decoration-[#b50a0a]">{brandName}</span>
-                 </>
-              )}
-            </Link>
-          </div>
-          <DashboardSidebarNav role={role} isSubscribed={isSubscribed ?? false} />
-          {/* Footer */}
-          <div className="p-6 border-t border-gray-800 shrink-0">
-            <SignOutButton />
-          </div>
-        </aside>
+        {/* Desktop Collapsible Sidebar */}
+        <DesktopSidebar 
+          role={role} 
+          isSubscribed={isSubscribed ?? false} 
+          sidebarLogoUrl={sidebarLogoUrl} 
+          brandName={brandName} 
+        />
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">

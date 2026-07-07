@@ -14,7 +14,8 @@ import {
   Building, 
   FileText, 
   Eye, 
-  CreditCard 
+  CreditCard,
+  Copy
 } from 'lucide-react';
 
 interface UserProfile {
@@ -157,8 +158,8 @@ export default function SubscriptionPage() {
           plan.status === 'Active' ? 'bg-green-50 border-green-100' : 
           plan.status === 'Pending Approval' ? 'bg-blue-50 border-blue-100' :
           'bg-red-50 border-red-100'
-        } border px-6 py-4 rounded-[20px] shadow-sm flex items-center gap-6`}>
-           <div>
+        } border px-6 py-4 rounded-[20px] shadow-sm flex items-center justify-between md:justify-start gap-6 w-full md:w-auto`}>
+           <div className="text-left">
               <p className="text-[9px] font-black tracking-wide mb-1 text-gray-900">Account Status</p>
               <p className={`text-xl font-black tracking-tighter ${
                  plan.status === 'Active' ? 'text-green-600' : 
@@ -216,7 +217,7 @@ export default function SubscriptionPage() {
                   <div className="flex flex-col gap-10 md:p-8 relative z-10">
                      {/* Payment Routes (Visible only if Unverified) */}
                      {plan.status === 'Unverified' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-50">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-8 border-t border-gray-50">
                            
                            {/* Route 1: Online Payment */}
                            <div className="space-y-6 bg-white p-6 rounded-[30px] border border-gray-100 shadow-sm flex flex-col items-start">
@@ -247,7 +248,7 @@ export default function SubscriptionPage() {
                                  </div>
 
                                  <div className="bg-gray-50 p-5 rounded-[20px] border border-gray-100">
-                                     <div className="grid grid-cols-2 gap-3">
+                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                                          <div>
                                              <p className="text-[8px] font-black text-gray-400 tracking-wide uppercase">Bank</p>
                                              <p className="text-[11px] font-bold text-gray-900">{paymentSettings.bankName}</p>
@@ -256,9 +257,22 @@ export default function SubscriptionPage() {
                                              <p className="text-[8px] font-black text-gray-400 tracking-wide uppercase">Name</p>
                                              <p className="text-[11px] font-bold text-gray-900">{paymentSettings.accountName}</p>
                                          </div>
-                                         <div className="col-span-2">
+                                         <div className="lg:col-span-2">
                                              <p className="text-[8px] font-black text-gray-400 tracking-wide uppercase">Account Number</p>
-                                             <p className="text-base font-black tracking-widest text-[#b50a0a]">{paymentSettings.accountNumber}</p>
+                                             <div className="flex items-center gap-2 mt-0.5">
+                                                <p className="text-base font-black tracking-widest text-[#b50a0a]">{paymentSettings.accountNumber}</p>
+                                                <button 
+                                                   type="button"
+                                                   onClick={() => {
+                                                      navigator.clipboard.writeText(paymentSettings.accountNumber || '');
+                                                      setMsg({ type: 'success', text: 'Account number copied!' });
+                                                   }}
+                                                   className="p-1.5 bg-[#b50a0a]/10 text-[#b50a0a] hover:bg-[#b50a0a] hover:text-white rounded-md transition-colors"
+                                                   title="Copy Account Number"
+                                                >
+                                                   <Copy className="w-3.5 h-3.5" />
+                                                </button>
+                                             </div>
                                          </div>
                                      </div>
                                  </div>
@@ -271,7 +285,7 @@ export default function SubscriptionPage() {
                                           type="text" 
                                           placeholder="Transaction Ref/ID" 
                                           required
-                                          className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all"
+                                          className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all"
                                        />
                                        <input 
                                           name="payment_receipt"
