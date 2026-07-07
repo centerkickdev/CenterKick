@@ -22,9 +22,9 @@ export default async function TournamentsPage() {
           <div className="mb-20 space-y-4">
              <div className="inline-flex items-center gap-3 bg-red-50 px-5 py-2 rounded-full border border-red-100">
                 <div className="w-2 h-2 rounded-full bg-[#a20000] animate-pulse"></div>
-                <span className="text-[10px] font-black text-[#a20000] uppercase tracking-widest underline underline-offset-4">Live Competitions</span>
+                <span className="text-[10px] font-black text-[#a20000] tracking-wide underline underline-offset-4">Live Competitions</span>
              </div>
-             <h1 className="text-6xl lg:text-8xl font-black text-gray-900 uppercase tracking-tighter leading-none">
+             <h1 className="text-6xl lg:text-8xl font-black text-gray-900 tracking-tighter leading-none">
                 LEAGUES & <br />
                 <span className="text-[#a20000]">TOURNAMENTS.</span>
              </h1>
@@ -49,18 +49,18 @@ export default async function TournamentsPage() {
                    )}
                    
                    <div className="absolute top-8 right-8">
-                     <span className="px-5 py-2 rounded-full bg-white/80 backdrop-blur-md text-[10px] font-black uppercase tracking-widest border border-gray-100 shadow-sm">
+                     <span className="px-5 py-2 rounded-full bg-white/80 backdrop-blur-md text-[10px] font-black tracking-wide border border-gray-100 shadow-sm">
                        {tournament.type}
                      </span>
                    </div>
                 </div>
 
                 <div className="p-10 flex-1 flex flex-col">
-                   <h3 className="text-3xl font-black text-gray-900 uppercase tracking-tighter mb-4 group-hover:text-[#a20000] transition-colors">
+                   <h3 className="text-3xl font-black text-gray-900 tracking-tighter mb-4 group-hover:text-[#a20000] transition-colors">
                       {tournament.name}
                    </h3>
                    
-                   <p className="text-gray-600 text-sm font-semibold leading-relaxed mb-10 line-clamp-2">
+                   <p className="text-gray-600 text-base font-semibold leading-relaxed mb-10 line-clamp-2">
                       {tournament.description || 'Global professional tournament sanctioned by CenterKick.'}
                    </p>
 
@@ -68,20 +68,20 @@ export default async function TournamentsPage() {
                       <div className="space-y-2">
                          <div className="flex items-center gap-2">
                             <Calendar className="w-4 h-4 text-[#a20000]" />
-                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Season</span>
+                            <span className="text-[10px] font-black text-gray-400 tracking-wide">Season</span>
                          </div>
-                         <p className="text-xs font-black text-gray-900 uppercase">2026/27</p>
+                         <p className="text-sm font-black text-gray-900">2026/27</p>
                       </div>
                       <div className="space-y-2">
                          <div className="flex items-center gap-2">
                             <Users className="w-4 h-4 text-[#a20000]" />
-                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Format</span>
+                            <span className="text-[10px] font-black text-gray-400 tracking-wide">Format</span>
                          </div>
-                         <p className="text-xs font-black text-gray-900 uppercase">{tournament.type}</p>
+                         <p className="text-sm font-black text-gray-900">{tournament.type}</p>
                       </div>
                    </div>
 
-                   <button className="w-full py-5 rounded-2xl border-2 border-gray-900 text-gray-900 font-black uppercase tracking-widest text-[11px] group-hover:bg-gray-900 group-hover:text-white transition-all flex items-center justify-center gap-3">
+                   <button className="w-full py-5 rounded-2xl border-2 border-gray-900 text-gray-900 font-black tracking-wide text-[11px] group-hover:bg-gray-900 group-hover:text-white transition-all flex items-center justify-center gap-3">
                       View Match Center <ArrowRight className="w-4 h-4" />
                    </button>
                 </div>
@@ -92,8 +92,8 @@ export default async function TournamentsPage() {
               <div className="col-span-full py-40 flex flex-col items-center justify-center text-center space-y-8 bg-gray-50 rounded-[80px] border-2 border-dashed border-gray-200">
                 <Trophy className="w-20 h-20 text-gray-200" />
                 <div className="space-y-2">
-                   <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">No Active Tournaments</h2>
-                   <p className="text-gray-500 font-bold text-sm uppercase tracking-widest">Check back soon for upcoming elite football competitions.</p>
+                   <h2 className="text-3xl font-black text-gray-900 tracking-tighter">No Active Tournaments</h2>
+                   <p className="text-gray-500 font-bold text-base tracking-wide">Check back soon for upcoming elite football competitions.</p>
                 </div>
               </div>
             )}

@@ -53,28 +53,28 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
 
   const StatusBadge = () => {
     if (!isActive) return (
-      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 text-[9px] font-black uppercase rounded-xl border border-red-100">
+      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 text-[9px] font-black rounded-xl border border-red-100">
         <XCircle className="w-3 h-3" /> Deactivated
       </span>
     );
     switch (profileStatus) {
       case 'active': return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 text-[9px] font-black uppercase rounded-xl border border-green-100">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 text-[9px] font-black rounded-xl border border-green-100">
           <CheckCircle className="w-3 h-3" /> Active
         </span>
       );
       case 'pending': return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 text-[9px] font-black uppercase rounded-xl border border-amber-100 animate-pulse">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 text-[9px] font-black rounded-xl border border-amber-100 animate-pulse">
           <Clock className="w-3 h-3" /> Pending Approval
         </span>
       );
       case 'rejected': return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 text-[9px] font-black uppercase rounded-xl border border-red-100">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 text-[9px] font-black rounded-xl border border-red-100">
           <XCircle className="w-3 h-3" /> Rejected
         </span>
       );
       default: return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-400 text-[9px] font-black uppercase rounded-xl border border-gray-100">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-400 text-[9px] font-black rounded-xl border border-gray-100">
           <AlertTriangle className="w-3 h-3" /> Incomplete
         </span>
       );
@@ -104,7 +104,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
       {/* Back */}
       <Link
         href="/admin/users"
-        className="inline-flex items-center gap-2 text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-colors"
+        className="inline-flex items-center gap-2 text-[10px] font-black text-gray-400 tracking-wide hover:text-gray-900 transition-colors"
       >
         <ArrowLeft className="w-3.5 h-3.5" /> Back to All Accounts
       </Link>
@@ -121,16 +121,16 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                 : user.email?.[0]?.toUpperCase()}
             </div>
             <div>
-              <h1 className="text-3xl font-black uppercase tracking-tighter leading-none flex items-center gap-3">
+              <h1 className="text-3xl font-black tracking-tighter leading-none flex items-center gap-3">
                 {profile?.first_name
                   ? `${profile.first_name} ${profile.last_name || ''}`.trim()
                   : user.email?.split('@')[0]}
                 {profile?.country && <FlagIcon country={profile.country} className="w-5 h-3 shrink-0 rounded-sm" />}
               </h1>
-              <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mt-1.5">{user.email}</p>
+              <p className="text-white/50 text-[10px] font-black tracking-wide mt-1.5">{user.email}</p>
               <div className="flex items-center gap-3 mt-4">
                 <StatusBadge />
-                <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 text-white/70 text-[9px] font-black uppercase rounded-xl border border-white/5">
+                <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 text-white/70 text-[9px] font-black rounded-xl border border-white/5">
                   {roleIcons[user.role] || <Shield className="w-3 h-3" />}
                   {roleLabels[user.role] || user.role || 'Unassigned'}
                 </span>
@@ -142,15 +142,15 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
           <div className="flex gap-4 md:p-8 shrink-0 bg-white/5 border border-white/10 p-6 rounded-[1.8rem] backdrop-blur-sm">
             <div className="text-center px-2">
               <p className="text-2xl font-black">{profile ? '100%' : '0%'}</p>
-              <p className="text-[8px] text-white/40 font-black uppercase tracking-widest mt-1">Completion</p>
+              <p className="text-[8px] text-white/40 font-black tracking-wide mt-1">Completion</p>
             </div>
             <div className="text-center px-2 border-l border-white/10">
               <p className="text-2xl font-black">{subscription ? 'Active' : 'None'}</p>
-              <p className="text-[8px] text-white/40 font-black uppercase tracking-widest mt-1">Plan State</p>
+              <p className="text-[8px] text-white/40 font-black tracking-wide mt-1">Plan State</p>
             </div>
             <div className="text-center px-2 border-l border-white/10">
               <p className="text-2xl font-black">{formatDateSafe(user.created_at, 'MMM yy')}</p>
-              <p className="text-[8px] text-white/40 font-black uppercase tracking-widest mt-1">Enrolled</p>
+              <p className="text-[8px] text-white/40 font-black tracking-wide mt-1">Enrolled</p>
             </div>
           </div>
         </div>
@@ -163,7 +163,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
 
           {/* 1. Basic Info Section */}
           <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-4 md:p-8 space-y-6">
-            <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest flex items-center gap-2 border-b border-gray-50 pb-4">
+            <h2 className="text-sm font-black text-gray-900 tracking-wide flex items-center gap-2 border-b border-gray-50 pb-4">
               <User className="w-4 h-4 text-[#b50a0a]" /> Personal Identity & Basic Info
             </h2>
             
@@ -179,8 +179,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                 { label: 'Verified Athlete Status', value: profile?.verification_requested ? 'Requested Verification' : 'Standard' },
               ].map((item, i) => (
                 <div key={i} className="space-y-1">
-                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{item.label}</p>
-                  <p className="text-sm font-bold text-gray-900 flex items-center gap-2 capitalize">
+                  <p className="text-[9px] font-black text-gray-400 tracking-wide">{item.label}</p>
+                  <p className="text-base font-bold text-gray-900 flex items-center gap-2 capitalize">
                     {item.icon} {item.value}
                   </p>
                 </div>
@@ -189,8 +189,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
 
             {profile?.bio && (
               <div className="pt-6 border-t border-gray-50">
-                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">Professional Bio</p>
-                <p className="text-sm text-gray-600 font-medium leading-relaxed italic">{profile.bio}</p>
+                <p className="text-[9px] font-black text-gray-400 tracking-wide mb-2">Professional Bio</p>
+                <p className="text-base text-gray-600 font-medium leading-relaxed">{profile.bio}</p>
               </div>
             )}
           </div>
@@ -198,7 +198,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
           {/* 2. Category / Role-Specific Specifications */}
           {profile && (user.role === 'player' || user.role === 'coach' || user.role === 'agent' || user.role === 'scout' || user.role === 'organization') && (
             <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-4 md:p-8 space-y-6">
-              <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest flex items-center gap-2 border-b border-gray-50 pb-4">
+              <h2 className="text-sm font-black text-gray-900 tracking-wide flex items-center gap-2 border-b border-gray-50 pb-4">
                 <ShieldCheck className="w-4 h-4 text-[#b50a0a]" /> 
                 {roleLabels[user.role]} Professional Specifications
               </h2>
@@ -215,8 +215,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                     { label: 'Est. Market Value ($)', value: profile.market_value ? `$${profile.market_value}` : 'N/A' }
                   ].map((field, idx) => (
                     <div key={idx} className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100/50">
-                      <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{field.label}</p>
-                      <p className="text-sm font-black text-gray-900 mt-1">{field.value}</p>
+                      <p className="text-[8px] font-black text-gray-400 tracking-wide">{field.label}</p>
+                      <p className="text-base font-black text-gray-900 mt-1">{field.value}</p>
                     </div>
                   ))}
                 </div>
@@ -230,8 +230,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                     { label: 'Technical Coaching License', value: profile.license || 'N/A' }
                   ].map((field, idx) => (
                     <div key={idx} className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100/50">
-                      <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{field.label}</p>
-                      <p className="text-sm font-black text-gray-900 mt-1">{field.value}</p>
+                      <p className="text-[8px] font-black text-gray-400 tracking-wide">{field.label}</p>
+                      <p className="text-base font-black text-gray-900 mt-1">{field.value}</p>
                     </div>
                   ))}
                 </div>
@@ -245,8 +245,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                     { label: 'FIFA Registered License Code', value: profile.license_code || 'N/A' }
                   ].map((field, idx) => (
                     <div key={idx} className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100/50">
-                      <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{field.label}</p>
-                      <p className="text-sm font-black text-gray-900 mt-1">{field.value}</p>
+                      <p className="text-[8px] font-black text-gray-400 tracking-wide">{field.label}</p>
+                      <p className="text-base font-black text-gray-900 mt-1">{field.value}</p>
                     </div>
                   ))}
                 </div>
@@ -257,7 +257,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
           {/* 3. Credentials & Official Document Proofs */}
           {profile && (profile.id_proof_url || profile.license_proof_url) && (
             <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-4 md:p-8 space-y-6">
-              <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest flex items-center gap-2 border-b border-gray-50 pb-4">
+              <h2 className="text-sm font-black text-gray-900 tracking-wide flex items-center gap-2 border-b border-gray-50 pb-4">
                 <FileText className="w-4 h-4 text-[#b50a0a]" /> Uploaded Identity & Credentials Documents
               </h2>
               
@@ -266,8 +266,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                 {profile.id_proof_url && (
                   <div className="p-5 bg-gray-50 border border-gray-100 rounded-3xl space-y-4">
                     <div className="flex items-center justify-between">
-                      <p className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Passport / ID Document</p>
-                      <span className="px-2.5 py-0.5 rounded-full text-[7px] font-black bg-yellow-100 text-yellow-800 uppercase tracking-widest">Verification Pending</span>
+                      <p className="text-[9px] font-black text-gray-900 tracking-wide">Passport / ID Document</p>
+                      <span className="px-2.5 py-0.5 rounded-full text-[7px] font-black bg-yellow-100 text-yellow-800 tracking-wide">Verification Pending</span>
                     </div>
                     {profile.id_proof_url.match(/\.(jpeg|jpg|gif|png)/i) || profile.id_proof_url.startsWith('blob:') ? (
                       <div className="h-44 w-full rounded-2xl bg-white border border-gray-200 overflow-hidden flex items-center justify-center relative group">
@@ -276,14 +276,14 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                     ) : (
                       <div className="h-44 w-full rounded-2xl bg-white border border-gray-200 flex flex-col items-center justify-center text-center p-4">
                         <FileText className="w-10 h-10 text-gray-300 mb-2" />
-                        <p className="text-[10px] font-black text-gray-900 uppercase">PDF / Verification File</p>
+                        <p className="text-[10px] font-black text-gray-900">PDF / Verification File</p>
                       </div>
                     )}
                     <a 
                       href={resolveDocUrl(profile.id_proof_url)} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="w-full py-3 bg-white hover:bg-gray-100 text-gray-900 rounded-xl text-[9px] font-black uppercase tracking-widest text-center border border-gray-200 flex items-center justify-center gap-1.5 transition-all"
+                      className="w-full py-3 bg-white hover:bg-gray-100 text-gray-900 rounded-xl text-[9px] font-black tracking-wide text-center border border-gray-200 flex items-center justify-center gap-1.5 transition-all"
                     >
                       Open Document <ExternalLink className="w-3 h-3" />
                     </a>
@@ -294,8 +294,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                 {profile.license_proof_url && (
                   <div className="p-5 bg-gray-50 border border-gray-100 rounded-3xl space-y-4">
                     <div className="flex items-center justify-between">
-                      <p className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Credentials / License Certificate</p>
-                      <span className="px-2.5 py-0.5 rounded-full text-[7px] font-black bg-yellow-100 text-yellow-800 uppercase tracking-widest">Verification Pending</span>
+                      <p className="text-[9px] font-black text-gray-900 tracking-wide">Credentials / License Certificate</p>
+                      <span className="px-2.5 py-0.5 rounded-full text-[7px] font-black bg-yellow-100 text-yellow-800 tracking-wide">Verification Pending</span>
                     </div>
                     {profile.license_proof_url.match(/\.(jpeg|jpg|gif|png)/i) || profile.license_proof_url.startsWith('blob:') ? (
                       <div className="h-44 w-full rounded-2xl bg-white border border-gray-200 overflow-hidden flex items-center justify-center relative group">
@@ -304,14 +304,14 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                     ) : (
                       <div className="h-44 w-full rounded-2xl bg-white border border-gray-200 flex flex-col items-center justify-center text-center p-4">
                         <FileText className="w-10 h-10 text-gray-300 mb-2" />
-                        <p className="text-[10px] font-black text-gray-900 uppercase">PDF / Verification File</p>
+                        <p className="text-[10px] font-black text-gray-900">PDF / Verification File</p>
                       </div>
                     )}
                     <a 
                       href={resolveDocUrl(profile.license_proof_url)} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="w-full py-3 bg-white hover:bg-gray-100 text-gray-900 rounded-xl text-[9px] font-black uppercase tracking-widest text-center border border-gray-200 flex items-center justify-center gap-1.5 transition-all"
+                      className="w-full py-3 bg-white hover:bg-gray-100 text-gray-900 rounded-xl text-[9px] font-black tracking-wide text-center border border-gray-200 flex items-center justify-center gap-1.5 transition-all"
                     >
                       Open Document <ExternalLink className="w-3 h-3" />
                     </a>
@@ -324,7 +324,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
           {/* 4. Social Links & Digital Handles */}
           {profile && profile.social_links && Object.values(profile.social_links).some(v => !!v) && (
             <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-4 md:p-8 space-y-6">
-              <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest flex items-center gap-2 border-b border-gray-50 pb-4">
+              <h2 className="text-sm font-black text-gray-900 tracking-wide flex items-center gap-2 border-b border-gray-50 pb-4">
                 <Globe className="w-4 h-4 text-[#b50a0a]" /> Social Verification & Networks
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -340,7 +340,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                       className="p-4 bg-gray-50 hover:bg-red-50 hover:text-[#b50a0a] rounded-2xl border border-gray-100 flex flex-col items-center justify-center text-center transition-all group"
                     >
                       <Globe className="w-5 h-5 text-gray-400 group-hover:text-[#b50a0a] mb-2" />
-                      <p className="text-[9px] font-black uppercase text-gray-900 tracking-wider">{platform}</p>
+                      <p className="text-[9px] font-black text-gray-900 tracking-wide">{platform}</p>
                     </a>
                   );
                 })}
@@ -351,7 +351,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
           {/* 5. Career Achievements & Awards */}
           {profile && profile.achievements && profile.achievements.length > 0 && (
             <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-4 md:p-8 space-y-6">
-              <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest flex items-center gap-2 border-b border-gray-50 pb-4">
+              <h2 className="text-sm font-black text-gray-900 tracking-wide flex items-center gap-2 border-b border-gray-50 pb-4">
                 <Award className="w-4 h-4 text-[#b50a0a]" /> Career Timeline & Achievements
               </h2>
               <div className="space-y-4">
@@ -361,8 +361,8 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                       <Award className="w-5 h-5 text-yellow-500" />
                     </div>
                     <div>
-                      <p className="text-sm font-black text-gray-900 uppercase tracking-tight">{ach.title}</p>
-                      <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-1">Conferred in {ach.year || 'N/A'}</p>
+                      <p className="text-base font-black text-gray-900 tracking-tight">{ach.title}</p>
+                      <p className="text-[9px] font-bold text-gray-400 tracking-wide mt-1">Conferred in {ach.year || 'N/A'}</p>
                     </div>
                   </div>
                 ))}
@@ -372,7 +372,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
 
           {/* 6. User Account Subscription Specs */}
           <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-4 md:p-8 space-y-6">
-            <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest flex items-center gap-2 border-b border-gray-50 pb-4">
+            <h2 className="text-sm font-black text-gray-900 tracking-wide flex items-center gap-2 border-b border-gray-50 pb-4">
               <CreditCard className="w-4 h-4 text-[#b50a0a]" /> Subscription Plan Status
             </h2>
             {subscription ? (
@@ -386,15 +386,15 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
                   { label: 'Created At', value: formatDateSafe(subscription.created_at) },
                 ].map((item, i) => (
                   <div key={i} className="space-y-1">
-                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{item.label}</p>
-                    <p className="text-sm font-bold text-gray-900">{item.value}</p>
+                    <p className="text-[9px] font-black text-gray-400 tracking-wide">{item.label}</p>
+                    <p className="text-base font-bold text-gray-900">{item.value}</p>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center p-6 text-center">
                 <AlertTriangle className="w-8 h-8 text-amber-500 mb-2" />
-                <p className="text-xs font-black text-gray-400 uppercase tracking-widest">No active plan recorded</p>
+                <p className="text-sm font-black text-gray-400 tracking-wide">No active plan recorded</p>
                 <p className="text-[10px] text-gray-400 max-w-xs mt-1">This participant has not activated a platform subscription tier yet.</p>
               </div>
             )}

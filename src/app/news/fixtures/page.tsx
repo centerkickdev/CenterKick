@@ -192,7 +192,7 @@ export default function FixturesPage() {
             {/* Page Header */}
             <div className="bg-[#383838] py-8">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
-                  <h1 className="text-white text-3xl font-black tracking-wide uppercase">Fixtures</h1>
+                  <h1 className="text-white text-3xl font-black tracking-wide">Fixtures</h1>
                </div>
             </div>
 
@@ -201,27 +201,27 @@ export default function FixturesPage() {
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                   <ul className="flex items-center gap-8 overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth whitespace-nowrap">
                      <li>
-                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            All News
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/fixtures" className="text-[#b50a0a] text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/fixtures" className="text-[#b50a0a] text-[10px] font-bold tracking-wide py-4 block">
                            Match Fixtures
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/results" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/results" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            Results
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/tables" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/tables" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            Tables
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/live-scores" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/live-scores" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            Live Scores
                         </Link>
                      </li>
@@ -235,14 +235,14 @@ export default function FixturesPage() {
                {/* Filters / Toolbar */}
                <div className="flex flex-wrap items-center gap-4 border-y border-gray-300 py-3 mb-8">
                   <div className="flex items-center gap-2 border-r border-gray-300 pr-6">
-                     <span className="text-[10px] font-bold text-[#b50a0a] uppercase tracking-wider">Filter By Date:</span>
+                     <span className="text-[10px] font-bold text-[#b50a0a] tracking-wide">Filter By Date:</span>
                      <button className="flex items-center gap-1 text-[11px] font-black text-gray-900 ml-1">
                         Next 7 Days <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
                   
                   <div className="flex items-center gap-2 border-r border-gray-300 pr-6 pl-2">
-                     <span className="text-[10px] font-bold text-[#b50a0a] uppercase tracking-wider">Filter By:</span>
+                     <span className="text-[10px] font-bold text-[#b50a0a] tracking-wide">Filter By:</span>
                      <button className="flex items-center gap-1 text-[11px] font-black text-gray-900 ml-1">
                         ALL <ChevronDown className="w-3 h-3" />
                      </button>
@@ -250,11 +250,11 @@ export default function FixturesPage() {
 
                   <div className="flex items-center gap-2 pl-2 flex-1">
                      <Search className="w-4 h-4 text-gray-400" />
-                     <input type="text" placeholder="Search Teams" className="bg-transparent border-none focus:outline-none text-[11px] font-bold w-full uppercase tracking-wider placeholder:text-gray-400" />
+                     <input type="text" placeholder="Search Teams" className="bg-transparent border-none focus:outline-none text-[11px] font-bold w-full tracking-wide placeholder:text-gray-400" />
                   </div>
 
                   <div className="hidden md:flex border-l border-gray-300 pl-6 h-full items-center">
-                     <button className="flex items-center gap-2 text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-gray-900 transition-colors">
+                     <button className="flex items-center gap-2 text-[10px] font-bold text-gray-600 tracking-wide hover:text-gray-900 transition-colors">
                         <CalendarPlus className="w-4 h-4" /> Add Fixtures To Calendar
                      </button>
                   </div>
@@ -272,8 +272,8 @@ export default function FixturesPage() {
                                  {/* Top Info */}
                                  <div className="flex justify-center mb-6">
                                     <div className="text-center">
-                                       <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Match details/info</span>
-                                       <span className="text-[11px] font-black text-gray-900 uppercase tracking-wider">{match.date} | {match.time}</span>
+                                       <span className="text-[9px] font-bold text-gray-400 tracking-wide block mb-1">Match details/info</span>
+                                       <span className="text-[11px] font-black text-gray-900 tracking-wide">{match.date} | {match.time}</span>
                                     </div>
                                  </div>
 
@@ -284,7 +284,7 @@ export default function FixturesPage() {
                                        <img src={match.logo1} className="w-10 h-10 object-contain" alt={match.team1} />
                                     </div>
                                     <div className="w-[20%] flex justify-center">
-                                       <span className="font-black text-[13px] text-gray-400 italic bg-gray-50 px-3 py-1 rounded">VS</span>
+                                       <span className="font-black text-[13px] text-gray-400 bg-gray-50 px-3 py-1 rounded">VS</span>
                                     </div>
                                     <div className="flex items-center justify-start w-[40%] gap-4">
                                        <img src={match.logo2} className="w-10 h-10 object-contain" alt={match.team2} />
@@ -310,7 +310,7 @@ export default function FixturesPage() {
 
                         {/* Load More Button for current League */}
                         <div className="flex justify-center mt-2 mb-4">
-                           <button className="bg-[#b50a0a] hover:bg-[#8b0000] text-white font-bold text-[10px] uppercase tracking-widest px-10 py-3 rounded shadow-md transition-colors">
+                           <button className="bg-[#b50a0a] hover:bg-[#8b0000] text-white font-bold text-[10px] tracking-wide px-10 py-3 rounded shadow-md transition-colors">
                               LOAD MORE
                            </button>
                         </div>

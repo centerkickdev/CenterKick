@@ -106,19 +106,19 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
 
   const getStatusBadge = (status: string, isActive: boolean) => {
     if (!isActive) return (
-      <span className="px-2 py-1 bg-red-50 text-red-700 text-[8px] font-black uppercase rounded-lg border border-red-100 flex items-center gap-1">
+      <span className="px-2 py-1 bg-red-50 text-red-700 text-[8px] font-black rounded-lg border border-red-100 flex items-center gap-1">
         <XCircle className="w-2.5 h-2.5" /> Deactivated
       </span>
     );
     switch (status?.toLowerCase()) {
       case 'active':
-        return <span className="px-2 py-1 bg-green-50 text-green-700 text-[8px] font-black uppercase rounded-lg border border-green-100 flex items-center gap-1"><CheckCircle className="w-2.5 h-2.5" /> Active</span>;
+        return <span className="px-2 py-1 bg-green-50 text-green-700 text-[8px] font-black rounded-lg border border-green-100 flex items-center gap-1"><CheckCircle className="w-2.5 h-2.5" /> Active</span>;
       case 'pending':
-        return <span className="px-2 py-1 bg-amber-50 text-amber-700 text-[8px] font-black uppercase rounded-lg border border-amber-100 flex items-center gap-1"><Clock className="w-2.5 h-2.5" /> Pending</span>;
+        return <span className="px-2 py-1 bg-amber-50 text-amber-700 text-[8px] font-black rounded-lg border border-amber-100 flex items-center gap-1"><Clock className="w-2.5 h-2.5" /> Pending</span>;
       case 'rejected':
-        return <span className="px-2 py-1 bg-red-50 text-red-600 text-[8px] font-black uppercase rounded-lg border border-red-100 flex items-center gap-1"><XCircle className="w-2.5 h-2.5" /> Rejected</span>;
+        return <span className="px-2 py-1 bg-red-50 text-red-600 text-[8px] font-black rounded-lg border border-red-100 flex items-center gap-1"><XCircle className="w-2.5 h-2.5" /> Rejected</span>;
       default:
-        return <span className="px-2 py-1 bg-gray-50 text-gray-400 text-[8px] font-black uppercase rounded-lg border border-gray-100 flex items-center gap-1"><Clock className="w-2.5 h-2.5" /> Incomplete</span>;
+        return <span className="px-2 py-1 bg-gray-50 text-gray-400 text-[8px] font-black rounded-lg border border-gray-100 flex items-center gap-1"><Clock className="w-2.5 h-2.5" /> Incomplete</span>;
     }
   };
 
@@ -128,12 +128,12 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
       {/* Toast Notification */}
       {toast && (
         <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl border animate-in slide-in-from-top-4 duration-300 ${
-          toast.type === 'success' 
-            ? 'bg-white border-green-100 text-green-700' 
-            : 'bg-white border-red-100 text-red-700'
-        }`}>
+ toast.type === 'success' 
+ ? 'bg-white border-green-100 text-green-700' 
+ : 'bg-white border-red-100 text-red-700'
+ }`}>
           {toast.type === 'success' ? <CheckCircle className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
-          <p className="text-[10px] font-black uppercase tracking-widest">{toast.message}</p>
+          <p className="text-[10px] font-black tracking-wide">{toast.message}</p>
         </div>
       )}
 
@@ -144,7 +144,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
           <input
             type="text"
             placeholder="Search accounts by email or name..."
-            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#b50a0a]/10 focus:border-[#b50a0a] transition-all"
+            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#b50a0a]/10 focus:border-[#b50a0a] transition-all"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -156,9 +156,9 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
               <button
                 key={r}
                 onClick={() => handleRoleFilter(r)}
-                className={`px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all ${
-                  currentRole === r ? 'bg-[#b50a0a] text-white shadow-lg' : 'text-gray-400 hover:text-[#b50a0a]'
-                }`}
+                className={`px-4 py-2 rounded-lg text-[9px] font-black tracking-wide transition-all ${
+ currentRole === r ? 'bg-[#b50a0a] text-white shadow-lg' : 'text-gray-400 hover:text-[#b50a0a]'
+ }`}
               >
                 {r === 'all' ? 'All Roles' : r === 'organization' ? 'Orgs' : r + 's'}
               </button>
@@ -173,18 +173,18 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
           <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-[1px] flex items-center justify-center animate-in fade-in duration-300">
             <div className="flex flex-col items-center gap-2">
               <div className="w-8 h-8 border-4 border-gray-100 border-t-[#b50a0a] rounded-full animate-spin"></div>
-              <p className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Updating View...</p>
+              <p className="text-[10px] font-black text-gray-400 tracking-wide">Updating View...</p>
             </div>
           </div>
         )}
         <table className="w-full text-left border-collapse whitespace-nowrap">
           <thead>
             <tr className="bg-gray-50/30">
-              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">Account User</th>
-              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">Identity / Role</th>
-              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">Status</th>
-              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">Registered On</th>
-              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 text-right">Actions</th>
+              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 tracking-wide border-b border-gray-50">Account User</th>
+              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 tracking-wide border-b border-gray-50">Identity / Role</th>
+              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 tracking-wide border-b border-gray-50">Status</th>
+              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 tracking-wide border-b border-gray-50">Registered On</th>
+              <th className="px-4 md:px-8 py-5 text-[9px] font-black text-gray-400 tracking-wide border-b border-gray-50 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -199,12 +199,12 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                 <tr key={user.id} className="hover:bg-gray-50/50 transition-colors group">
                   <td className="px-4 md:px-8 py-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-gray-900 flex items-center justify-center font-black text-white text-xs border-2 border-white shadow-md shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-gray-900 flex items-center justify-center font-black text-white text-sm border-2 border-white shadow-md shrink-0">
                         {user.email?.[0]?.toUpperCase()}
                       </div>
                       <div>
                         <p className="text-[11px] font-black text-gray-900 truncate max-w-full max-w-[200px]">{user.email}</p>
-                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                        <p className="text-[9px] font-bold text-gray-400 tracking-wide">
                           {user.profile?.first_name
                             ? `${user.profile.first_name} ${user.profile.last_name || ''}`.trim()
                             : `UID: ${user.id.substring(0, 8)}`}
@@ -218,7 +218,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                       <div className={`p-1.5 rounded-lg ${user.role ? 'bg-red-50 text-[#b50a0a]' : 'bg-gray-100 text-gray-400'}`}>
                         {getRoleIcon(user.role)}
                       </div>
-                      <span className={`text-[10px] font-black uppercase tracking-widest ${user.role ? 'text-gray-900' : 'text-gray-300'}`}>
+                      <span className={`text-[10px] font-black tracking-wide ${user.role ? 'text-gray-900' : 'text-gray-300'}`}>
                         {user.role || 'Unassigned'}
                       </span>
                     </div>
@@ -232,7 +232,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                         <button
                           onClick={() => runAction(user.id, () => activateUser(user.id))}
                           disabled={isLoading}
-                          className="px-2 py-1 bg-green-600 text-white text-[8px] font-black uppercase rounded-lg hover:bg-green-700 transition-all flex items-center gap-1 w-fit disabled:opacity-50"
+                          className="px-2 py-1 bg-green-600 text-white text-[8px] font-black rounded-lg hover:bg-green-700 transition-all flex items-center gap-1 w-fit disabled:opacity-50"
                         >
                           {isLoading ? <RefreshCw className="w-2.5 h-2.5 animate-spin" /> : <CheckCircle className="w-2.5 h-2.5" />}
                           Approve
@@ -279,14 +279,14 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                               {isActive ? (
                                 <button
                                   onClick={() => runAction(user.id, () => deactivateUser(user.id))}
-                                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black tracking-wide text-red-600 hover:bg-red-50 rounded-xl transition-all"
                                 >
                                   <UserX className="w-3.5 h-3.5" /> Deactivate Account
                                 </button>
                               ) : (
                                 <button
                                   onClick={() => runAction(user.id, () => activateUser(user.id))}
-                                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-green-600 hover:bg-green-50 rounded-xl transition-all"
+                                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black tracking-wide text-green-600 hover:bg-green-50 rounded-xl transition-all"
                                 >
                                   <CheckCircle className="w-3.5 h-3.5" /> Activate Account
                                 </button>
@@ -296,7 +296,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                               {isPendingActivation && isParticipant && (
                                 <button
                                   onClick={() => runAction(user.id, () => activateUser(user.id))}
-                                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-green-700 hover:bg-green-50 rounded-xl transition-all"
+                                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black tracking-wide text-green-700 hover:bg-green-50 rounded-xl transition-all"
                                 >
                                   <ShieldCheck className="w-3.5 h-3.5" /> Approve & Activate
                                 </button>
@@ -306,7 +306,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                               {profileStatus === 'pending' && isParticipant && (
                                 <button
                                   onClick={() => runAction(user.id, () => rejectUser(user.id))}
-                                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                                  className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black tracking-wide text-red-500 hover:bg-red-50 rounded-xl transition-all"
                                 >
                                   <XCircle className="w-3.5 h-3.5" /> Reject Application
                                 </button>
@@ -317,7 +317,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                               {/* View Full Profile */}
                               <Link
                                 href={`/admin/users/${user.id}`}
-                                className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black uppercase tracking-widest text-gray-600 hover:bg-gray-50 rounded-xl transition-all"
+                                className="w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black tracking-wide text-gray-600 hover:bg-gray-50 rounded-xl transition-all"
                               >
                                 <Eye className="w-3.5 h-3.5" /> View Full Profile
                                 <ChevronRight className="w-3 h-3 ml-auto" />
@@ -341,14 +341,14 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
           <div className="w-20 h-20 bg-gray-50 rounded-[2rem] flex items-center justify-center mb-6">
             <Users className="w-10 h-10 text-gray-200" />
           </div>
-          <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">No Accounts Found</h3>
-          <p className="text-gray-400 text-xs font-bold max-w-xs mt-2">Try adjusting your filters or search terms to find the user.</p>
+          <h3 className="text-xl font-black text-gray-900 tracking-tighter">No Accounts Found</h3>
+          <p className="text-gray-400 text-sm font-bold max-w-xs mt-2">Try adjusting your filters or search terms to find the user.</p>
         </div>
       )}
 
       {/* Pagination */}
       <div className="p-6 border-t border-gray-50 flex items-center justify-between bg-gray-50/30">
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+        <p className="text-[10px] font-black text-gray-400 tracking-wide">
           Showing {initialUsers.length} of {totalCount} Records
         </p>
         <div className="flex gap-2">
@@ -359,7 +359,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                 params.set('page', String(currentPage - 1));
                 startTransition(() => router.push(`/admin/users?${params.toString()}`, { scroll: false }));
               }}
-              className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-[9px] font-black uppercase tracking-widest text-gray-900 hover:bg-gray-900 hover:text-white transition-all"
+              className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-[9px] font-black tracking-wide text-gray-900 hover:bg-gray-900 hover:text-white transition-all"
             >
               Previous
             </button>
@@ -371,7 +371,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                 params.set('page', String(currentPage + 1));
                 startTransition(() => router.push(`/admin/users?${params.toString()}`, { scroll: false }));
               }}
-              className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-[9px] font-black uppercase tracking-widest text-gray-900 hover:bg-gray-900 hover:text-white transition-all"
+              className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-[9px] font-black tracking-wide text-gray-900 hover:bg-gray-900 hover:text-white transition-all"
             >
               Next Page
             </button>

@@ -191,7 +191,7 @@ export default function LiveScoresPage() {
             {/* Page Header */}
             <div className="bg-[#383838] py-8">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
-                  <h1 className="text-white text-3xl font-black tracking-wide uppercase">Live Scores</h1>
+                  <h1 className="text-white text-3xl font-black tracking-wide">Live Scores</h1>
                </div>
             </div>
 
@@ -200,27 +200,27 @@ export default function LiveScoresPage() {
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                   <ul className="flex items-center gap-8 overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth whitespace-nowrap">
                      <li>
-                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            All News
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/fixtures" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/fixtures" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            Match Fixtures
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/results" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/results" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            Results
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/tables" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/tables" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            Tables
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/live-scores" className="text-[#b50a0a] text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/live-scores" className="text-[#b50a0a] text-[10px] font-bold tracking-wide py-4 block">
                            Live Scores
                         </Link>
                      </li>
@@ -242,14 +242,14 @@ export default function LiveScoresPage() {
                               <div className="p-6">
                                  
                                  {/* Absolute Live Indicator text in top right */}
-                                 <div className="absolute top-4 right-6 text-[10px] font-black text-gray-900 flex items-center gap-1.5 uppercase">
+                                 <div className="absolute top-4 right-6 text-[10px] font-black text-gray-900 flex items-center gap-1.5">
                                     Live <div className="w-1.5 h-1.5 bg-red-600 rounded-full animate-pulse"></div>
                                  </div>
 
                                  {/* Top Info Header */}
                                  <div className="flex justify-center mb-6">
                                     <div className="text-center">
-                                       <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Match details/info</span>
+                                       <span className="text-[9px] font-bold text-gray-400 tracking-wide block mb-1">Match details/info</span>
                                     </div>
                                  </div>
 
@@ -266,10 +266,10 @@ export default function LiveScoresPage() {
                                        <div className="font-black text-[28px] text-gray-900 tracking-[0.2em] leading-none mb-2">
                                           {match.score}
                                        </div>
-                                       <span className="text-[10px] font-bold text-[#b50a0a] uppercase tracking-widest">
+                                       <span className="text-[10px] font-bold text-[#b50a0a] tracking-wide">
                                           {match.statusLabel}
                                        </span>
-                                       <span className="text-[9px] font-bold text-[#b50a0a] uppercase">
+                                       <span className="text-[9px] font-bold text-[#b50a0a]">
                                           {match.time}
                                        </span>
                                     </div>
@@ -287,7 +287,7 @@ export default function LiveScoresPage() {
 
                         {/* Load More Button for current League */}
                         <div className="flex justify-center mt-2 mb-4">
-                           <button className="bg-[#b50a0a] hover:bg-[#8b0000] text-white font-bold text-[10px] uppercase tracking-widest px-10 py-3 rounded shadow-md transition-colors">
+                           <button className="bg-[#b50a0a] hover:bg-[#8b0000] text-white font-bold text-[10px] tracking-wide px-10 py-3 rounded shadow-md transition-colors">
                               LOAD MORE
                            </button>
                         </div>

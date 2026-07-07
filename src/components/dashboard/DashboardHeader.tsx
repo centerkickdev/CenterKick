@@ -33,10 +33,10 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName }: Dash
           </button>
           <div className="flex items-center gap-3 pl-6 border-l border-gray-100">
             <div className="text-right hidden sm:block">
-              <span className="text-gray-900 font-bold text-xs truncate max-w-full max-w-[150px]">{email}</span>
-              <p className="text-[10px] font-bold text-[#b50a0a] uppercase tracking-widest">{role}</p>
+              <span className="text-gray-900 font-bold text-sm truncate max-w-full max-w-[150px]">{email}</span>
+              <p className="text-[10px] font-bold text-[#b50a0a] tracking-wide">{role}</p>
             </div>
-            <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white shadow-lg text-xs">
+            <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white shadow-lg text-sm">
               {email?.[0]?.toUpperCase() || 'U'}
             </div>
           </div>
@@ -45,8 +45,8 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName }: Dash
 
       {/* MOBILE DASHBOARD MENU OVERLAY */}
       <div className={`md:hidden fixed inset-0 z-[999] transition-all duration-300 ${
-        isOpen ? 'visible' : 'invisible pointer-events-none'
-      }`}>
+ isOpen ? 'visible' : 'invisible pointer-events-none'
+ }`}>
         {/* Backdrop */}
         <div
           className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
@@ -54,8 +54,8 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName }: Dash
         />
         {/* Panel */}
         <div className={`absolute inset-0 left-0 w-72 bg-gray-900 flex flex-col text-gray-300 transition-transform duration-300 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}>
+ isOpen ? 'translate-x-0' : '-translate-x-full'
+ }`}>
           {/* Panel Header */}
           <div className="h-20 flex items-center justify-between px-6 border-b border-gray-800 shrink-0">
             <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center gap-3 w-full">
@@ -66,9 +66,9 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName }: Dash
               ) : (
                  <>
                     <div className="w-8 h-8 rounded-lg bg-[#b50a0a] flex items-center justify-center shrink-0">
-                      <span className="text-white font-black italic text-base">C</span>
+                      <span className="text-white font-black text-base">C</span>
                     </div>
-                    <span className="text-lg font-black text-white tracking-tighter uppercase">{brandName}</span>
+                    <span className="text-lg font-black text-white tracking-tighter">{brandName}</span>
                  </>
               )}
             </Link>

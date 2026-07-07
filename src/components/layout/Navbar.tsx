@@ -150,10 +150,10 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
   return (
     <>
       <nav suppressHydrationWarning className={`fixed z-50 left-0 right-0 mx-auto transition-all duration-500 ease-out backdrop-blur-xl ${
-        isScrolled 
-          ? 'top-3 lg:top-4 w-[calc(100%-1.5rem)] lg:w-[calc(100%-2rem)] max-w-[1300px] bg-white/95 border border-gray-200/50 shadow-2xl py-1.5 lg:py-2 rounded-full' 
-          : 'top-0 w-full bg-white lg:bg-white/95 border-b border-gray-100 shadow-sm py-3 lg:py-3.5 rounded-none'
-      }`}>
+ isScrolled 
+ ? 'top-3 lg:top-4 w-[calc(100%-1.5rem)] lg:w-[calc(100%-2rem)] max-w-[1300px] bg-white/95 border border-gray-200/50 shadow-2xl py-1.5 lg:py-2 rounded-full' 
+ : 'top-0 w-full bg-white lg:bg-white/95 border-b border-gray-100 shadow-sm py-3 lg:py-3.5 rounded-none'
+ }`}>
         <div className="max-w-[1200px] mx-auto flex items-center justify-between px-6 sm:px-8 h-12">
            
            {/* LOGO */}
@@ -169,7 +169,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-2.49 0-4.5-2.01-4.5-4.5S8.51 7.5 11 7.5s4.5 2.01 4.5 4.5c0 .34-.04.68-.11 1h-2.12c.15-.31.23-.65.23-1 0-1.38-1.12-2.5-2.5-2.5S8.5 10.62 8.5 12 9.62 14.5 11 14.5c.66 0 1.25-.26 1.7-.68l1.45 1.45c-.83.76-1.92 1.23-3.15 1.23z"/>
                     </svg>
                  </div>
-                 <span className="self-center text-lg font-black whitespace-nowrap text-gray-900 group-hover:text-[#b50a0a] transition-all uppercase tracking-tighter italic">
+                 <span className="self-center text-lg font-black whitespace-nowrap text-gray-900 group-hover:text-[#b50a0a] transition-all tracking-tighter">
                    {brandName}
                  </span>
                </div>
@@ -189,7 +189,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
 
            {/* NAVIGATION LINKS */}
            <div className="hidden lg:flex items-center justify-center">
-              <ul className="flex flex-row space-x-7 text-[10px] font-black tracking-[0.2em] uppercase text-gray-600">
+              <ul className="flex flex-row space-x-7 text-sm font-semibold tracking-wide text-gray-600">
                 {navContent.links.map((link: NavLink, idx: number) => (
                   <li key={idx} className="relative group/drop py-2">
                      {link.dropdown ? (
@@ -197,10 +197,10 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                            <button 
                               onClick={() => toggleDropdown(link.label)}
                               className={`flex items-center gap-1.5 transition-colors duration-300 hover:text-[#b50a0a] ${
-                                link.dropdown.some((d: { label: string; href: string }) => pathname.startsWith(d.href)) 
-                                  ? 'text-[#b50a0a]' 
-                                  : 'text-gray-600'
-                              }`}
+ link.dropdown.some((d: { label: string; href: string }) => pathname.startsWith(d.href)) 
+ ? 'text-[#b50a0a]' 
+ : 'text-gray-600'
+ }`}
                            >
                               {link.label} 
                               <ChevronDown className="w-3 h-3 opacity-60 transition-transform duration-300 group-hover/drop:rotate-180" />
@@ -211,7 +211,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                                      <Link 
                                        key={dIdx} 
                                        href={d.href} 
-                                       className="px-5 py-3 hover:bg-gray-50 text-[9px] font-black uppercase tracking-widest text-gray-600 hover:text-[#b50a0a] transition-all rounded-xl border-l-2 border-transparent hover:border-[#b50a0a]"
+                                       className="px-5 py-3 hover:bg-gray-50 text-sm font-semibold tracking-wide text-gray-600 hover:text-[#b50a0a] transition-all rounded-xl border-l-2 border-transparent hover:border-[#b50a0a]"
                                      >
                                        {d.label}
                                      </Link>
@@ -223,8 +223,8 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                         <Link 
                           href={link.href || '#'} 
                           className={`transition-colors duration-300 hover:text-[#b50a0a] relative ${
-                            isActive(link.href) ? 'text-[#b50a0a]' : 'text-gray-600'
-                          }`}
+ isActive(link.href) ? 'text-[#b50a0a]' : 'text-gray-600'
+ }`}
                         >
                            {link.label}
                            {isActive(link.href) && (
@@ -241,19 +241,19 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
            <div className="hidden lg:flex items-center gap-4">
              {user ? (
                <Link href={dashboardHref}>
-                 <button type="button" className="text-white bg-[#b50a0a] hover:bg-black font-black rounded-full text-[9px] tracking-[0.2em] uppercase px-8 py-3 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-[1px] active:scale-95">
+                 <button type="button" className="text-white bg-[#b50a0a] hover:bg-black font-semibold rounded-full text-sm tracking-wide px-8 py-3 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-[1px] active:scale-95">
                    Dashboard
                  </button>
                </Link>
              ) : (
                <>
                  <Link href="/login">
-                   <button type="button" className="text-gray-600 hover:text-[#b50a0a] font-black text-[9px] tracking-[0.2em] uppercase px-4 transition-all hover:scale-105">
+                   <button type="button" className="text-gray-600 hover:text-[#b50a0a] font-semibold text-sm tracking-wide px-4 transition-all hover:scale-105">
                      Login
                    </button>
                  </Link>
                  <Link href="/register">
-                   <button type="button" className="text-white bg-[#b50a0a] hover:bg-black font-black rounded-full text-[9px] tracking-[0.2em] uppercase px-8 py-3 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-[1px] active:scale-95">
+                   <button type="button" className="text-white bg-[#b50a0a] hover:bg-black font-semibold rounded-full text-sm tracking-wide px-8 py-3 shadow-md hover:shadow-xl transition-all transform hover:-translate-y-[1px] active:scale-95">
                      Register
                    </button>
                  </Link>
@@ -266,8 +266,8 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
 
       {/* MOBILE & TABLET NAV — FULL SCREEN OVERLAY */}
       <div className={`lg:hidden fixed inset-0 z-[200] transition-all duration-300 ${
-        isOpen ? 'visible' : 'invisible pointer-events-none'
-      }`}>
+ isOpen ? 'visible' : 'invisible pointer-events-none'
+ }`}>
         {/* Backdrop */}
         <div
           className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
@@ -289,7 +289,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-2.49 0-4.5-2.01-4.5-4.5S8.51 7.5 11 7.5s4.5 2.01 4.5 4.5c0 .34-.04.68-.11 1h-2.12c.15-.31.23-.65.23-1 0-1.38-1.12-2.5-2.5-2.5S8.5 10.62 8.5 12 9.62 14.5 11 14.5c.66 0 1.25-.26 1.7-.68l1.45 1.45c-.83.76-1.92 1.23-3.15 1.23z"/>
                     </svg>
                   </div>
-                  <span className="self-center text-base font-black whitespace-nowrap text-gray-900 group-hover:text-[#b50a0a] transition-all uppercase tracking-tighter italic">
+                  <span className="self-center text-base font-black whitespace-nowrap text-gray-900 group-hover:text-[#b50a0a] transition-all tracking-tighter">
                     {brandName}
                   </span>
                 </div>
@@ -312,7 +312,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                     <div className="flex flex-col">
                       <button
                         onClick={() => toggleDropdown(link.label)}
-                        className="flex items-center justify-between w-full py-4 text-sm font-black uppercase tracking-widest text-gray-800 border-b border-gray-50"
+                        className="flex items-center justify-between w-full py-4 text-base font-black tracking-wide text-gray-800 border-b border-gray-50"
                       >
                         <span>{link.label}</span>
                         <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === link.label ? 'rotate-180 text-[#b50a0a]' : 'text-gray-400'}`} />
@@ -324,9 +324,9 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                               key={dIdx}
                               href={d.href}
                               onClick={() => setIsOpen(false)}
-                              className={`py-3 text-xs font-bold uppercase tracking-widest border-l-2 pl-4 transition-colors ${
-                                pathname.startsWith(d.href) ? 'text-[#b50a0a] border-[#b50a0a]' : 'text-gray-500 border-gray-100 hover:text-[#b50a0a] hover:border-[#b50a0a]'
-                              }`}
+                              className={`py-3 text-sm font-bold tracking-wide border-l-2 pl-4 transition-colors ${
+ pathname.startsWith(d.href) ? 'text-[#b50a0a] border-[#b50a0a]' : 'text-gray-500 border-gray-100 hover:text-[#b50a0a] hover:border-[#b50a0a]'
+ }`}
                             >
                               {d.label}
                             </Link>
@@ -338,9 +338,9 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                     <Link
                       href={link.href || '#'}
                       onClick={() => setIsOpen(false)}
-                      className={`block py-4 text-sm font-black uppercase tracking-widest border-b border-gray-50 transition-colors ${
-                        isActive(link.href) ? 'text-[#b50a0a]' : 'text-gray-800 hover:text-[#b50a0a]'
-                      }`}
+                      className={`block py-4 text-base font-black tracking-wide border-b border-gray-50 transition-colors ${
+ isActive(link.href) ? 'text-[#b50a0a]' : 'text-gray-800 hover:text-[#b50a0a]'
+ }`}
                     >
                       {link.label}
                     </Link>
@@ -354,19 +354,19 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
           <div className="px-6 pb-10 pt-4 border-t border-gray-100 flex flex-col gap-3 shrink-0">
             {user ? (
               <Link href={dashboardHref} onClick={() => setIsOpen(false)}>
-                <button className="w-full bg-[#b50a0a] text-white font-black rounded-2xl text-xs tracking-widest uppercase py-4 shadow-md transition-all hover:bg-black">
+                <button className="w-full bg-[#b50a0a] text-white font-black rounded-2xl text-sm tracking-wide py-4 shadow-md transition-all hover:bg-black">
                   Dashboard
                 </button>
               </Link>
             ) : (
               <>
                 <Link href="/register" onClick={() => setIsOpen(false)}>
-                  <button className="w-full bg-[#b50a0a] text-white font-black rounded-2xl text-xs tracking-widest uppercase py-4 shadow-md transition-all hover:bg-black">
+                  <button className="w-full bg-[#b50a0a] text-white font-black rounded-2xl text-sm tracking-wide py-4 shadow-md transition-all hover:bg-black">
                     Register
                   </button>
                 </Link>
                 <Link href="/login" onClick={() => setIsOpen(false)}>
-                  <button className="w-full border border-gray-200 text-gray-700 font-black rounded-2xl text-xs tracking-widest uppercase py-4 transition-all hover:border-[#b50a0a] hover:text-[#b50a0a]">
+                  <button className="w-full border border-gray-200 text-gray-700 font-black rounded-2xl text-sm tracking-wide py-4 transition-all hover:border-[#b50a0a] hover:text-[#b50a0a]">
                     Login
                   </button>
                 </Link>

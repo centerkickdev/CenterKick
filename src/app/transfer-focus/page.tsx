@@ -227,8 +227,8 @@ export default function TransferFocusPage() {
             {/* Dark Hero Header */}
             <div className="bg-[#1a1a1a] py-8 sm:py-14 px-4 border-b-4 border-[#b50a0a]">
                <div className="max-w-[1200px] mx-auto text-white flex flex-col items-center md:items-start text-center md:text-left">
-                  <span className="text-[#b50a0a] text-[10px] font-black uppercase tracking-[0.3em] mb-2">Live Availability Registry</span>
-                  <h1 className="text-3xl sm:text-[44px] font-black uppercase tracking-widest leading-none italic drop-shadow-md">
+                  <span className="text-[#b50a0a] text-[10px] font-black tracking-[0.3em] mb-2">Live Availability Registry</span>
+                  <h1 className="text-3xl sm:text-[44px] font-black tracking-wide leading-none drop-shadow-md">
                      TRANSFER <span className="text-[#b50a0a]">FOCUS</span>
                   </h1>
                   <p className="text-[12px] md:text-[13px] text-gray-400 mt-2 font-semibold tracking-wide">
@@ -244,8 +244,8 @@ export default function TransferFocusPage() {
                      <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`py-4.5 px-6 text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all relative
-                           ${activeTab === tab ? 'text-[#ff3b3b]' : 'text-gray-300 hover:text-white'}`}
+                        className={`py-4.5 px-6 text-[10px] font-black tracking-wide whitespace-nowrap transition-all relative
+ ${activeTab === tab ? 'text-[#ff3b3b]' : 'text-gray-300 hover:text-white'}`}
                      >
                         {tab}
                         {activeTab === tab && (
@@ -270,7 +270,7 @@ export default function TransferFocusPage() {
                            value={searchQuery}
                            onChange={(e) => setSearchQuery(e.target.value)}
                            placeholder={`Search ${activeTab.toLowerCase()} by name, position, or club...`}
-                           className="w-full pl-14 pr-6 py-4 border border-gray-200 outline-none text-gray-900 font-semibold placeholder-gray-400 text-xs shadow-sm bg-white rounded-l-2xl focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
+                           className="w-full pl-14 pr-6 py-4 border border-gray-200 outline-none text-gray-900 font-semibold placeholder-gray-400 text-sm shadow-sm bg-white rounded-l-2xl focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all"
                         />
                      </div>
                      <button 
@@ -278,7 +278,7 @@ export default function TransferFocusPage() {
                         className="bg-white border-y border-r border-gray-200 py-4 px-8 flex items-center justify-center text-gray-900 hover:bg-gray-50 transition-colors shadow-sm h-full rounded-r-2xl group border-l"
                      >
                         <SlidersHorizontal className="w-4 h-4 stroke-[2.5] text-gray-500 group-hover:text-red-500" />
-                        <span className="ml-2 font-black text-[10px] uppercase tracking-widest text-gray-500 group-hover:text-red-500">Filters</span>
+                        <span className="ml-2 font-black text-[10px] tracking-wide text-gray-500 group-hover:text-red-500">Filters</span>
                      </button>
                   </div>
 
@@ -286,11 +286,11 @@ export default function TransferFocusPage() {
                   {showFilters && (
                      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-xl flex flex-wrap gap-4 animate-in fade-in slide-in-from-top-4 duration-350">
                         <div className="flex flex-col min-w-[200px]">
-                           <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Country Region</label>
+                           <label className="text-[9px] font-black text-gray-400 tracking-wide mb-1.5">Country Region</label>
                            <select 
                               value={selectedCountry} 
                               onChange={(e) => setSelectedCountry(e.target.value)}
-                              className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs font-bold text-gray-800 outline-none focus:ring-2 focus:ring-red-500"
+                              className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-800 outline-none focus:ring-2 focus:ring-red-500"
                            >
                               <option value="">All Countries</option>
                               {availableCountries.map(c => (
@@ -301,7 +301,7 @@ export default function TransferFocusPage() {
                         <div className="flex items-end">
                            <button 
                               onClick={() => { setSelectedCountry(''); setSearchQuery(''); }}
-                              className="text-[9px] font-black text-[#b50a0a] uppercase tracking-widest hover:underline pb-3"
+                              className="text-[9px] font-black text-[#b50a0a] tracking-wide hover:underline pb-3"
                            >
                               Reset Filters
                            </button>
@@ -315,12 +315,12 @@ export default function TransferFocusPage() {
                   {loading ? (
                      <div className="text-center py-24">
                         <div className="w-10 h-10 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-gray-400 text-xs font-black uppercase tracking-widest">Loading verified directory records...</p>
+                        <p className="text-gray-400 text-sm font-black tracking-wide">Loading verified directory records...</p>
                      </div>
                   ) : filteredProfiles.length === 0 ? (
                      <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200 m-6">
                         <User className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                        <p className="text-gray-900 font-bold uppercase tracking-widest text-xs">No active records found for {activeTab}</p>
+                        <p className="text-gray-900 font-bold tracking-wide text-sm">No active records found for {activeTab}</p>
                      </div>
                   ) : (
                      <div className="overflow-x-auto">
@@ -330,37 +330,37 @@ export default function TransferFocusPage() {
                                  {/* Dynamic Column Headers based on Role */}
                                  {activeTab.includes('AGENT') || activeTab.includes('ENDING') ? (
                                     <>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-8 py-4.5 w-[25%] border-r border-white/10">Player</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[20%] border-r border-white/10">Position</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[15%] text-center border-r border-white/10">Country</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[10%] text-center border-r border-white/10">Age</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-8 py-4.5 w-[30%] text-right">
+                                       <th className="font-black text-[9px] tracking-wide px-8 py-4.5 w-[25%] border-r border-white/10">Player</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[20%] border-r border-white/10">Position</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[15%] text-center border-r border-white/10">Country</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[10%] text-center border-r border-white/10">Age</th>
+                                       <th className="font-black text-[9px] tracking-wide px-8 py-4.5 w-[30%] text-right">
                                           {activeTab === 'FREE AGENT' ? 'Out of Contract Since' : 'Contract Expiry'}
                                        </th>
                                     </>
                                  ) : activeTab.includes('COACH')  ? (
                                     <>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-8 py-4.5 w-[30%] border-r border-white/10">Coach / Specialist</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[25%] border-r border-white/10">Preferred Formation</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[15%] text-center border-r border-white/10">Country</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[15%] text-center border-r border-white/10">License</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-8 py-4.5 w-[15%] text-right">Primary Tactics</th>
+                                       <th className="font-black text-[9px] tracking-wide px-8 py-4.5 w-[30%] border-r border-white/10">Coach / Specialist</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[25%] border-r border-white/10">Preferred Formation</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[15%] text-center border-r border-white/10">Country</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[15%] text-center border-r border-white/10">License</th>
+                                       <th className="font-black text-[9px] tracking-wide px-8 py-4.5 w-[15%] text-right">Primary Tactics</th>
                                     </>
                                  ) : activeTab === 'SCOUTS' ? (
                                     <>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-8 py-4.5 w-[30%] border-r border-white/10">Talent Scout</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[25%] border-r border-white/10">Agency Name</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[15%] text-center border-r border-white/10">Country</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[15%] text-center border-r border-white/10">Verification</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-8 py-4.5 w-[15%] text-right">Status</th>
+                                       <th className="font-black text-[9px] tracking-wide px-8 py-4.5 w-[30%] border-r border-white/10">Talent Scout</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[25%] border-r border-white/10">Agency Name</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[15%] text-center border-r border-white/10">Country</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[15%] text-center border-r border-white/10">Verification</th>
+                                       <th className="font-black text-[9px] tracking-wide px-8 py-4.5 w-[15%] text-right">Status</th>
                                     </>
                                  ) : (
                                     <>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-8 py-4.5 w-[35%] border-r border-white/10">Organization / Academy</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[25%] border-r border-white/10">League / Level</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[15%] text-center border-r border-white/10">Country</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-6 py-4.5 w-[15%] text-center border-r border-white/10">Formation</th>
-                                       <th className="font-black text-[9px] uppercase tracking-wider px-8 py-4.5 w-[10%] text-right">Status</th>
+                                       <th className="font-black text-[9px] tracking-wide px-8 py-4.5 w-[35%] border-r border-white/10">Organization / Academy</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[25%] border-r border-white/10">League / Level</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[15%] text-center border-r border-white/10">Country</th>
+                                       <th className="font-black text-[9px] tracking-wide px-6 py-4.5 w-[15%] text-center border-r border-white/10">Formation</th>
+                                       <th className="font-black text-[9px] tracking-wide px-8 py-4.5 w-[10%] text-right">Status</th>
                                     </>
                                  )}
                               </tr>
@@ -385,19 +385,19 @@ export default function TransferFocusPage() {
                                                          className="w-full h-full object-cover" 
                                                       />
                                                    </div>
-                                                   <Link href={`/${roleSlug}/${profile.slug}`} className="font-black text-[11px] text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer uppercase">
+                                                   <Link href={`/${roleSlug}/${profile.slug}`} className="font-black text-[11px] text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer">
                                                       {name}
                                                    </Link>
                                                 </div>
                                              </td>
                                              <td className="px-6 py-4.5 border-r border-gray-100">
-                                                <span className="font-black text-[10px] text-[#b50a0a] uppercase tracking-widest">{profile.position || 'Striker'}</span>
+                                                <span className="font-black text-[10px] text-[#b50a0a] tracking-wide">{profile.position || 'Striker'}</span>
                                              </td>
                                              <td className="px-6 py-4.5 border-r border-gray-100">
                                                 {renderFlags(profile.country)}
                                              </td>
                                              <td className="px-6 py-4.5 text-center border-r border-gray-100">
-                                                <span className="font-bold text-xs text-gray-900">{calculateAge(profile.date_of_birth)}</span>
+                                                <span className="font-bold text-sm text-gray-900">{calculateAge(profile.date_of_birth)}</span>
                                              </td>
                                              <td className="px-8 py-4.5 text-right font-bold text-[10px] text-gray-600">
                                                 {activeTab === 'FREE AGENT' ? (
@@ -418,21 +418,21 @@ export default function TransferFocusPage() {
                                                          className="w-full h-full object-cover" 
                                                       />
                                                    </div>
-                                                   <Link href={`/coaches/${profile.slug}`} className="font-black text-[11px] text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer uppercase">
+                                                   <Link href={`/coaches/${profile.slug}`} className="font-black text-[11px] text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer">
                                                       {name}
                                                    </Link>
                                                 </div>
                                              </td>
                                              <td className="px-6 py-4.5 border-r border-gray-100">
-                                                <span className="font-black text-[10px] text-gray-900 uppercase tracking-widest">{profile.tactics?.preferred_formation || profile.formation || '4-3-3 Attacking'}</span>
+                                                <span className="font-black text-[10px] text-gray-900 tracking-wide">{profile.tactics?.preferred_formation || profile.formation || '4-3-3 Attacking'}</span>
                                              </td>
                                              <td className="px-6 py-4.5 border-r border-gray-100">
                                                 {renderFlags(profile.country)}
                                              </td>
                                              <td className="px-6 py-4.5 text-center border-r border-gray-100">
-                                                <span className="font-black text-[9px] text-[#b50a0a] uppercase tracking-widest">{profile.license || 'UEFA A License'}</span>
+                                                <span className="font-black text-[9px] text-[#b50a0a] tracking-wide">{profile.license || 'UEFA A License'}</span>
                                              </td>
-                                             <td className="px-8 py-4.5 text-right font-bold text-[10px] text-gray-500 uppercase tracking-widest">
+                                             <td className="px-8 py-4.5 text-right font-bold text-[10px] text-gray-500 tracking-wide">
                                                 {profile.tactics?.defense_style || 'Pressing'}
                                              </td>
                                           </>
@@ -447,22 +447,22 @@ export default function TransferFocusPage() {
                                                          className="w-full h-full object-cover" 
                                                       />
                                                    </div>
-                                                   <Link href={`/agents/${profile.slug}`} className="font-black text-[11px] text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer uppercase">
+                                                   <Link href={`/agents/${profile.slug}`} className="font-black text-[11px] text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer">
                                                       {name}
                                                    </Link>
                                                 </div>
                                              </td>
                                              <td className="px-6 py-4.5 border-r border-gray-100">
-                                                <span className="font-black text-[10px] text-gray-900 uppercase tracking-widest">{profile.agency_name || 'Independent Scout'}</span>
+                                                <span className="font-black text-[10px] text-gray-900 tracking-wide">{profile.agency_name || 'Independent Scout'}</span>
                                              </td>
                                              <td className="px-6 py-4.5 border-r border-gray-100">
                                                 {renderFlags(profile.country)}
                                              </td>
                                              <td className="px-6 py-4.5 text-center border-r border-gray-100">
-                                                <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-wider border border-blue-100">Verified</span>
+                                                <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[8px] font-black tracking-wide border border-blue-100">Verified</span>
                                              </td>
                                              <td className="px-8 py-4.5 text-right">
-                                                <span className="text-xs font-black text-emerald-600 uppercase tracking-widest">Active</span>
+                                                <span className="text-sm font-black text-emerald-600 tracking-wide">Active</span>
                                              </td>
                                           </>
                                        ) : (
@@ -476,22 +476,22 @@ export default function TransferFocusPage() {
                                                          className="w-full h-full object-cover" 
                                                       />
                                                    </div>
-                                                   <Link href={`/organizations/${profile.slug}`} className="font-black text-[11px] text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer uppercase">
+                                                   <Link href={`/organizations/${profile.slug}`} className="font-black text-[11px] text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer">
                                                       {name}
                                                    </Link>
                                                 </div>
                                              </td>
                                              <td className="px-6 py-4.5 border-r border-gray-100">
-                                                <span className="font-black text-[10px] text-[#b50a0a] uppercase tracking-widest">{profile.league || 'Elite Youth League'}</span>
+                                                <span className="font-black text-[10px] text-[#b50a0a] tracking-wide">{profile.league || 'Elite Youth League'}</span>
                                              </td>
                                              <td className="px-6 py-4.5 border-r border-gray-100">
                                                 {renderFlags(profile.country)}
                                              </td>
                                              <td className="px-6 py-4.5 text-center border-r border-gray-100">
-                                                <span className="font-bold text-[10px] text-gray-900 uppercase tracking-wider">{profile.formation || 'Academy Standard'}</span>
+                                                <span className="font-bold text-[10px] text-gray-900 tracking-wide">{profile.formation || 'Academy Standard'}</span>
                                              </td>
                                              <td className="px-8 py-4.5 text-right">
-                                                <span className="bg-amber-50 text-amber-600 px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-wider border border-amber-100">Partner</span>
+                                                <span className="bg-amber-50 text-amber-600 px-3 py-1 rounded-full text-[8px] font-black tracking-wide border border-amber-100">Partner</span>
                                              </td>
                                           </>
                                        )}
@@ -518,9 +518,9 @@ export default function TransferFocusPage() {
                               <button 
                                  key={p} 
                                  onClick={() => setCurrentPage(p)}
-                                 className={`w-8 h-8 rounded-full font-bold text-xs flex items-center justify-center transition-all ${
-                                    currentPage === p ? 'bg-[#b50a0a] text-white shadow-sm' : 'text-gray-500 hover:bg-gray-100'
-                                 }`}
+                                 className={`w-8 h-8 rounded-full font-bold text-sm flex items-center justify-center transition-all ${
+ currentPage === p ? 'bg-[#b50a0a] text-white shadow-sm' : 'text-gray-500 hover:bg-gray-100'
+ }`}
                               >
                                  {p}
                               </button>
@@ -542,9 +542,9 @@ export default function TransferFocusPage() {
                   <div className="flex items-center justify-between mb-8">
                      <div className="flex items-center gap-2">
                         <div className="w-2 h-6 bg-[#b50a0a]"></div>
-                        <h2 className="text-2xl md:text-[28px] font-black tracking-tight text-gray-800 uppercase italic">Latest transfer rumors news</h2>
+                        <h2 className="text-2xl md:text-[28px] font-black tracking-tight text-gray-800">Latest transfer rumors news</h2>
                      </div>
-                     <Link href="/news" className="text-[10px] font-black text-gray-400 hover:text-[#b50a0a] tracking-widest uppercase flex items-center gap-1 transition-colors">
+                     <Link href="/news" className="text-[10px] font-black text-gray-400 hover:text-[#b50a0a] tracking-wide flex items-center gap-1 transition-colors">
                         SEE ALL <ChevronRight className="w-4 h-4" />
                      </Link>
                   </div>
@@ -557,16 +557,16 @@ export default function TransferFocusPage() {
                            </div>
                            <div className="p-6 relative">
                               <div className="absolute top-0 left-6 w-[30px] h-[3px] bg-[#b50a0a]"></div>
-                              <h3 className="font-black text-[14px] text-gray-900 leading-snug mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 uppercase italic tracking-tighter">
+                              <h3 className="font-black text-[14px] text-gray-900 leading-snug mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 tracking-tighter">
                                  {news.title}
                               </h3>
-                              <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{new Date(news.published_at || news.created_at || '').toLocaleDateString()}</span>
+                              <span className="text-[9px] font-black text-gray-400 tracking-wide">{new Date(news.published_at || news.created_at || '').toLocaleDateString()}</span>
                            </div>
                         </Link>
                      ))}
                      {rumorsNews.length === 0 && (
                         <div className="col-span-full py-12 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                           <p className="text-gray-400 text-xs font-black uppercase tracking-widest">No transfer rumors currently published.</p>
+                           <p className="text-gray-400 text-sm font-black tracking-wide">No transfer rumors currently published.</p>
                         </div>
                      )}
                   </div>
@@ -577,9 +577,9 @@ export default function TransferFocusPage() {
                   <div className="flex items-center justify-between mb-8">
                      <div className="flex items-center gap-2">
                         <div className="w-2 h-6 bg-[#b50a0a]"></div>
-                        <h2 className="text-2xl md:text-[28px] font-black tracking-tight text-gray-800 uppercase italic">Top football transfer news</h2>
+                        <h2 className="text-2xl md:text-[28px] font-black tracking-tight text-gray-800">Top football transfer news</h2>
                      </div>
-                     <Link href="/news" className="text-[10px] font-black text-gray-400 hover:text-[#b50a0a] tracking-widest uppercase flex items-center gap-1 transition-colors">
+                     <Link href="/news" className="text-[10px] font-black text-gray-400 hover:text-[#b50a0a] tracking-wide flex items-center gap-1 transition-colors">
                         SEE ALL <ChevronRight className="w-4 h-4" />
                      </Link>
                   </div>
@@ -592,16 +592,16 @@ export default function TransferFocusPage() {
                            </div>
                            <div className="p-6 relative">
                               <div className="absolute top-0 left-6 w-[30px] h-[3px] bg-[#b50a0a]"></div>
-                              <h3 className="font-black text-[14px] text-gray-900 leading-snug mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 uppercase italic tracking-tighter">
+                              <h3 className="font-black text-[14px] text-gray-900 leading-snug mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 tracking-tighter">
                                  {news.title}
                               </h3>
-                              <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{new Date(news.published_at || news.created_at || '').toLocaleDateString()}</span>
+                              <span className="text-[9px] font-black text-gray-400 tracking-wide">{new Date(news.published_at || news.created_at || '').toLocaleDateString()}</span>
                            </div>
                         </Link>
                      ))}
                      {topTransferNews.length === 0 && (
                         <div className="col-span-full py-12 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                           <p className="text-gray-400 text-xs font-black uppercase tracking-widest">No top transfer articles currently published.</p>
+                           <p className="text-gray-400 text-sm font-black tracking-wide">No top transfer articles currently published.</p>
                         </div>
                      )}
                   </div>

@@ -39,8 +39,8 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                <div key={key} className="w-full bg-gray-50 py-24 md:py-32 relative overflow-hidden border-b border-gray-100">
                   <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#b50a0a]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
                   <div className="max-w-[1200px] mx-auto px-4 lg:px-0 text-center relative z-10">
-                     <span className="text-[#b50a0a] font-bold tracking-[0.2em] uppercase mb-4 block text-sm">Contact Us</span>
-                     <h1 className="text-5xl md:text-7xl font-black text-gray-900 uppercase tracking-tighter mb-8 drop-shadow-sm">
+                     <span className="text-[#b50a0a] font-bold tracking-[0.2em] mb-4 block text-base">Contact Us</span>
+                     <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tighter mb-8 drop-shadow-sm">
                         {header.title?.split(' ').map((word: string, i: number) => (
                            <span key={i} className={word === 'Touch' ? 'text-[#ff4d4d]' : ''}>{word} </span>
                         ))}
@@ -99,7 +99,7 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                         </div>
                         <input type="text" placeholder="Subject" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] text-black placeholder:text-gray-900" />
                         <textarea rows={6} placeholder="Message" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] resize-none text-black placeholder:text-gray-900"></textarea>
-                        <button type="submit" className="bg-[#b50a0a] text-white font-black uppercase tracking-widest px-10 py-5 rounded-xl shadow-lg transition-all hover:-translate-y-1 group flex items-center gap-3">
+                        <button type="submit" className="bg-[#b50a0a] text-white font-black tracking-wide px-10 py-5 rounded-xl shadow-lg transition-all hover:-translate-y-1 group flex items-center gap-3">
                             Send Message <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </button>
                      </form>
@@ -123,8 +123,8 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                <div key={key} className="w-full bg-gray-50 py-32 px-6 border-y border-gray-200">
                   <div className="max-w-[800px] mx-auto">
                      <div className="text-center mb-16">
-                        <span className="text-[#b50a0a] font-bold tracking-[0.2em] uppercase mb-4 block text-sm">Got Questions?</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 uppercase tracking-tight">❔ FAQs</h2>
+                        <span className="text-[#b50a0a] font-bold tracking-[0.2em] mb-4 block text-base">Got Questions?</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">❔ FAQs</h2>
                      </div>
                      <div className="space-y-4">
                         {faqs.map((faq: { q: string; a: string }, idx: number) => (

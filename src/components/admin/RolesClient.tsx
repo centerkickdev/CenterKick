@@ -159,12 +159,12 @@ export function RolesClient({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-black text-gray-900 uppercase tracking-tighter italic">Manage <span className="text-[#b50a0a]">Roles & Access</span></h1>
-          <p className="text-gray-900 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Configure administrative accounts, manage permissions, and audit system activities.</p>
+          <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Manage <span className="text-[#b50a0a]">Roles & Access</span></h1>
+          <p className="text-gray-900 text-[10px] font-bold tracking-[0.2em] mt-1">Configure administrative accounts, manage permissions, and audit system activities.</p>
         </div>
         <button 
           onClick={() => setIsInviteModalOpen(true)}
-          className="bg-[#b50a0a] hover:bg-black text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-3 shadow-xl shadow-red-900/20 active:scale-95 group"
+          className="bg-[#b50a0a] hover:bg-black text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all flex items-center gap-3 shadow-xl shadow-red-900/20 active:scale-95 group"
         >
           <UserPlus className="w-4 h-4 group-hover:rotate-12 transition-transform" /> Invite Team Member
         </button>
@@ -181,9 +181,9 @@ export function RolesClient({
                       <div className="w-8 h-8 rounded-xl bg-[#b50a0a] flex items-center justify-center text-white shadow-lg">
                          <ShieldAlert className="w-4 h-4" />
                       </div>
-                      <h2 className="text-[11px] font-black text-gray-900 uppercase tracking-widest">Verification Queue</h2>
+                      <h2 className="text-[11px] font-black text-gray-900 tracking-wide">Verification Queue</h2>
                    </div>
-                   <span className="px-3 py-1 bg-[#b50a0a] text-white text-[9px] font-black rounded-lg uppercase tracking-widest">
+                   <span className="px-3 py-1 bg-[#b50a0a] text-white text-[9px] font-black rounded-lg tracking-wide">
                       {verificationQueue.length} Pending
                    </span>
                 </div>
@@ -192,14 +192,14 @@ export function RolesClient({
                    {verificationQueue.map((user: Record<string, any>) => (
                       <div key={user.id} className="bg-white p-6 rounded-3xl shadow-sm border border-red-100/50 flex items-center justify-between group hover:shadow-md transition-all">
                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center font-black text-gray-400 text-sm border border-gray-100 italic">
+                            <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center font-black text-gray-400 text-base border border-gray-100">
                                {user.email?.[0]?.toUpperCase() || 'U'}
                             </div>
                             <div>
-                               <p className="font-bold text-gray-900 text-xs">{user.profiles?.first_name} {user.profiles?.last_name}</p>
+                               <p className="font-bold text-gray-900 text-sm">{user.profiles?.first_name} {user.profiles?.last_name}</p>
                                <div className="flex items-center gap-2 mt-1">
                                   <div className={`w-1.5 h-1.5 rounded-full ${user.is_verification_requested ? 'bg-[#b50a0a] animate-pulse' : 'bg-gray-300'}`}></div>
-                                  <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">
+                                  <p className="text-[9px] text-gray-500 font-bold tracking-wide">
                                      {user.is_verification_requested ? 'Requested Verification' : 'Newly Registered'}
                                   </p>
                                </div>
@@ -224,8 +224,8 @@ export function RolesClient({
            <div className="bg-white rounded-[3rem] border border-gray-100 shadow-2xl shadow-gray-200/50 overflow-hidden">
              <div className="p-4 md:p-8 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                   <h2 className="text-[12px] font-black text-gray-900 uppercase tracking-widest leading-none">Administrative Staff</h2>
-                   <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-2 italic">Full list of active and inactive administrators.</p>
+                   <h2 className="text-[12px] font-black text-gray-900 tracking-wide leading-none">Administrative Staff</h2>
+                   <p className="text-[9px] font-bold text-gray-400 tracking-wide mt-2">Full list of active and inactive administrators.</p>
                 </div>
                 <div className="relative">
                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
@@ -234,39 +234,39 @@ export function RolesClient({
                       placeholder="Search teammates..." 
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      className="pl-12 pr-6 py-3 bg-gray-50 border border-transparent focus:border-gray-100 focus:bg-white rounded-2xl text-xs font-bold outline-none transition-all w-full md:w-80 text-gray-900"
+                      className="pl-12 pr-6 py-3 bg-gray-50 border border-transparent focus:border-gray-100 focus:bg-white rounded-2xl text-sm font-bold outline-none transition-all w-full md:w-80 text-gray-900"
                    />
                 </div>
              </div>
              <div className="overflow-x-auto w-full pb-4 custom-scrollbar">
-               <table className="w-full text-left text-sm whitespace-nowrap">
+               <table className="w-full text-left text-base whitespace-nowrap">
                  <tbody className="divide-y divide-gray-50">
                    {filteredAdmins.map((admin: Record<string, any>) => (
                      <tr key={admin.id} className="hover:bg-gray-50/50 transition-colors border-b border-gray-100 last:border-0">
                        <td className="px-4 py-4">
                           <div className="flex items-center gap-4">
-                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-white text-sm shadow-xl transition-transform group-hover:scale-105 ${admin.is_active ? 'bg-gray-900' : 'bg-gray-300'}`}>
+                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-white text-base shadow-xl transition-transform group-hover:scale-105 ${admin.is_active ? 'bg-gray-900' : 'bg-gray-300'}`}>
                                 {admin.email?.[0]?.toUpperCase() || 'A'}
                              </div>
                              <div>
-                                <p className={`font-black text-sm uppercase tracking-tight ${admin.is_active ? 'text-gray-900' : 'text-gray-400 line-through'}`}>
+                                <p className={`font-black text-base tracking-tight ${admin.is_active ? 'text-gray-900' : 'text-gray-400 line-through'}`}>
                                    {admin.profiles?.first_name} {admin.profiles?.last_name}
                                 </p>
-                                <p className="text-[9px] text-gray-400 mt-1 uppercase font-bold tracking-[0.2em]">{admin.email}</p>
+                                <p className="text-[9px] text-gray-400 mt-1 font-bold tracking-[0.2em]">{admin.email}</p>
                              </div>
                           </div>
                        </td>
                        <td className="px-4 py-4">
                           <div className="flex flex-col gap-1">
-                             <span className={`w-fit px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 ${
-                               admin.role === 'superadmin' ? 'bg-red-50 text-[#b50a0a]' : 'bg-gray-100 text-gray-600'
-                             }`}>
+                             <span className={`w-fit px-3 py-1 rounded-lg text-[9px] font-black tracking-wide flex items-center gap-1.5 ${
+ admin.role === 'superadmin' ? 'bg-red-50 text-[#b50a0a]' : 'bg-gray-100 text-gray-600'
+ }`}>
                                {admin.role === 'superadmin' && <Shield className="w-3 h-3" />}
                                {admin.role}
                              </span>
                              <div className="flex items-center gap-1.5 ml-1">
                                 <div className={`w-1.5 h-1.5 rounded-full ${admin.is_active ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">{admin.is_active ? 'Active' : 'Deactivated'}</span>
+                                <span className="text-[8px] font-black text-gray-400 tracking-wide">{admin.is_active ? 'Active' : 'Deactivated'}</span>
                              </div>
                           </div>
                        </td>
@@ -287,10 +287,10 @@ export function RolesClient({
                                  <button 
                                    onClick={() => handleToggleStatus(admin.id, admin.is_active)}
                                    className={`p-3 rounded-xl transition-all shadow-sm ${
-                                      admin.is_active 
-                                        ? 'text-gray-300 hover:text-red-600 hover:bg-red-50' 
-                                        : 'text-green-600 bg-green-50 hover:bg-green-100'
-                                   }`}
+ admin.is_active 
+ ? 'text-gray-300 hover:text-red-600 hover:bg-red-50' 
+ : 'text-green-600 bg-green-50 hover:bg-green-100'
+ }`}
                                    title={admin.is_active ? "Deactivate Account" : "Activate Account"}
                                  >
                                     <Power className="w-4 h-4" />
@@ -317,11 +317,11 @@ export function RolesClient({
            {invitations.length > 0 && (
              <div className="bg-white rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden opacity-80 hover:opacity-100 transition-opacity">
                <div className="p-4 md:p-8 border-b border-gray-50">
-                  <h2 className="text-[12px] font-black text-gray-900 uppercase tracking-widest">Pending Access Tokens</h2>
-                  <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-2 italic">Invitations sent that are yet to be claimed.</p>
+                  <h2 className="text-[12px] font-black text-gray-900 tracking-wide">Pending Access Tokens</h2>
+                  <p className="text-[9px] font-bold text-gray-400 tracking-wide mt-2">Invitations sent that are yet to be claimed.</p>
                </div>
                <div className="overflow-x-auto w-full pb-4 custom-scrollbar">
-                 <table className="w-full text-left text-sm text-gray-600 whitespace-nowrap">
+                 <table className="w-full text-left text-base text-gray-600 whitespace-nowrap">
                    <tbody className="divide-y divide-gray-50">
                      {invitations.map((invite: Record<string, any>) => (
                        <tr key={invite.id} className="hover:bg-gray-50/50 transition-colors">
@@ -331,16 +331,16 @@ export function RolesClient({
                                   <Mail className="w-5 h-5" />
                                </div>
                                <div>
-                                  <p className="font-black text-gray-900 text-sm uppercase tracking-tight">{invite.email}</p>
+                                  <p className="font-black text-gray-900 text-base tracking-tight">{invite.email}</p>
                                   <div className="flex items-center gap-2 mt-1.5">
                                     <Clock className="w-3 h-3 text-gray-300" />
-                                    <p className="text-[9px] text-gray-400 uppercase font-black tracking-widest">Expires <DateDisplay date={invite.expires_at} /></p>
+                                    <p className="text-[9px] text-gray-400 font-black tracking-wide">Expires <DateDisplay date={invite.expires_at} /></p>
                                   </div>
                                </div>
                             </div>
                          </td>
                          <td className="px-4 py-4">
-                            <span className="px-3 py-1 rounded-lg bg-gray-50 text-gray-400 text-[8px] font-black uppercase tracking-widest border border-gray-100">
+                            <span className="px-3 py-1 rounded-lg bg-gray-50 text-gray-400 text-[8px] font-black tracking-wide border border-gray-100">
                                {invite.role}
                             </span>
                          </td>
@@ -349,14 +349,14 @@ export function RolesClient({
                                <button 
                                  onClick={() => handleResendInvite(invite.id)}
                                  disabled={loading}
-                                 className="text-[10px] font-black uppercase tracking-widest text-[#b50a0a] hover:bg-red-50 px-4 py-2 rounded-xl transition-all disabled:opacity-50"
+                                 className="text-[10px] font-black tracking-wide text-[#b50a0a] hover:bg-red-50 px-4 py-2 rounded-xl transition-all disabled:opacity-50"
                                >
                                   {loading ? 'Resending...' : 'Resend Invite'}
                                </button>
                                 <button 
                                   onClick={() => handleRevokeInvite(invite.id)}
                                   disabled={loading}
-                                  className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-black transition-all disabled:opacity-50"
+                                  className="text-[10px] font-black tracking-wide text-gray-400 hover:text-black transition-all disabled:opacity-50"
                                 >
                                   Revoke
                                 </button>
@@ -375,8 +375,8 @@ export function RolesClient({
         <div className="space-y-8">
            <div className="bg-gray-900 p-10 rounded-[3rem] shadow-2xl shadow-gray-900/40 relative overflow-hidden group">
               <ShieldCheck className="absolute -right-6 -bottom-6 w-40 h-40 text-white/5 group-hover:rotate-12 transition-transform duration-700" />
-              <h2 className="text-[11px] font-black text-[#b50a0a] uppercase tracking-[0.3em] mb-6 italic">Governance Logic</h2>
-              <div className="space-y-3 relative z-10 text-[10px] font-extrabold text-gray-400 uppercase tracking-[0.15em]">
+              <h2 className="text-[11px] font-black text-[#b50a0a] tracking-[0.3em] mb-6">Governance Logic</h2>
+              <div className="space-y-3 relative z-10 text-[10px] font-extrabold text-gray-400 tracking-[0.15em]">
                  {[
                    { role: 'Superadmin', desc: 'Full system control. Permission root.' },
                    { role: 'Admin', desc: 'Full access. Cannot manage other Admins.' },
@@ -387,7 +387,7 @@ export function RolesClient({
                  ].map((inf, i) => (
                    <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 hover:bg-white/[0.08] transition-colors">
                       <p className={`${inf.role === 'Superadmin' ? 'text-[#b50a0a]' : 'text-white'} mb-1`}>{inf.role}</p>
-                      <p className="text-[9px] font-bold tracking-widest normal-case text-gray-400">{inf.desc}</p>
+                      <p className="text-[9px] font-bold tracking-wide normal-case text-gray-400">{inf.desc}</p>
                    </div>
                  ))}
               </div>
@@ -411,29 +411,29 @@ export function RolesClient({
                  <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <UserPlus className="w-8 h-8 text-[#b50a0a]" />
                  </div>
-                 <h3 className="text-3xl font-black text-gray-900 uppercase tracking-tighter italic">Invite <span className="text-[#b50a0a]">Administrator</span></h3>
-                 <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] mt-2">Send an encrypted invitation link via email.</p>
+                 <h3 className="text-3xl font-black text-gray-900 tracking-tighter">Invite <span className="text-[#b50a0a]">Administrator</span></h3>
+                 <p className="text-[9px] font-black text-gray-400 tracking-[0.3em] mt-2">Send an encrypted invitation link via email.</p>
               </div>
 
               <form onSubmit={handleInvite} className="space-y-6">
                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Recipient Email</label>
+                    <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Recipient Email</label>
                     <input 
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="teammate@centerkick.com"
-                      className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-[#b50a0a] focus:ring-4 focus:ring-red-900/5 outline-none transition-all font-bold text-sm text-black"
+                      className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-[#b50a0a] focus:ring-4 focus:ring-red-900/5 outline-none transition-all font-bold text-base text-black"
                     />
                  </div>
 
                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Pre-assign Target Role</label>
+                    <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Pre-assign Target Role</label>
                     <select 
                       value={role}
                       onChange={(e) => setRole(e.target.value)}
-                      className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-[#b50a0a] outline-none transition-all font-bold text-sm appearance-none text-black cursor-pointer"
+                      className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:border-[#b50a0a] outline-none transition-all font-bold text-base appearance-none text-black cursor-pointer"
                     >
                        {isSuper && <option value="admin">Administrator</option>}
                        <option value="blogger">Blogger / CMS Editor</option>
@@ -446,7 +446,7 @@ export function RolesClient({
 
                  <button 
                    disabled={loading}
-                   className="w-full py-5 bg-[#b50a0a] hover:bg-black text-white rounded-[1.5rem] font-black text-xs uppercase tracking-[0.3em] transition-all shadow-xl shadow-red-900/20 flex items-center justify-center gap-3 active:scale-[0.98]"
+                   className="w-full py-5 bg-[#b50a0a] hover:bg-black text-white rounded-[1.5rem] font-black text-sm tracking-[0.3em] transition-all shadow-xl shadow-red-900/20 flex items-center justify-center gap-3 active:scale-[0.98]"
                  >
                     {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
                     Issue Invitation
@@ -475,15 +475,15 @@ export function RolesClient({
               </button>
 
               <div className="flex flex-col items-center mb-10">
-                 <div className="w-24 h-24 rounded-[2rem] bg-gray-900 flex items-center justify-center text-white text-3xl font-black mb-6 shadow-2xl italic tracking-tighter">
+                 <div className="w-24 h-24 rounded-[2rem] bg-gray-900 flex items-center justify-center text-white text-3xl font-black mb-6 shadow-2xl tracking-tighter">
                     {selectedUser.email?.[0]?.toUpperCase() || 'U'}
                  </div>
-                 <h3 className="text-3xl font-black text-gray-900 uppercase tracking-tighter italic">
+                 <h3 className="text-3xl font-black text-gray-900 tracking-tighter">
                     {selectedUser.profiles?.first_name} <span className="text-[#b50a0a]">{selectedUser.profiles?.last_name}</span>
                  </h3>
-                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mt-2">{selectedUser.email}</p>
+                 <p className="text-[10px] font-black text-gray-400 tracking-[0.3em] mt-2">{selectedUser.email}</p>
                  {selectedUser.is_verification_requested && (
-                    <div className="mt-4 px-4 py-1.5 bg-red-50 text-[#b50a0a] rounded-full text-[9px] font-black uppercase tracking-widest border border-red-100 flex items-center gap-2 animate-pulse">
+                    <div className="mt-4 px-4 py-1.5 bg-red-50 text-[#b50a0a] rounded-full text-[9px] font-black tracking-wide border border-red-100 flex items-center gap-2 animate-pulse">
                        <ShieldAlert className="w-3.5 h-3.5" /> Pending Verification Request
                     </div>
                  )}
@@ -491,21 +491,21 @@ export function RolesClient({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-8 mb-10">
                  <div className="space-y-1">
-                    <p className="flex items-center gap-2 text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                    <p className="flex items-center gap-2 text-[9px] font-black text-gray-400 tracking-wide">
                        <MapPin className="w-3 h-3 text-[#b50a0a]" /> Location
                     </p>
-                    <p className="text-xs font-bold text-gray-900">{selectedUser.profiles?.location || 'Not provided'}</p>
+                    <p className="text-sm font-bold text-gray-900">{selectedUser.profiles?.location || 'Not provided'}</p>
                  </div>
                  <div className="space-y-1 text-right">
-                    <p className="flex items-center justify-end gap-2 text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                    <p className="flex items-center justify-end gap-2 text-[9px] font-black text-gray-400 tracking-wide">
                        <CalendarIcon className="w-3 h-3 text-[#b50a0a]" /> Date of Birth
                     </p>
-                    <p className="text-xs font-bold text-gray-900">{selectedUser.profiles?.date_of_birth || 'Not provided'}</p>
+                    <p className="text-sm font-bold text-gray-900">{selectedUser.profiles?.date_of_birth || 'Not provided'}</p>
                  </div>
               </div>
 
               <div className="space-y-4">
-                 <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-2 italic">Assign Role & Approve Access</label>
+                 <label className="text-[10px] font-black text-gray-900 tracking-wide ml-2">Assign Role & Approve Access</label>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {[
                       ...(isSuper ? [{id: 'admin', label: 'Administrator', icon: ShieldCheck}] : []),
@@ -519,14 +519,14 @@ export function RolesClient({
                         disabled={loading}
                         onClick={() => handleUpdateRole(selectedUser.id, r.id)}
                         className={`flex items-center justify-between p-4 rounded-3xl border-2 transition-all group ${
-                          selectedUser.role === r.id 
-                            ? 'bg-gray-900 border-gray-900 text-white' 
-                            : 'bg-white border-gray-100 hover:border-[#b50a0a]'
-                        }`}
+ selectedUser.role === r.id 
+ ? 'bg-gray-900 border-gray-900 text-white' 
+ : 'bg-white border-gray-100 hover:border-[#b50a0a]'
+ }`}
                       >
                          <div className="flex items-center gap-3">
                             <r.icon className={`w-4 h-4 ${selectedUser.role === r.id ? 'text-[#b50a0a]' : 'text-gray-400 group-hover:text-[#b50a0a] transition-colors'}`} />
-                            <span className="text-[10px] font-black uppercase tracking-widest">{r.label}</span>
+                            <span className="text-[10px] font-black tracking-wide">{r.label}</span>
                          </div>
                          <div className={`w-1.5 h-1.5 rounded-full ${selectedUser.role === r.id ? 'bg-[#b50a0a]' : 'bg-transparent'}`}></div>
                       </button>
@@ -534,7 +534,7 @@ export function RolesClient({
                  </div>
               </div>
 
-              <div className="mt-10 pt-8 border-t border-gray-50 flex justify-between items-center text-[9px] font-black text-gray-400 uppercase tracking-widest">
+              <div className="mt-10 pt-8 border-t border-gray-50 flex justify-between items-center text-[9px] font-black text-gray-400 tracking-wide">
                  <p>User Identity Verified &bull; Security Grade A</p>
                  <button 
                    onClick={() => handleToggleStatus(selectedUser.id, selectedUser.is_active)}

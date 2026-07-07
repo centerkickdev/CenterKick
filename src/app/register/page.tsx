@@ -126,14 +126,14 @@ export default function RegisterPage() {
 
          {/* Navigation */}
          <div className="absolute top-8 left-8 z-20">
-            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[10px] font-black tracking-wide bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
                <ArrowLeft className="w-4 h-4" /> Back to Home
             </Link>
          </div>
 
          <div className="relative z-10 max-w-md w-full px-6 py-12 bg-white/95 backdrop-blur-md rounded-[40px] shadow-2xl border border-white/20 animate-in fade-in zoom-in duration-700">
             <div className="text-center mb-10">
-               <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter leading-none mb-3">
+               <h1 className="text-3xl font-black text-gray-900 tracking-tighter leading-none mb-3">
                   Create <span className="text-[#a20000]">Account</span>
                </h1>
             </div>
@@ -141,7 +141,7 @@ export default function RegisterPage() {
             {status && (
                <div className={`mb-8 p-4 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-top-2 duration-500 ${status.type === 'success' ? 'bg-green-50 border border-green-100 text-green-700' : 'bg-red-50 border border-red-100 text-red-700'}`}>
                   {status.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
-                  <p className="text-[10px] font-black uppercase tracking-widest">{status.message}</p>
+                  <p className="text-[10px] font-black tracking-wide">{status.message}</p>
                </div>
             )}
 
@@ -161,14 +161,14 @@ export default function RegisterPage() {
                               }
                            });
                         }}
-                        className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-gray-100 hover:bg-gray-50 transition-all text-[10px] font-black uppercase tracking-widest text-gray-600 shadow-sm"
+                        className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-gray-100 hover:bg-gray-50 transition-all text-[10px] font-black tracking-wide text-gray-600 shadow-sm"
                      >
                         <Chrome className="w-4 h-4 text-red-600" /> Continue with Google
                      </button>
 
                      <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                           <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Professional Email</label>
+                           <label className="text-[10px] font-black text-gray-400 tracking-wide ml-1">Professional Email</label>
                            <div className="relative">
                               <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                               <input
@@ -176,7 +176,7 @@ export default function RegisterPage() {
                                  type="email"
                                  required
                                  placeholder="name@agency.com"
-                                 className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl pl-12 pr-6 py-4 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-gray-900 placeholder:text-gray-300"
+                                 className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl pl-12 pr-6 py-4 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-gray-900 placeholder:text-gray-300"
                               />
                            </div>
                         </div>
@@ -194,7 +194,7 @@ export default function RegisterPage() {
                         <button
                            type="submit"
                            disabled={isLoading}
-                           className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
+                           className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
                         >
                            {isLoading ? (
                               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -207,7 +207,7 @@ export default function RegisterPage() {
                ) : (
                   <form onSubmit={handleVerifyOtp} className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500">
                      <div className="space-y-2">
-                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Verification Code</label>
+                        <label className="text-[10px] font-black text-gray-400 tracking-wide ml-1">Verification Code</label>
                         <input
                            type="text"
                            required
@@ -218,15 +218,15 @@ export default function RegisterPage() {
                            maxLength={6}
                         />
                         <div className="flex flex-col items-center gap-2 mt-4">
-                           <p className="text-[9px] text-center text-gray-400 font-bold uppercase tracking-widest">
+                           <p className="text-[9px] text-center text-gray-400 font-bold tracking-wide">
                               Enter the 6-digit code sent to <span className="text-gray-900">{email}</span>
                            </p>
                            {timeLeft > 0 ? (
-                              <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                              <p className="text-[9px] font-black text-slate-500 tracking-wide">
                                  Code expires in <span className="text-[#a20000]">{Math.floor(timeLeft / 60)}:${('0' + (timeLeft % 60)).slice(-2)}</span>
                               </p>
                            ) : (
-                              <p className="text-[9px] font-black text-red-600 uppercase tracking-widest">
+                              <p className="text-[9px] font-black text-red-600 tracking-wide">
                                  Code expired. Please request a new one.
                               </p>
                            )}
@@ -236,7 +236,7 @@ export default function RegisterPage() {
                      <button
                         type="submit"
                         disabled={isLoading || timeLeft === 0}
-                        className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
+                        className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
                      >
                         {isLoading ? (
                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -247,7 +247,7 @@ export default function RegisterPage() {
 
                      <div className="flex flex-col items-center gap-3 pt-2">
                         {resendCooldown > 0 ? (
-                           <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">
+                           <span className="text-[9px] font-black text-gray-400 tracking-wide">
                               Resend code in {resendCooldown}s
                            </span>
                         ) : (
@@ -255,7 +255,7 @@ export default function RegisterPage() {
                               type="button"
                               onClick={handleResend}
                               disabled={isResending}
-                              className="text-[9px] font-black text-[#a20000] uppercase tracking-widest hover:underline disabled:opacity-50"
+                              className="text-[9px] font-black text-[#a20000] tracking-wide hover:underline disabled:opacity-50"
                            >
                               {isResending ? 'Sending...' : 'Resend Verification Code'}
                            </button>
@@ -264,7 +264,7 @@ export default function RegisterPage() {
                         <button 
                            type="button"
                            onClick={() => setShowOtp(false)}
-                           className="text-center text-[9px] font-black text-gray-400 uppercase tracking-widest hover:text-gray-900 transition-colors"
+                           className="text-center text-[9px] font-black text-gray-400 tracking-wide hover:text-gray-900 transition-colors"
                         >
                            Change Email Address
                         </button>
@@ -274,7 +274,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="mt-12 text-center">
-               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+               <p className="text-[10px] font-black text-gray-400 tracking-wide">
                   Already have an account?
                   <Link href="/login" className="text-[#a20000] ml-2 hover:underline font-black">Login Now</Link>
                </p>

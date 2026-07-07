@@ -120,7 +120,7 @@ export async function sendTestEmail(apiKey: string, fromEmail: string, targetEma
             <p>This is a test email from your CenterKick System Settings.</p>
             <p>If you are reading this, your Resend API integration is correctly configured and active.</p>
             <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
-            <p style="font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">
+            <p style="font-size: 11px; color: #9ca3af; text-transform: ; font-weight: 700; letter-spacing: 0.05em;">
                 Verified at: ${new Date().toLocaleString()}
             </p>
         </div>

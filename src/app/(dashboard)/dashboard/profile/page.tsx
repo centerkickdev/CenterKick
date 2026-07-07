@@ -236,19 +236,19 @@ export default function ProfileEditor() {
 
   const isAdminOrOps = ['superadmin', 'admin', 'operations'].includes(role);
 
-  if (isLoading) return <div className="pt-20 text-center font-black uppercase tracking-widest animate-pulse">Loading Editor...</div>;
+  if (isLoading) return <div className="pt-20 text-center font-black tracking-wide animate-pulse">Loading Editor...</div>;
 
   return (
     <div className="max-w-full max-w-[1000px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">My <span className="text-[#b50a0a]">Profile</span></h1>
-          <p className="text-gray-900 text-[10px] font-bold uppercase tracking-widest mt-1">Manage your professional data & public appearance.</p>
+          <h1 className="text-3xl font-black text-gray-900 tracking-tighter">My <span className="text-[#b50a0a]">Profile</span></h1>
+          <p className="text-gray-900 text-[10px] font-bold tracking-wide mt-1">Manage your professional data & public appearance.</p>
         </div>
         <button 
           onClick={handleSave}
           disabled={isSaving}
-          className="px-4 md:px-8 py-3.5 bg-gray-900 text-white rounded-xl text-[11px] font-black uppercase tracking-[0.2em] hover:bg-black transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50"
+          className="px-4 md:px-8 py-3.5 bg-gray-900 text-white rounded-xl text-[11px] font-black tracking-[0.2em] hover:bg-black transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50"
         >
           {isSaving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <Save className="w-4 h-4" />}
           Save Changes
@@ -256,7 +256,7 @@ export default function ProfileEditor() {
       </div>
 
       {status && (
-        <div className={`p-4 rounded-xl text-xs font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2 duration-500 ${status.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'}`}>
+        <div className={`p-4 rounded-xl text-sm font-black tracking-wide animate-in fade-in slide-in-from-top-2 duration-500 ${status.type === 'success' ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-red-50 text-red-700 border border-red-100'}`}>
           {status.msg}
         </div>
       )}
@@ -275,7 +275,7 @@ export default function ProfileEditor() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap lg:w-full ${activeTab === tab.id ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-900 hover:bg-gray-100'}`}
+                className={`flex items-center gap-3 px-6 py-4 rounded-2xl text-[10px] font-black tracking-wide transition-all whitespace-nowrap lg:w-full ${activeTab === tab.id ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-900 hover:bg-gray-100'}`}
               >
                 <tab.icon className="w-4 h-4" />
                 {tab.id}
@@ -302,7 +302,7 @@ export default function ProfileEditor() {
                         ) : (
                           <>
                             <Camera className="w-6 h-6 mb-1 group-hover:text-[#b50a0a]" />
-                            <span className="text-[8px] font-black uppercase tracking-widest">Photo</span>
+                            <span className="text-[8px] font-black tracking-wide">Photo</span>
                           </>
                         )}
                       </div>
@@ -314,28 +314,28 @@ export default function ProfileEditor() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-8">
                   <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">First Name</label>
-                    <input name="first_name" type="text" defaultValue={profile?.first_name} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
+                    <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">First Name</label>
+                    <input name="first_name" type="text" defaultValue={profile?.first_name} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
                   </div>
                   <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Last Name</label>
-                    <input name="last_name" type="text" defaultValue={profile?.last_name} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
+                    <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Last Name</label>
+                    <input name="last_name" type="text" defaultValue={profile?.last_name} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-8">
                   <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Date of Birth</label>
+                    <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Date of Birth</label>
                     <div className="relative">
                       <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
-                      <input name="date_of_birth" type="date" defaultValue={profile?.date_of_birth} className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
+                      <input name="date_of_birth" type="date" defaultValue={profile?.date_of_birth} className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
                     </div>
                   </div>
                   <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Country</label>
+                    <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Country</label>
                     <div className="relative">
                       <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
-                      <input name="country" type="text" defaultValue={profile?.country} className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
+                      <input name="country" type="text" defaultValue={profile?.country} className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
                     </div>
                   </div>
                 </div>
@@ -344,10 +344,10 @@ export default function ProfileEditor() {
                 <div className="p-4 md:p-8 bg-red-50/20 border border-red-100/50 rounded-3xl space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                      <h4 className="text-[10px] font-black uppercase text-gray-900 tracking-widest">Official Nationality Verification</h4>
-                      <p className="text-[9px] text-gray-500 font-bold uppercase mt-0.5">Required by Admin to prevent false citizenship reporting</p>
+                      <h4 className="text-[10px] font-black text-gray-900 tracking-wide">Official Nationality Verification</h4>
+                      <p className="text-[9px] text-gray-500 font-bold mt-0.5">Required by Admin to prevent false citizenship reporting</p>
                     </div>
-                    <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest self-start sm:self-center ${profile?.id_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                    <span className={`px-4 py-1.5 rounded-full text-[8px] font-black tracking-wide self-start sm:self-center ${profile?.id_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
                       {profile?.id_proof_url ? 'Pending Verification' : 'Proof Required'}
                     </span>
                   </div>
@@ -367,29 +367,29 @@ export default function ProfileEditor() {
                     <button
                       type="button"
                       onClick={() => document.getElementById('id_proof_file')?.click()}
-                      className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                      className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-[10px] font-black tracking-wide transition-all shadow-sm"
                     >
                       Upload Passport / ID Card
                     </button>
                     {profile?.id_proof_url && (
-                      <span className="text-[10px] text-green-600 font-bold uppercase">✓ ID File Loaded & Ready</span>
+                      <span className="text-[10px] text-green-600 font-bold">✓ ID File Loaded & Ready</span>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-8 pt-8 border-t border-gray-50">
                   <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Public Contact Email</label>
+                    <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Public Contact Email</label>
                     <div className="relative">
                        <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
-                       <input name="contact_email" type="email" defaultValue={profile?.contact_email} placeholder="public@agency.com" className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" />
+                       <input name="contact_email" type="email" defaultValue={profile?.contact_email} placeholder="public@agency.com" className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" />
                     </div>
                   </div>
                   <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Public Phone</label>
+                    <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Public Phone</label>
                     <div className="relative">
                        <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
-                       <input name="phone_number" type="tel" defaultValue={profile?.phone_number} placeholder="+234..." className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" />
+                       <input name="phone_number" type="tel" defaultValue={profile?.phone_number} placeholder="+234..." className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" />
                     </div>
                   </div>
                 </div>
@@ -401,16 +401,16 @@ export default function ProfileEditor() {
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-2 h-10 bg-[#b50a0a] rounded-full"></div>
                   <div>
-                    <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Professional Stats</h3>
-                    <p className="text-[9px] font-bold text-gray-900 uppercase tracking-[0.2em] mt-0.5">Role Specific Performance Identifiers</p>
+                    <h3 className="text-base font-black tracking-wide text-gray-900">Professional Stats</h3>
+                    <p className="text-[9px] font-bold text-gray-900 tracking-[0.2em] mt-0.5">Role Specific Performance Identifiers</p>
                   </div>
                 </div>
 
                 {role === 'athlete' || role === 'player' ? (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Primary Position</label>
-                      <select name="position" defaultValue={profile?.position} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
+                      <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Primary Position</label>
+                      <select name="position" defaultValue={profile?.position} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
                         <option value="Striker" className="text-black">Striker</option>
                         <option value="Midfielder" className="text-black">Midfielder</option>
                         <option value="Defender" className="text-black">Defender</option>
@@ -418,34 +418,34 @@ export default function ProfileEditor() {
                       </select>
                     </div>
                     <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Main Foot</label>
-                      <select name="foot" defaultValue={profile?.foot} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
+                      <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Main Foot</label>
+                      <select name="foot" defaultValue={profile?.foot} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
                         <option value="Right" className="text-black">Right</option>
                         <option value="Left" className="text-black">Left</option>
                         <option value="Both" className="text-black">Both</option>
                       </select>
                     </div>
                     <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Jersey #</label>
-                      <input name="jersey_number" type="number" defaultValue={profile?.jersey_number} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
+                      <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Jersey #</label>
+                      <input name="jersey_number" type="number" defaultValue={profile?.jersey_number} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
                     </div>
                     <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Height (cm)</label>
-                      <input name="height_cm" type="number" defaultValue={profile?.height_cm} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
+                      <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Height (cm)</label>
+                      <input name="height_cm" type="number" defaultValue={profile?.height_cm} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
                     </div>
                     <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Weight (kg)</label>
-                      <input name="weight_kg" type="number" defaultValue={profile?.weight_kg} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
+                      <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Weight (kg)</label>
+                      <input name="weight_kg" type="number" defaultValue={profile?.weight_kg} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" />
                     </div>
                     <div className="space-y-4">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Market Value ($)</label>
+                      <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Market Value ($)</label>
                       <input 
                         name="market_value" 
                         type="text" 
                         defaultValue={profile?.market_value} 
                         disabled={!isAdminOrOps}
                         placeholder="12,000,000" 
-                        className={`w-full ${isAdminOrOps ? 'bg-gray-50' : 'bg-gray-100 cursor-not-allowed opacity-80'} border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all outline-none font-mono text-black placeholder:text-gray-500`} 
+                        className={`w-full ${isAdminOrOps ? 'bg-gray-50' : 'bg-gray-100 cursor-not-allowed opacity-80'} border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all outline-none font-mono text-black placeholder:text-gray-500`} 
                       />
                       {!isAdminOrOps && <p className="text-[9px] text-[#b50a0a] mt-1 font-bold ml-1">Only administrators can update market values.</p>}
                     </div>
@@ -454,8 +454,8 @@ export default function ProfileEditor() {
                   <div className="space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-8">
                       <div className="space-y-4">
-                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Preferred Formation</label>
-                        <select name="formation" defaultValue={profile?.formation} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
+                        <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Preferred Formation</label>
+                        <select name="formation" defaultValue={profile?.formation} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
                           <option value="4-3-3" className="text-black">4-3-3 Offensive</option>
                           <option value="4-4-2" className="text-black">4-4-2 Classic</option>
                           <option value="3-5-2" className="text-black">3-5-2 Wingbacks</option>
@@ -463,8 +463,8 @@ export default function ProfileEditor() {
                         </select>
                       </div>
                       <div className="space-y-4">
-                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Technical License</label>
-                        <select name="license" defaultValue={profile?.license} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
+                        <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Technical License</label>
+                        <select name="license" defaultValue={profile?.license} className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black">
                           <option value="UEFA Pro" className="text-black">UEFA Pro</option>
                           <option value="UEFA A" className="text-black">UEFA A</option>
                           <option value="UEFA B" className="text-black">UEFA B</option>
@@ -477,10 +477,10 @@ export default function ProfileEditor() {
                     <div className="p-4 md:p-8 bg-red-50/20 border border-red-100/50 rounded-3xl space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
-                          <h4 className="text-[10px] font-black uppercase text-gray-900 tracking-widest">Coaching License Verification</h4>
-                          <p className="text-[9px] text-gray-500 font-bold uppercase mt-0.5">Required by Admin to verify technical credentials and coaching experience</p>
+                          <h4 className="text-[10px] font-black text-gray-900 tracking-wide">Coaching License Verification</h4>
+                          <p className="text-[9px] text-gray-500 font-bold mt-0.5">Required by Admin to verify technical credentials and coaching experience</p>
                         </div>
-                        <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest self-start sm:self-center ${profile?.license_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                        <span className={`px-4 py-1.5 rounded-full text-[8px] font-black tracking-wide self-start sm:self-center ${profile?.license_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
                           {profile?.license_proof_url ? 'Pending Verification' : 'Proof Required'}
                         </span>
                       </div>
@@ -500,12 +500,12 @@ export default function ProfileEditor() {
                         <button
                           type="button"
                           onClick={() => document.getElementById('license_proof_file')?.click()}
-                          className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                          className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-[10px] font-black tracking-wide transition-all shadow-sm"
                         >
                           Upload Coaching Certificate
                         </button>
                         {profile?.license_proof_url && (
-                          <span className="text-[10px] text-green-600 font-bold uppercase">✓ Certificate Loaded & Ready</span>
+                          <span className="text-[10px] text-green-600 font-bold">✓ Certificate Loaded & Ready</span>
                         )}
                       </div>
                     </div>
@@ -514,12 +514,12 @@ export default function ProfileEditor() {
                   <div className="space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-8">
                       <div className="space-y-4">
-                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Agency Name</label>
-                        <input name="agency_name" type="text" defaultValue={profile?.agency_name} placeholder="Global Talent Management" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" />
+                        <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Agency Name</label>
+                        <input name="agency_name" type="text" defaultValue={profile?.agency_name} placeholder="Global Talent Management" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" />
                       </div>
                       <div className="space-y-4">
-                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">FIFA License Code</label>
-                        <input name="license_code" type="text" defaultValue={profile?.license_code} placeholder="FL-XXXXXXXX" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none font-mono text-black placeholder:text-gray-900" />
+                        <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">FIFA License Code</label>
+                        <input name="license_code" type="text" defaultValue={profile?.license_code} placeholder="FL-XXXXXXXX" className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none font-mono text-black placeholder:text-gray-900" />
                       </div>
                     </div>
 
@@ -527,10 +527,10 @@ export default function ProfileEditor() {
                     <div className="p-4 md:p-8 bg-red-50/20 border border-red-100/50 rounded-3xl space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
-                          <h4 className="text-[10px] font-black uppercase text-gray-900 tracking-widest">FIFA Agent License Verification</h4>
-                          <p className="text-[9px] text-gray-500 font-bold uppercase mt-0.5">Required by Admin to authorize legal player transfers and representing rights</p>
+                          <h4 className="text-[10px] font-black text-gray-900 tracking-wide">FIFA Agent License Verification</h4>
+                          <p className="text-[9px] text-gray-500 font-bold mt-0.5">Required by Admin to authorize legal player transfers and representing rights</p>
                         </div>
-                        <span className={`px-4 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest self-start sm:self-center ${profile?.license_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                        <span className={`px-4 py-1.5 rounded-full text-[8px] font-black tracking-wide self-start sm:self-center ${profile?.license_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
                           {profile?.license_proof_url ? 'Pending Verification' : 'Proof Required'}
                         </span>
                       </div>
@@ -550,12 +550,12 @@ export default function ProfileEditor() {
                         <button
                           type="button"
                           onClick={() => document.getElementById('agent_proof_file')?.click()}
-                          className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-sm"
+                          className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-[10px] font-black tracking-wide transition-all shadow-sm"
                         >
                           Upload FIFA Agent License
                         </button>
                         {profile?.license_proof_url && (
-                          <span className="text-[10px] text-green-600 font-bold uppercase">✓ FIFA Document Loaded & Ready</span>
+                          <span className="text-[10px] text-green-600 font-bold">✓ FIFA Document Loaded & Ready</span>
                         )}
                       </div>
                     </div>
@@ -563,7 +563,7 @@ export default function ProfileEditor() {
                 )}
 
                 <div className="pt-8 border-t border-gray-50">
-                   <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-6">Social Proof & Recognition</h4>
+                   <h4 className="text-[10px] font-black text-gray-900 tracking-wide mb-6">Social Proof & Recognition</h4>
                    <div className="space-y-4">
                       {achievements.map((item, i) => (
                         <div key={i} className="flex items-center gap-6 p-6 bg-gray-50 rounded-2xl border border-gray-100 group transition-all hover:bg-white hover:shadow-xl hover:border-white">
@@ -571,8 +571,8 @@ export default function ProfileEditor() {
                               <Award className="w-6 h-6 text-yellow-500" />
                            </div>
                            <div className="flex-1">
-                              <p className="text-xs font-black uppercase text-gray-900 leading-none mb-1">{item.title}</p>
-                              <p className="text-[10px] font-bold text-gray-900 uppercase tracking-widest">{item.year || 'Major Recognition'}</p>
+                              <p className="text-sm font-black text-gray-900 leading-none mb-1">{item.title}</p>
+                              <p className="text-[10px] font-bold text-gray-900 tracking-wide">{item.year || 'Major Recognition'}</p>
                            </div>
                            <button 
                              type="button"
@@ -590,7 +590,7 @@ export default function ProfileEditor() {
                           const year = prompt('Year:');
                           if (title) setAchievements([...achievements, { title, year }]);
                         }}
-                        className="w-full py-4 border-2 border-dashed border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-widest text-gray-900 hover:border-[#b50a0a] hover:text-[#b50a0a] transition-all flex items-center justify-center gap-2"
+                        className="w-full py-4 border-2 border-dashed border-gray-100 rounded-2xl text-[10px] font-black tracking-wide text-gray-900 hover:border-[#b50a0a] hover:text-[#b50a0a] transition-all flex items-center justify-center gap-2"
                       >
                         <Plus className="w-4 h-4" /> Add Achievement
                       </button>
@@ -602,13 +602,13 @@ export default function ProfileEditor() {
             {activeTab === 'Bio & Portfolio' && (
                <div className="space-y-10 animate-in fade-in duration-500">
                   <div className="space-y-4">
-                    <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Professional Bio</label>
-                    <textarea name="bio" rows={8} defaultValue={profile?.bio} placeholder="Describe your professional journey, skills, and ambitions..." className="w-full bg-gray-50 border-none rounded-3xl px-4 md:px-8 py-6 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none leading-relaxed text-black placeholder:text-gray-900" />
+                    <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Professional Bio</label>
+                    <textarea name="bio" rows={8} defaultValue={profile?.bio} placeholder="Describe your professional journey, skills, and ambitions..." className="w-full bg-gray-50 border-none rounded-3xl px-4 md:px-8 py-6 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none leading-relaxed text-black placeholder:text-gray-900" />
                   </div>
 
                   {(role === 'agent' || role === 'organization') && (
                     <div className="pt-8 border-t border-gray-50">
-                       <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-6">Represented Talent Portfolio</h4>
+                       <h4 className="text-[10px] font-black text-gray-900 tracking-wide mb-6">Represented Talent Portfolio</h4>
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {portfolioMembers.map((member) => (
                             <div key={member.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100">
@@ -616,7 +616,7 @@ export default function ProfileEditor() {
                                   {member.avatar_url && <img src={member.avatar_url} className="w-full h-full object-cover" />}
                                </div>
                                <div className="flex-1 min-w-0">
-                                  <p className="text-[11px] font-black uppercase text-gray-900 truncate">{member.first_name} {member.last_name}</p>
+                                  <p className="text-[11px] font-black text-gray-900 truncate">{member.first_name} {member.last_name}</p>
                                   <p className="text-[9px] font-bold text-gray-900 truncate">{member.position || member.role} {member.market_value ? `• $${member.market_value}` : ''}</p>
                                </div>
                                <button 
@@ -645,7 +645,7 @@ export default function ProfileEditor() {
                <div className="space-y-10 animate-in fade-in duration-500">
                   <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                       <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Video Highlights</h4>
+                       <h4 className="text-[10px] font-black text-gray-900 tracking-wide">Video Highlights</h4>
                        <span className="text-[9px] font-bold bg-gray-900 text-white px-2 py-1 rounded">MP4 • max 50MB</span>
                     </div>
                     <input type="file" id="video_upload" className="hidden" accept="video/mp4,video/x-m4v,video/*" onChange={handleVideoUpload} />
@@ -658,7 +658,7 @@ export default function ProfileEditor() {
                            <video src={profile.highlight_reel_url} className="w-full h-full object-cover" muted loop playsInline onMouseEnter={e => e.currentTarget.play()} onMouseLeave={e => e.currentTarget.pause()} />
                            <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                              <Camera className="w-8 h-8 text-white mb-2" />
-                             <span className="text-white text-[10px] font-black uppercase tracking-widest">Change Video</span>
+                             <span className="text-white text-[10px] font-black tracking-wide">Change Video</span>
                            </div>
                          </div>
                        ) : (
@@ -666,7 +666,7 @@ export default function ProfileEditor() {
                            <div className="w-16 h-16 rounded-full bg-red-50 text-[#b50a0a] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                               <Camera className="w-8 h-8" />
                            </div>
-                           <p className="text-xs font-black uppercase tracking-widest text-gray-900 mb-2">Upload Highlight Reel</p>
+                           <p className="text-sm font-black tracking-wide text-gray-900 mb-2">Upload Highlight Reel</p>
                            <p className="text-[10px] font-medium text-gray-900 leading-relaxed max-w-full max-w-[250px]">Click to select or drag and drop your best match clips here.</p>
                          </>
                        )}
@@ -674,7 +674,7 @@ export default function ProfileEditor() {
                   </div>
 
                   <div className="space-y-6 pt-10 border-t border-gray-50">
-                    <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Action Photos</h4>
+                    <h4 className="text-[10px] font-black text-gray-900 tracking-wide">Action Photos</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                        {[1, 2, 3].map((_, i) => (
                          <div key={i} className="aspect-square bg-gray-100 rounded-2xl relative group overflow-hidden">
@@ -685,7 +685,7 @@ export default function ProfileEditor() {
                        ))}
                        <button className="aspect-square border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center text-gray-900 hover:border-[#b50a0a] hover:text-[#b50a0a] transition-all">
                           <Plus className="w-6 h-6 mb-2" />
-                          <span className="text-[8px] font-black uppercase tracking-[0.2em]">Add Photo</span>
+                          <span className="text-[8px] font-black tracking-[0.2em]">Add Photo</span>
                        </button>
                     </div>
                   </div>
@@ -702,7 +702,7 @@ export default function ProfileEditor() {
                         { name: 'LinkedIn', id: 'social_linkedin', icon: Globe, placeholder: 'linkedin.com/in/name', value: profile?.social_links?.linkedin },
                      ].map((social, i) => (
                        <div key={i} className="space-y-4">
-                          <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">{social.name}</label>
+                          <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">{social.name}</label>
                           <div className="relative">
                              <social.icon className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
                              <input 
@@ -710,7 +710,7 @@ export default function ProfileEditor() {
                                type="text" 
                                defaultValue={social.value}
                                placeholder={social.placeholder} 
-                               className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
+                               className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
                              />
                           </div>
                        </div>

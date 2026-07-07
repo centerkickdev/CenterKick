@@ -33,44 +33,44 @@ export function DashboardSidebarNav({ role }: DashboardSidebarNavProps) {
     <nav className="flex-1 p-6 space-y-2 overflow-y-auto">
       <Link href="/dashboard" className={`${getLinkClasses('/dashboard')} group`}>
         <Home className={getIconClasses('/dashboard')} />
-        <span className="text-sm uppercase tracking-widest">Overview</span>
+        <span className="text-base tracking-wide">Overview</span>
       </Link>
       
       <Link href="/dashboard/profile" className={`${getLinkClasses('/dashboard/profile')} group`}>
         <Users className={getIconClasses('/dashboard/profile')} />
-        <span className="text-sm uppercase tracking-widest">My Profile</span>
+        <span className="text-base tracking-wide">My Profile</span>
       </Link>
 
       {(role === 'player' || role === 'athlete' || role === 'coach') && (
         <Link href="/dashboard/stats" className={`${getLinkClasses('/dashboard/stats')} group`}>
           <BarChart2 className={getIconClasses('/dashboard/stats')} />
-          <span className="text-sm uppercase tracking-widest">Stats & Media</span>
+          <span className="text-base tracking-wide">Stats & Media</span>
         </Link>
       )}
 
       {(role === 'agent' || role === 'scout' || role === 'organization') && (
         <Link href="/dashboard/scout" className={`${getLinkClasses('/dashboard/scout')} group`}>
           <Search className={getIconClasses('/dashboard/scout')} />
-          <span className="text-sm uppercase tracking-widest">Discovery</span>
+          <span className="text-base tracking-wide">Discovery</span>
         </Link>
       )}
 
       {role === 'agent' && (
         <Link href="/dashboard/portfolio" className={`${getLinkClasses('/dashboard/portfolio')} group`}>
           <Users className={getIconClasses('/dashboard/portfolio')} />
-          <span className="text-sm uppercase tracking-widest">Portfolio</span>
+          <span className="text-base tracking-wide">Portfolio</span>
         </Link>
       )}
 
       <div className="pt-8 mt-8 border-t border-gray-800">
-        <span className="px-4 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Management</span>
+        <span className="px-4 text-[10px] font-black text-gray-500 tracking-[0.2em]">Management</span>
         <Link href="/dashboard/subscription" className={`${getLinkClasses('/dashboard/subscription')} group mt-4`}>
           <Shield className={getIconClasses('/dashboard/subscription')} />
-          <span className="text-sm uppercase tracking-widest">Subscription</span>
+          <span className="text-base tracking-wide">Subscription</span>
         </Link>
         <Link href="/dashboard/settings" className={`${getLinkClasses('/dashboard/settings')} group`}>
           <Settings className={getIconClasses('/dashboard/settings')} />
-          <span className="text-sm uppercase tracking-widest">Settings</span>
+          <span className="text-base tracking-wide">Settings</span>
         </Link>
         <div className="scale-95 origin-left mt-2">
           <SignOutButton />

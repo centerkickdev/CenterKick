@@ -102,7 +102,7 @@ export default function MediaGallery({ isOpen, onClose, onSelect, title = "Media
         <div className="px-4 md:px-8 py-6 border-b border-gray-50 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <ImageIcon className="w-5 h-5 text-[#b50a0a]" />
-            <h3 className="text-sm font-black text-black uppercase tracking-widest">{title}</h3>
+            <h3 className="text-base font-black text-black tracking-wide">{title}</h3>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-gray-50 rounded-lg text-gray-900 transition-colors">
             <X className="w-5 h-5" />
@@ -124,13 +124,13 @@ export default function MediaGallery({ isOpen, onClose, onSelect, title = "Media
           <button 
             disabled={isUploading}
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-2 px-6 py-2.5 bg-black text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-[#b50a0a] transition-all"
+            className="flex items-center gap-2 px-6 py-2.5 bg-black text-white rounded-xl text-[9px] font-black tracking-wide hover:bg-[#b50a0a] transition-all"
           >
             {isUploading ? <Loader2 className="w-3 h-3 animate-spin" /> : <UploadCloud className="w-3 h-3" />}
             Upload New
           </button>
           <input type="file" ref={fileInputRef} className="hidden" accept="image/jpeg,image/png,image/webp" onChange={handleUpload} />
-          <p className="text-[9px] font-black text-gray-900 uppercase tracking-widest ml-auto">
+          <p className="text-[9px] font-black text-gray-900 tracking-wide ml-auto">
             {assets.length} / {totalCount} Assets
           </p>
         </div>
@@ -141,7 +141,7 @@ export default function MediaGallery({ isOpen, onClose, onSelect, title = "Media
           ) : assets.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center opacity-40">
               <ImageIcon className="w-10 h-10 mb-4" />
-              <p className="text-[10px] font-black uppercase tracking-widest">Nothing here yet</p>
+              <p className="text-[10px] font-black tracking-wide">Nothing here yet</p>
             </div>
           ) : (
             <div className="space-y-8">
@@ -151,8 +151,8 @@ export default function MediaGallery({ isOpen, onClose, onSelect, title = "Media
                     <div 
                       onClick={() => setSelectedAssetId(asset.id)}
                       className={`group relative aspect-square rounded-2xl overflow-hidden cursor-pointer border-4 transition-all shadow-sm ${
-                        selectedAssetId === asset.id ? 'border-[#b50a0a]' : 'border-transparent'
-                      }`}
+ selectedAssetId === asset.id ? 'border-[#b50a0a]' : 'border-transparent'
+ }`}
                     >
                       <img src={asset.url} alt={asset.filename} className="w-full h-full object-cover" />
                       <div className={`absolute inset-0 bg-black/40 transition-opacity ${selectedAssetId === asset.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
@@ -181,7 +181,7 @@ export default function MediaGallery({ isOpen, onClose, onSelect, title = "Media
                   <button 
                     onClick={() => loadAssets(50, assets.length)}
                     disabled={isLoading}
-                    className="px-4 md:px-8 py-3 bg-gray-50 border border-gray-100 text-gray-900 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center gap-2"
+                    className="px-4 md:px-8 py-3 bg-gray-50 border border-gray-100 text-gray-900 rounded-xl text-[9px] font-black tracking-wide hover:bg-gray-100 transition-all flex items-center gap-2"
                   >
                     {isLoading && <Loader2 className="w-3 h-3 animate-spin" />}
                     Load More Assets
@@ -193,7 +193,7 @@ export default function MediaGallery({ isOpen, onClose, onSelect, title = "Media
         </div>
 
         <div className="px-4 md:px-8 py-6 border-t border-gray-50 bg-gray-50/50 flex items-center justify-between">
-          <p className="text-[8px] font-black text-gray-500 uppercase tracking-widest">
+          <p className="text-[8px] font-black text-gray-500 tracking-wide">
             JPG / PNG / WebP • Optimized for Web
           </p>
           <button 
@@ -203,7 +203,7 @@ export default function MediaGallery({ isOpen, onClose, onSelect, title = "Media
               if (asset) onSelect(asset.url);
               onClose();
             }}
-            className="flex items-center gap-2 px-4 md:px-8 py-3 bg-[#b50a0a] text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black transition-all disabled:opacity-50 shadow-lg"
+            className="flex items-center gap-2 px-4 md:px-8 py-3 bg-[#b50a0a] text-white rounded-xl text-[9px] font-black tracking-wide hover:bg-black transition-all disabled:opacity-50 shadow-lg"
           >
             Insert into post
             <MousePointer2 className="w-3.5 h-3.5" />

@@ -43,14 +43,14 @@ export default function NewTournamentPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
-          <Link href="/admin/tournaments" className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-[#b50a0a] transition-colors mb-4">
+          <Link href="/admin/tournaments" className="flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-gray-400 hover:text-[#b50a0a] transition-colors mb-4">
             <ArrowLeft className="w-3 h-3" /> Back to Tournaments
           </Link>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center border border-red-100 shadow-sm">
               <Trophy className="w-5 h-5 text-[#b50a0a]" />
             </div>
-            <h1 className="text-4xl font-black text-gray-900 uppercase tracking-tighter">New Tournament</h1>
+            <h1 className="text-4xl font-black text-gray-900 tracking-tighter">New Tournament</h1>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default function NewTournamentPage() {
       {error && (
         <div className="bg-red-50 border border-red-100 p-5 rounded-2xl flex items-center gap-4 text-red-600 animate-in fade-in slide-in-from-top-2">
           <Info className="w-5 h-5 shrink-0" />
-          <p className="text-[10px] font-black uppercase tracking-widest">{error}</p>
+          <p className="text-[10px] font-black tracking-wide">{error}</p>
         </div>
       )}
 
@@ -70,22 +70,22 @@ export default function NewTournamentPage() {
               <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center">
                 <Layout className="w-4 h-4 text-gray-400" />
               </div>
-              <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Tournament Identity</h3>
+              <h3 className="text-base font-black tracking-wide text-gray-900">Tournament Identity</h3>
             </div>
 
             <div className="space-y-4">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Official Name</label>
+              <label className="text-[10px] font-black text-gray-400 tracking-wide ml-1">Official Name</label>
               <input 
                 name="name"
                 required
                 type="text" 
                 placeholder="e.g. Lagos Elite League 2026" 
-                className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-300" 
+                className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-300" 
               />
             </div>
 
             <div className="space-y-4">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Tournament Logo (Optional)</label>
+              <label className="text-[10px] font-black text-gray-400 tracking-wide ml-1">Tournament Logo (Optional)</label>
               <div className="flex items-center gap-6">
                 <div className="w-24 h-24 rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden shrink-0 relative group cursor-pointer hover:border-[#b50a0a] transition-colors">
                   {logoPreview ? (
@@ -102,19 +102,19 @@ export default function NewTournamentPage() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-[11px] font-black text-gray-900 uppercase">Upload Identity</p>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Recommended: 400x400px. Max 4MB.</p>
+                  <p className="text-[11px] font-black text-gray-900">Upload Identity</p>
+                  <p className="text-[10px] font-bold text-gray-400 tracking-wide">Recommended: 400x400px. Max 4MB.</p>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Detailed Description</label>
+              <label className="text-[10px] font-black text-gray-400 tracking-wide ml-1">Detailed Description</label>
               <textarea 
                 name="description"
                 rows={4}
                 placeholder="Describe the format, rules, and eligibility..." 
-                className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-300 resize-none" 
+                className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-300 resize-none" 
               />
             </div>
           </div>
@@ -125,16 +125,16 @@ export default function NewTournamentPage() {
               <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center">
                 <Calendar className="w-4 h-4 text-gray-400" />
               </div>
-              <h3 className="text-sm font-black uppercase tracking-widest text-gray-900">Timeline & Format</h3>
+              <h3 className="text-base font-black tracking-wide text-gray-900">Timeline & Format</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-8">
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Tournament Type</label>
+                <label className="text-[10px] font-black text-gray-400 tracking-wide ml-1">Tournament Type</label>
                 <select 
                   name="type"
                   required
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black"
+                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black"
                 >
                   <option value="league">League Format</option>
                   <option value="knockout">Knockout Tournament</option>
@@ -143,11 +143,11 @@ export default function NewTournamentPage() {
               </div>
               
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Kick-off Date</label>
+                <label className="text-[10px] font-black text-gray-400 tracking-wide ml-1">Kick-off Date</label>
                 <input 
                   name="start_date"
                   type="date" 
-                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" 
+                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black" 
                 />
               </div>
             </div>
@@ -158,8 +158,8 @@ export default function NewTournamentPage() {
         <div className="space-y-8">
           <div className="bg-gray-900 rounded-[40px] p-10 text-white space-y-8 shadow-2xl">
             <div className="space-y-2">
-              <h4 className="text-lg font-black uppercase tracking-tighter">Ready to Launch?</h4>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-relaxed">
+              <h4 className="text-lg font-black tracking-tighter">Ready to Launch?</h4>
+              <p className="text-[10px] font-bold text-gray-400 tracking-wide leading-relaxed">
                 Confirming will create the tournament core. You can add teams and fixtures in the next step.
               </p>
             </div>
@@ -167,7 +167,7 @@ export default function NewTournamentPage() {
             <button 
               type="submit"
               disabled={isLoading}
-              className="w-full bg-[#b50a0a] text-white py-6 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-black transition-all flex items-center justify-center gap-4 shadow-xl transform active:scale-95 disabled:opacity-50"
+              className="w-full bg-[#b50a0a] text-white py-6 rounded-2xl font-black tracking-[0.2em] text-[10px] hover:bg-white hover:text-black transition-all flex items-center justify-center gap-4 shadow-xl transform active:scale-95 disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -180,8 +180,8 @@ export default function NewTournamentPage() {
           </div>
 
           <div className="bg-white border border-gray-100 rounded-[40px] p-4 md:p-8 text-center space-y-4">
-            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Need help with formats?</p>
-            <Link href="/admin/docs/tournaments" className="text-[10px] font-black text-[#b50a0a] uppercase tracking-widest hover:underline">
+            <p className="text-[9px] font-black text-gray-400 tracking-wide">Need help with formats?</p>
+            <Link href="/admin/docs/tournaments" className="text-[10px] font-black text-[#b50a0a] tracking-wide hover:underline">
               Read Management Guide
             </Link>
           </div>

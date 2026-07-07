@@ -35,8 +35,8 @@ export default function PlayersClient({ players }: PlayersClientProps) {
          {/* Filter Bar */}
          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-8 border-b border-gray-100">
             <div>
-               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 uppercase tracking-tighter">Verified Athletes</h2>
-               <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Discover rising football talent</p>
+               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tighter">Verified Athletes</h2>
+               <p className="text-sm font-bold text-gray-400 tracking-wide mt-1">Discover rising football talent</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
                <div className="relative">
@@ -46,14 +46,14 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                      placeholder="Search athletes..."
                      value={searchQuery}
                      onChange={e => setSearchQuery(e.target.value)}
-                     className="pl-11 pr-5 py-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#a20000] w-full sm:w-56 transition-all"
+                     className="pl-11 pr-5 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-900 focus:outline-none focus:border-[#a20000] w-full sm:w-56 transition-all"
                   />
                </div>
                <div className="relative">
                   <select
                      value={selectedCountry}
                      onChange={e => setSelectedCountry(e.target.value)}
-                     className="appearance-none pl-5 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:border-[#a20000] w-full sm:w-48 cursor-pointer transition-all"
+                     className="appearance-none pl-5 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-900 focus:outline-none focus:border-[#a20000] w-full sm:w-48 cursor-pointer transition-all"
                   >
                      <option value="">All Countries</option>
                      {availableCountries.map(c => <option key={c} value={c}>{c}</option>)}
@@ -66,7 +66,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
          {/* Grid */}
          {filtered.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-               <p className="text-gray-500 font-bold uppercase tracking-widest text-sm">No matching athlete profiles found.</p>
+               <p className="text-gray-500 font-bold tracking-wide text-base">No matching athlete profiles found.</p>
             </div>
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
@@ -87,8 +87,8 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                           <span className="text-[#ff4d4d] text-[9px] font-bold uppercase tracking-widest block mb-0.5">{athlete.position || 'Player'}</span>
-                           <h3 className="text-white font-black text-sm sm:text-base leading-tight uppercase tracking-tight line-clamp-2">{name}</h3>
+                           <span className="text-[#ff4d4d] text-[9px] font-bold tracking-wide block mb-0.5">{athlete.position || 'Player'}</span>
+                           <h3 className="text-white font-black text-base sm:text-base leading-tight tracking-tight line-clamp-2">{name}</h3>
                         </div>
                      </Link>
                   );

@@ -16,7 +16,7 @@ function ImageSelectField({ label, value, onChange }: { label: string, value: st
   const [galleryOpen, setGalleryOpen] = useState(false);
   return (
     <div className="space-y-2">
-       <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">{label}</label>
+       <label className="text-[9px] font-black text-gray-400 tracking-wide ml-1">{label}</label>
        <div className="flex gap-2">
           <input 
             className="flex-1 bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
@@ -63,7 +63,7 @@ function ArrayEditor({ label, items, onChange, itemTemplate, renderItemForm }: {
   return (
     <div className="space-y-4 border border-gray-100 rounded-3xl p-6 bg-gray-50/50">
       <div className="flex items-center justify-between">
-         <label className="text-[11px] font-black text-gray-900 uppercase tracking-widest">{label}</label>
+         <label className="text-[11px] font-black text-gray-900 tracking-wide">{label}</label>
          <button type="button" onClick={addItem} className="bg-white border border-gray-200 shadow-sm text-gray-900 px-3 py-1.5 rounded-xl text-[9px] font-bold flex items-center gap-2 hover:border-[#b50a0a] hover:text-[#b50a0a] transition-colors">
            <Plus className="w-3 h-3" /> Add Item
          </button>
@@ -77,7 +77,7 @@ function ArrayEditor({ label, items, onChange, itemTemplate, renderItemForm }: {
              {renderItemForm(item, (k: string, v: any) => updateItem(idx, k, v))}
           </div>
         ))}
-        {currentItems.length === 0 && <p className="text-[10px] text-gray-400 text-center py-4 italic">No items yet.</p>}
+        {currentItems.length === 0 && <p className="text-[10px] text-gray-400 text-center py-4">No items yet.</p>}
       </div>
     </div>
   );
@@ -138,11 +138,11 @@ export default function PageEditorClient({ page, content, categories }: PageEdit
       <div className="lg:w-80 space-y-6">
         <div className="bg-white p-4 md:p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-8 sticky top-24">
            <div>
-              <Link href="/admin/manage-ui" className="text-[9px] font-black text-[#b50a0a] uppercase tracking-widest flex items-center gap-2 mb-4 hover:translate-x-1 transition-transform">
+              <Link href="/admin/manage-ui" className="text-[9px] font-black text-[#b50a0a] tracking-wide flex items-center gap-2 mb-4 hover:translate-x-1 transition-transform">
                  <ChevronUp className="w-3 h-3 -rotate-90" /> Back to Dashboard
               </Link>
-              <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tighter italic">{page.name}</h2>
-              <p className="text-[10px] font-bold text-gray-900 uppercase tracking-widest mt-1">Manage Section Layout</p>
+              <h2 className="text-2xl font-black text-gray-900 tracking-tighter">{page.name}</h2>
+              <p className="text-[10px] font-bold text-gray-900 tracking-wide mt-1">Manage Section Layout</p>
            </div>
 
            <div className="space-y-3">
@@ -151,20 +151,20 @@ export default function PageEditorClient({ page, content, categories }: PageEdit
                   key={key}
                   onClick={() => setActiveSection(key)}
                   className={`group flex items-center justify-between p-4 rounded-2xl border transition-all cursor-pointer ${
-                    activeSection === key 
-                    ? 'border-[#b50a0a] bg-red-50/50 shadow-md' 
-                    : 'border-gray-100 bg-gray-50/50 hover:bg-white hover:border-gray-200'
-                  }`}
+ activeSection === key 
+ ? 'border-[#b50a0a] bg-red-50/50 shadow-md' 
+ : 'border-gray-100 bg-gray-50/50 hover:bg-white hover:border-gray-200'
+ }`}
                 >
                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black italic ${
-                        activeSection === key ? 'bg-[#b50a0a] text-white' : 'bg-white text-gray-300'
-                      }`}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-black ${
+ activeSection === key ? 'bg-[#b50a0a] text-white' : 'bg-white text-gray-300'
+ }`}>
                          {index + 1}
                       </div>
-                      <span className={`text-[11px] font-black uppercase tracking-widest ${
-                        activeSection === key ? 'text-gray-900' : 'text-gray-500'
-                      }`}>{key.replace('_', ' ')}</span>
+                      <span className={`text-[11px] font-black tracking-wide ${
+ activeSection === key ? 'text-gray-900' : 'text-gray-500'
+ }`}>{key.replace('_', ' ')}</span>
                    </div>
                    
                    <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -190,7 +190,7 @@ export default function PageEditorClient({ page, content, categories }: PageEdit
            <button 
              onClick={saveLayout}
              disabled={isSaving}
-             className="w-full bg-black text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#b50a0a] transition-all flex items-center justify-center gap-3 shadow-xl shadow-gray-200 disabled:opacity-50"
+             className="w-full bg-black text-white py-4 rounded-2xl font-black text-[10px] tracking-wide hover:bg-[#b50a0a] transition-all flex items-center justify-center gap-3 shadow-xl shadow-gray-200 disabled:opacity-50"
            >
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
               Save New Layout
@@ -210,8 +210,8 @@ export default function PageEditorClient({ page, content, categories }: PageEdit
          ) : (
            <div className="bg-white p-20 rounded-[3.5rem] border border-gray-100 shadow-sm text-center">
               <Layout className="w-20 h-20 text-gray-100 mx-auto mb-8" />
-              <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tighter italic">Select a section to edit</h3>
-              <p className="text-gray-900 text-[10px] font-black uppercase tracking-widest mt-2">All changes will be reflected on the live site almost instantly.</p>
+              <h3 className="text-2xl font-black text-gray-900 tracking-tighter">Select a section to edit</h3>
+              <p className="text-gray-900 text-[10px] font-black tracking-wide mt-2">All changes will be reflected on the live site almost instantly.</p>
            </div>
          )}
       </div>
@@ -250,14 +250,14 @@ function SectionEditor({ page, section, initialContent, categories }: { page: st
                 <EditIcon keyName={section} />
              </div>
              <div>
-                <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tighter italic">Editing: {section.replace('_', ' ')}</h3>
-                <p className="text-[10px] font-bold text-gray-900 uppercase tracking-widest mt-1">Modify text, visuals, and dynamic connections</p>
+                <h3 className="text-2xl font-black text-gray-900 tracking-tighter">Editing: {section.replace('_', ' ')}</h3>
+                <p className="text-[10px] font-bold text-gray-900 tracking-wide mt-1">Modify text, visuals, and dynamic connections</p>
              </div>
           </div>
           <button 
             onClick={handleSave}
             disabled={isSaving}
-            className="bg-[#b50a0a] text-white px-4 md:px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-black transition-all flex items-center gap-3 shadow-xl shadow-red-900/10 disabled:opacity-50"
+            className="bg-[#b50a0a] text-white px-4 md:px-8 py-3.5 rounded-2xl font-black text-[10px] tracking-wide hover:bg-black transition-all flex items-center gap-3 shadow-xl shadow-red-900/10 disabled:opacity-50"
           >
              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
              Publish Changes
@@ -269,7 +269,7 @@ function SectionEditor({ page, section, initialContent, categories }: { page: st
             renderFields(section, content, updateField, categories, page)
           ) : (
             <div className="p-12 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-               <p className="text-[9px] font-black text-gray-900 uppercase tracking-widest">No configurable fields for this section yet.</p>
+               <p className="text-[9px] font-black text-gray-900 tracking-wide">No configurable fields for this section yet.</p>
             </div>
           )}
        </form>
@@ -294,7 +294,7 @@ function renderFields(section: string, content: any, onChange: (f: string, v: an
     const handleChg = onItemChange || ((v: any) => onChange(field, v));
     return (
       <div className="space-y-2">
-         <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">{label}</label>
+         <label className="text-[9px] font-black text-gray-400 tracking-wide ml-1">{label}</label>
          {multiline ? (
             <textarea 
               rows={4}
@@ -318,7 +318,7 @@ function renderFields(section: string, content: any, onChange: (f: string, v: an
   // Common category selector helper
   const CategorySelect = ({ label, field }: any) => (
     <div className="space-y-2">
-       <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">{label}</label>
+       <label className="text-[9px] font-black text-gray-400 tracking-wide ml-1">{label}</label>
        <select 
          className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black"
          value={content[field] || ''}
@@ -381,13 +381,13 @@ function renderFields(section: string, content: any, onChange: (f: string, v: an
       return (
         <div className="space-y-12">
            <div className="space-y-6 border border-gray-100 p-6 rounded-3xl bg-gray-50/50">
-              <h4 className="text-[11px] font-black text-gray-900 uppercase tracking-widest mb-4">Mission Configuration</h4>
+              <h4 className="text-[11px] font-black text-gray-900 tracking-wide mb-4">Mission Configuration</h4>
               <TextInput label="Mission Title" field="title" itemValue={(content.mission || {}).title} onItemChange={(v: any) => updateMV('mission', 'title', v)} placeholder="Our Mission..." />
               <TextInput label="Mission Description" field="description" itemValue={(content.mission || {}).description} onItemChange={(v: any) => updateMV('mission', 'description', v)} placeholder="To empower footballers..." multiline />
               <ImageSelectField label="Mission Background Image" value={(content.mission || {}).image} onChange={(v) => updateMV('mission', 'image', v)} />
            </div>
            <div className="space-y-6 border border-gray-100 p-6 rounded-3xl bg-gray-50/50">
-              <h4 className="text-[11px] font-black text-gray-900 uppercase tracking-widest mb-4">Vision Configuration</h4>
+              <h4 className="text-[11px] font-black text-gray-900 tracking-wide mb-4">Vision Configuration</h4>
               <TextInput label="Vision Title" field="title" itemValue={(content.vision || {}).title} onItemChange={(v: any) => updateMV('vision', 'title', v)} placeholder="Our Vision..." />
               <TextInput label="Vision Description" field="description" itemValue={(content.vision || {}).description} onItemChange={(v: any) => updateMV('vision', 'description', v)} placeholder="To become Africa's leading..." multiline />
               <ImageSelectField label="Vision Background Image" value={(content.vision || {}).image} onChange={(v) => updateMV('vision', 'image', v)} />
@@ -445,7 +445,7 @@ function renderFields(section: string, content: any, onChange: (f: string, v: an
       return (
         <div className="space-y-6">
            <TextInput label="Brand Name" field="brand" placeholder="CenterKick" />
-           <p className="text-[9px] font-black text-gray-900 uppercase tracking-widest italic mt-4">Navigation links are currently managed via JSON in the database for version 1.</p>
+           <p className="text-[9px] font-black text-gray-900 tracking-wide mt-4">Navigation links are currently managed via JSON in the database for version 1.</p>
         </div>
       );
     case 'faqs':
@@ -469,7 +469,7 @@ function renderFields(section: string, content: any, onChange: (f: string, v: an
       return (
         <div className="space-y-6">
            <TextInput label="Footer Description" field="description" placeholder="CenterKick is a football media platform..." multiline />
-           <p className="text-[9px] font-black text-gray-900 uppercase tracking-widest italic mt-4">Columns and social links are managed via JSON in the database for version 1.</p>
+           <p className="text-[9px] font-black text-gray-900 tracking-wide mt-4">Columns and social links are managed via JSON in the database for version 1.</p>
         </div>
       );
     case 'about':
@@ -480,7 +480,7 @@ function renderFields(section: string, content: any, onChange: (f: string, v: an
            </div>
          );
       }
-      return <p className="text-xs text-gray-400 italic">Configuration for {section} is coming soon.</p>;
+      return <p className="text-sm text-gray-400">Configuration for {section} is coming soon.</p>;
     case 'links':
       if (pageSlug === 'footer') {
          return (
@@ -512,22 +512,22 @@ function renderFields(section: string, content: any, onChange: (f: string, v: an
            </div>
          );
       }
-      return <p className="text-xs text-gray-400 italic">Configuration for {section} is coming soon.</p>;
+      return <p className="text-sm text-gray-400">Configuration for {section} is coming soon.</p>;
     case 'social':
       if (pageSlug === 'footer') {
          return (
            <div className="space-y-6 p-6 border border-gray-100 rounded-3xl bg-gray-50/50 text-center">
-              <h3 className="text-[12px] font-black text-gray-900 uppercase tracking-widest mb-2">Social Profiles</h3>
+              <h3 className="text-[12px] font-black text-gray-900 tracking-wide mb-2">Social Profiles</h3>
               <p className="text-[10px] text-gray-500 mb-6 max-w-md mx-auto">
                  Social media icons in the footer are automatically synchronized with your global site settings.
               </p>
-              <Link href="/admin/settings?tab=Social%20Links" className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full text-[10px] font-black tracking-widest uppercase hover:bg-[#b50a0a] transition-colors">
+              <Link href="/admin/settings?tab=Social%20Links" className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 rounded-full text-[10px] font-black tracking-wide hover:bg-[#b50a0a] transition-colors">
                  Manage Social Links
               </Link>
            </div>
          );
       }
-      return <p className="text-xs text-gray-400 italic">Configuration for {section} is coming soon.</p>;
+      return <p className="text-sm text-gray-400">Configuration for {section} is coming soon.</p>;
     case 'contact':
       if (pageSlug === 'footer') {
          return (
@@ -537,8 +537,8 @@ function renderFields(section: string, content: any, onChange: (f: string, v: an
            </div>
          );
       }
-      return <p className="text-xs text-gray-400 italic">Configuration for {section} is coming soon.</p>;
+      return <p className="text-sm text-gray-400">Configuration for {section} is coming soon.</p>;
     default:
-      return <p className="text-xs text-gray-400 italic">Configuration for {section} is coming soon.</p>;
+      return <p className="text-sm text-gray-400">Configuration for {section} is coming soon.</p>;
   }
 }

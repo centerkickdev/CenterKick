@@ -97,13 +97,13 @@ export async function sendEmailNotification(email: string, subject: string, body
       html: `
         <div style="font-family: sans-serif; padding: 40px; color: #171717; background-color: #f9fafb; border-bottom: 4px solid #B91C1C;">
             <div style="max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 24px; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                <div style="color: #B91C1C; font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em; margin-bottom: 32px;">
+                <div style="color: #B91C1C; font-weight: 900; font-size: 24px; text-transform: ; letter-spacing: -0.05em; margin-bottom: 32px;">
                     Center<span style="color: #171717;">Kick</span>
                 </div>
                 <div style="line-height: 1.6; color: #404040; font-size: 15px;">
                     ${body.replace(/\n/g, '<br />')}
                 </div>
-                <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #f3f4f6; font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">
+                <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid #f3f4f6; font-size: 11px; color: #9ca3af; text-transform: ; font-weight: 700; letter-spacing: 0.05em;">
                     &copy; ${new Date().getFullYear()} CenterKick Global. Professional Football Network.
                 </div>
             </div>

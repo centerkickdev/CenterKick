@@ -50,7 +50,7 @@ function ImageUpload({ label, value, onUpload, path }: { label: string, value: s
 
   return (
     <div className="space-y-3">
-      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">{label}</label>
+      <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">{label}</label>
       <div className="relative group">
         <div className={`w-full bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl p-6 transition-all flex flex-col items-center justify-center gap-3 ${isUploading ? 'opacity-50' : 'hover:border-gray-300 hover:bg-gray-100/50'}`}>
           {value ? (
@@ -63,7 +63,7 @@ function ImageUpload({ label, value, onUpload, path }: { label: string, value: s
           ) : (
             <div className="flex flex-col items-center gap-2 py-2">
                {isUploading ? <Loader2 className="w-6 h-6 text-black animate-spin" /> : <Upload className="w-6 h-6 text-black" />}
-               <p className="text-[9px] font-bold text-gray-900 uppercase tracking-widest">Click to upload {label.split(' ')[1]}</p>
+               <p className="text-[9px] font-bold text-gray-900 tracking-wide">Click to upload {label.split(' ')[1]}</p>
             </div>
           )}
           <input 
@@ -75,7 +75,7 @@ function ImageUpload({ label, value, onUpload, path }: { label: string, value: s
           />
         </div>
         {value && !isUploading && (
-           <p className="text-[8px] font-bold text-gray-900 mt-2 truncate max-w-full px-2 italic">{value}</p>
+           <p className="text-[8px] font-bold text-gray-900 mt-2 truncate max-w-full px-2">{value}</p>
         )}
       </div>
     </div>
@@ -203,20 +203,20 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
             <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mb-6">
               <Trash2 className="w-8 h-8 text-red-500" />
             </div>
-            <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">Reset {activeSection}?</h3>
-            <p className="text-[11px] text-gray-900 font-bold uppercase tracking-widest leading-relaxed mb-8 italic">
+            <h3 className="text-xl font-black text-gray-900 tracking-tighter mb-2">Reset {activeSection}?</h3>
+            <p className="text-[11px] text-gray-900 font-bold tracking-wide leading-relaxed mb-8">
               This will only clear the variables for the <span className="text-red-500">{activeSection}</span> module. Other settings will remain untouched.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <button 
                 onClick={handleResetSection}
-                className="flex-1 bg-red-500 text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-red-600 shadow-xl shadow-red-100"
+                className="flex-1 bg-red-500 text-white px-6 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all hover:bg-red-600 shadow-xl shadow-red-100"
               >
                 Confirm Reset
               </button>
               <button 
                 onClick={() => setShowResetConfirm(false)}
-                className="flex-1 bg-gray-100 text-gray-900 px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-gray-200"
+                className="flex-1 bg-gray-100 text-gray-900 px-6 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all hover:bg-gray-200"
               >
                 Cancel
               </button>
@@ -228,8 +228,8 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">System Settings</h1>
-          <p className="text-gray-900 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">
+          <h1 className="text-3xl font-black text-gray-900 tracking-tighter">System Settings</h1>
+          <p className="text-gray-900 text-[10px] font-bold tracking-[0.2em] mt-1">
             Configure global platform variables and system maintenance.
           </p>
         </div>
@@ -237,7 +237,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
           <button 
             onClick={handleClearCache}
             disabled={isClearing}
-            className="group min-w-0 md:min-w-full max-w-[200px] bg-white border border-gray-200 text-gray-900 px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-start gap-3 hover:bg-gray-50 hover:border-gray-100 disabled:opacity-50"
+            className="group min-w-0 md:min-w-full max-w-[200px] bg-white border border-gray-200 text-gray-900 px-6 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all flex items-center justify-start gap-3 hover:bg-gray-50 hover:border-gray-100 disabled:opacity-50"
           >
             <RefreshCw className={`w-4 h-4 text-orange-500 ${isClearing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
             <span className="text-left leading-none">{isClearing ? 'Clearing...' : 'Clear System Cache'}</span>
@@ -253,24 +253,24 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
               key={section.title}
               onClick={() => setActiveSection(section.title)}
               className={`w-full flex items-center justify-between px-6 py-5 rounded-[2rem] transition-all border-2 ${
-                activeSection === section.title
-                  ? 'bg-white border-gray-900 shadow-xl scale-[1.02] z-10'
-                  : 'bg-transparent border-transparent hover:bg-white/50 hover:border-gray-100'
-              }`}
+ activeSection === section.title
+ ? 'bg-white border-gray-900 shadow-xl scale-[1.02] z-10'
+ : 'bg-transparent border-transparent hover:bg-white/50 hover:border-gray-100'
+ }`}
             >
               <div className="flex items-center gap-4">
                 <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
-                   activeSection === section.title ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-400'
-                }`}>
+ activeSection === section.title ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-400'
+ }`}>
                    <section.icon className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <p className={`text-[10px] font-black uppercase tracking-widest ${
-                    activeSection === section.title ? 'text-gray-900' : 'text-gray-900'
-                  }`}>
+                  <p className={`text-[10px] font-black tracking-wide ${
+ activeSection === section.title ? 'text-gray-900' : 'text-gray-900'
+ }`}>
                     {section.title}
                   </p>
-                  <p className="text-[8px] font-bold text-gray-900 uppercase tracking-widest opacity-60">
+                  <p className="text-[8px] font-bold text-gray-900 tracking-wide opacity-60">
                     {section.label}
                   </p>
                 </div>
@@ -287,19 +287,19 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
               <div className="space-y-10 animate-in slide-in-from-bottom-2 duration-300">
                 <div className="flex items-center justify-between border-b border-gray-50 pb-6">
                    <div>
-                      <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Platform DNA</h3>
-                      <p className="text-[10px] text-gray-900 font-bold mt-1 uppercase">Core identity and accessibility rules</p>
+                      <h3 className="text-base font-black text-gray-900 tracking-wide">Platform DNA</h3>
+                      <p className="text-[10px] text-gray-900 font-bold mt-1">Core identity and accessibility rules</p>
                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:p-8">
                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Platform Name</label>
+                      <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Platform Name</label>
                       <input 
                         type="text" 
                         value={settings.siteTitle || 'CenterKick'}
                         onChange={(e) => updateSetting('siteTitle', e.target.value)}
-                        className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-xs font-bold text-black focus:ring-2 focus:ring-gray-900" 
+                        className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm font-bold text-black focus:ring-2 focus:ring-gray-900" 
                       />
                    </div>
 
@@ -312,7 +312,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                         <div key={item.key} className="flex items-center justify-between p-5 bg-gray-50 rounded-3xl group hover:bg-gray-100 transition-colors">
                            <div className="flex items-center gap-3">
                               <item.icon className={`w-4 h-4 ${settings[item.key] ? 'text-green-500' : 'text-gray-400'}`} />
-                              <span className="text-[11px] font-black text-gray-700 uppercase tracking-widest">{item.label}</span>
+                              <span className="text-[11px] font-black text-gray-700 tracking-wide">{item.label}</span>
                            </div>
                            <button 
                              onClick={() => updateSetting(item.key, !settings[item.key])}
@@ -329,7 +329,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                     <button 
                       onClick={handleSave}
                       disabled={isSaving}
-                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
+                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
                     >
                       <Save className="w-4 h-4 text-[#b50a0a]" />
                       {isSaving ? 'Saving...' : 'Save Global Settings'}
@@ -342,10 +342,10 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
               <div className="space-y-10 animate-in slide-in-from-bottom-2 duration-300">
                 <div className="flex items-center justify-between border-b border-gray-50 pb-6">
                    <div>
-                      <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Email Service (Resend)</h3>
-                      <p className="text-[10px] text-gray-900 font-bold mt-1 uppercase">Infrastructure for transactional emails</p>
+                      <h3 className="text-base font-black text-gray-900 tracking-wide">Email Service (Resend)</h3>
+                      <p className="text-[10px] text-gray-900 font-bold mt-1">Infrastructure for transactional emails</p>
                    </div>
-                   <div className="flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border border-indigo-100 italic">
+                   <div className="flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl text-[9px] font-black tracking-wide border border-indigo-100">
                       <Zap className="w-3 h-3" />
                       Resend API Active
                    </div>
@@ -353,14 +353,14 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-8">
                    <div className="space-y-2 col-span-2">
-                      <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Resend API Key</label>
+                      <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Resend API Key</label>
                       <div className="relative">
                         <input 
                           type={showPassword ? 'text' : 'password'} 
                           value={settings.resendKey || ''} 
                           onChange={(e) => updateSetting('resendKey', e.target.value)}
                           placeholder="re_..."
-                          className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-xs font-bold text-black focus:ring-2 focus:ring-gray-900" 
+                          className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm font-bold text-black focus:ring-2 focus:ring-gray-900" 
                         />
                         <button 
                           onClick={() => setShowPassword(!showPassword)}
@@ -371,20 +371,20 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                       </div>
                    </div>
                     <div className="space-y-2 col-span-2">
-                       <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">From Email (Sender)</label>
+                       <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">From Email (Sender)</label>
                        <input 
                          type="text" 
                          value={settings.fromEmail || 'no-reply@centerkick.net'}
                          onChange={(e) => updateSetting('fromEmail', e.target.value)}
                          placeholder="Onboarding <onboarding@resend.dev>"
-                         className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-xs font-bold text-black focus:ring-2 focus:ring-gray-900" 
+                         className="w-full bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm font-bold text-black focus:ring-2 focus:ring-gray-900" 
                        />
                     </div>
 
                     <div className="space-y-4 col-span-2 mt-4 p-6 bg-gray-50 rounded-[2rem] border border-gray-100">
                        <div className="flex items-center gap-2 mb-2">
                           <Zap className="w-3.5 h-3.5 text-indigo-500" />
-                          <h4 className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Connectivity Test</h4>
+                          <h4 className="text-[10px] font-black text-gray-700 tracking-wide">Connectivity Test</h4>
                        </div>
                        <div className="flex flex-col sm:flex-row gap-3">
                           <input 
@@ -392,18 +392,18 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                             value={testEmail}
                             onChange={(e) => setTestEmail(e.target.value)}
                             placeholder="Recipient email for test..."
-                            className="flex-1 bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-black focus:ring-2 focus:ring-indigo-500" 
+                            className="flex-1 bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold text-black focus:ring-2 focus:ring-indigo-500" 
                           />
                           <button 
                             onClick={handleTestEmail}
                             disabled={isTestingEmail}
-                            className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all hover:bg-indigo-700 disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="bg-indigo-600 text-white px-6 py-3 rounded-xl font-black text-[9px] tracking-wide transition-all hover:bg-indigo-700 disabled:opacity-50 flex items-center justify-center gap-2"
                           >
                              {isTestingEmail ? <Loader2 className="w-3 h-3 animate-spin" /> : <Mail className="w-3 h-3" />}
                              Verify Connection
                           </button>
                        </div>
-                       <p className="text-[8px] text-gray-900 font-bold uppercase tracking-widest italic ml-1">
+                       <p className="text-[8px] text-gray-900 font-bold tracking-wide ml-1">
                           Sends a secure test mail to verify your Resend configuration before saving.
                        </p>
                     </div>
@@ -413,7 +413,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                     <button 
                       onClick={handleSave}
                       disabled={isSaving}
-                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
+                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
                     >
                       <Save className="w-4 h-4 text-[#b50a0a]" />
                       {isSaving ? 'Saving...' : 'Save Mail Settings'}
@@ -426,8 +426,8 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
               <div className="space-y-10 animate-in slide-in-from-bottom-2 duration-300">
                 <div className="flex items-center justify-between border-b border-gray-50 pb-6">
                    <div>
-                      <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Hardened Perimeter</h3>
-                      <p className="text-[10px] text-gray-900 font-bold mt-1 uppercase">Advanced authentication policies</p>
+                      <h3 className="text-base font-black text-gray-900 tracking-wide">Hardened Perimeter</h3>
+                      <p className="text-[10px] text-gray-900 font-bold mt-1">Advanced authentication policies</p>
                    </div>
                 </div>
 
@@ -439,8 +439,8 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                    ].map((item) => (
                      <div key={item.key} className="flex items-center justify-between p-6 bg-gray-50 rounded-[2rem]">
                         <div className="space-y-1">
-                           <span className="text-[11px] font-black text-gray-800 uppercase tracking-widest">{item.label}</span>
-                           <p className="text-[8px] font-bold text-gray-900 uppercase tracking-[0.1em]">Recommended for admin roles</p>
+                           <span className="text-[11px] font-black text-gray-800 tracking-wide">{item.label}</span>
+                           <p className="text-[8px] font-bold text-gray-900 tracking-[0.1em]">Recommended for admin roles</p>
                         </div>
                         <button 
                           onClick={() => updateSetting(item.key, !settings[item.key])}
@@ -456,7 +456,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                     <button 
                       onClick={handleSave}
                       disabled={isSaving}
-                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
+                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
                     >
                       <Save className="w-4 h-4 text-[#b50a0a]" />
                       {isSaving ? 'Saving...' : 'Save Security Settings'}
@@ -469,15 +469,15 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
               <div className="space-y-10 animate-in slide-in-from-bottom-2 duration-300">
                 <div className="flex items-center justify-between border-b border-gray-50 pb-6">
                    <div>
-                      <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Brand Assets</h3>
-                      <p className="text-[10px] text-gray-900 font-bold mt-1 uppercase">Global imagery and iconography</p>
+                      <h3 className="text-base font-black text-gray-900 tracking-wide">Brand Assets</h3>
+                      <p className="text-[10px] text-gray-900 font-bold mt-1">Global imagery and iconography</p>
                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:p-8">
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:p-8">
    <div className="space-y-6">
-      <h4 className="text-[9px] font-black text-gray-900 uppercase tracking-widest px-1">Site & Footer</h4>
+      <h4 className="text-[9px] font-black text-gray-900 tracking-wide px-1">Site & Footer</h4>
       <ImageUpload 
         label="Main Header Logo" 
         value={settings.logoUrl || ''} 
@@ -492,7 +492,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
       />
    </div>
    <div className="space-y-6">
-      <h4 className="text-[9px] font-black text-gray-900 uppercase tracking-widest px-1">Internal Portals</h4>
+      <h4 className="text-[9px] font-black text-gray-900 tracking-wide px-1">Internal Portals</h4>
       <ImageUpload 
         label="Admin Sidebar Logo" 
         value={settings.adminLogoUrl || ''} 
@@ -527,7 +527,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                     <button 
                       onClick={handleSave}
                       disabled={isSaving}
-                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
+                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
                     >
                       <Save className="w-4 h-4 text-[#b50a0a]" />
                       {isSaving ? 'Saving...' : 'Save Assets Configuration'}
@@ -540,14 +540,14 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
               <div className="space-y-10 animate-in slide-in-from-bottom-2 duration-300">
                 <div className="flex items-center justify-between border-b border-gray-50 pb-6">
                    <div>
-                      <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest">Social Profiles</h3>
-                      <p className="text-[10px] text-gray-900 font-bold mt-1 uppercase">Manage platform social handles</p>
+                      <h3 className="text-base font-black text-gray-900 tracking-wide">Social Profiles</h3>
+                      <p className="text-[10px] text-gray-900 font-bold mt-1">Manage platform social handles</p>
                    </div>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                    <div className="space-y-2">
-                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Facebook URL</label>
+                     <label className="text-[9px] font-black text-gray-400 tracking-wide ml-1">Facebook URL</label>
                      <input 
                        className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
                        placeholder="https://facebook.com/..."
@@ -556,7 +556,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                      />
                    </div>
                    <div className="space-y-2">
-                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">Instagram URL</label>
+                     <label className="text-[9px] font-black text-gray-400 tracking-wide ml-1">Instagram URL</label>
                      <input 
                        className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
                        placeholder="https://instagram.com/..."
@@ -565,7 +565,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                      />
                    </div>
                    <div className="space-y-2">
-                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">X (Twitter) URL</label>
+                     <label className="text-[9px] font-black text-gray-400 tracking-wide ml-1">X (Twitter) URL</label>
                      <input 
                        className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
                        placeholder="https://twitter.com/..."
@@ -574,7 +574,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                      />
                    </div>
                    <div className="space-y-2">
-                     <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest ml-1">YouTube URL</label>
+                     <label className="text-[9px] font-black text-gray-400 tracking-wide ml-1">YouTube URL</label>
                      <input 
                        className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
                        placeholder="https://youtube.com/..."
@@ -588,7 +588,7 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                     <button 
                       onClick={handleSave}
                       disabled={isSaving}
-                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
+                      className="bg-gray-900 text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all hover:bg-black flex items-center gap-4 disabled:opacity-50 shadow-xl shadow-gray-100"
                     >
                       <Save className="w-4 h-4 text-[#b50a0a]" />
                       {isSaving ? 'Saving...' : 'Save Social Links'}
@@ -602,12 +602,12 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
             <div className="mt-auto pt-10 border-t border-gray-50 flex flex-col md:flex-row items-center justify-between gap-4">
               <button 
                 onClick={() => setShowResetConfirm(true)}
-                className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-700 transition-all hover:translate-x-1"
+                className="flex items-center gap-3 text-[10px] font-black tracking-wide text-red-500 hover:text-red-700 transition-all hover:translate-x-1"
               >
                 <Trash2 className="w-4 h-4" /> Reset {activeSection.split(' ')[0]} to Defaults
               </button>
                <div className="text-right">
-                 <p className="text-[8px] font-black text-gray-900 uppercase tracking-widest italic opacity-50">
+                 <p className="text-[8px] font-black text-gray-900 tracking-wide opacity-50">
                    Last deploy: <DateDisplay date={new Date()} />
                  </p>
                </div>

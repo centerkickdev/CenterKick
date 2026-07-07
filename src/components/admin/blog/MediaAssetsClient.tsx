@@ -40,11 +40,11 @@ export default function MediaAssetsClient({ assets: initialAssets }: MediaPagePr
             <ChevronLeft className="w-5 h-5 text-gray-900" />
           </Link>
           <div>
-            <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter flex items-center gap-3">
+            <h1 className="text-3xl font-black text-gray-900 tracking-tighter flex items-center gap-3">
               <ImageIcon className="w-8 h-8 text-[#b50a0a]" />
               Media Assets
             </h1>
-            <p className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Manage all uploaded visuals and assets for the blog system.</p>
+            <p className="text-gray-500 text-[10px] font-bold tracking-[0.2em] mt-1">Manage all uploaded visuals and assets for the blog system.</p>
           </div>
         </div>
 
@@ -74,7 +74,7 @@ export default function MediaAssetsClient({ assets: initialAssets }: MediaPagePr
                   setIsLoading(false);
               }} 
            />
-           <button className="bg-black text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-3 shadow-xl hover:bg-[#b50a0a] group-hover:-translate-y-0.5">
+           <button className="bg-black text-white px-4 md:px-8 py-4 rounded-2xl font-black text-[10px] tracking-wide transition-all flex items-center gap-3 shadow-xl hover:bg-[#b50a0a] group-hover:-translate-y-0.5">
               {isLoading ? <Plus className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
               Upload New Asset
            </button>
@@ -90,12 +90,12 @@ export default function MediaAssetsClient({ assets: initialAssets }: MediaPagePr
             placeholder="Search by filename..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-16 pr-8 py-4 bg-gray-50 border-none rounded-2xl text-[11px] font-black uppercase tracking-widest focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
+            className="w-full pl-16 pr-8 py-4 bg-gray-50 border-none rounded-2xl text-[11px] font-black tracking-wide focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
           />
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-            {filteredAssets.length} <span className="italic">Items Found</span>
+          <p className="text-[10px] font-black text-gray-400 tracking-wide">
+            {filteredAssets.length} <span className="">Items Found</span>
           </p>
         </div>
       </div>
@@ -119,7 +119,7 @@ export default function MediaAssetsClient({ assets: initialAssets }: MediaPagePr
                     showToast('Direct URL copied', 'success');
                     setTimeout(() => setCopiedId(null), 2000);
                   }}
-                  className="w-full py-3 bg-white text-black rounded-xl text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#b50a0a] hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 duration-300"
+                  className="w-full py-3 bg-white text-black rounded-xl text-[9px] font-black tracking-wide flex items-center justify-center gap-2 hover:bg-[#b50a0a] hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 duration-300"
                 >
                   {copiedId === asset.id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                   {copiedId === asset.id ? 'Copied!' : 'Copy Link'}
@@ -131,7 +131,7 @@ export default function MediaAssetsClient({ assets: initialAssets }: MediaPagePr
                       showToast('Asset removed', 'success');
                     }
                   }}
-                  className="w-full py-3 bg-red-600/20 text-red-500 border border-red-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 delay-75 duration-300"
+                  className="w-full py-3 bg-red-600/20 text-red-500 border border-red-500/20 rounded-xl text-[9px] font-black tracking-wide flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-all transform translate-y-4 group-hover:translate-y-0 delay-75 duration-300"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   Delete
@@ -140,14 +140,14 @@ export default function MediaAssetsClient({ assets: initialAssets }: MediaPagePr
 
               <div className="absolute top-4 left-4">
                 <div className="bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
-                   <p className="text-[7px] font-black text-white uppercase tracking-widest truncate max-w-full max-w-[100px]">
+                   <p className="text-[7px] font-black text-white tracking-wide truncate max-w-full max-w-[100px]">
                       {asset.filename.split('.').pop()}
                    </p>
                 </div>
               </div>
 
               <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                  <p className="text-[8px] font-black text-white truncate uppercase tracking-widest drop-shadow-lg">
+                  <p className="text-[8px] font-black text-white truncate tracking-wide drop-shadow-lg">
                     {asset.filename}
                   </p>
               </div>
@@ -157,7 +157,7 @@ export default function MediaAssetsClient({ assets: initialAssets }: MediaPagePr
         {filteredAssets.length === 0 && (
           <div className="col-span-full py-32 text-center bg-gray-50 rounded-[3rem] border border-dashed border-gray-200">
              <ImageIcon className="w-16 h-16 text-gray-200 mx-auto mb-6" />
-             <p className="text-xs font-black uppercase tracking-widest text-gray-400">No assets matching your search.</p>
+             <p className="text-sm font-black tracking-wide text-gray-400">No assets matching your search.</p>
           </div>
         )}
       </div>

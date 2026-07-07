@@ -106,11 +106,11 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
                      </div>
                   )}
                </Link>
-               <p className="text-white/80 text-[14px] leading-[1.8] max-w-[700px] mb-8 font-light italic text-center">
+               <p className="text-white/80 text-[14px] leading-[1.8] max-w-[700px] mb-8 font-light text-center">
                   {desc}
                </p>
 
-               <h3 className="mb-5 text-[12px] font-bold text-white tracking-widest uppercase">FOLLOW US</h3>
+               <h3 className="mb-5 text-[12px] font-bold text-white tracking-wide">FOLLOW US</h3>
                <div className="flex items-center justify-center gap-6">
                   <a href={fbUrl} target="_blank" rel="noopener noreferrer" className="text-white hover:text-white/70 transition-colors">
                      <Facebook className="w-6 h-6" />
@@ -131,11 +131,11 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 justify-items-center md:justify-items-start text-center md:text-left">
                {/* Column 1: Quick Links */}
                <div className="w-full">
-                  <h3 className="mb-6 text-[14px] font-bold text-white tracking-wide uppercase">Quick Links</h3>
+                  <h3 className="mb-6 text-[14px] font-bold text-white tracking-wide">Quick Links</h3>
                   <ul className="text-white/80 space-y-3 text-[12px] font-light">
                      {quickLinks.map((link: any, i: number) => (
                         <li key={i}>
-                           <Link href={link.url || '#'} className="hover:text-white transition-colors uppercase tracking-widest block">
+                           <Link href={link.url || '#'} className="hover:text-white transition-colors tracking-wide block">
                               {link.title}
                            </Link>
                         </li>
@@ -145,16 +145,16 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
 
                {/* Column 3: Services */}
                <div className="w-full">
-                  <h3 className="mb-6 text-[14px] font-bold text-white tracking-wide uppercase">SERVICES</h3>
+                  <h3 className="mb-6 text-[14px] font-bold text-white tracking-wide">SERVICES</h3>
                   <ul className="text-white/80 space-y-3 text-[12px] font-light">
                      {services.map((svc: any, i: number) => (
                         <li key={i}>
                            {svc.url && svc.url !== '#' ? (
-                              <Link href={svc.url} className="hover:text-white transition-colors uppercase tracking-widest block opacity-80 hover:opacity-100">
+                              <Link href={svc.url} className="hover:text-white transition-colors tracking-wide block opacity-80 hover:opacity-100">
                                  {svc.title}
                               </Link>
                            ) : (
-                              <span className="uppercase tracking-widest opacity-80 block">{svc.title}</span>
+                              <span className="tracking-wide opacity-80 block">{svc.title}</span>
                            )}
                         </li>
                      ))}
@@ -163,26 +163,26 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
 
                {/* Column 3: Legal */}
                <div className="w-full">
-                  <h3 className="mb-6 text-[14px] font-bold text-white tracking-wide uppercase">LEGAL</h3>
+                  <h3 className="mb-6 text-[14px] font-bold text-white tracking-wide">LEGAL</h3>
                   <ul className="text-white/80 space-y-3 text-[12px] font-light">
-                     <li><Link href="/privacy" className="hover:text-white transition-colors uppercase tracking-widest block">Privacy Policy</Link></li>
-                     <li><Link href="/terms" className="hover:text-white transition-colors uppercase tracking-widest block">Terms of Service</Link></li>
+                     <li><Link href="/privacy" className="hover:text-white transition-colors tracking-wide block">Privacy Policy</Link></li>
+                     <li><Link href="/terms" className="hover:text-white transition-colors tracking-wide block">Terms of Service</Link></li>
                   </ul>
                </div>
 
                {/* Column 4: Contact */}
                <div className="w-full">
-                  <h3 className="mb-6 text-[14px] font-bold text-white tracking-wide uppercase">CONTACT INFORMATION</h3>
+                  <h3 className="mb-6 text-[14px] font-bold text-white tracking-wide">CONTACT INFORMATION</h3>
                   <ul className="text-white/80 space-y-4 text-[12px] font-light">
                      <li>
                         <a href={`mailto:${contactEmail}`} className="hover:text-white transition-colors flex flex-col md:items-start items-center gap-1">
-                           <span className="uppercase tracking-widest opacity-60 text-[10px]">Email</span>
+                           <span className="tracking-wide opacity-60 text-[10px]">Email</span>
                            <span>{contactEmail}</span>
                         </a>
                      </li>
                      <li>
                         <div className="flex flex-col md:items-start items-center gap-1">
-                           <span className="uppercase tracking-widest opacity-60 text-[10px]">Phone / WhatsApp</span>
+                           <span className="tracking-wide opacity-60 text-[10px]">Phone / WhatsApp</span>
                            <span>{contactPhone}</span>
                         </div>
                      </li>
@@ -194,11 +194,11 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
          {/* Developers Tag Bar */}
          <div className="bg-[#8b0000] border-t border-white/10 py-6 md:py-8">
             <div className="max-w-[1200px] mx-auto px-4 lg:px-0 text-center flex flex-col md:flex-row items-center justify-center gap-2 md:gap-0">
-               <span className="text-[10px] font-black text-white/60 tracking-[0.2em] uppercase">
+               <span className="text-[10px] font-black text-white/60 tracking-[0.2em]">
                   &copy; {new Date().getFullYear()} {brandName}. All Rights Reserved.
                </span>
-               <span className="hidden md:inline text-[10px] font-black text-white/40 px-2 tracking-[0.2em] uppercase">|</span>
-               <span className="text-[10px] font-black text-white/60 tracking-[0.2em] uppercase">
+               <span className="hidden md:inline text-[10px] font-black text-white/40 px-2 tracking-[0.2em]">|</span>
+               <span className="text-[10px] font-black text-white/60 tracking-[0.2em]">
                   <a href="https://devunomieta.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-white/80 mx-1">@DEVUNOMIETA</a>
                   <span className="opacity-40 px-1">|</span>
                   <a href="https://cortdevs.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-white/80 mx-1">CORTDEVS</a>

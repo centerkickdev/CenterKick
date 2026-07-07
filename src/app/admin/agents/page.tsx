@@ -89,11 +89,11 @@ export default async function AdminAgentsPage({
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 uppercase tracking-tighter leading-none">Agents <span className="text-[#b50a0a]">Portfolio</span></h1>
-          <p className="text-gray-400 text-[9px] font-black uppercase tracking-[0.2em] mt-2">Manage sports agencies, license credentials and network connections.</p>
+          <h1 className="text-2xl font-black text-gray-900 tracking-tighter leading-none">Agents <span className="text-[#b50a0a]">Portfolio</span></h1>
+          <p className="text-gray-400 text-[9px] font-black tracking-[0.2em] mt-2">Manage sports agencies, license credentials and network connections.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/admin/agents?add=true" className="bg-[#b50a0a] hover:bg-black text-white px-5 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center gap-2 shadow-xl shadow-red-900/10 active:scale-95">
+          <Link href="/admin/agents?add=true" className="bg-[#b50a0a] hover:bg-black text-white px-5 py-3 rounded-xl font-black text-[9px] tracking-wide transition-all flex items-center gap-2 shadow-xl shadow-red-900/10 active:scale-95">
             <UserPlus className="w-3.5 h-3.5" /> Enroll New Agent
           </Link>
         </div>
@@ -111,8 +111,8 @@ export default async function AdminAgentsPage({
               <stat.icon className="w-4 h-4" />
             </div>
             <div className="space-y-0.5">
-              <p className={`text-[9px] font-black uppercase tracking-widest ${tab === stat.tab ? 'text-gray-900' : 'text-gray-400'}`}>{stat.label}</p>
-              <p className={`text-2xl font-black italic tracking-tighter ${tab === stat.tab ? 'text-[#b50a0a]' : 'text-gray-900'}`}>{stat.value}</p>
+              <p className={`text-[9px] font-black tracking-wide ${tab === stat.tab ? 'text-gray-900' : 'text-gray-400'}`}>{stat.label}</p>
+              <p className={`text-2xl font-black tracking-tighter ${tab === stat.tab ? 'text-[#b50a0a]' : 'text-gray-900'}`}>{stat.value}</p>
             </div>
             {tab === stat.tab && (
               <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-[#b50a0a] rounded-full"></div>

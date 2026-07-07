@@ -247,7 +247,7 @@ export default function OnboardingPage() {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
         <div className="w-10 h-10 rounded-full border-4 border-slate-100 border-t-[#a20000] animate-spin mb-4"></div>
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest animate-pulse">Initializing Portal...</p>
+        <p className="text-[10px] font-black text-slate-400 tracking-wide animate-pulse">Initializing Portal...</p>
       </div>
     );
   }
@@ -276,7 +276,7 @@ export default function OnboardingPage() {
 
       {/* Navigation */}
       <div className="absolute top-8 left-8 z-20">
-         <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+         <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[10px] font-black tracking-wide bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
             <ArrowLeft className="w-4 h-4" /> Back to Home
          </Link>
       </div>
@@ -295,12 +295,12 @@ export default function OnboardingPage() {
         </div>
 
         <div className="text-center mb-10">
-          <h1 className="text-3xl lg:text-4xl font-black text-white uppercase tracking-tighter leading-none mb-3">
+          <h1 className="text-3xl lg:text-4xl font-black text-white tracking-tighter leading-none mb-3">
             {step === 1 && <>Select Your <span className="text-[#a20000]">Identity</span></>}
             {step === 2 && <>Profile <span className="text-[#a20000]">Specifications</span></>}
             {step === 3 && <>Verification <span className="text-[#a20000]">Pending</span></>}
           </h1>
-          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">
+          <p className="text-white/40 text-[10px] font-black tracking-[0.2em]">
             {step === 1 && "Choose how you will engage with the platform"}
             {step === 2 && "Tell us more about your professional background"}
             {step === 3 && "We are reviewing your payment reference"}
@@ -308,7 +308,7 @@ export default function OnboardingPage() {
         </div>
 
         {error && (
-          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-3 animate-in shake duration-500">
+          <div className="mb-8 p-4 bg-red-500/10 border border-red-500/20 rounded-2xl text-red-500 text-[10px] font-black tracking-wide flex items-center gap-3 animate-in shake duration-500">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -321,23 +321,23 @@ export default function OnboardingPage() {
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {/* Role Selection */}
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Account Identity</label>
+                <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Account Identity</label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {roles.map((item) => (
                     <button
                       key={item.id}
                       onClick={() => setRole(item.id)}
                       className={`p-6 rounded-3xl border-2 text-left transition-all flex flex-col gap-3 ${
-                        role === item.id 
-                          ? 'border-[#a20000] bg-red-50/20 shadow-lg shadow-red-100/30' 
-                          : 'border-slate-50 hover:border-slate-200 bg-white'
-                      }`}
+ role === item.id 
+ ? 'border-[#a20000] bg-red-50/20 shadow-lg shadow-red-100/30' 
+ : 'border-slate-50 hover:border-slate-200 bg-white'
+ }`}
                     >
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${role === item.id ? 'bg-[#a20000] text-white' : 'bg-slate-50 text-slate-400'}`}>
                         <item.icon className="w-5 h-5" />
                       </div>
                       <div>
-                        <h4 className="font-black text-[10px] uppercase tracking-tight text-slate-900">{item.label}</h4>
+                        <h4 className="font-black text-[10px] tracking-tight text-slate-900">{item.label}</h4>
                         <p className="text-[9px] text-slate-400 mt-1 font-bold leading-relaxed">{item.desc}</p>
                       </div>
                     </button>
@@ -349,7 +349,7 @@ export default function OnboardingPage() {
               <div className="space-y-6 pt-8 border-t border-slate-50">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
+                    <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Full Name</label>
                     <div className="relative">
                       <User className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input
@@ -358,13 +358,13 @@ export default function OnboardingPage() {
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         placeholder="John Doe"
-                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none transition-all placeholder:text-slate-300"
+                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-6 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none transition-all placeholder:text-slate-300"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Date of Birth</label>
+                    <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Date of Birth</label>
                     <div className="relative">
                       <Calendar className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input
@@ -372,13 +372,13 @@ export default function OnboardingPage() {
                         required
                         value={dob}
                         onChange={(e) => setDob(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none transition-all"
+                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-6 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none transition-all"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone Number</label>
+                    <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Phone Number</label>
                     <div className="relative">
                       <Phone className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input
@@ -387,13 +387,13 @@ export default function OnboardingPage() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="+234..."
-                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none transition-all placeholder:text-slate-300"
+                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-6 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none transition-all placeholder:text-slate-300"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Country</label>
+                    <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Country</label>
                     <CountrySelect
                       value={country}
                       onChange={setCountry}
@@ -405,7 +405,7 @@ export default function OnboardingPage() {
                 <button
                   onClick={() => handleNextStep(2)}
                   disabled={isLoading}
-                  className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl"
+                  className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl"
                 >
                   {isLoading ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <>Continue to Payment <ChevronRight className="w-4 h-4" /></>}
                 </button>
@@ -417,14 +417,14 @@ export default function OnboardingPage() {
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {/* Pricing Highlight */}
               <div className="text-center mb-6">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Activation Fee</p>
-                <h2 className="text-4xl font-black text-slate-900 italic tracking-tighter">
+                <p className="text-[10px] font-black text-slate-400 tracking-[0.2em] mb-1">Total Activation Fee</p>
+                <h2 className="text-4xl font-black text-slate-900 tracking-tighter">
                   ₦{Number(paymentSettings.plans?.[role]?.amount || 15000).toLocaleString()}
                 </h2>
-                <p className="text-[10px] font-bold text-gray-400 lowercase tracking-wide italic mt-0.5">
+                <p className="text-[10px] font-bold text-gray-400 lowercase tracking-wide mt-0.5">
                   ~ ${(Number(paymentSettings.plans?.[role]?.amount || 15000) / 1500).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} usd conversion
                 </p>
-                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">
+                <p className="text-[9px] font-bold text-slate-400 tracking-wide mt-1">
                   {paymentSettings.plans?.[role]?.frequency || 'One-time Payment'} for {role} Profile
                 </p>
               </div>
@@ -433,13 +433,13 @@ export default function OnboardingPage() {
               <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
                 <button
                   onClick={() => setPaymentMethod('gateway')}
-                  className={`flex-1 flex items-center justify-center gap-3 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${paymentMethod === 'gateway' ? 'bg-white text-slate-900 shadow-md border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                  className={`flex-1 flex items-center justify-center gap-3 py-3 rounded-xl text-[10px] font-black tracking-wide transition-all ${paymentMethod === 'gateway' ? 'bg-white text-slate-900 shadow-md border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
                 >
                   <CreditCard className="w-4 h-4" /> Payment Gateway
                 </button>
                 <button
                   onClick={() => setPaymentMethod('bank')}
-                  className={`flex-1 flex items-center justify-center gap-3 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${paymentMethod === 'bank' ? 'bg-white text-slate-900 shadow-md border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                  className={`flex-1 flex items-center justify-center gap-3 py-3 rounded-xl text-[10px] font-black tracking-wide transition-all ${paymentMethod === 'bank' ? 'bg-white text-slate-900 shadow-md border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
                 >
                   <Building className="w-4 h-4" /> Bank Settlement
                 </button>
@@ -451,7 +451,7 @@ export default function OnboardingPage() {
                   <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-4">
                       <CreditCard className="w-5 h-5 text-[#a20000]" />
-                      <h3 className="text-sm font-black uppercase tracking-widest">Gateway Payment</h3>
+                      <h3 className="text-base font-black tracking-wide">Gateway Payment</h3>
                     </div>
                     <p className="text-[11px] text-slate-400 font-medium mb-6 leading-relaxed">
                       Pay instantly using Paystack/Stripe. Your account will be flagged for priority verification once the transaction is logged.
@@ -459,7 +459,7 @@ export default function OnboardingPage() {
                     <a 
                       href={paymentSettings.paymentLink || 'https://paystack.com/pay/centerkick-pro'} 
                       target="_blank" 
-                      className="inline-flex items-center gap-2 bg-[#a20000] text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-700 transition-all shadow-lg"
+                      className="inline-flex items-center gap-2 bg-[#a20000] text-white px-6 py-3 rounded-xl text-[10px] font-black tracking-wide hover:bg-red-700 transition-all shadow-lg"
                     >
                       Open Payment Portal <ArrowRight className="w-4 h-4" />
                     </a>
@@ -472,27 +472,27 @@ export default function OnboardingPage() {
                     <div className="space-y-4 flex-1">
                       <div className="flex items-center gap-3 mb-1">
                         <Building className="w-5 h-5 text-amber-600" />
-                        <h3 className="text-sm font-black uppercase tracking-widest text-slate-900">Local Bank Transfer</h3>
+                        <h3 className="text-base font-black tracking-wide text-slate-900">Local Bank Transfer</h3>
                       </div>
                       <div className="space-y-3">
                         <div className="flex flex-col">
-                          <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Institution</span>
-                          <span className="text-xs font-black text-slate-900 uppercase tracking-tight">{paymentSettings.bankName || 'OPAY'}</span>
+                          <span className="text-[8px] font-black text-slate-400 tracking-wide">Institution</span>
+                          <span className="text-sm font-black text-slate-900 tracking-tight">{paymentSettings.bankName || 'OPAY'}</span>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="flex flex-col">
-                            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Acc. Name</span>
+                            <span className="text-[8px] font-black text-slate-400 tracking-wide">Acc. Name</span>
                             <span className="text-[11px] font-bold text-slate-900">{paymentSettings.accountName || 'CENTERKICK'}</span>
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Number</span>
-                            <span className="text-[11px] font-bold text-slate-900 tracking-wider">{paymentSettings.accountNumber || '0123456789'}</span>
+                            <span className="text-[8px] font-black text-slate-400 tracking-wide">Number</span>
+                            <span className="text-[11px] font-bold text-slate-900 tracking-wide">{paymentSettings.accountNumber || '0123456789'}</span>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className="bg-slate-50 p-4 rounded-2xl md:w-48">
-                      <p className="text-[10px] font-bold text-slate-500 leading-relaxed italic text-center">
+                      <p className="text-[10px] font-bold text-slate-500 leading-relaxed text-center">
                         &quot;After transfer, please provide proof details for manual confirmation.&quot;
                       </p>
                     </div>
@@ -503,7 +503,7 @@ export default function OnboardingPage() {
               {/* Settlement Proof Module */}
               <div className="space-y-6 pt-6 border-t border-slate-50">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
+                  <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">
                     {paymentMethod === 'bank' ? 'Transfer Reference / Name' : 'Payment Reference / Transaction ID'}
                   </label>
                   <div className="relative">
@@ -514,7 +514,7 @@ export default function OnboardingPage() {
                       value={paymentRef}
                       onChange={(e) => setPaymentRef(e.target.value)}
                       placeholder={paymentMethod === 'bank' ? "Enter your bank transfer name" : "e.g. T234567890"}
-                      className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none transition-all placeholder:text-slate-300"
+                      className="w-full bg-slate-50 border border-slate-100 rounded-2xl pl-12 pr-6 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none transition-all placeholder:text-slate-300"
                     />
                   </div>
                 </div>
@@ -522,29 +522,29 @@ export default function OnboardingPage() {
                 {paymentMethod === 'bank' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Depositor Name</label>
+                      <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Depositor Name</label>
                       <input
                         type="text"
                         required
                         value={proofName}
                         onChange={(e) => setProofName(e.target.value)}
                         placeholder="Name on transfer"
-                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none"
+                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Depositor Email</label>
+                      <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Depositor Email</label>
                       <input
                         type="email"
                         required
                         value={proofEmail}
                         onChange={(e) => setProofEmail(e.target.value)}
                         placeholder="Your email address"
-                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none"
+                        className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-6 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#a20000] outline-none"
                       />
                     </div>
                     <div className="md:col-span-2 space-y-2">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Proof of Payment (Image/PDF)</label>
+                      <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Proof of Payment (Image/PDF)</label>
                       <div className="relative">
                         <input
                           type="file"
@@ -559,7 +559,7 @@ export default function OnboardingPage() {
                             className="w-full flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-2xl p-8 hover:border-[#a20000] hover:bg-red-50/20 transition-all cursor-pointer group"
                           >
                             <CreditCard className="w-8 h-8 text-slate-300 group-hover:text-[#a20000] mb-3" />
-                            <span className="text-xs font-black uppercase text-slate-900 tracking-widest">
+                            <span className="text-sm font-black text-slate-900 tracking-wide">
                               Choose File to Upload
                             </span>
                             <span className="text-[10px] font-bold text-slate-400 mt-1">PNG, JPG or PDF up to 5MB</span>
@@ -578,8 +578,8 @@ export default function OnboardingPage() {
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-[10px] font-black text-slate-900 truncate uppercase tracking-tight">{proofFile.name}</p>
-                              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{(proofFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                              <p className="text-[10px] font-black text-slate-900 truncate tracking-tight">{proofFile.name}</p>
+                              <p className="text-[9px] font-bold text-slate-400 tracking-wide">{(proofFile.size / 1024 / 1024).toFixed(2)} MB</p>
                             </div>
                             <button 
                               type="button"
@@ -600,14 +600,14 @@ export default function OnboardingPage() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="px-8 py-5 bg-slate-50 text-slate-400 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all"
+                  className="px-8 py-5 bg-slate-50 text-slate-400 rounded-2xl text-[10px] font-black tracking-wide hover:bg-slate-100 transition-all"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50"
+                  className="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50"
                 >
                   {isLoading ? (
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -627,8 +627,8 @@ export default function OnboardingPage() {
               </div>
               
               <div className="space-y-4">
-                <h2 className="text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none">Registration Submitted!</h2>
-                <p className="text-[11px] text-slate-500 font-bold uppercase tracking-[0.2em] leading-relaxed max-w-sm mx-auto">
+                <h2 className="text-3xl font-black text-slate-900 tracking-tighter leading-none">Registration Submitted!</h2>
+                <p className="text-[11px] text-slate-500 font-bold tracking-[0.2em] leading-relaxed max-w-sm mx-auto">
                   Your profile and payment are under review. <br />
                   You will be redirected to the dashboard shortly.
                 </p>
@@ -636,7 +636,7 @@ export default function OnboardingPage() {
 
               <div className="flex flex-col items-center gap-6 pt-4">
                 <Link href="/dashboard" className="w-full max-w-[280px]">
-                  <button className="w-full bg-[#a20000] text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-red-700 transition-all shadow-xl shadow-red-900/20 flex items-center justify-center gap-3 group">
+                  <button className="w-full bg-[#a20000] text-white py-5 rounded-2xl font-black tracking-[0.2em] text-[10px] hover:bg-red-700 transition-all shadow-xl shadow-red-900/20 flex items-center justify-center gap-3 group">
                     Enter Dashboard <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </Link>

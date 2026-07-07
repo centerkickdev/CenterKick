@@ -83,9 +83,9 @@ export default async function DashboardLayout({
               ) : (
                  <>
                     <div className="w-10 h-10 rounded-xl bg-[#b50a0a] flex items-center justify-center shadow-lg shadow-red-900/40">
-                      <span className="text-white font-black italic text-xl">C</span>
+                      <span className="text-white font-black text-xl">C</span>
                     </div>
-                    <span className="text-2xl font-black text-white tracking-tighter uppercase underline underline-offset-4 decoration-[#b50a0a]">{brandName}</span>
+                    <span className="text-2xl font-black text-white tracking-tighter underline underline-offset-4 decoration-[#b50a0a]">{brandName}</span>
                  </>
               )}
             </Link>

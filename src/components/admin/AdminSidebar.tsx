@@ -72,7 +72,7 @@ export function AdminSidebar({ role }: { role: string }) {
     <nav className="flex-1 p-6 space-y-6 overflow-y-auto custom-scrollbar">
       {menuItems.map((section, idx) => (
         <div key={idx} className="space-y-1">
-          <span className="px-4 text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">{section.group}</span>
+          <span className="px-4 text-[9px] font-black text-gray-500 tracking-[0.2em]">{section.group}</span>
           {section.items.map((item) => {
             const isActive = item.href === '/admin' 
               ? pathname === '/admin' 
@@ -82,14 +82,14 @@ export function AdminSidebar({ role }: { role: string }) {
                 key={item.href}
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all group ${isActive
-                    ? 'text-white bg-[#b50a0a] shadow-lg shadow-red-900/20'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+ ? 'text-white bg-[#b50a0a] shadow-lg shadow-red-900/20'
+ : 'text-gray-400 hover:text-white hover:bg-white/5'
+ }`}
               >
                 <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-white' : 'group-hover:text-[#b50a0a]'
-                  }`} />
-                <span className={`text-[11px] uppercase tracking-widest ${isActive ? 'text-white' : 'text-gray-400'
-                  }`}>{item.label}</span>
+ }`} />
+                <span className={`text-[11px] tracking-wide ${isActive ? 'text-white' : 'text-gray-400'
+ }`}>{item.label}</span>
               </Link>
             );
           })}
@@ -97,13 +97,13 @@ export function AdminSidebar({ role }: { role: string }) {
       ))}
 
       <div className="pt-4 mt-4 border-t border-gray-800/50 space-y-1">
-        <span className="px-4 text-[9px] font-black text-gray-500 uppercase tracking-[0.2em]">Session</span>
+        <span className="px-4 text-[9px] font-black text-gray-500 tracking-[0.2em]">Session</span>
         <Link
           href="/dashboard"
           className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all text-gray-400 hover:text-white hover:bg-white/5 group"
         >
           <Home className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
-          <span className="text-[11px] uppercase tracking-widest text-gray-400 group-hover:text-white">User Dashboard</span>
+          <span className="text-[11px] tracking-wide text-gray-400 group-hover:text-white">User Dashboard</span>
         </Link>
         <div className="scale-95 origin-left">
           <SignOutButton />

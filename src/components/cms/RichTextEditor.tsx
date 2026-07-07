@@ -35,7 +35,7 @@ export function RichTextEditor({ content, onChange }: { content: string, onChang
         <button
           type="button"
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('italic') ? 'bg-gray-200 text-primary' : 'text-gray-700'}`}
+          className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('') ? 'bg-gray-200 text-primary' : 'text-gray-700'}`}
         >
           <Italic className="w-4 h-4" />
         </button>

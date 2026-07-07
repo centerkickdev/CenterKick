@@ -18,17 +18,17 @@ export default async function ModerationPage() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    return <div className="p-4 md:p-8 text-red-500 bg-red-50 border border-red-100 rounded-2xl font-black uppercase tracking-widest">Error loading profiles: {error.message}</div>;
+    return <div className="p-4 md:p-8 text-red-500 bg-red-50 border border-red-100 rounded-2xl font-black tracking-wide">Error loading profiles: {error.message}</div>;
   }
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">
+          <h1 className="text-3xl font-black text-gray-900 tracking-tighter">
             Profile <span className="text-[#b50a0a]">Moderation</span>
           </h1>
-          <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mt-1">Review and manage user profiles visibility and status.</p>
+          <p className="text-gray-500 text-[10px] font-bold tracking-wide mt-1">Review and manage user profiles visibility and status.</p>
         </div>
       </div>
 
@@ -37,11 +37,11 @@ export default async function ModerationPage() {
           <table className="w-full text-left whitespace-nowrap">
             <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
-                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">User / Profile</th>
-                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Role</th>
-                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Status</th>
-                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Joined</th>
-                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] text-right">Actions</th>
+                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 tracking-[0.2em]">User / Profile</th>
+                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 tracking-[0.2em]">Role</th>
+                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 tracking-[0.2em]">Status</th>
+                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 tracking-[0.2em]">Joined</th>
+                <th className="px-4 md:px-8 py-5 text-[10px] font-black text-gray-400 tracking-[0.2em] text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -51,7 +51,7 @@ export default async function ModerationPage() {
                     <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-4 text-gray-300">
                       <User className="w-6 h-6" />
                     </div>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">No profiles to moderate.</p>
+                    <p className="text-[10px] font-black text-gray-400 tracking-wide">No profiles to moderate.</p>
                   </td>
                 </tr>
               ) : (
@@ -67,11 +67,11 @@ export default async function ModerationPage() {
                            )}
                         </div>
                         <div>
-                          <p className="text-sm font-black text-gray-900 leading-tight line-clamp-1">{profile.first_name} {profile.last_name}</p>
-                          <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{profile.users?.email}</p>
+                          <p className="text-base font-black text-gray-900 leading-tight line-clamp-1">{profile.first_name} {profile.last_name}</p>
+                          <p className="text-[9px] font-bold text-gray-400 tracking-wide mt-0.5">{profile.users?.email}</p>
                           {profile.verification_requested && (
                              <div className="mt-2 flex items-center gap-2">
-                                <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-md text-[8px] font-black uppercase tracking-widest border border-blue-100 flex items-center gap-1">
+                                <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-md text-[8px] font-black tracking-wide border border-blue-100 flex items-center gap-1">
                                    <Shield className="w-2.5 h-2.5" /> Reference: {profile.payment_reference || 'N/A'}
                                 </span>
                              </div>
@@ -80,30 +80,30 @@ export default async function ModerationPage() {
                       </div>
                     </td>
                     <td className="px-4 md:px-8 py-6">
-                      <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-[9px] font-black uppercase tracking-widest">
+                      <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-[9px] font-black tracking-wide">
                         {profile.users?.role || 'player'}
                       </span>
                     </td>
                     <td className="px-4 md:px-8 py-6">
                       <div className="flex items-center gap-2">
                         <div className={`w-1.5 h-1.5 rounded-full ${
-                          profile.status === 'active' ? 'bg-green-500' : 
-                          profile.status === 'rejected' ? 'bg-red-500' : 
-                          profile.status === 'suspended' ? 'bg-orange-500' :
-                          'bg-blue-500'
-                        }`}></div>
-                        <span className={`text-[10px] font-black uppercase tracking-widest ${
-                          profile.status === 'active' ? 'text-green-600' : 
-                          profile.status === 'rejected' ? 'text-red-600' : 
-                          profile.status === 'suspended' ? 'text-orange-600' :
-                          'text-blue-600'
-                        }`}>
+ profile.status === 'active' ? 'bg-green-500' : 
+ profile.status === 'rejected' ? 'bg-red-500' : 
+ profile.status === 'suspended' ? 'bg-orange-500' :
+ 'bg-blue-500'
+ }`}></div>
+                        <span className={`text-[10px] font-black tracking-wide ${
+ profile.status === 'active' ? 'text-green-600' : 
+ profile.status === 'rejected' ? 'text-red-600' : 
+ profile.status === 'suspended' ? 'text-orange-600' :
+ 'text-blue-600'
+ }`}>
                           {profile.status}
                         </span>
                       </div>
                     </td>
                     <td className="px-4 md:px-8 py-6">
-                      <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                      <span className="text-[10px] font-bold text-gray-500 tracking-wide">
                         {new Date(profile.created_at).toLocaleDateString()}
                       </span>
                     </td>

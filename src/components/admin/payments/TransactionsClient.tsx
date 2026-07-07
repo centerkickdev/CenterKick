@@ -209,8 +209,8 @@ export function TransactionsClient({
                      <Activity className="w-7 h-7 text-white animate-pulse" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black uppercase tracking-tight">Financial Growth <span className="text-[#b50a0a]">Monitor</span></h3>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Real-time performance metrics & projections</p>
+                    <h3 className="text-2xl font-black tracking-tight">Financial Growth <span className="text-[#b50a0a]">Monitor</span></h3>
+                    <p className="text-sm font-bold text-gray-400 tracking-wide mt-1">Real-time performance metrics & projections</p>
                   </div>
                </div>
 
@@ -221,7 +221,7 @@ export function TransactionsClient({
                        <button
                          key={curr}
                          onClick={() => setCurrency(curr as 'USD' | 'NGN')}
-                         className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${currency === curr ? 'bg-[#b50a0a] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                         className={`px-5 py-2.5 rounded-xl text-sm font-black tracking-wide transition-all ${currency === curr ? 'bg-[#b50a0a] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
                        >
                          {curr === 'USD' ? '$ USD' : '₦ NGN'}
                        </button>
@@ -234,7 +234,7 @@ export function TransactionsClient({
                        <button
                          key={t}
                          onClick={() => setTimeframe(t)}
-                         className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${timeframe === t ? 'bg-white text-gray-950 shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                         className={`px-6 py-2.5 rounded-xl text-sm font-black tracking-wide transition-all ${timeframe === t ? 'bg-white text-gray-950 shadow-lg' : 'text-gray-400 hover:text-white'}`}
                        >
                          {t}
                        </button>
@@ -268,21 +268,21 @@ export function TransactionsClient({
                              {formatVal(d.value)}
                           </div>
                        </div>
-                       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{d.name}</span>
+                       <span className="text-[10px] font-black text-gray-400 tracking-wide">{d.name}</span>
                     </div>
                   ))}
                </div>
 
                <div className="bg-white/[0.02] border border-white/[0.06] rounded-[2rem] p-6 flex flex-col justify-center space-y-6 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] overflow-hidden">
                   <div className="min-w-0">
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em] mb-1">Current Projection</p>
-                    <div className="flex items-baseline gap-0.5 text-[#ff3a3a] text-lg sm:text-xl xl:text-[22px] font-black italic tracking-tighter whitespace-nowrap overflow-visible">
+                    <p className="text-[10px] font-black text-gray-400 tracking-[0.15em] mb-1">Current Projection</p>
+                    <div className="flex items-baseline gap-0.5 text-[#ff3a3a] text-lg sm:text-xl xl:text-[22px] font-black tracking-tighter whitespace-nowrap overflow-visible">
                        <span>+</span>
                        <span>{formatVal(currentProjection, 0)}</span>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider">
+                    <div className="flex items-center justify-between text-[10px] font-black tracking-wide">
                        <span className="text-gray-400">Growth Rate</span>
                        <span className="text-green-400">+{growthRate.toFixed(1)}%</span>
                     </div>
@@ -307,16 +307,16 @@ export function TransactionsClient({
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg ${stat.label === 'Total Revenue' ? 'bg-[#b50a0a] shadow-red-900/20' : 'bg-gray-900 shadow-gray-200'}`}>
                         <Icon className="w-6 h-6" />
                     </div>
-                    <div className={`flex items-center gap-1 text-xs font-black ${stat.color} bg-white px-3 py-1.5 rounded-full border border-gray-50 shadow-sm`}>
+                    <div className={`flex items-center gap-1 text-sm font-black ${stat.color} bg-white px-3 py-1.5 rounded-full border border-gray-50 shadow-sm`}>
                         {stat.trend} <TrendingUp className="w-3.5 h-3.5" />
                     </div>
                   </div>
-                  <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-1">{stat.label}</p>
+                  <p className="text-sm font-black text-gray-500 tracking-wide mb-1">{stat.label}</p>
                   <div className="flex items-baseline gap-2">
                     <p className="text-3xl font-black text-gray-900 tracking-tight">
                       {stat.isCurrency ? formatVal(Number(stat.value)) : stat.value}
                     </p>
-                    {stat.isCurrency && <span className="text-xs font-black text-gray-400 uppercase tracking-widest">{currency}</span>}
+                    {stat.isCurrency && <span className="text-sm font-black text-gray-400 tracking-wide">{currency}</span>}
                   </div>
               </div>
             </div>
@@ -329,13 +329,13 @@ export function TransactionsClient({
         <div className="p-4 md:p-8 border-b border-gray-50 space-y-6">
            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                 <h2 className="text-sm font-black text-gray-800 uppercase tracking-widest underline decoration-[#b50a0a] decoration-4 underline-offset-8">Transaction Archives</h2>
+                 <h2 className="text-base font-black text-gray-800 tracking-wide underline decoration-[#b50a0a] decoration-4 underline-offset-8">Transaction Archives</h2>
               </div>
               <div className="flex gap-4">
                  <select 
                    onChange={(e) => handleDateChange(e.target.value, searchParams.get('month') || undefined)}
                    value={searchParams.get('year') || new Date().getFullYear().toString()}
-                   className="bg-gray-50 border-none rounded-xl text-xs font-black uppercase tracking-widest px-4 py-2.5 text-gray-800"
+                   className="bg-gray-50 border-none rounded-xl text-sm font-black tracking-wide px-4 py-2.5 text-gray-800"
                  >
                     {[2024, 2025, 2026].map(year => (
                        <option key={year} value={year}>{year}</option>
@@ -344,7 +344,7 @@ export function TransactionsClient({
                  <select 
                    onChange={(e) => handleDateChange(searchParams.get('year') || undefined, e.target.value)}
                    value={searchParams.get('month') || ''}
-                   className="bg-gray-50 border-none rounded-xl text-xs font-black uppercase tracking-widest px-4 py-2.5 text-gray-800"
+                   className="bg-gray-50 border-none rounded-xl text-sm font-black tracking-wide px-4 py-2.5 text-gray-800"
                  >
                     <option value="">Full Year</option>
                     {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => (
@@ -362,13 +362,13 @@ export function TransactionsClient({
                    placeholder="Search by Reference or Payer Name..."
                    value={searchQuery}
                    onChange={(e) => setSearchQuery(e.target.value)}
-                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-800 placeholder:text-gray-300"
+                   className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-xl text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-800 placeholder:text-gray-300"
                  />
               </form>
               <select 
                 onChange={(e) => handleFilterChange('status', e.target.value)}
                 value={searchParams.get('status') || ''}
-                className="bg-gray-50 border-none rounded-xl text-xs font-black uppercase tracking-widest px-4 py-3 focus:ring-2 focus:ring-[#b50a0a] text-gray-800 appearance-none pr-10 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_1rem_center] bg-no-repeat"
+                className="bg-gray-50 border-none rounded-xl text-sm font-black tracking-wide px-4 py-3 focus:ring-2 focus:ring-[#b50a0a] text-gray-800 appearance-none pr-10 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_1rem_center] bg-no-repeat"
               >
                  <option value="">All Statuses</option>
                  <option value="confirmed">Confirmed</option>
@@ -378,7 +378,7 @@ export function TransactionsClient({
               <select 
                 onChange={(e) => handleFilterChange('method', e.target.value)}
                 value={searchParams.get('method') || ''}
-                className="bg-gray-50 border-none rounded-xl text-xs font-black uppercase tracking-widest px-4 py-3 focus:ring-2 focus:ring-[#b50a0a] text-gray-800 appearance-none pr-10 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_1rem_center] bg-no-repeat"
+                className="bg-gray-50 border-none rounded-xl text-sm font-black tracking-wide px-4 py-3 focus:ring-2 focus:ring-[#b50a0a] text-gray-800 appearance-none pr-10 bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:12px_12px] bg-[right_1rem_center] bg-no-repeat"
               >
                  <option value="">All Methods</option>
                  <option value="direct_transfer">Direct Transfer</option>
@@ -389,16 +389,16 @@ export function TransactionsClient({
         </div>
 
         <div className="overflow-x-auto w-full pb-4 custom-scrollbar">
-          <table className="w-full text-left text-sm text-gray-600 table-auto whitespace-nowrap">
+          <table className="w-full text-left text-base text-gray-600 table-auto whitespace-nowrap">
             <thead className="bg-[#f8f9fa] border-b border-gray-100">
               <tr>
-                 <th className="px-3 py-3 text-[10px] font-extrabold uppercase tracking-wider text-[#b50a0a]">Reference / ID</th>
-                 <th className="px-3 py-3 text-[10px] font-extrabold uppercase tracking-wider text-[#b50a0a]">Payer Details</th>
-                 <th className="px-3 py-3 text-[10px] font-extrabold uppercase tracking-wider text-[#b50a0a]">Amount</th>
-                 <th className="px-3 py-3 text-[10px] font-extrabold uppercase tracking-wider text-[#b50a0a]">Gateway</th>
-                 <th className="px-3 py-3 text-[10px] font-extrabold uppercase tracking-wider text-[#b50a0a]">Status</th>
-                 <th className="px-3 py-3 text-[10px] font-extrabold uppercase tracking-wider text-[#b50a0a]">Date</th>
-                 <th className="px-3 py-3 text-[10px] font-extrabold uppercase tracking-wider text-[#b50a0a] text-right">Actions</th>
+                 <th className="px-3 py-3 text-[10px] font-extrabold tracking-wide text-[#b50a0a]">Reference / ID</th>
+                 <th className="px-3 py-3 text-[10px] font-extrabold tracking-wide text-[#b50a0a]">Payer Details</th>
+                 <th className="px-3 py-3 text-[10px] font-extrabold tracking-wide text-[#b50a0a]">Amount</th>
+                 <th className="px-3 py-3 text-[10px] font-extrabold tracking-wide text-[#b50a0a]">Gateway</th>
+                 <th className="px-3 py-3 text-[10px] font-extrabold tracking-wide text-[#b50a0a]">Status</th>
+                 <th className="px-3 py-3 text-[10px] font-extrabold tracking-wide text-[#b50a0a]">Date</th>
+                 <th className="px-3 py-3 text-[10px] font-extrabold tracking-wide text-[#b50a0a] text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -406,7 +406,7 @@ export function TransactionsClient({
                  <tr>
                     <td colSpan={7} className="px-3 py-12 text-center">
                        <CreditCard className="w-10 h-10 text-gray-200 mx-auto mb-3" />
-                       <p className="text-xs font-black uppercase tracking-widest text-gray-400">No transactions recorded yet.</p>
+                       <p className="text-sm font-black tracking-wide text-gray-400">No transactions recorded yet.</p>
                     </td>
                  </tr>
                ) : (
@@ -414,7 +414,7 @@ export function TransactionsClient({
                    <tr key={tx.id} className="hover:bg-gray-50/50 transition-colors group">
                       <td className="px-3 py-2.5">
                          <div className="flex flex-col">
-                            <span className="font-extrabold text-gray-900 uppercase text-[11px] tracking-tight">{tx.reference}</span>
+                            <span className="font-extrabold text-gray-900 text-[11px] tracking-tight">{tx.reference}</span>
                             <span className="text-[10px] font-semibold text-gray-400 mt-0.5">ID: {tx.id.slice(0, 8)}</span>
                          </div>
                       </td>
@@ -426,25 +426,25 @@ export function TransactionsClient({
                       </td>
                       <td className="px-3 py-2.5">
                          <div className="flex flex-col">
-                            <span className="font-extrabold text-gray-900 text-xs italic tracking-tight">{formatVal(Number(tx.amount))}</span>
-                            <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mt-0.5">{currency}</span>
+                            <span className="font-extrabold text-gray-900 text-sm tracking-tight">{formatVal(Number(tx.amount))}</span>
+                            <span className="text-[9px] font-bold text-gray-400 tracking-wide mt-0.5">{currency}</span>
                          </div>
                       </td>
                       <td className="px-3 py-2.5">
                          <div className="flex items-center gap-1.5">
                             <Globe className="w-3.5 h-3.5 text-black shrink-0" />
-                            <span className="text-[10px] font-bold text-gray-700 uppercase tracking-wider">{getMethodLabel(tx.method)}</span>
+                            <span className="text-[10px] font-bold text-gray-700 tracking-wide">{getMethodLabel(tx.method)}</span>
                          </div>
                       </td>
                       <td className="px-3 py-2.5">
-                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[9px] font-bold uppercase tracking-wider ${getStatusColor(tx.status)}`}>
+                         <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[9px] font-bold tracking-wide ${getStatusColor(tx.status)}`}>
                             {tx.status === 'confirmed' ? <CheckCircle className="w-3 h-3" /> : tx.status === 'failed' ? <XCircle className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
                             {tx.status}
                          </div>
                       </td>
                       <td className="px-3 py-2.5">
                          <div className="flex flex-col">
-                            <DateDisplay date={tx.created_at} className="text-[10px] font-bold text-gray-800 uppercase" />
+                            <DateDisplay date={tx.created_at} className="text-[10px] font-bold text-gray-800" />
                             <span className="text-[9px] font-medium text-gray-400 mt-0.5">
                                {new Date(tx.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
@@ -505,7 +505,7 @@ export function TransactionsClient({
 
         {/* Pagination */}
         <div className="p-6 bg-[#f8f9fa] border-t border-gray-100 flex items-center justify-between">
-           <p className="text-xs font-bold text-gray-600 uppercase tracking-wider">
+           <p className="text-sm font-bold text-gray-600 tracking-wide">
               Viewing <span className="text-[#b50a0a] font-extrabold">{transactions.length}</span> of <span className="text-[#b50a0a] font-extrabold">{totalCount}</span> Transactions
            </p>
            <div className="flex items-center gap-1.5">
@@ -521,7 +521,7 @@ export function TransactionsClient({
                     <button 
                       key={i}
                       onClick={() => navigateToPage(i + 1)}
-                      className={`w-10 h-10 rounded-xl text-xs font-black transition-all ${currentPage === i + 1 ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'bg-white border border-gray-200 text-gray-400 hover:bg-gray-50'}`}
+                      className={`w-10 h-10 rounded-xl text-sm font-black transition-all ${currentPage === i + 1 ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'bg-white border border-gray-200 text-gray-400 hover:bg-gray-50'}`}
                     >
                        {i + 1}
                     </button>
@@ -551,34 +551,34 @@ export function TransactionsClient({
                   $
                 </div>
                 <div>
-                  <h2 className="text-2xl font-black italic uppercase tracking-tighter leading-none mb-2">Transaction Details</h2>
-                  <p className="text-[10px] font-black text-[#b50a0a] uppercase tracking-[0.2em]">Reference: {inspectPayment.reference}</p>
+                  <h2 className="text-2xl font-black tracking-tighter leading-none mb-2">Transaction Details</h2>
+                  <p className="text-[10px] font-black text-[#b50a0a] tracking-[0.2em]">Reference: {inspectPayment.reference}</p>
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 mb-10">
                 <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 uppercase tracking-widest font-black"><UserCheck className="w-3.5 h-3.5" /> Payer Name</div>
+                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 tracking-wide font-black"><UserCheck className="w-3.5 h-3.5" /> Payer Name</div>
                   <p className="text-[14px] font-black text-gray-900 truncate pr-4">
                     {inspectPayment.profiles ? `${inspectPayment.profiles.first_name} ${inspectPayment.profiles.last_name}` : 'N/A'}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 uppercase tracking-widest font-black"><Globe className="w-3.5 h-3.5" /> Email Address</div>
+                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 tracking-wide font-black"><Globe className="w-3.5 h-3.5" /> Email Address</div>
                   <p className="text-[14px] font-black text-gray-900 truncate pr-4">{inspectPayment.profiles?.email || 'N/A'}</p>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 uppercase tracking-widest font-black"><CreditCard className="w-3.5 h-3.5" /> Transaction Amount</div>
-                  <p className="text-[14px] font-black text-green-600 uppercase italic font-black">{formatVal(Number(inspectPayment.amount))} {inspectPayment.currency}</p>
+                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 tracking-wide font-black"><CreditCard className="w-3.5 h-3.5" /> Transaction Amount</div>
+                  <p className="text-[14px] font-black text-green-600 font-black">{formatVal(Number(inspectPayment.amount))} {inspectPayment.currency}</p>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 uppercase tracking-widest font-black"><Clock className="w-3.5 h-3.5" /> Payment Method / Gateway</div>
-                  <p className="text-[14px] font-black text-gray-900 uppercase font-bold">{getMethodLabel(inspectPayment.method)}</p>
+                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 tracking-wide font-black"><Clock className="w-3.5 h-3.5" /> Payment Method / Gateway</div>
+                  <p className="text-[14px] font-black text-gray-900 font-bold">{getMethodLabel(inspectPayment.method)}</p>
                 </div>
                 <div className="space-y-2 col-span-2">
-                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 uppercase tracking-widest font-black"><Activity className="w-3.5 h-3.5" /> Transaction Status</div>
+                  <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-300 tracking-wide font-black"><Activity className="w-3.5 h-3.5" /> Transaction Status</div>
                   <div className="flex items-center gap-1.5 mt-1">
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[9px] font-bold uppercase tracking-wider ${getStatusColor(inspectPayment.status)}`}>
+                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full border text-[9px] font-bold tracking-wide ${getStatusColor(inspectPayment.status)}`}>
                       {inspectPayment.status}
                     </span>
                   </div>
@@ -588,29 +588,29 @@ export function TransactionsClient({
               {inspectPayment.method === 'direct_transfer' && (
                 <div className="bg-slate-50 rounded-[2rem] p-6 mb-8 border border-slate-100 space-y-4 text-left">
                   <div className="flex items-center justify-between border-b border-slate-200/60 pb-3">
-                    <h4 className="text-[10px] font-black uppercase text-slate-900 tracking-wider flex items-center gap-2">
+                    <h4 className="text-[10px] font-black text-slate-900 tracking-wide flex items-center gap-2">
                       <Building className="w-4 h-4 text-amber-600" /> Direct Transfer Details
                     </h4>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Depositor Name</p>
-                      <p className="text-xs font-bold text-slate-800">{inspectPayment.metadata?.proofName || 'N/A'}</p>
+                      <p className="text-[8px] font-black text-slate-400 tracking-wide">Depositor Name</p>
+                      <p className="text-sm font-bold text-slate-800">{inspectPayment.metadata?.proofName || 'N/A'}</p>
                     </div>
                     <div>
-                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Depositor Email</p>
-                      <p className="text-xs font-bold text-slate-800 break-all">{inspectPayment.metadata?.proofEmail || 'N/A'}</p>
+                      <p className="text-[8px] font-black text-slate-400 tracking-wide">Depositor Email</p>
+                      <p className="text-sm font-bold text-slate-800 break-all">{inspectPayment.metadata?.proofEmail || 'N/A'}</p>
                     </div>
                   </div>
                   {inspectPayment.metadata?.proofFileUrl ? (
                     <div className="space-y-2 pt-2 border-t border-slate-200/60">
-                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Uploaded Proof Receipt</p>
+                      <p className="text-[8px] font-black text-slate-400 tracking-wide">Uploaded Proof Receipt</p>
                       {inspectPayment.metadata.proofFileUrl.toLowerCase().endsWith('.pdf') ? (
                         <a
                           href={inspectPayment.metadata.proofFileUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold text-[#b50a0a] hover:bg-slate-50 transition-all shadow-sm"
+                          className="inline-flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-sm font-bold text-[#b50a0a] hover:bg-slate-50 transition-all shadow-sm"
                         >
                           <FileText className="w-4 h-4 text-[#b50a0a]" /> Open PDF Receipt
                         </a>
@@ -625,7 +625,7 @@ export function TransactionsClient({
                             href={inspectPayment.metadata.proofFileUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="absolute bottom-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white px-3.5 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest backdrop-blur-sm transition-all shadow-lg"
+                            className="absolute bottom-3 right-3 bg-slate-900/80 hover:bg-slate-900 text-white px-3.5 py-2 rounded-xl text-[9px] font-black tracking-wide backdrop-blur-sm transition-all shadow-lg"
                           >
                             Open Full Image
                           </a>
@@ -634,8 +634,8 @@ export function TransactionsClient({
                     </div>
                   ) : inspectPayment.metadata?.proofFileName ? (
                     <div className="pt-2 border-t border-slate-200/60">
-                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Uploaded File Name</p>
-                      <p className="text-xs font-bold text-slate-600">{inspectPayment.metadata.proofFileName}</p>
+                      <p className="text-[8px] font-black text-slate-400 tracking-wide">Uploaded File Name</p>
+                      <p className="text-sm font-bold text-slate-600">{inspectPayment.metadata.proofFileName}</p>
                     </div>
                   ) : null}
                 </div>
@@ -643,22 +643,22 @@ export function TransactionsClient({
 
               {inspectPayment.status === 'failed' && (inspectPayment.metadata?.rejection_reason || inspectPayment.metadata?.reason) && (
                 <div className="bg-red-50 rounded-[2rem] p-6 mb-8 border border-red-100 space-y-2 text-left">
-                  <p className="text-[9px] font-black uppercase text-red-700 tracking-widest">Rejection Reason</p>
-                  <p className="text-red-900 text-xs font-bold leading-relaxed">{inspectPayment.metadata.rejection_reason || inspectPayment.metadata.reason}</p>
+                  <p className="text-[9px] font-black text-red-700 tracking-wide">Rejection Reason</p>
+                  <p className="text-red-900 text-sm font-bold leading-relaxed">{inspectPayment.metadata.rejection_reason || inspectPayment.metadata.reason}</p>
                 </div>
               )}
 
               {inspectPayment.status === 'confirmed' && (inspectPayment.metadata?.approval_comment || inspectPayment.metadata?.comment) && (
                 <div className="bg-green-50 rounded-[2rem] p-6 mb-8 border border-green-100 space-y-2 text-left">
-                  <p className="text-[9px] font-black uppercase text-green-700 tracking-widest">Approval Comment</p>
-                  <p className="text-green-900 text-xs font-bold leading-relaxed">{inspectPayment.metadata.approval_comment || inspectPayment.metadata.comment}</p>
+                  <p className="text-[9px] font-black text-green-700 tracking-wide">Approval Comment</p>
+                  <p className="text-green-900 text-sm font-bold leading-relaxed">{inspectPayment.metadata.approval_comment || inspectPayment.metadata.comment}</p>
                 </div>
               )}
 
               {inspectPayment.status === 'pending' && inspectPayment.method === 'direct_transfer' ? (
                 <div className="bg-gray-50 rounded-[2.5rem] p-6 mb-10 border border-gray-100 flex items-center justify-between animate-pulse">
                   <div>
-                    <p className="text-[9px] font-black uppercase text-gray-900 tracking-widest">Verify Settlement Funds</p>
+                    <p className="text-[9px] font-black text-gray-900 tracking-wide">Verify Settlement Funds</p>
                     <p className="text-gray-400 text-[10px] leading-relaxed mt-1">Please confirm that funds matching reference <strong>{inspectPayment.reference}</strong> are fully cleared in the corporate bank account.</p>
                   </div>
                 </div>
@@ -678,7 +678,7 @@ export function TransactionsClient({
                         targetEmail: inspectPayment.profiles?.email || 'N/A'
                       });
                     }}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-green-900/10 cursor-pointer"
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-[2rem] font-black tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-green-900/10 cursor-pointer"
                   >
                     <CheckCircle className="w-4 h-4" /> Confirm & Activate
                   </button>
@@ -694,7 +694,7 @@ export function TransactionsClient({
                         targetEmail: inspectPayment.profiles?.email || 'N/A'
                       });
                     }}
-                    className="flex-1 bg-red-50 hover:bg-red-100 text-red-650 border border-red-100 py-5 rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
+                    className="flex-1 bg-red-50 hover:bg-red-100 text-red-650 border border-red-100 py-5 rounded-[2rem] font-black tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <X className="w-4 h-4" /> Reject Payment
                   </button>
@@ -702,7 +702,7 @@ export function TransactionsClient({
               ) : (
                 <button
                   onClick={() => setInspectPayment(null)}
-                  className="w-full bg-gray-900 hover:bg-gray-950 text-white py-5 rounded-[2rem] font-black uppercase tracking-[0.25em] text-[11px] transition-all cursor-pointer"
+                  className="w-full bg-gray-900 hover:bg-gray-950 text-white py-5 rounded-[2rem] font-black tracking-[0.25em] text-[11px] transition-all cursor-pointer"
                 >
                   Close Preview
                 </button>
@@ -725,24 +725,24 @@ export function TransactionsClient({
                   {decisionAction.type.startsWith('approve') ? <ShieldCheck className="w-6 h-6" /> : <Ban className="w-6 h-6" />}
                 </div>
                 <div>
-                  <h3 className="text-xl font-black uppercase tracking-tight italic text-gray-955">{decisionAction.title}</h3>
-                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">{decisionAction.subtitle}</p>
+                  <h3 className="text-xl font-black tracking-tight text-gray-955">{decisionAction.title}</h3>
+                  <p className="text-[9px] font-black text-gray-400 tracking-wide mt-1">{decisionAction.subtitle}</p>
                 </div>
               </div>
               
               <div className="bg-gray-50 border border-gray-100 rounded-[2.5rem] p-6 mb-6 space-y-3">
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span className="text-gray-400 uppercase">Target Name</span>
+                  <span className="text-gray-400">Target Name</span>
                   <span className="text-gray-950 font-black">{decisionAction.targetName}</span>
                 </div>
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span className="text-gray-400 uppercase">Email Address</span>
+                  <span className="text-gray-400">Email Address</span>
                   <span className="text-gray-955 font-black">{decisionAction.targetEmail}</span>
                 </div>
               </div>
 
               <div className="space-y-2 mb-6">
-                <label className="text-[10px] font-black text-gray-955 uppercase tracking-widest block ml-1">
+                <label className="text-[10px] font-black text-gray-955 tracking-wide block ml-1">
                   Reason / Email Note (Optional)
                 </label>
                 <textarea
@@ -754,7 +754,7 @@ export function TransactionsClient({
                   }
                   value={decisionReason}
                   onChange={(e) => setDecisionReason(e.target.value)}
-                  className="w-full p-4 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-950 placeholder:text-gray-400 resize-none animate-in fade-in"
+                  className="w-full p-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-950 placeholder:text-gray-400 resize-none animate-in fade-in"
                 />
               </div>
 
@@ -777,18 +777,18 @@ export function TransactionsClient({
                       }
                     });
                   }}
-                  className={`flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all shadow-lg flex items-center justify-center gap-1.5 cursor-pointer ${
-                    decisionAction.type.startsWith('approve')
-                      ? 'bg-green-600 hover:bg-green-700 shadow-green-900/10'
-                      : 'bg-red-600 hover:bg-red-700 shadow-red-900/10'
-                  }`}
+                  className={`flex-1 py-4 rounded-2xl text-[10px] font-black tracking-[0.2em] text-white transition-all shadow-lg flex items-center justify-center gap-1.5 cursor-pointer ${
+ decisionAction.type.startsWith('approve')
+ ? 'bg-green-600 hover:bg-green-700 shadow-green-900/10'
+ : 'bg-red-600 hover:bg-red-700 shadow-red-900/10'
+ }`}
                 >
                   {actionLoadingId !== null ? <RefreshCcw className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
                   Confirm & Notify
                 </button>
                 <button
                   onClick={() => { setDecisionAction(null); setDecisionReason(''); }}
-                  className="px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer"
+                  className="px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-2xl text-[10px] font-black tracking-wide transition-all cursor-pointer"
                 >
                   Cancel
                 </button>

@@ -25,10 +25,10 @@ export default async function OrganizationPage({ params }: OrganizationPageProps
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex items-center gap-4">
-        <Link href="/admin/organizations" className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-gray-50 transition-all">
+        <Link href="/admin/organizations" className="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-black tracking-wide hover:bg-gray-50 transition-all">
           &larr; Back
         </Link>
-        <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter leading-none">
+        <h1 className="text-3xl font-black text-gray-900 tracking-tighter leading-none">
           Organization <span className="text-[#b50a0a]">Profile</span>
         </h1>
       </div>
@@ -49,15 +49,15 @@ export default async function OrganizationPage({ params }: OrganizationPageProps
                 {org.first_name} {org.last_name}
               </h2>
               <div className="flex items-center gap-4 flex-wrap">
-                <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-widest">
+                <span className="flex items-center gap-1.5 text-sm font-bold text-gray-500 tracking-wide">
                   <Mail className="w-3.5 h-3.5" />
                   {org.email || org.users?.email || 'N/A'}
                 </span>
-                <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-widest">
+                <span className="flex items-center gap-1.5 text-sm font-bold text-gray-500 tracking-wide">
                   <MapPin className="w-3.5 h-3.5" />
                   {org.country || org.nationality || 'Unspecified Location'}
                 </span>
-                <span className="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-widest">
+                <span className="flex items-center gap-1.5 text-sm font-bold text-gray-500 tracking-wide">
                   <Calendar className="w-3.5 h-3.5" />
                   Joined {format(new Date(org.created_at), 'MMM dd, yyyy')}
                 </span>
@@ -66,25 +66,25 @@ export default async function OrganizationPage({ params }: OrganizationPageProps
 
             <div className="flex items-center gap-3">
               {org.status === 'active' ? (
-                <div className="px-4 py-2 bg-green-50 text-green-700 rounded-xl flex items-center gap-2 text-[10px] font-black uppercase tracking-widest border border-green-100">
+                <div className="px-4 py-2 bg-green-50 text-green-700 rounded-xl flex items-center gap-2 text-[10px] font-black tracking-wide border border-green-100">
                   <CheckCircle className="w-4 h-4" />
                   Verified Active
                 </div>
               ) : (
-                <div className="px-4 py-2 bg-amber-50 text-amber-700 rounded-xl flex items-center gap-2 text-[10px] font-black uppercase tracking-widest border border-amber-100">
+                <div className="px-4 py-2 bg-amber-50 text-amber-700 rounded-xl flex items-center gap-2 text-[10px] font-black tracking-wide border border-amber-100">
                   <Clock className="w-4 h-4" />
                   Pending Verification
                 </div>
               )}
-              <div className="px-4 py-2 bg-gray-100 text-gray-600 rounded-xl text-[10px] font-black uppercase tracking-widest border border-gray-200">
+              <div className="px-4 py-2 bg-gray-100 text-gray-600 rounded-xl text-[10px] font-black tracking-wide border border-gray-200">
                 ID: {org.id.split('-')[0]}
               </div>
             </div>
 
             {org.bio && (
               <div className="mt-6">
-                <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-2">About Organization</h3>
-                <p className="text-sm text-gray-600 leading-relaxed max-w-3xl">
+                <h3 className="text-sm font-black text-gray-900 tracking-wide mb-2">About Organization</h3>
+                <p className="text-base text-gray-600 leading-relaxed max-w-3xl">
                   {org.bio}
                 </p>
               </div>

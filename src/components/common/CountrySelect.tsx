@@ -75,11 +75,11 @@ export function CountrySelect({ value, onChange, className = '', required }: Cou
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full bg-slate-50 border rounded-2xl pl-12 pr-10 py-4 text-sm font-bold text-left transition-all outline-none flex items-center justify-between ${
-          isOpen
-            ? 'border-[#a20000] ring-2 ring-[#a20000] bg-white'
-            : 'border-slate-100 hover:border-slate-200'
-        } ${value ? 'text-slate-900' : 'text-slate-300'}`}
+        className={`w-full bg-slate-50 border rounded-2xl pl-12 pr-10 py-4 text-base font-bold text-left transition-all outline-none flex items-center justify-between ${
+ isOpen
+ ? 'border-[#a20000] ring-2 ring-[#a20000] bg-white'
+ : 'border-slate-100 hover:border-slate-200'
+ } ${value ? 'text-slate-900' : 'text-slate-300'}`}
       >
         <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
         <span className="truncate">{value || 'Select country...'}</span>
@@ -98,7 +98,7 @@ export function CountrySelect({ value, onChange, className = '', required }: Cou
                 placeholder="Search countries..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-9 pr-3 py-2.5 bg-slate-50 rounded-xl text-xs font-bold text-slate-900 placeholder:text-slate-300 outline-none focus:bg-white border border-transparent focus:border-slate-200 transition-all"
+                className="w-full pl-9 pr-3 py-2.5 bg-slate-50 rounded-xl text-sm font-bold text-slate-900 placeholder:text-slate-300 outline-none focus:bg-white border border-transparent focus:border-slate-200 transition-all"
               />
             </div>
           </div>
@@ -106,7 +106,7 @@ export function CountrySelect({ value, onChange, className = '', required }: Cou
           {/* Country List */}
           <div className="max-h-52 overflow-y-auto overscroll-contain">
             {filtered.length === 0 ? (
-              <p className="px-4 py-6 text-center text-[10px] font-black text-slate-400 uppercase tracking-widest">No countries found</p>
+              <p className="px-4 py-6 text-center text-[10px] font-black text-slate-400 tracking-wide">No countries found</p>
             ) : (
               <div className="p-2">
                 {filtered.map(country => (
@@ -118,11 +118,11 @@ export function CountrySelect({ value, onChange, className = '', required }: Cou
                       setIsOpen(false);
                       setSearch('');
                     }}
-                    className={`w-full text-left px-3 py-2.5 text-xs font-bold rounded-xl transition-all ${
-                      value === country
-                        ? 'bg-[#a20000] text-white'
-                        : 'text-slate-700 hover:bg-slate-50'
-                    }`}
+                    className={`w-full text-left px-3 py-2.5 text-sm font-bold rounded-xl transition-all ${
+ value === country
+ ? 'bg-[#a20000] text-white'
+ : 'text-slate-700 hover:bg-slate-50'
+ }`}
                   >
                     {country}
                   </button>

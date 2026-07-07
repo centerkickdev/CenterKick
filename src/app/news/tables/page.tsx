@@ -63,7 +63,7 @@ export default function TablesPage() {
             {/* Page Header */}
             <div className="bg-[#383838] py-8">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
-                  <h1 className="text-white text-3xl font-black tracking-wide uppercase">Tables</h1>
+                  <h1 className="text-white text-3xl font-black tracking-wide">Tables</h1>
                </div>
             </div>
 
@@ -72,27 +72,27 @@ export default function TablesPage() {
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                   <ul className="flex items-center gap-8 overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth whitespace-nowrap">
                      <li>
-                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            All News
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/fixtures" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/fixtures" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            Match Fixtures
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/results" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/results" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            Results
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/tables" className="text-[#b50a0a] text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/tables" className="text-[#b50a0a] text-[10px] font-bold tracking-wide py-4 block">
                            Tables
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/live-scores" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold uppercase tracking-widest py-4 block">
+                        <Link href="/news/live-scores" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
                            Live Scores
                         </Link>
                      </li>
@@ -106,35 +106,35 @@ export default function TablesPage() {
                {/* Filters Bar */}
                <div className="flex flex-wrap items-center border border-gray-200 py-3 px-6 mb-12 shadow-sm rounded-sm">
                   <div className="flex flex-col border-r border-gray-200 pr-8">
-                     <span className="text-[8px] font-bold text-[#b50a0a] uppercase tracking-wider">Filter By Competition:</span>
+                     <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide">Filter By Competition:</span>
                      <button className="flex items-center gap-1 text-[13px] font-black text-gray-900 mt-1">
                         Nigeria League <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
                   
                   <div className="flex flex-col border-r border-gray-200 px-8">
-                     <span className="text-[8px] font-bold text-[#b50a0a] uppercase tracking-wider">Filter By Season:</span>
+                     <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide">Filter By Season:</span>
                      <button className="flex items-center gap-1 text-[13px] font-black text-gray-900 mt-1">
                         2022/23 <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
 
                   <div className="flex flex-col border-r border-gray-200 px-8">
-                     <span className="text-[8px] font-bold text-[#b50a0a] uppercase tracking-wider">Filter By Matchweek:</span>
+                     <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide">Filter By Matchweek:</span>
                      <button className="flex items-center gap-1 text-[13px] font-black text-gray-900 mt-1">
                         All Matchweeks <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
 
                   <div className="flex flex-col border-r border-gray-200 px-8">
-                     <span className="text-[8px] font-bold text-[#b50a0a] uppercase tracking-wider">Filter By Home / Away:</span>
+                     <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide">Filter By Home / Away:</span>
                      <button className="flex items-center gap-1 text-[13px] font-black text-gray-900 mt-1">
                         All Matches <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
 
                   <div className="flex flex-col pl-8 ml-auto">
-                     <button className="flex items-center gap-2 text-[11px] font-black text-gray-900 hover:text-[#b50a0a] transition-colors uppercase">
+                     <button className="flex items-center gap-2 text-[11px] font-black text-gray-900 hover:text-[#b50a0a] transition-colors">
                         <RotateCcw className="w-3 h-3" /> Reset Filters
                      </button>
                   </div>
@@ -154,23 +154,23 @@ export default function TablesPage() {
 
                {/* Group A Table */}
                <div className="mb-16">
-                  <h2 className="text-lg font-black text-gray-900 uppercase tracking-widest mb-6">Group A</h2>
+                  <h2 className="text-lg font-black text-gray-900 tracking-wide mb-6">Group A</h2>
                   
                   <div className="w-full overflow-x-auto">
                      <table className="w-full text-left border-collapse min-w-[800px]">
                         <thead>
                            <tr className="bg-[#e5e5e5] border-b-2 border-white">
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-4 py-3 text-center w-12">Pos</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-4 py-3">Club</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">Played</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">Won</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">Drawn</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">Lost</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">GF</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">GA</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">GD</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-16">Points</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-4 py-3 text-center w-40">Form</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3 text-center w-12">Pos</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3">Club</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Played</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Won</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Drawn</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Lost</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GF</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GA</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GD</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-16">Points</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3 text-center w-40">Form</th>
                            </tr>
                         </thead>
                         <tbody>
@@ -209,23 +209,23 @@ export default function TablesPage() {
 
                {/* Group B Table */}
                <div>
-                  <h2 className="text-lg font-black text-gray-900 uppercase tracking-widest mb-6">Group B</h2>
+                  <h2 className="text-lg font-black text-gray-900 tracking-wide mb-6">Group B</h2>
                   
                   <div className="w-full overflow-x-auto">
                      <table className="w-full text-left border-collapse min-w-[800px]">
                         <thead>
                            <tr className="bg-[#e5e5e5] border-b-2 border-white">
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-4 py-3 text-center w-12">Pos</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-4 py-3">Club</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">Played</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">Won</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">Drawn</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">Lost</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">GF</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">GA</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-12">GD</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-2 py-3 text-center w-16">Points</th>
-                              <th className="font-bold text-[9px] text-gray-500 uppercase px-4 py-3 text-center w-40">Form</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3 text-center w-12">Pos</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3">Club</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Played</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Won</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Drawn</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Lost</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GF</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GA</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GD</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-16">Points</th>
+                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3 text-center w-40">Form</th>
                            </tr>
                         </thead>
                         <tbody>

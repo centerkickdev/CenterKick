@@ -25,7 +25,7 @@ export function PasswordField({
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center px-1">
-        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">{label}</label>
+        <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">{label}</label>
         {rightElement}
       </div>
       <div className="relative">
@@ -36,7 +36,7 @@ export function PasswordField({
           required={required}
           placeholder={placeholder} 
           defaultValue={defaultValue}
-          className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-14 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
+          className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-14 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
         />
         <button
           type="button"

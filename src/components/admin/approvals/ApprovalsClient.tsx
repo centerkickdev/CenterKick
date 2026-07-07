@@ -296,21 +296,21 @@ export function ApprovalsClient({
               key={c.id}
               onClick={() => handleTabChange(c.id)}
               className={`p-5 rounded-[1.8rem] border-2 text-left transition-all duration-300 relative overflow-hidden group active:scale-[0.98] ${
-                isActive 
-                  ? 'border-[#b50a0a] bg-white shadow-xl shadow-red-900/5' 
-                  : 'border-gray-100 bg-white shadow-sm hover:border-gray-200 hover:shadow-md'
-              }`}
+ isActive 
+ ? 'border-[#b50a0a] bg-white shadow-xl shadow-red-900/5' 
+ : 'border-gray-100 bg-white shadow-sm hover:border-gray-200 hover:shadow-md'
+ }`}
             >
               <div className={`w-12 h-12 rounded-2xl ${c.bg} ${c.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
                 <c.icon className="w-5 h-5" />
               </div>
-              <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em]">{c.label}</p>
+              <p className="text-[9px] font-black text-gray-400 tracking-[0.2em]">{c.label}</p>
               <div className="flex items-baseline gap-2 mt-1">
-                <p className={`text-3xl font-black italic tracking-tighter ${isActive ? 'text-[#b50a0a]' : 'text-gray-900'}`}>
+                <p className={`text-3xl font-black tracking-tighter ${isActive ? 'text-[#b50a0a]' : 'text-gray-900'}`}>
                   {c.count}
                 </p>
                 {c.count > 0 && (
-                  <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${isActive ? 'bg-red-50 text-[#b50a0a]' : 'bg-gray-100 text-gray-500'}`}>
+                  <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${isActive ? 'bg-red-50 text-[#b50a0a]' : 'bg-gray-100 text-gray-500'}`}>
                     Action Req.
                   </span>
                 )}
@@ -329,10 +329,10 @@ export function ApprovalsClient({
         {/* Header toolbar */}
         <div className="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="text-sm font-black uppercase tracking-widest text-gray-950 flex items-center gap-2">
-              Pending Queue <span className="text-[#b50a0a] font-black italic">({tab.toUpperCase()})</span>
+            <h2 className="text-base font-black tracking-wide text-gray-950 flex items-center gap-2">
+              Pending Queue <span className="text-[#b50a0a] font-black">({tab.toUpperCase()})</span>
             </h2>
-            <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">
+            <p className="text-[9px] font-black text-gray-400 tracking-wide mt-1">
               Select records to verify profile authenticity or settlement transfers.
             </p>
           </div>
@@ -346,7 +346,7 @@ export function ApprovalsClient({
                 placeholder="Search by name, email, or reference..." 
                 value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
-                className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 placeholder:text-gray-400"
+                className="w-full pl-12 pr-4 py-3 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 placeholder:text-gray-400"
               />
             </div>
 
@@ -356,7 +356,7 @@ export function ApprovalsClient({
               <select
                 value={roleFilter}
                 onChange={(e) => { setRoleFilter(e.target.value); setCurrentPage(1); }}
-                className="pl-12 pr-8 py-3 bg-gray-50 border-none rounded-2xl text-xs font-black uppercase tracking-widest focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 appearance-none cursor-pointer"
+                className="pl-12 pr-8 py-3 bg-gray-50 border-none rounded-2xl text-sm font-black tracking-wide focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 appearance-none cursor-pointer"
               >
                 <option value="all">ALL ROLES</option>
                 <option value="player">PLAYERS</option>
@@ -375,7 +375,7 @@ export function ApprovalsClient({
               {((filtered as any).sports.length === 0 && (filtered as any).staff.length === 0) ? (
                 <div className="px-6 py-20 text-center">
                   <ShieldCheck className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">No new registration requests waiting for approval.</p>
+                  <p className="text-[10px] font-black tracking-wide text-gray-400">No new registration requests waiting for approval.</p>
                 </div>
               ) : (
                 <>
@@ -383,7 +383,7 @@ export function ApprovalsClient({
                   {(filtered as any).sports.map((reg: Registration) => (
                     <div key={reg.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-gray-50/50 transition-colors">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-gray-900 flex items-center justify-center font-black text-white text-sm shrink-0">
+                        <div className="w-12 h-12 rounded-2xl bg-gray-900 flex items-center justify-center font-black text-white text-base shrink-0">
                           {((reg.first_name && reg.first_name[0]) || 'R').toUpperCase()}
                         </div>
                         <div>
@@ -391,23 +391,23 @@ export function ApprovalsClient({
                             {reg.user_id ? (
                               <Link 
                                 href={`/admin/users/${reg.user_id}`} 
-                                className="font-black text-gray-900 text-sm hover:text-[#b50a0a] transition-colors flex items-center gap-1.5 group"
+                                className="font-black text-gray-900 text-base hover:text-[#b50a0a] transition-colors flex items-center gap-1.5 group"
                               >
                                 {reg.first_name} {reg.last_name}
                                 <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </Link>
                             ) : (
-                              <p className="font-black text-gray-900 text-sm">{reg.first_name} {reg.last_name}</p>
+                              <p className="font-black text-gray-900 text-base">{reg.first_name} {reg.last_name}</p>
                             )}
                             <FlagIcon country={reg.country} className="w-3.5 h-2" />
                           </div>
-                          <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{reg.email}</p>
+                          <p className="text-[9px] font-bold text-gray-400 tracking-wide mt-0.5">{reg.email}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 rounded text-[8px] font-black uppercase tracking-widest text-gray-700 border border-gray-200/50">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 rounded text-[8px] font-black tracking-wide text-gray-700 border border-gray-200/50">
                               {getRoleIcon(reg.role)}
                               {reg.role}
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-600 rounded text-[8px] font-black uppercase tracking-widest border border-amber-100">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-600 rounded text-[8px] font-black tracking-wide border border-amber-100">
                               Awaiting Verification
                             </span>
                           </div>
@@ -431,7 +431,7 @@ export function ApprovalsClient({
                             targetName: `${reg.first_name} ${reg.last_name}`,
                             targetEmail: reg.email || 'N/A'
                           })}
-                          className="flex items-center gap-1.5 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg shadow-green-900/10 transition-all disabled:opacity-50"
+                          className="flex items-center gap-1.5 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-[9px] font-black tracking-wide shadow-lg shadow-green-900/10 transition-all disabled:opacity-50"
                         >
                           <Check className="w-3.5 h-3.5" />
                           Approve Profile
@@ -446,7 +446,7 @@ export function ApprovalsClient({
                             targetName: `${reg.first_name} ${reg.last_name}`,
                             targetEmail: reg.email || 'N/A'
                           })}
-                          className="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                          className="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-xl text-[9px] font-black tracking-wide transition-all disabled:opacity-50"
                         >
                           Reject
                         </button>
@@ -458,23 +458,23 @@ export function ApprovalsClient({
                   {(filtered as any).staff.map((staff: StaffRequest) => (
                     <div key={staff.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-gray-50/50 transition-colors">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-red-950 flex items-center justify-center font-black text-white text-sm shrink-0">
+                        <div className="w-12 h-12 rounded-2xl bg-red-950 flex items-center justify-center font-black text-white text-base shrink-0">
                           <Shield className="w-5 h-5 text-[#b50a0a]" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
                             <Link 
                               href={`/admin/users/${staff.id}`} 
-                              className="font-black text-gray-900 text-sm hover:text-[#b50a0a] transition-colors flex items-center gap-1.5 group"
+                              className="font-black text-gray-900 text-base hover:text-[#b50a0a] transition-colors flex items-center gap-1.5 group"
                             >
                               {staff.profiles?.first_name} {staff.profiles?.last_name}
                               <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                             </Link>
                             <FlagIcon country={staff.profiles?.country || ''} className="w-3.5 h-2" />
                           </div>
-                          <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{staff.email}</p>
+                          <p className="text-[9px] font-bold text-gray-400 tracking-wide mt-0.5">{staff.email}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 text-[#b50a0a] rounded text-[8px] font-black uppercase tracking-widest border border-red-100">
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 text-[#b50a0a] rounded text-[8px] font-black tracking-wide border border-red-100">
                               <ShieldAlert className="w-3.5 h-3.5" />
                               Requested Admin Access
                             </span>
@@ -484,7 +484,7 @@ export function ApprovalsClient({
                       <div className="flex items-center gap-3">
                         <button
                           onClick={() => setSelectedStaff(staff)}
-                          className="flex items-center gap-1.5 px-5 py-2.5 bg-gray-950 hover:bg-black text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all"
+                          className="flex items-center gap-1.5 px-5 py-2.5 bg-gray-950 hover:bg-black text-white rounded-xl text-[9px] font-black tracking-wide transition-all"
                         >
                           <ShieldCheck className="w-3.5 h-3.5" />
                           Assign Role & Approve
@@ -499,7 +499,7 @@ export function ApprovalsClient({
                             targetName: `${staff.profiles?.first_name || 'Staff Member'} ${staff.profiles?.last_name || ''}`,
                             targetEmail: staff.email
                           })}
-                          className="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                          className="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-xl text-[9px] font-black tracking-wide transition-all disabled:opacity-50"
                         >
                           Reject
                         </button>
@@ -516,14 +516,14 @@ export function ApprovalsClient({
               {(filtered as ProfileEdit[]).length === 0 ? (
                 <div className="px-6 py-20 text-center">
                   <FileText className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">No profile edits currently requiring review.</p>
+                  <p className="text-[10px] font-black tracking-wide text-gray-400">No profile edits currently requiring review.</p>
                 </div>
               ) : (
                 (filtered as ProfileEdit[]).map((edit: ProfileEdit) => (
                   <div key={edit.id} className="p-6 space-y-4 hover:bg-gray-50/50 transition-colors">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center font-black text-gray-600 text-xs shrink-0 border border-gray-200">
+                        <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center font-black text-gray-600 text-sm shrink-0 border border-gray-200">
                           {((edit.profiles?.first_name && edit.profiles.first_name[0]) || 'E').toUpperCase()}
                         </div>
                         <div>
@@ -531,17 +531,17 @@ export function ApprovalsClient({
                             {edit.profiles?.user_id ? (
                               <Link 
                                 href={`/admin/users/${edit.profiles.user_id}`} 
-                                className="font-black text-gray-900 text-sm hover:text-[#b50a0a] transition-colors flex items-center gap-1.5 group"
+                                className="font-black text-gray-900 text-base hover:text-[#b50a0a] transition-colors flex items-center gap-1.5 group"
                               >
                                 {edit.profiles?.first_name} {edit.profiles?.last_name}
                                 <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </Link>
                             ) : (
-                              <p className="font-black text-gray-900 text-sm">{edit.profiles?.first_name} {edit.profiles?.last_name}</p>
+                              <p className="font-black text-gray-900 text-base">{edit.profiles?.first_name} {edit.profiles?.last_name}</p>
                             )}
                             <FlagIcon country={edit.profiles?.country || ''} className="w-3 h-2" />
                           </div>
-                          <p className="text-[8px] font-black text-[#b50a0a] uppercase tracking-widest mt-0.5">{edit.profiles?.role}</p>
+                          <p className="text-[8px] font-black text-[#b50a0a] tracking-wide mt-0.5">{edit.profiles?.role}</p>
                         </div>
                       </div>
                       
@@ -556,7 +556,7 @@ export function ApprovalsClient({
                             targetName: `${edit.profiles?.first_name} ${edit.profiles?.last_name}`,
                             targetEmail: edit.profiles?.email || 'N/A'
                           })}
-                          className="flex items-center gap-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[8px] font-black uppercase tracking-widest shadow-md transition-all disabled:opacity-50"
+                          className="flex items-center gap-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-[8px] font-black tracking-wide shadow-md transition-all disabled:opacity-50"
                         >
                           <Check className="w-3 h-3" />
                           Approve
@@ -571,7 +571,7 @@ export function ApprovalsClient({
                             targetName: `${edit.profiles?.first_name} ${edit.profiles?.last_name}`,
                             targetEmail: edit.profiles?.email || 'N/A'
                           })}
-                          className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                          className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-lg text-[8px] font-black tracking-wide transition-all disabled:opacity-50"
                         >
                           Reject
                         </button>
@@ -581,16 +581,16 @@ export function ApprovalsClient({
                     {/* Side-by-Side Values Panel */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-gray-50 border border-gray-100 p-4 rounded-2xl">
                       <div className="space-y-1">
-                        <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Field Requested</p>
-                        <p className="text-xs font-black text-gray-800 uppercase tracking-wide">{formatFieldName(edit.field_name)}</p>
+                        <p className="text-[8px] font-black text-gray-400 tracking-wide">Field Requested</p>
+                        <p className="text-sm font-black text-gray-800 tracking-wide">{formatFieldName(edit.field_name)}</p>
                       </div>
                       <div className="space-y-1 bg-red-50/50 border border-red-100/50 p-2.5 rounded-xl">
-                        <p className="text-[8px] font-black text-red-400 uppercase tracking-widest">Current Value</p>
-                        <p className="text-xs font-bold text-red-700 line-through truncate">{edit.old_value || '-- empty --'}</p>
+                        <p className="text-[8px] font-black text-red-400 tracking-wide">Current Value</p>
+                        <p className="text-sm font-bold text-red-700 line-through truncate">{edit.old_value || '-- empty --'}</p>
                       </div>
                       <div className="space-y-1 bg-green-50/50 border border-green-100/50 p-2.5 rounded-xl">
-                        <p className="text-[8px] font-black text-green-400 uppercase tracking-widest">Proposed Value</p>
-                        <p className="text-xs font-black text-green-700 truncate">{edit.new_value || '-- empty --'}</p>
+                        <p className="text-[8px] font-black text-green-400 tracking-wide">Proposed Value</p>
+                        <p className="text-sm font-black text-green-700 truncate">{edit.new_value || '-- empty --'}</p>
                       </div>
                     </div>
                   </div>
@@ -600,13 +600,13 @@ export function ApprovalsClient({
           )}
 
           {tab === 'prospects' && (
-            <table className="w-full text-left text-sm text-gray-600 whitespace-nowrap">
+            <table className="w-full text-left text-base text-gray-600 whitespace-nowrap">
               <thead className="bg-[#f8f9fa] border-b border-gray-100">
                 <tr>
-                  <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-[#b50a0a]">Prospect Identity</th>
-                  <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-[#b50a0a]">Role Type</th>
-                  <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-[#b50a0a]">Status</th>
-                  <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-[#b50a0a] text-right">Actions</th>
+                  <th className="px-6 py-5 text-[10px] font-black tracking-wide text-[#b50a0a]">Prospect Identity</th>
+                  <th className="px-6 py-5 text-[10px] font-black tracking-wide text-[#b50a0a]">Role Type</th>
+                  <th className="px-6 py-5 text-[10px] font-black tracking-wide text-[#b50a0a]">Status</th>
+                  <th className="px-6 py-5 text-[10px] font-black tracking-wide text-[#b50a0a] text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -614,7 +614,7 @@ export function ApprovalsClient({
                   <tr>
                     <td colSpan={4} className="px-6 py-20 text-center">
                       <Mail className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">No prospects matching your filters.</p>
+                      <p className="text-[10px] font-black tracking-wide text-gray-400">No prospects matching your filters.</p>
                     </td>
                   </tr>
                 ) : (
@@ -622,7 +622,7 @@ export function ApprovalsClient({
                     <tr key={prospect.id} className="hover:bg-gray-50/50 transition-colors group">
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-2xl bg-gray-900 flex items-center justify-center font-black text-white text-sm shrink-0 shadow-lg shadow-gray-200/50">
+                          <div className="w-10 h-10 rounded-2xl bg-gray-900 flex items-center justify-center font-black text-white text-base shrink-0 shadow-lg shadow-gray-200/50">
                             {((prospect.first_name && prospect.first_name[0]) || 'U').toUpperCase()}
                           </div>
                           <div>
@@ -630,12 +630,12 @@ export function ApprovalsClient({
                               <p className="font-black text-gray-900 leading-none truncate max-w-full max-w-[150px]">{prospect.first_name} {prospect.last_name}</p>
                               <FlagIcon country={prospect.country} className="w-3 h-2" />
                             </div>
-                            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest truncate max-w-full max-w-[200px]">{prospect.email || 'No email'}</p>
+                            <p className="text-[9px] font-bold text-gray-400 tracking-wide truncate max-w-full max-w-[200px]">{prospect.email || 'No email'}</p>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-5">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 rounded-lg text-[8px] font-black uppercase tracking-widest text-gray-950 border border-gray-200/50">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 rounded-lg text-[8px] font-black tracking-wide text-gray-950 border border-gray-200/50">
                           {getRoleIcon(prospect.role)}
                           {prospect.role}
                         </span>
@@ -644,11 +644,11 @@ export function ApprovalsClient({
                         <div className="flex flex-col gap-1">
                           <div className="flex items-center gap-2">
                             <div className={`w-1.5 h-1.5 rounded-full ${prospect.status === 'new' ? 'bg-blue-500' : 'bg-orange-500'}`}></div>
-                            <span className={`text-[8px] font-black uppercase tracking-widest ${prospect.status === 'new' ? 'text-blue-600' : 'text-orange-600'}`}>
+                            <span className={`text-[8px] font-black tracking-wide ${prospect.status === 'new' ? 'text-blue-600' : 'text-orange-600'}`}>
                               {prospect.status === 'new' ? 'NEW / PENDING PAY' : 'EXPIRED / RENEW'}
                             </span>
                           </div>
-                          <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">
+                          <span className="text-[8px] font-bold text-gray-400 tracking-wide">
                             Since <DateDisplay date={prospect.created_at} />
                           </span>
                         </div>
@@ -664,7 +664,7 @@ export function ApprovalsClient({
                           <button 
                             disabled={actionLoadingId === prospect.email}
                             onClick={() => handleResendInv(prospect.email!, prospect.last_name, prospect.role)}
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-100 rounded-xl text-[9px] font-black uppercase tracking-widest text-gray-900 hover:bg-black hover:text-white hover:border-black transition-all shadow-sm"
+                            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-100 rounded-xl text-[9px] font-black tracking-wide text-gray-900 hover:bg-black hover:text-white hover:border-black transition-all shadow-sm"
                           >
                             {actionLoadingId === prospect.email ? <RefreshCcw className="w-3.5 h-3.5 animate-spin" /> : <RefreshCcw className="w-3.5 h-3.5" />}
                             {prospect.status === 'expired' ? 'Send Reminder' : 'Resend Invitation'}
@@ -683,13 +683,13 @@ export function ApprovalsClient({
               {(filtered as PaymentTransaction[]).length === 0 ? (
                 <div className="px-6 py-20 text-center">
                   <CreditCard className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">No manual bank transfer payments currently awaiting verification.</p>
+                  <p className="text-[10px] font-black tracking-wide text-gray-400">No manual bank transfer payments currently awaiting verification.</p>
                 </div>
               ) : (
                 (filtered as PaymentTransaction[]).map((pay: PaymentTransaction) => (
                   <div key={pay.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-gray-50/50 transition-colors">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center font-black text-sm shrink-0 border border-green-100">
+                      <div className="w-12 h-12 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center font-black text-base shrink-0 border border-green-100">
                         <DollarSign className="w-6 h-6 animate-pulse" />
                       </div>
                       <div>
@@ -697,22 +697,22 @@ export function ApprovalsClient({
                           {pay.user_id ? (
                             <Link 
                               href={`/admin/users/${pay.user_id}`} 
-                              className="font-black text-gray-900 text-sm hover:text-[#b50a0a] transition-colors flex items-center gap-1.5 group"
+                              className="font-black text-gray-900 text-base hover:text-[#b50a0a] transition-colors flex items-center gap-1.5 group"
                             >
                               {pay.profiles?.first_name} {pay.profiles?.last_name}
                               <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                             </Link>
                           ) : (
-                            <p className="font-black text-gray-900 text-sm">{pay.profiles?.first_name} {pay.profiles?.last_name}</p>
+                            <p className="font-black text-gray-900 text-base">{pay.profiles?.first_name} {pay.profiles?.last_name}</p>
                           )}
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 rounded text-[7px] font-black uppercase text-gray-600">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 rounded text-[7px] font-black text-gray-600">
                             {pay.profiles?.role}
                           </span>
                         </div>
-                        <p className="text-[8px] font-black text-[#b50a0a] uppercase tracking-widest mt-1">REF: {pay.reference}</p>
+                        <p className="text-[8px] font-black text-[#b50a0a] tracking-wide mt-1">REF: {pay.reference}</p>
                         <div className="flex items-baseline gap-2 mt-1">
-                          <span className="text-sm font-black text-gray-900 italic">${pay.amount.toLocaleString()} {pay.currency}</span>
-                          <span className="text-[8px] font-bold text-gray-400 uppercase">Awaiting Settlement Confirmation</span>
+                          <span className="text-base font-black text-gray-900">${pay.amount.toLocaleString()} {pay.currency}</span>
+                          <span className="text-[8px] font-bold text-gray-400">Awaiting Settlement Confirmation</span>
                         </div>
                       </div>
                     </div>
@@ -735,7 +735,7 @@ export function ApprovalsClient({
                           targetName: `${pay.profiles?.first_name} ${pay.profiles?.last_name}`,
                           targetEmail: pay.profiles?.email || 'N/A'
                         })}
-                        className="flex items-center gap-1.5 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg shadow-green-900/10 transition-all disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-[9px] font-black tracking-wide shadow-lg shadow-green-900/10 transition-all disabled:opacity-50"
                       >
                         <Check className="w-3.5 h-3.5" />
                         Approve Payment
@@ -750,7 +750,7 @@ export function ApprovalsClient({
                           targetName: `${pay.profiles?.first_name} ${pay.profiles?.last_name}`,
                           targetEmail: pay.profiles?.email || 'N/A'
                         })}
-                        className="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all disabled:opacity-50"
+                        className="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-xl text-[9px] font-black tracking-wide transition-all disabled:opacity-50"
                       >
                         Reject
                       </button>
@@ -763,7 +763,7 @@ export function ApprovalsClient({
         </div>
 
         {/* Footer info/alert */}
-        <div className="p-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-[9px] font-black text-gray-400 uppercase tracking-widest">
+        <div className="p-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-[9px] font-black text-gray-400 tracking-wide">
           <p>Verified Administrative Approvals Center</p>
           <p>&bull;</p>
           <p>Security Grade AAA Secure</p>
@@ -785,30 +785,30 @@ export function ApprovalsClient({
                   {decisionAction.type.startsWith('approve') ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
                 </div>
                 <div>
-                  <h3 className="text-lg font-black uppercase tracking-tight text-gray-900 leading-none">{decisionAction.title}</h3>
-                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1.5">{decisionAction.subtitle}</p>
+                  <h3 className="text-lg font-black tracking-tight text-gray-900 leading-none">{decisionAction.title}</h3>
+                  <p className="text-[9px] font-black text-gray-400 tracking-wide mt-1.5">{decisionAction.subtitle}</p>
                 </div>
               </div>
 
               <div className="bg-gray-50 rounded-2xl p-4 mb-6 border border-gray-100 space-y-2">
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span className="text-gray-400 uppercase">Target User</span>
+                  <span className="text-gray-400">Target User</span>
                   <span className="text-gray-900 font-black">{decisionAction.targetName}</span>
                 </div>
                 <div className="flex justify-between text-[10px] font-bold">
-                  <span className="text-gray-400 uppercase">Email</span>
+                  <span className="text-gray-400">Email</span>
                   <span className="text-gray-900 font-black">{decisionAction.targetEmail}</span>
                 </div>
                 {decisionAction.staffRole && (
                   <div className="flex justify-between text-[10px] font-bold">
-                    <span className="text-gray-400 uppercase">Assigned Role</span>
-                    <span className="text-[#b50a0a] font-black uppercase">{decisionAction.staffRole}</span>
+                    <span className="text-gray-400">Assigned Role</span>
+                    <span className="text-[#b50a0a] font-black">{decisionAction.staffRole}</span>
                   </div>
                 )}
               </div>
 
               <div className="space-y-2 mb-6">
-                <label className="text-[10px] font-black text-gray-950 uppercase tracking-widest block ml-1">
+                <label className="text-[10px] font-black text-gray-950 tracking-wide block ml-1">
                   Reason / Email Note (Optional)
                 </label>
                 <textarea
@@ -820,7 +820,7 @@ export function ApprovalsClient({
                   }
                   value={decisionReason}
                   onChange={(e) => setDecisionReason(e.target.value)}
-                  className="w-full p-4 bg-gray-50 border-none rounded-2xl text-xs font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 placeholder:text-gray-400 resize-none"
+                  className="w-full p-4 bg-gray-50 border-none rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 placeholder:text-gray-400 resize-none"
                 />
               </div>
 
@@ -849,18 +849,18 @@ export function ApprovalsClient({
                       }
                     });
                   }}
-                  className={`flex-1 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all shadow-lg flex items-center justify-center gap-1.5 ${
-                    decisionAction.type.startsWith('approve')
-                      ? 'bg-green-600 hover:bg-green-700 shadow-green-900/10'
-                      : 'bg-red-600 hover:bg-red-700 shadow-red-900/10'
-                  }`}
+                  className={`flex-1 py-4 rounded-2xl text-[10px] font-black tracking-[0.2em] text-white transition-all shadow-lg flex items-center justify-center gap-1.5 ${
+ decisionAction.type.startsWith('approve')
+ ? 'bg-green-600 hover:bg-green-700 shadow-green-900/10'
+ : 'bg-red-600 hover:bg-red-700 shadow-red-900/10'
+ }`}
                 >
                   {actionLoadingId !== null ? <RefreshCcw className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
                   Confirm & Notify
                 </button>
                 <button
                   onClick={() => { setDecisionAction(null); setDecisionReason(''); }}
-                  className="px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
+                  className="px-6 py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-2xl text-[10px] font-black tracking-wide transition-all"
                 >
                   Cancel
                 </button>
@@ -887,13 +887,13 @@ export function ApprovalsClient({
                   )}
                 </div>
                 <div>
-                  <h2 className="text-3xl font-black italic uppercase tracking-tighter leading-none mb-2">{inspectRegistration.first_name} {inspectRegistration.last_name}</h2>
+                  <h2 className="text-3xl font-black tracking-tighter leading-none mb-2">{inspectRegistration.first_name} {inspectRegistration.last_name}</h2>
                   <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 rounded text-[8px] font-black uppercase tracking-widest text-gray-700 border border-gray-200/50">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 rounded text-[8px] font-black tracking-wide text-gray-700 border border-gray-200/50">
                       {getRoleIcon(inspectRegistration.role)}
                       {inspectRegistration.role}
                     </span>
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-600 rounded text-[8px] font-black uppercase tracking-widest border border-amber-100">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-600 rounded text-[8px] font-black tracking-wide border border-amber-100">
                       Awaiting Approval
                     </span>
                   </div>
@@ -902,22 +902,22 @@ export function ApprovalsClient({
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 mb-10 border-b border-gray-100 pb-6">
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-[8px] font-black text-gray-400 uppercase tracking-widest"><Mail className="w-3.5 h-3.5" /> Email Address</div>
-                  <p className="text-xs font-black text-gray-900 truncate pr-4">{inspectRegistration.email || 'No email'}</p>
+                  <div className="flex items-center gap-2 text-[8px] font-black text-gray-400 tracking-wide"><Mail className="w-3.5 h-3.5" /> Email Address</div>
+                  <p className="text-sm font-black text-gray-900 truncate pr-4">{inspectRegistration.email || 'No email'}</p>
                 </div>
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-[8px] font-black text-gray-400 uppercase tracking-widest"><Globe className="w-3.5 h-3.5" /> Origin / Country</div>
-                  <p className="text-xs font-black text-gray-900 flex items-center gap-2 uppercase tracking-wide">
+                  <div className="flex items-center gap-2 text-[8px] font-black text-gray-400 tracking-wide"><Globe className="w-3.5 h-3.5" /> Origin / Country</div>
+                  <p className="text-sm font-black text-gray-900 flex items-center gap-2 tracking-wide">
                     <FlagIcon country={inspectRegistration.country} className="w-4 h-2.5" /> {inspectRegistration.country || 'N/A'}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-[8px] font-black text-gray-400 uppercase tracking-widest"><Phone className="w-3.5 h-3.5" /> Phone Number</div>
-                  <p className="text-xs font-black text-gray-900">{inspectRegistration.phone_number || 'N/A'}</p>
+                  <div className="flex items-center gap-2 text-[8px] font-black text-gray-400 tracking-wide"><Phone className="w-3.5 h-3.5" /> Phone Number</div>
+                  <p className="text-sm font-black text-gray-900">{inspectRegistration.phone_number || 'N/A'}</p>
                 </div>
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-[8px] font-black text-gray-400 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" /> Date of Birth</div>
-                  <p className="text-xs font-black text-gray-900">
+                  <div className="flex items-center gap-2 text-[8px] font-black text-gray-400 tracking-wide"><Calendar className="w-3.5 h-3.5" /> Date of Birth</div>
+                  <p className="text-sm font-black text-gray-900">
                     {inspectRegistration.date_of_birth ? (
                       new Date(inspectRegistration.date_of_birth).toLocaleDateString('en-US', {
                         month: 'long',
@@ -932,15 +932,15 @@ export function ApprovalsClient({
               {/* Bio block inside modal */}
               {inspectRegistration.bio && (
                 <div className="mb-10 space-y-2 border-b border-gray-100 pb-6">
-                  <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest block">Professional Biography</span>
-                  <p className="text-xs text-gray-600 font-medium leading-relaxed italic">"{inspectRegistration.bio}"</p>
+                  <span className="text-[8px] font-black text-gray-400 tracking-wide block">Professional Biography</span>
+                  <p className="text-sm text-gray-600 font-medium leading-relaxed">"{inspectRegistration.bio}"</p>
                 </div>
               )}
 
               {/* Category-Specific Specifications inside Modal */}
               {(inspectRegistration.role === 'player' || inspectRegistration.role === 'coach' || inspectRegistration.role === 'agent' || inspectRegistration.role === 'scout' || inspectRegistration.role === 'organization') && (
                 <div className="mb-10 space-y-4 border-b border-gray-100 pb-6">
-                  <h4 className="text-[9px] font-black text-gray-955 uppercase tracking-widest flex items-center gap-1.5">
+                  <h4 className="text-[9px] font-black text-gray-955 tracking-wide flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-[#b50a0a]" />
                     Professional Specifications ({inspectRegistration.role})
                   </h4>
@@ -948,28 +948,28 @@ export function ApprovalsClient({
                   {inspectRegistration.role === 'player' && (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Position</span>
-                        <span className="text-xs font-black text-gray-900">{inspectRegistration.position || 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">Position</span>
+                        <span className="text-sm font-black text-gray-900">{inspectRegistration.position || 'N/A'}</span>
                       </div>
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Dominant Foot</span>
-                        <span className="text-xs font-black text-gray-900 capitalize">{inspectRegistration.foot || 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">Dominant Foot</span>
+                        <span className="text-sm font-black text-gray-900 capitalize">{inspectRegistration.foot || 'N/A'}</span>
                       </div>
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Jersey Num</span>
-                        <span className="text-xs font-black text-gray-900">{inspectRegistration.jersey_number ? `#${inspectRegistration.jersey_number}` : 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">Jersey Num</span>
+                        <span className="text-sm font-black text-gray-900">{inspectRegistration.jersey_number ? `#${inspectRegistration.jersey_number}` : 'N/A'}</span>
                       </div>
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Height (cm)</span>
-                        <span className="text-xs font-black text-gray-900">{inspectRegistration.height_cm ? `${inspectRegistration.height_cm} cm` : 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">Height (cm)</span>
+                        <span className="text-sm font-black text-gray-900">{inspectRegistration.height_cm ? `${inspectRegistration.height_cm} cm` : 'N/A'}</span>
                       </div>
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Weight (kg)</span>
-                        <span className="text-xs font-black text-gray-900">{inspectRegistration.weight_kg ? `${inspectRegistration.weight_kg} kg` : 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">Weight (kg)</span>
+                        <span className="text-sm font-black text-gray-900">{inspectRegistration.weight_kg ? `${inspectRegistration.weight_kg} kg` : 'N/A'}</span>
                       </div>
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Market Value</span>
-                        <span className="text-xs font-black text-gray-900">{inspectRegistration.market_value ? `$${Number(inspectRegistration.market_value).toLocaleString()}` : 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">Market Value</span>
+                        <span className="text-sm font-black text-gray-900">{inspectRegistration.market_value ? `$${Number(inspectRegistration.market_value).toLocaleString()}` : 'N/A'}</span>
                       </div>
                     </div>
                   )}
@@ -977,12 +977,12 @@ export function ApprovalsClient({
                   {inspectRegistration.role === 'coach' && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Preferred Formation</span>
-                        <span className="text-xs font-black text-gray-900">{inspectRegistration.formation || 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">Preferred Formation</span>
+                        <span className="text-sm font-black text-gray-900">{inspectRegistration.formation || 'N/A'}</span>
                       </div>
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Coaching License</span>
-                        <span className="text-xs font-black text-gray-900">{inspectRegistration.license || 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">Coaching License</span>
+                        <span className="text-sm font-black text-gray-900">{inspectRegistration.license || 'N/A'}</span>
                       </div>
                     </div>
                   )}
@@ -990,12 +990,12 @@ export function ApprovalsClient({
                   {(inspectRegistration.role === 'agent' || inspectRegistration.role === 'scout' || inspectRegistration.role === 'organization') && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Agency / Club Name</span>
-                        <span className="text-xs font-black text-gray-900">{inspectRegistration.agency_name || 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">Agency / Club Name</span>
+                        <span className="text-sm font-black text-gray-900">{inspectRegistration.agency_name || 'N/A'}</span>
                       </div>
                       <div className="bg-gray-50/50 border border-gray-100 p-3 rounded-2xl">
-                        <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">License Code</span>
-                        <span className="text-xs font-black text-gray-900">{inspectRegistration.license_code || 'N/A'}</span>
+                        <span className="text-[7px] font-black text-gray-400 block tracking-wide">License Code</span>
+                        <span className="text-sm font-black text-gray-900">{inspectRegistration.license_code || 'N/A'}</span>
                       </div>
                     </div>
                   )}
@@ -1005,7 +1005,7 @@ export function ApprovalsClient({
               {/* Document Proofs inside Modal */}
               {(inspectRegistration.id_proof_url || inspectRegistration.license_proof_url) && (
                 <div className="mb-10 space-y-4 border-b border-gray-100 pb-6">
-                  <h4 className="text-[9px] font-black text-gray-955 uppercase tracking-widest flex items-center gap-1.5">
+                  <h4 className="text-[9px] font-black text-gray-955 tracking-wide flex items-center gap-1.5">
                     <FileText className="w-4 h-4 text-[#b50a0a]" />
                     Uploaded Document Proofs
                   </h4>
@@ -1013,14 +1013,14 @@ export function ApprovalsClient({
                     {inspectRegistration.id_proof_url && (
                       <div className="bg-gray-50/50 border border-gray-100 p-4 rounded-2xl flex items-center justify-between gap-4">
                         <div className="min-w-0">
-                          <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Passport / ID</span>
-                          <span className="text-[9px] font-black text-green-700 uppercase tracking-widest bg-green-50 px-2 py-0.5 rounded mt-1 inline-block border border-green-100/50">Uploaded</span>
+                          <span className="text-[7px] font-black text-gray-400 block tracking-wide">Passport / ID</span>
+                          <span className="text-[9px] font-black text-green-700 tracking-wide bg-green-50 px-2 py-0.5 rounded mt-1 inline-block border border-green-100/50">Uploaded</span>
                         </div>
                         <a 
                           href={resolveDocUrl(inspectRegistration.id_proof_url)}
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="px-3 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-black hover:text-white rounded-xl text-[8px] font-black uppercase tracking-widest transition-all shrink-0 flex items-center gap-1 shadow-sm"
+                          className="px-3 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-black hover:text-white rounded-xl text-[8px] font-black tracking-wide transition-all shrink-0 flex items-center gap-1 shadow-sm"
                         >
                           View <ExternalLink className="w-3 h-3" />
                         </a>
@@ -1029,14 +1029,14 @@ export function ApprovalsClient({
                     {inspectRegistration.license_proof_url && (
                       <div className="bg-gray-50/50 border border-gray-100 p-4 rounded-2xl flex items-center justify-between gap-4">
                         <div className="min-w-0">
-                          <span className="text-[7px] font-black text-gray-400 uppercase block tracking-wider">Credentials License</span>
-                          <span className="text-[9px] font-black text-green-700 uppercase tracking-widest bg-green-50 px-2 py-0.5 rounded mt-1 inline-block border border-green-100/50">Uploaded</span>
+                          <span className="text-[7px] font-black text-gray-400 block tracking-wide">Credentials License</span>
+                          <span className="text-[9px] font-black text-green-700 tracking-wide bg-green-50 px-2 py-0.5 rounded mt-1 inline-block border border-green-100/50">Uploaded</span>
                         </div>
                         <a 
                           href={resolveDocUrl(inspectRegistration.license_proof_url)}
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="px-3 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-black hover:text-white rounded-xl text-[8px] font-black uppercase tracking-widest transition-all shrink-0 flex items-center gap-1 shadow-sm"
+                          className="px-3 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-black hover:text-white rounded-xl text-[8px] font-black tracking-wide transition-all shrink-0 flex items-center gap-1 shadow-sm"
                         >
                           View <ExternalLink className="w-3 h-3" />
                         </a>
@@ -1048,13 +1048,13 @@ export function ApprovalsClient({
 
               <div className="bg-gray-50 border border-gray-100 rounded-[2rem] p-6 mb-10 flex items-center justify-between">
                 <div>
-                  <p className="text-[9px] font-black uppercase text-gray-900 tracking-widest">Verify Profile Integrity</p>
+                  <p className="text-[9px] font-black text-gray-900 tracking-wide">Verify Profile Integrity</p>
                   <p className="text-gray-400 text-[10px] leading-relaxed mt-1">Cross-examine loaded category stats and verified identity documents.</p>
                 </div>
                 {inspectRegistration.user_id && (
                   <Link
                     href={`/admin/users/${inspectRegistration.user_id}`}
-                    className="flex items-center gap-1.5 px-4 py-2.5 bg-white border border-gray-100 text-gray-900 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-sm shrink-0"
+                    className="flex items-center gap-1.5 px-4 py-2.5 bg-white border border-gray-100 text-gray-900 rounded-xl text-[9px] font-black tracking-wide hover:bg-black hover:text-white transition-all shadow-sm shrink-0"
                   >
                     View Full Profile
                   </Link>
@@ -1074,7 +1074,7 @@ export function ApprovalsClient({
                       targetEmail: inspectRegistration.email || 'N/A'
                     });
                   }}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-green-900/10"
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-[2rem] font-black tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-green-900/10"
                 >
                   <CheckCircle className="w-4 h-4" /> Approve Account
                 </button>
@@ -1090,7 +1090,7 @@ export function ApprovalsClient({
                       targetEmail: inspectRegistration.email || 'N/A'
                     });
                   }}
-                  className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 py-5 rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2"
+                  className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 py-5 rounded-[2rem] font-black tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2"
                 >
                   <X className="w-4 h-4" /> Decline Request
                 </button>
@@ -1113,41 +1113,41 @@ export function ApprovalsClient({
                   $
                 </div>
                 <div>
-                  <h2 className="text-2xl font-black italic uppercase tracking-tighter leading-none mb-2">Direct Bank Settlement</h2>
-                  <p className="text-[10px] font-black text-[#b50a0a] uppercase tracking-[0.2em]">Transaction Ref: {inspectPayment.reference}</p>
+                  <h2 className="text-2xl font-black tracking-tighter leading-none mb-2">Direct Bank Settlement</h2>
+                  <p className="text-[10px] font-black text-[#b50a0a] tracking-[0.2em]">Transaction Ref: {inspectPayment.reference}</p>
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 mb-10">
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 uppercase tracking-widest"><User className="w-3.5 h-3.5" /> Payer Name</div>
+                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 tracking-wide"><User className="w-3.5 h-3.5" /> Payer Name</div>
                   <p className="text-[14px] font-black text-gray-900 truncate pr-4">
                     {inspectPayment.profiles?.first_name} {inspectPayment.profiles?.last_name}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 uppercase tracking-widest"><Mail className="w-3.5 h-3.5" /> Email Address</div>
+                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 tracking-wide"><Mail className="w-3.5 h-3.5" /> Email Address</div>
                   <p className="text-[14px] font-black text-gray-900 truncate pr-4">{inspectPayment.profiles?.email || 'N/A'}</p>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 uppercase tracking-widest"><CreditCard className="w-3.5 h-3.5" /> Subscription Amount</div>
-                  <p className="text-[14px] font-black text-green-600 uppercase font-black italic">${inspectPayment.amount.toLocaleString()} {inspectPayment.currency}</p>
+                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 tracking-wide"><CreditCard className="w-3.5 h-3.5" /> Subscription Amount</div>
+                  <p className="text-[14px] font-black text-green-600 font-black">${inspectPayment.amount.toLocaleString()} {inspectPayment.currency}</p>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" /> Transfer Initiated</div>
-                  <p className="text-[14px] font-black text-gray-900 uppercase"><DateDisplay date={inspectPayment.created_at} /></p>
+                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 tracking-wide"><Calendar className="w-3.5 h-3.5" /> Transfer Initiated</div>
+                  <p className="text-[14px] font-black text-gray-900"><DateDisplay date={inspectPayment.created_at} /></p>
                 </div>
               </div>
 
               <div className="bg-gray-50 rounded-[2.5rem] p-6 mb-10 border border-gray-100 flex items-center justify-between">
                 <div>
-                  <p className="text-[9px] font-black uppercase text-gray-900 tracking-widest">Verify Settlement Funds</p>
+                  <p className="text-[9px] font-black text-gray-900 tracking-wide">Verify Settlement Funds</p>
                   <p className="text-gray-400 text-[10px] leading-relaxed mt-1">Please confirm that funds matching reference <strong>{inspectPayment.reference}</strong> are fully cleared in the corporate bank account.</p>
                 </div>
                 {inspectPayment.user_id && (
                   <Link
                     href={`/admin/users/${inspectPayment.user_id}`}
-                    className="flex items-center gap-1.5 px-4 py-2.5 bg-white border border-gray-100 text-gray-900 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all shadow-sm shrink-0"
+                    className="flex items-center gap-1.5 px-4 py-2.5 bg-white border border-gray-100 text-gray-900 rounded-xl text-[9px] font-black tracking-wide hover:bg-black hover:text-white transition-all shadow-sm shrink-0"
                   >
                     View Full Profile
                   </Link>
@@ -1167,7 +1167,7 @@ export function ApprovalsClient({
                       targetEmail: inspectPayment.profiles?.email || 'N/A'
                     });
                   }}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-green-900/10"
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-[2rem] font-black tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-green-900/10"
                 >
                   <CheckCircle className="w-4 h-4" /> Confirm & Activate
                 </button>
@@ -1183,7 +1183,7 @@ export function ApprovalsClient({
                       targetEmail: inspectPayment.profiles?.email || 'N/A'
                     });
                   }}
-                  className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 py-5 rounded-[2rem] font-black uppercase tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2"
+                  className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 py-5 rounded-[2rem] font-black tracking-[0.2em] text-[11px] transition-all text-center flex items-center justify-center gap-2"
                 >
                   <X className="w-4 h-4" /> Reject Payment
                 </button>
@@ -1206,35 +1206,35 @@ export function ApprovalsClient({
                   {((selectedProspect.first_name && selectedProspect.first_name[0]) || 'P').toUpperCase()}
                 </div>
                 <div>
-                  <h2 className="text-3xl font-black italic uppercase tracking-tighter leading-none mb-2">{selectedProspect.first_name} {selectedProspect.last_name}</h2>
-                  <p className="text-[10px] font-black text-[#b50a0a] uppercase tracking-[0.2em]">{selectedProspect.role} Prospect</p>
+                  <h2 className="text-3xl font-black tracking-tighter leading-none mb-2">{selectedProspect.first_name} {selectedProspect.last_name}</h2>
+                  <p className="text-[10px] font-black text-[#b50a0a] tracking-[0.2em]">{selectedProspect.role} Prospect</p>
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-10 mb-10">
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 uppercase tracking-widest"><Mail className="w-3.5 h-3.5" /> Email Address</div>
+                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 tracking-wide"><Mail className="w-3.5 h-3.5" /> Email Address</div>
                   <p className="text-[14px] font-black text-gray-900 truncate pr-4">{selectedProspect.email || 'No email'}</p>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 uppercase tracking-widest"><Globe className="w-3.5 h-3.5" /> Location</div>
-                  <p className="text-[14px] font-black text-gray-900 flex items-center gap-2 uppercase tracking-wide">
+                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 tracking-wide"><Globe className="w-3.5 h-3.5" /> Location</div>
+                  <p className="text-[14px] font-black text-gray-900 flex items-center gap-2 tracking-wide">
                     <FlagIcon country={selectedProspect.country} className="w-4 h-2.5" /> {selectedProspect.country || 'N/A'}
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 uppercase tracking-widest"><Calendar className="w-3.5 h-3.5" /> Enrolled On</div>
-                  <p className="text-[14px] font-black text-gray-900 uppercase"><DateDisplay date={selectedProspect.created_at} /></p>
+                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 tracking-wide"><Calendar className="w-3.5 h-3.5" /> Enrolled On</div>
+                  <p className="text-[14px] font-black text-gray-900"><DateDisplay date={selectedProspect.created_at} /></p>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 uppercase tracking-widest"><Clock className="w-3.5 h-3.5" /> Status</div>
-                  <p className="text-[14px] font-black text-gray-900 uppercase">{selectedProspect.status === 'new' ? 'New invite' : 'Expired subscription'}</p>
+                  <div className="flex items-center gap-2 text-[10px] font-black text-gray-300 tracking-wide"><Clock className="w-3.5 h-3.5" /> Status</div>
+                  <p className="text-[14px] font-black text-gray-900">{selectedProspect.status === 'new' ? 'New invite' : 'Expired subscription'}</p>
                 </div>
               </div>
 
               <div className="bg-gray-50 rounded-[2.5rem] p-6 mb-10 border border-gray-100">
-                <p className="text-[9px] font-black uppercase text-gray-900 tracking-widest">Onboarding Status</p>
-                <p className="text-gray-400 text-[11px] leading-relaxed italic mt-4">
+                <p className="text-[9px] font-black text-gray-900 tracking-wide">Onboarding Status</p>
+                <p className="text-gray-400 text-[11px] leading-relaxed mt-4">
                   This sports directory profile was created by an administrator. You can invite the participant to renew or claim their profile by clicking the button below.
                 </p>
               </div>
@@ -1244,7 +1244,7 @@ export function ApprovalsClient({
                   handleResendInv(selectedProspect.email!, selectedProspect.last_name, selectedProspect.role);
                   setSelectedProspect(null);
                 }}
-                className="w-full bg-black hover:bg-[#b50a0a] text-white py-5 rounded-[2rem] font-black uppercase tracking-[0.25em] text-[11px] transition-all shadow-md"
+                className="w-full bg-black hover:bg-[#b50a0a] text-white py-5 rounded-[2rem] font-black tracking-[0.25em] text-[11px] transition-all shadow-md"
               >
                 {selectedProspect.status === 'expired' ? 'Send Renewal Link' : 'Send Invitation Link'}
               </button>
@@ -1265,16 +1265,16 @@ export function ApprovalsClient({
                 <div className="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center text-[#b50a0a] mb-4 border border-red-100">
                   <ShieldAlert className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-black uppercase tracking-tight italic text-gray-900">
+                <h3 className="text-2xl font-black tracking-tight text-gray-900">
                   Assign Staff <span className="text-[#b50a0a]">Permission</span>
                 </h3>
-                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-1">
+                <p className="text-[9px] font-black text-gray-400 tracking-wide mt-1">
                   Assign an official administrative role to {selectedStaff.profiles?.first_name}
                 </p>
               </div>
 
               <div className="space-y-4 mb-8">
-                <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Assign Target Role</label>
+                <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Assign Target Role</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {[
                     { id: 'admin', label: 'Administrator', icon: ShieldCheck },
@@ -1286,14 +1286,14 @@ export function ApprovalsClient({
                       key={r.id}
                       onClick={() => setTargetStaffRole(r.id)}
                       className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all text-left ${
-                        targetStaffRole === r.id 
-                          ? 'bg-gray-900 border-gray-900 text-white shadow-lg shadow-gray-900/10' 
-                          : 'bg-white border-gray-100 hover:border-gray-200 text-gray-600'
-                      }`}
+ targetStaffRole === r.id 
+ ? 'bg-gray-900 border-gray-900 text-white shadow-lg shadow-gray-900/10' 
+ : 'bg-white border-gray-100 hover:border-gray-200 text-gray-600'
+ }`}
                     >
                       <div>
                         <r.icon className="w-4 h-4 text-[#b50a0a] mb-2" />
-                        <span className="text-[9px] font-black uppercase tracking-widest block">{r.label}</span>
+                        <span className="text-[9px] font-black tracking-wide block">{r.label}</span>
                       </div>
                       <div className={`w-2.5 h-2.5 rounded-full ${targetStaffRole === r.id ? 'bg-[#b50a0a]' : 'bg-gray-200'}`}></div>
                     </button>
@@ -1315,7 +1315,7 @@ export function ApprovalsClient({
                     staffRole: targetStaffRole
                   });
                 }}
-                className="w-full bg-[#b50a0a] hover:bg-black text-white py-5 rounded-[2rem] font-black uppercase tracking-[0.25em] text-[11px] transition-all shadow-xl shadow-red-900/10 flex items-center justify-center gap-2"
+                className="w-full bg-[#b50a0a] hover:bg-black text-white py-5 rounded-[2rem] font-black tracking-[0.25em] text-[11px] transition-all shadow-xl shadow-red-900/10 flex items-center justify-center gap-2"
               >
                 <ShieldCheck className="w-4 h-4" /> Grant Role & Proceed
               </button>

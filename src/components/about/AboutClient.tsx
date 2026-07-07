@@ -53,16 +53,16 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div>
                   </div>
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center z-0 overflow-hidden pointer-events-none">
-                     <h1 className="text-[15vw] font-black uppercase tracking-tighter text-transparent stroke-text opacity-10 leading-none">ABOUT US</h1>
+                     <h1 className="text-[15vw] font-black tracking-tighter text-transparent stroke-text opacity-10 leading-none">ABOUT US</h1>
                   </div>
                   <div className="relative z-10 w-full max-w-[1000px] mx-auto px-6 text-center flex flex-col justify-center h-full">
                      <div className="flex justify-center mb-8">
                         <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 shadow-[0_4px_30px_rgba(0,0,0,0.1)]">
                            <span className="w-2 h-2 rounded-full bg-[#ff3333] animate-pulse"></span>
-                           <span className="text-white font-bold text-xs uppercase tracking-widest">{hero.subtitle}</span>
+                           <span className="text-white font-bold text-sm tracking-wide">{hero.subtitle}</span>
                         </div>
                      </div>
-                     <h2 className="text-6xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tighter mb-8 drop-shadow-xl">
+                     <h2 className="text-6xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter mb-8 drop-shadow-xl">
                         {hero.title?.split(' ').map((word: string, i: number) => (
                            <span key={i} className={word === 'Us' ? 'text-[#ff4d4d]' : ''}>{word} </span>
                         ))}
@@ -115,7 +115,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                         <div className="relative z-10">
                            <div className="inline-flex items-center gap-3 mb-6 bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
                               <span className="w-2 h-2 rounded-full bg-[#b50a0a] animate-pulse"></span>
-                              <h3 className="text-xs font-black text-[#b50a0a] tracking-[0.2em] uppercase">Our Mission</h3>
+                              <h3 className="text-sm font-black text-[#b50a0a] tracking-[0.2em]">Our Mission</h3>
                            </div>
                            <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-6 tracking-tight group-hover:text-[#b50a0a] transition-colors duration-300">{missionTitle}</h2>
                            <p className="text-gray-600 text-lg leading-relaxed font-medium">{missionDesc}</p>
@@ -127,7 +127,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                         <div className="relative z-10">
                            <div className="inline-flex items-center gap-3 mb-6 bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
                               <span className="w-2 h-2 rounded-full bg-green-600 animate-pulse"></span>
-                              <h3 className="text-xs font-black text-green-600 tracking-[0.2em] uppercase">Our Vision</h3>
+                              <h3 className="text-sm font-black text-green-600 tracking-[0.2em]">Our Vision</h3>
                            </div>
                            <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-6 tracking-tight group-hover:text-green-600 transition-colors duration-300">{visionTitle}</h2>
                            <p className="text-gray-600 text-lg leading-relaxed font-medium">{visionDesc}</p>
@@ -147,8 +147,8 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                      <div className="max-w-[1200px] mx-auto">
                      <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
                         <div>
-                           <span className="text-[#b50a0a] font-bold tracking-[0.2em] uppercase mb-4 block text-sm">{philosophySubtitle}</span>
-                           <h2 className="text-4xl md:text-5xl font-black text-gray-900 uppercase tracking-tight">{philosophyTitle}</h2>
+                           <span className="text-[#b50a0a] font-bold tracking-[0.2em] mb-4 block text-base">{philosophySubtitle}</span>
+                           <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">{philosophyTitle}</h2>
                         </div>
                      </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -175,7 +175,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                <div key={key} className="w-full bg-white py-32">
                   <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                      <div className="text-center mb-24 relative">
-                        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-gray-50 uppercase tracking-tighter w-full pointer-events-none select-none">{servicesTitle}</h2>
+                        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-gray-50 tracking-tighter w-full pointer-events-none select-none">{servicesTitle}</h2>
                      </div>
                      <div className="space-y-32">
                         {servicesList.map((svc: any, idx: number) => {
@@ -183,10 +183,10 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                            return (
                               <div key={idx} className={`flex flex-col ${isEven ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12 lg:gap-20 relative`}>
                                  <div className="w-full lg:w-1/2 relative z-10 mt-8 lg:mt-0">
-                                    <div className="inline-block text-[#b50a0a] font-black text-sm uppercase tracking-widest mb-6 border-b-2 border-[#b50a0a] pb-1">Service {svc.num}</div>
-                                    <h3 className="text-4xl md:text-5xl font-black text-gray-900 uppercase tracking-tight mb-8 leading-tight">{svc.title}</h3>
+                                    <div className="inline-block text-[#b50a0a] font-black text-base tracking-wide mb-6 border-b-2 border-[#b50a0a] pb-1">Service {svc.num}</div>
+                                    <h3 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-8 leading-tight">{svc.title}</h3>
                                     <p className="text-gray-600 text-xl leading-relaxed font-medium mb-8">{svc.desc}</p>
-                                    <Link href="/transfer-focus" className="inline-flex items-center gap-2 text-[#b50a0a] font-bold uppercase tracking-wider hover:text-gray-900 group transition-colors">
+                                    <Link href="/transfer-focus" className="inline-flex items-center gap-2 text-[#b50a0a] font-bold tracking-wide hover:text-gray-900 group transition-colors">
                                        Learn More <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                     </Link>
                                  </div>

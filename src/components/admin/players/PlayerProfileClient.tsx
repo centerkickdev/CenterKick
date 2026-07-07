@@ -200,10 +200,10 @@ function StatFormModal({
       <div className="bg-white rounded-[2.5rem] w-full max-w-2xl overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-300">
         <div className="p-4 md:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div>
-            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">
+            <h3 className="text-xl font-black text-slate-900 tracking-tight">
               {initialData ? 'Edit Career Record' : 'Add Career Record'}
             </h3>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Detailed Performance Entry</p>
+            <p className="text-[10px] font-bold text-slate-400 tracking-wide mt-1">Detailed Performance Entry</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
             <X className="w-5 h-5 text-slate-400" />
@@ -214,17 +214,17 @@ function StatFormModal({
           {/* Season & League */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Football Season</label>
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Football Season</label>
               <select 
                 value={formData.season}
                 onChange={(e) => setFormData({ ...formData, season: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               >
                 {seasonsList.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">League / Tournament</label>
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">League / Tournament</label>
               <div className="relative group/select">
                 <input 
                   type="text"
@@ -232,7 +232,7 @@ function StatFormModal({
                   placeholder="e.g. Premier League"
                   value={formData.league_name || ''}
                   onChange={(e) => setFormData({ ...formData, league_name: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
                 />
                 <datalist id="league-list">
                   {leagues.map((l: any) => <option key={l.id} value={l.name} />)}
@@ -255,7 +255,7 @@ function StatFormModal({
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Club / Team Name</label>
+            <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Club / Team Name</label>
             <div className="relative">
               <input 
                 type="text"
@@ -263,7 +263,7 @@ function StatFormModal({
                 placeholder="Search or enter club name..."
                 value={formData.club_name || ''}
                 onChange={(e) => setFormData({ ...formData, club_name: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               />
                <datalist id="club-list">
                 {allClubs
@@ -279,7 +279,7 @@ function StatFormModal({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1 flex items-center gap-2">
                 <Activity className="w-3 h-3 text-slate-400" /> Appearances
               </label>
               <input 
@@ -287,11 +287,11 @@ function StatFormModal({
                 min="0"
                 value={formData.appearances || 0}
                 onChange={(e) => setFormData({ ...formData, appearances: parseInt(e.target.value) || 0 })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1 flex items-center gap-2">
                 <Clock className="w-3 h-3 text-slate-400" /> Minutes Played
               </label>
               <input 
@@ -299,11 +299,11 @@ function StatFormModal({
                 min="0"
                 value={formData.minutes_played || 0}
                 onChange={(e) => setFormData({ ...formData, minutes_played: parseInt(e.target.value) || 0 })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1 flex items-center gap-2">
                 <Target className="w-3 h-3 text-slate-400" /> Goals
               </label>
               <input 
@@ -311,11 +311,11 @@ function StatFormModal({
                 min="0"
                 value={formData.goals || 0}
                 onChange={(e) => setFormData({ ...formData, goals: parseInt(e.target.value) || 0 })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1 flex items-center gap-2">
                 <Award className="w-3 h-3 text-slate-400" /> Assists
               </label>
               <input 
@@ -323,11 +323,11 @@ function StatFormModal({
                 min="0"
                 value={formData.assists || 0}
                 onChange={(e) => setFormData({ ...formData, assists: parseInt(e.target.value) || 0 })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1 flex items-center gap-2">
                 <AlertCircle className="w-3 h-3 text-yellow-500" /> Yellow Cards
               </label>
               <input 
@@ -335,11 +335,11 @@ function StatFormModal({
                 min="0"
                 value={formData.yellow_cards || 0}
                 onChange={(e) => setFormData({ ...formData, yellow_cards: parseInt(e.target.value) || 0 })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1 flex items-center gap-2">
                 <AlertCircle className="w-3 h-3 text-red-500" /> Red Cards
               </label>
               <input 
@@ -347,7 +347,7 @@ function StatFormModal({
                 min="0"
                 value={formData.red_cards || 0}
                 onChange={(e) => setFormData({ ...formData, red_cards: parseInt(e.target.value) || 0 })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-black text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               />
             </div>
           </div>
@@ -356,13 +356,13 @@ function StatFormModal({
         <div className="p-4 md:p-8 bg-slate-50 border-t border-slate-100 flex gap-4">
           <button 
             onClick={() => onSave(formData)}
-            className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl shadow-slate-200"
+            className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-[10px] font-black tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl shadow-slate-200"
           >
             {initialData ? 'Save Changes' : 'Add Record'}
           </button>
           <button 
             onClick={onClose}
-            className="px-10 bg-white text-slate-400 border border-slate-200 rounded-2xl py-4 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all"
+            className="px-10 bg-white text-slate-400 border border-slate-200 rounded-2xl py-4 text-[10px] font-black tracking-wide hover:bg-slate-50 transition-all"
           >
             Cancel
           </button>
@@ -413,10 +413,10 @@ function TransferFormModal({
       <div className="bg-white rounded-[2.5rem] w-full max-w-2xl overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-300">
         <div className="p-4 md:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div>
-            <h3 className="text-xl font-bold text-slate-900 uppercase tracking-tight">
+            <h3 className="text-xl font-bold text-slate-900 tracking-tight">
               {initialData ? 'Edit Transfer Record' : 'Add Transfer Record'}
             </h3>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Movement & Contract Details</p>
+            <p className="text-[10px] font-bold text-slate-400 tracking-wide mt-1">Movement & Contract Details</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
             <X className="w-5 h-5 text-slate-400" />
@@ -426,28 +426,28 @@ function TransferFormModal({
         <div className="p-10 space-y-8 max-h-[70vh] overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Season</label>
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Season</label>
               <select 
                 value={formData.season}
                 onChange={(e) => setFormData({ ...formData, season: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               >
                 {seasonsList.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Transfer Date</label>
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Transfer Date</label>
               <input 
                 type="date"
                 value={formData.transfer_date || ''}
                 onChange={(e) => setFormData({ ...formData, transfer_date: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">League</label>
+            <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">League</label>
             <div className="relative group/select">
                 <input 
                   type="text"
@@ -462,7 +462,7 @@ function TransferFormModal({
                         league_flag: league ? league.countries?.code : formData.league_flag
                       });
                   }}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
                 />
                 <datalist id="transfer-league-list">
                   {leagues.map((l: Record<string, any>) => <option key={l.id} value={l.name} />)}
@@ -485,7 +485,7 @@ function TransferFormModal({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">New Club (Joined)</label>
+                <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">New Club (Joined)</label>
                 <div className="relative">
                   <input 
                     type="text"
@@ -493,7 +493,7 @@ function TransferFormModal({
                     placeholder="Joined..."
                     value={formData.to_club_name || ''}
                     onChange={(e) => setFormData({ ...formData, to_club_name: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
                   />
                   <datalist id="to-club-list">
                     {allClubs
@@ -507,7 +507,7 @@ function TransferFormModal({
                 </div>
              </div>
              <div className="space-y-2">
-                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Old Club (Left)</label>
+                <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Old Club (Left)</label>
                 <div className="relative">
                   <input 
                     type="text"
@@ -515,7 +515,7 @@ function TransferFormModal({
                     placeholder="Left..."
                     value={formData.from_club_name || ''}
                     onChange={(e) => setFormData({ ...formData, from_club_name: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
                   />
                   <datalist id="from-club-list">
                     {allClubs
@@ -529,7 +529,7 @@ function TransferFormModal({
           </div>
 
           <div className="space-y-4">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Transfer Fee / Status</label>
+            <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Transfer Fee / Status</label>
             <div className="flex gap-4">
               {['Free', 'Loan', 'Transferred'].map((type) => (
                 <label key={type} className="flex-1 cursor-pointer group">
@@ -546,13 +546,11 @@ function TransferFormModal({
                       }
                     }}
                   />
-                  <div className={`
-                    py-4 rounded-2xl border-2 text-center transition-all
-                    ${(type === 'Transferred' && !['Free', 'Loan'].includes(formData.transfer_fee || '')) || formData.transfer_fee === type
-                      ? 'bg-slate-900 border-slate-900 text-white shadow-lg' 
-                      : 'bg-slate-50 border-slate-200 text-slate-400 hover:border-slate-300'}
-                  `}>
-                    <span className="text-[10px] font-black uppercase tracking-widest">{type}</span>
+                  <div className={`py-4 rounded-2xl border-2 text-center transition-all
+ ${(type === 'Transferred' && !['Free', 'Loan'].includes(formData.transfer_fee || '')) || formData.transfer_fee === type
+ ? 'bg-slate-900 border-slate-900 text-white shadow-lg' 
+ : 'bg-slate-50 border-slate-200 text-slate-400 hover:border-slate-300'}`}>
+                    <span className="text-[10px] font-black tracking-wide">{type}</span>
                   </div>
                 </label>
               ))}
@@ -565,7 +563,7 @@ function TransferFormModal({
                   placeholder="Enter Transfer Amount (e.g. $10,000,000)"
                   value={formData.transfer_fee || ''}
                   onChange={(e) => setFormData({ ...formData, transfer_fee: e.target.value })}
-                  className="w-full bg-slate-100 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                  className="w-full bg-slate-100 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
                 />
               </div>
             )}
@@ -575,13 +573,13 @@ function TransferFormModal({
         <div className="p-4 md:p-8 bg-slate-50 border-t border-slate-100 flex gap-4">
           <button 
             onClick={() => onSave(formData)}
-            className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl shadow-slate-200"
+            className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-[10px] font-black tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl shadow-slate-200"
           >
             {initialData ? 'Save Changes' : 'Add Record'}
           </button>
           <button 
             onClick={onClose}
-            className="px-10 bg-white text-slate-400 border border-slate-200 rounded-2xl py-4 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all"
+            className="px-10 bg-white text-slate-400 border border-slate-200 rounded-2xl py-4 text-[10px] font-black tracking-wide hover:bg-slate-50 transition-all"
           >
             Cancel
           </button>
@@ -628,10 +626,10 @@ function AchievementFormModal({
       <div className="bg-white rounded-[2.5rem] w-full max-w-xl overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-300">
         <div className="p-4 md:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div>
-            <h3 className="text-xl font-bold text-slate-900 uppercase tracking-tight">
+            <h3 className="text-xl font-bold text-slate-900 tracking-tight">
               {initialData ? 'Edit Career Honour' : 'Add Career Honour'}
             </h3>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Official Recognition & Awards</p>
+            <p className="text-[10px] font-bold text-slate-400 tracking-wide mt-1">Official Recognition & Awards</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
             <X className="w-5 h-5 text-slate-400" />
@@ -640,33 +638,33 @@ function AchievementFormModal({
         
         <div className="p-10 space-y-6 max-h-[70vh] overflow-y-auto">
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Award / Trophy Title</label>
+            <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Award / Trophy Title</label>
             <input 
               type="text"
               placeholder="e.g. Premier League Winner, Golden Boot"
               value={formData.title || ''}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Year / Season</label>
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Year / Season</label>
               <select 
                 value={formData.year || ''}
                 onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               >
                 {seasonsList.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
+              <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Category</label>
               <select 
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
               >
                 <option value="Club">Club Honour</option>
                 <option value="Individual">Individual Award</option>
@@ -677,23 +675,23 @@ function AchievementFormModal({
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Organization / Competition</label>
+            <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Organization / Competition</label>
             <input 
               type="text"
               placeholder="e.g. Manchester City, Premier League, FIFA"
               value={formData.organization || ''}
               onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Short Description (Optional)</label>
+            <label className="text-[10px] font-black text-slate-400 tracking-wide ml-1">Short Description (Optional)</label>
             <textarea 
               placeholder="Brief details about the achievement..."
               value={formData.description || ''}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all h-24"
+              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] transition-all h-24"
             />
           </div>
         </div>
@@ -701,13 +699,13 @@ function AchievementFormModal({
         <div className="p-4 md:p-8 bg-slate-50 border-t border-slate-100 flex gap-4">
           <button 
             onClick={() => onSave(formData)}
-            className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl shadow-slate-200"
+            className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-[10px] font-black tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl shadow-slate-200"
           >
             {initialData ? 'Save Changes' : 'Add Award'}
           </button>
           <button 
             onClick={onClose}
-            className="px-10 bg-white text-slate-400 border border-slate-200 rounded-2xl py-4 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all"
+            className="px-10 bg-white text-slate-400 border border-slate-200 rounded-2xl py-4 text-[10px] font-black tracking-wide hover:bg-slate-50 transition-all"
           >
             Cancel
           </button>
@@ -780,8 +778,8 @@ function MediaGalleryModal({
       <div className="bg-white rounded-[2.5rem] w-full max-w-2xl overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-300">
         <div className="p-4 md:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div>
-            <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Manage Media Gallery</h3>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Video, Photos & External Portfolios</p>
+            <h3 className="text-xl font-black text-slate-900 tracking-tight">Manage Media Gallery</h3>
+            <p className="text-[10px] font-bold text-slate-400 tracking-wide mt-1">Video, Photos & External Portfolios</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
             <X className="w-5 h-5 text-slate-400" />
@@ -793,21 +791,21 @@ function MediaGalleryModal({
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <Activity className="w-4 h-4 text-red-600" />
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Featured Video URL (YouTube/Vimeo)</label>
+              <label className="text-[10px] font-black text-slate-400 tracking-wide">Featured Video URL (YouTube/Vimeo)</label>
             </div>
             <input 
               type="text"
               placeholder="https://www.youtube.com/watch?v=..."
               value={formData.highlight_video_url}
               onChange={(e) => setFormData({ ...formData, highlight_video_url: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 transition-all"
             />
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <ImageIcon className="w-4 h-4 text-indigo-600" />
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Action Images (Upload up to 5)</label>
+              <label className="text-[10px] font-black text-slate-400 tracking-wide">Action Images (Upload up to 5)</label>
             </div>
             <div className="grid gap-4">
               {[0, 1, 2, 3, 4].map((idx) => (
@@ -826,14 +824,14 @@ function MediaGalleryModal({
                             />
                          </div>
                       ) : (
-                         <span className="text-xs font-black text-slate-300">#{idx + 1}</span>
+                         <span className="text-sm font-black text-slate-300">#{idx + 1}</span>
                       )}
                    </div>
                    
                    <div className="flex-1 min-w-0">
                       {formData.action_images[idx] ? (
                          <div className="flex flex-col gap-1">
-                            <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest flex items-center gap-1.5">
+                            <p className="text-[10px] font-bold text-green-600 tracking-wide flex items-center gap-1.5">
                                <CheckCircle className="w-3 h-3" /> Image Ready
                             </p>
                             <p className="text-[10px] text-slate-400 truncate max-w-full font-medium">
@@ -842,7 +840,7 @@ function MediaGalleryModal({
                          </div>
                       ) : (
                          <div className="flex flex-col gap-1">
-                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">No Image selected</p>
+                            <p className="text-[10px] font-bold text-slate-400 tracking-wide">No Image selected</p>
                             <p className="text-[10px] text-slate-300 font-medium">Click button to upload action shot</p>
                          </div>
                       )}
@@ -868,7 +866,7 @@ function MediaGalleryModal({
                             onChange={(e) => handleFileChange(idx, e.target.files?.[0])}
                             disabled={uploadingIndex === idx}
                          />
-                         <button className={`px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 shadow-sm ${uploadingIndex === idx ? 'bg-slate-200 text-slate-400 animate-pulse' : 'bg-white text-slate-900 border border-slate-200 hover:bg-slate-50'}`}>
+                         <button className={`px-6 py-3 rounded-2xl text-[10px] font-black tracking-wide transition-all flex items-center gap-2 shadow-sm ${uploadingIndex === idx ? 'bg-slate-200 text-slate-400 animate-pulse' : 'bg-white text-slate-900 border border-slate-200 hover:bg-slate-50'}`}>
                             {uploadingIndex === idx ? 'Uploading...' : formData.action_images[idx] ? 'Replace' : 'Upload'}
                          </button>
                       </div>
@@ -882,14 +880,14 @@ function MediaGalleryModal({
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <ExternalLink className="w-4 h-4 text-slate-400" />
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">External Portfolio / Channel Link</label>
+              <label className="text-[10px] font-black text-slate-400 tracking-wide">External Portfolio / Channel Link</label>
             </div>
             <input 
               type="text"
               placeholder="e.g. https://shutterstock.com/athlete-portfolio"
               value={formData.external_gallery_url}
               onChange={(e) => setFormData({ ...formData, external_gallery_url: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 transition-all"
+              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-base font-bold text-slate-900 focus:ring-2 focus:ring-indigo-500 transition-all"
             />
           </div>
         </div>
@@ -897,13 +895,13 @@ function MediaGalleryModal({
         <div className="p-4 md:p-8 bg-slate-50 border-t border-slate-100 flex gap-4">
           <button 
             onClick={() => onSave(formData)}
-            className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200"
+            className="flex-1 bg-slate-900 text-white rounded-2xl py-4 text-[10px] font-black tracking-[0.2em] hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200"
           >
             Save Media Gallery
           </button>
           <button 
             onClick={onClose}
-            className="px-10 bg-white text-slate-400 border border-slate-200 rounded-2xl py-4 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all"
+            className="px-10 bg-white text-slate-400 border border-slate-200 rounded-2xl py-4 text-[10px] font-black tracking-wide hover:bg-slate-50 transition-all"
           >
             Cancel
           </button>
@@ -1344,7 +1342,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
           <div className="flex items-center gap-6">
             <Link 
               href="/admin/players"
-              className="group flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-all font-bold text-xs uppercase tracking-widest"
+              className="group flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-all font-bold text-sm tracking-wide"
             >
               <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
               Back to Players
@@ -1370,17 +1368,17 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                 </div>
               </div>
               <div>
-                <h1 className="text-lg font-black text-slate-900 uppercase tracking-tighter leading-none flex items-center gap-3">
+                <h1 className="text-lg font-black text-slate-900 tracking-tighter leading-none flex items-center gap-3">
                   {player.first_name} <span className="text-[#b50a0a]">{player.last_name}</span>
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-black tracking-widest ${
-                    player.is_subscribed ? 'bg-emerald-100 text-emerald-600' : 
-                    player.users?.subscriptions?.[0]?.status === 'expired' ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-500'
-                  }`}>
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-black tracking-wide ${
+ player.is_subscribed ? 'bg-emerald-100 text-emerald-600' : 
+ player.users?.subscriptions?.[0]?.status === 'expired' ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-500'
+ }`}>
                     {player.is_subscribed ? 'PRO' : 
                      player.users?.subscriptions?.[0]?.status === 'expired' ? 'EXPIRED' : 'NEW'}
                   </span>
                 </h1>
-                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mt-1 flex items-center gap-2">
+                <p className="text-[9px] font-bold text-slate-400 tracking-[0.2em] mt-1 flex items-center gap-2">
                   <FlagIcon country={player.country || ''} className="w-3.5 h-2.5" />
                   {player.email || 'NO EMAIL'} • {player.position}
                 </p>
@@ -1392,7 +1390,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
             <Link 
               href={`/players/${player.id}`} 
               target="_blank"
-              className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all border border-slate-100"
+              className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 rounded-lg text-[9px] font-black tracking-wide hover:bg-slate-100 transition-all border border-slate-100"
             >
               View Public <ExternalLink className="w-3 h-3" />
             </Link>
@@ -1438,11 +1436,11 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
               <button
                 key={tab.id}
                 onClick={() => { setActiveTab(tab.id as 'profile' | 'stats' | 'bio' | 'gallery' | 'news' | 'shop' | 'billing'); setEditingSection(null); }}
-                className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all group ${
-                  activeTab === tab.id 
-                  ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/20 translate-x-1' 
-                  : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
-                }`}
+                className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-[10px] font-black tracking-wide transition-all group ${
+ activeTab === tab.id 
+ ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/20 translate-x-1' 
+ : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
+ }`}
               >
                 <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-white' : 'text-slate-300 group-hover:text-slate-900'} transition-colors`} />
                 {tab.label}
@@ -1452,13 +1450,13 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
 
           <div className="mt-auto pt-6 border-t border-slate-50">
             <div className="bg-slate-50 rounded-2xl p-4">
-              <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Assigned Agent</p>
+              <p className="text-[8px] font-black text-slate-400 tracking-wide mb-1">Assigned Agent</p>
               {player.agent_id ? (
-                <Link href={`/admin/agents/${player.agent_id}`} className="text-[10px] font-black text-slate-900 uppercase hover:text-[#b50a0a] transition-colors">
+                <Link href={`/admin/agents/${player.agent_id}`} className="text-[10px] font-black text-slate-900 hover:text-[#b50a0a] transition-colors">
                   {agents.find(a => a.user_id === player.agent_id)?.first_name ? `${agents.find(a => a.user_id === player.agent_id)?.first_name} ${agents.find(a => a.user_id === player.agent_id)?.last_name}` : 'Linked Agent'}
                 </Link>
               ) : (
-                <p className="text-[10px] font-bold text-slate-400 italic">Independent</p>
+                <p className="text-[10px] font-bold text-slate-400">Independent</p>
               )}
             </div>
           </div>
@@ -1477,7 +1475,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                         <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
                           <UserCircle className="w-6 h-6" />
                         </div>
-                        <h3 className="text-base font-black text-slate-900 uppercase tracking-tight">Identity Details</h3>
+                        <h3 className="text-base font-black text-slate-900 tracking-tight">Identity Details</h3>
                       </div>
                       <button 
                         onClick={() => setEditingSection(editingSection === 'identity' ? null : 'identity')}
@@ -1499,7 +1497,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                         { label: 'Gender', value: player.gender, field: 'gender', type: 'select', options: ['Male', 'Female', 'Other'] },
                       ].map((item, i) => (
                         <div key={i} className="flex flex-col gap-1">
-                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{item.label}</span>
+                          <span className="text-[9px] font-black text-slate-400 tracking-wide">{item.label}</span>
                           {editingSection === 'identity' ? (
                             item.type === 'select' ? (
                               <select 
@@ -1531,8 +1529,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
 
                     {editingSection === 'identity' && (
                       <div className="mt-8 flex gap-3 animate-in fade-in slide-in-from-top-2">
-                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-[#b50a0a] transition-all">Save Changes</button>
-                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
+                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-black tracking-wide hover:bg-[#b50a0a] transition-all">Save Changes</button>
+                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black tracking-wide hover:bg-slate-200 transition-all">Cancel</button>
                       </div>
                     )}
                   </div>
@@ -1547,7 +1545,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                         <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
                           <Briefcase className="w-6 h-6" />
                         </div>
-                        <h3 className="text-base font-black text-slate-900 uppercase tracking-tight">Pro Career</h3>
+                        <h3 className="text-base font-black text-slate-900 tracking-tight">Pro Career</h3>
                       </div>
                       <button 
                          onClick={() => setEditingSection(editingSection === 'pro' ? null : 'pro')}
@@ -1571,7 +1569,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                         ];
                       })().map((item, i) => (
                         <div key={i} className="flex flex-col gap-1">
-                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{item.label}</span>
+                          <span className="text-[9px] font-black text-slate-400 tracking-wide">{item.label}</span>
                           {editingSection === 'pro' ? (
                             item.type === 'select' ? (
                               <select 
@@ -1610,8 +1608,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
 
                     {editingSection === 'pro' && (
                       <div className="mt-8 flex gap-3 animate-in fade-in slide-in-from-top-2">
-                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-[#b50a0a] transition-all">Save Changes</button>
-                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
+                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-black tracking-wide hover:bg-[#b50a0a] transition-all">Save Changes</button>
+                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black tracking-wide hover:bg-slate-200 transition-all">Cancel</button>
                       </div>
                     )}
                   </div>
@@ -1625,7 +1623,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                         <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
                           <Shield className="w-6 h-6" />
                         </div>
-                        <h3 className="text-base font-black text-slate-900 uppercase tracking-tight">Agent Relationship</h3>
+                        <h3 className="text-base font-black text-slate-900 tracking-tight">Agent Relationship</h3>
                       </div>
                       <button 
                          onClick={() => setEditingSection(editingSection === 'agent' ? null : 'agent')}
@@ -1653,10 +1651,10 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                             </select>
                           ) : (
                             <>
-                              <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight">
+                              <h4 className="text-base font-black text-slate-900 tracking-tight">
                                 {agents.find(a => a.user_id === player.agent_id)?.first_name ? `${agents.find(a => a.user_id === player.agent_id)?.first_name} ${agents.find(a => a.user_id === player.agent_id)?.last_name}` : 'Independent'}
                               </h4>
-                              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Status: {player.agent_status || 'N/A'}</p>
+                              <p className="text-[10px] font-bold text-slate-400 tracking-wide mt-1">Status: {player.agent_status || 'N/A'}</p>
                             </>
                           )}
                        </div>
@@ -1664,8 +1662,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
 
                     {editingSection === 'agent' && (
                       <div className="mt-8 flex gap-3 animate-in fade-in slide-in-from-top-2">
-                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-[#b50a0a] transition-all">Save Changes</button>
-                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
+                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-black tracking-wide hover:bg-[#b50a0a] transition-all">Save Changes</button>
+                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black tracking-wide hover:bg-slate-200 transition-all">Cancel</button>
                       </div>
                     )}
                   </div>
@@ -1676,11 +1674,11 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                   <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-[4rem] -z-0 transition-all group-hover:bg-slate-100"></div>
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="flex items-center justify-between mb-8">
-                      <h3 className="text-base font-black text-slate-900 uppercase tracking-tight flex items-center gap-3">
+                      <h3 className="text-base font-black text-slate-900 tracking-tight flex items-center gap-3">
                         <Lock className="w-5 h-5 text-[#b50a0a]" /> Password Management
                       </h3>
                       <div className="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full">
-                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                         <p className="text-[10px] font-black text-slate-400 tracking-wide leading-none">
                             {player.email ? 'Account Active' : 'No Account'}
                          </p>
                       </div>
@@ -1689,8 +1687,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                       <div className="space-y-6">
                         <div>
-                          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Registered Email</p>
-                          <p className="text-sm font-black text-slate-900 flex items-center gap-2">
+                          <p className="text-[9px] font-black text-slate-400 tracking-wide mb-1.5">Registered Email</p>
+                          <p className="text-base font-black text-slate-900 flex items-center gap-2">
                              {player.email || 'No email linked'}
                              {player.user_id && <ExternalLink className="w-3.5 h-3.5 text-[#b50a0a]" />}
                           </p>
@@ -1704,11 +1702,11 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       </div>
 
                       <div className="flex flex-col gap-3 justify-center">
-                        <button className="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#b50a0a] transition-all shadow-lg shadow-slate-200">
+                        <button className="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black tracking-wide hover:bg-[#b50a0a] transition-all shadow-lg shadow-slate-200">
                           Send Password Reset Link
                         </button>
                         {!player.is_subscribed && (
-                          <button className="w-full py-4 bg-slate-50 text-slate-500 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all">
+                          <button className="w-full py-4 bg-slate-50 text-slate-500 border border-slate-100 rounded-2xl text-[10px] font-black tracking-wide hover:bg-slate-100 transition-all">
                             Resend Account Invitation
                           </button>
                         )}
@@ -1728,11 +1726,11 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                   <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-300">
                     <Activity className="w-10 h-10" />
                   </div>
-                  <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">No Career Data Yet</h3>
-                  <p className="text-sm font-bold text-slate-400 mt-2 max-w-sm mx-auto">Start building this player&apos;s professional history by adding their first season data.</p>
+                  <h3 className="text-xl font-black text-slate-900 tracking-tight">No Career Data Yet</h3>
+                  <p className="text-base font-bold text-slate-400 mt-2 max-w-sm mx-auto">Start building this player&apos;s professional history by adding their first season data.</p>
                   <button 
                     onClick={() => { setEditingStat(null); setSelectedSeasonForAdd(null); setShowStatModal(true); }}
-                    className="mt-8 px-4 md:px-8 py-4 bg-[#b50a0a] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-900 transition-all shadow-xl shadow-red-900/20"
+                    className="mt-8 px-4 md:px-8 py-4 bg-[#b50a0a] text-white rounded-2xl text-[10px] font-black tracking-[0.2em] hover:bg-slate-900 transition-all shadow-xl shadow-red-900/20"
                   >
                     + Create First Record
                   </button>
@@ -1742,10 +1740,10 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                   <section key={season} className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm overflow-hidden group/season">
                     <div className="flex items-center justify-between mb-6">
                       <div className="flex items-center gap-3">
-                        <div className="bg-slate-900 text-white px-4 py-2 rounded-xl italic font-black text-xs tracking-tighter">
+                        <div className="bg-slate-900 text-white px-4 py-2 rounded-xl font-black text-sm tracking-tighter">
                           {season}
                         </div>
-                        <h3 className="text-base font-black text-slate-900 uppercase tracking-tight">Season Overview</h3>
+                        <h3 className="text-base font-black text-slate-900 tracking-tight">Season Overview</h3>
                       </div>
                       <button 
                          onClick={() => { setSelectedSeasonForAdd(season); setEditingStat(null); setShowStatModal(true); }}
@@ -1759,14 +1757,14 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       <table className="w-full text-left border-collapse whitespace-nowrap">
                         <thead>
                           <tr className="bg-slate-50 border-b border-slate-100">
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-400">Club / Team</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-400 text-center">League</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-400 text-center">Apps</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-400 text-center">Mins</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-400 text-center">Goals</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-400 text-center">Ast</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-400 text-center">Cards</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-400">Club / Team</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-400 text-center">League</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-400 text-center">Apps</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-400 text-center">Mins</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-400 text-center">Goals</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-400 text-center">Ast</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-400 text-center">Cards</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-400 text-right">Actions</th>
                           </tr>
                         </thead>
                         <tbody className="text-[11px] font-bold text-slate-700 divide-y divide-slate-100">
@@ -1785,7 +1783,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                                       />
                                     </div>
                                   ) : (
-                                    <div className="w-6 h-6 bg-slate-100 rounded-md flex items-center justify-center text-[8px] text-slate-400 uppercase font-bold">{stat.club_name[0]}</div>
+                                    <div className="w-6 h-6 bg-slate-100 rounded-md flex items-center justify-center text-[8px] text-slate-400 font-bold">{stat.club_name[0]}</div>
                                   )}
                                   <span className="font-bold text-slate-900 text-[10px] whitespace-nowrap">{toTitleCase(stat.club_name)}</span>
                                 </div>
@@ -1804,7 +1802,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                                   )}
                                   <span 
                                     title={stat.league_name || undefined}
-                                    className="px-2 py-0.5 bg-slate-100 rounded-full text-[9px] font-bold uppercase tracking-tight text-slate-500 cursor-help"
+                                    className="px-2 py-0.5 bg-slate-100 rounded-full text-[9px] font-bold tracking-tight text-slate-500 cursor-help"
                                   >
                                     {shortenLeagueName(stat.league_name)}
                                   </span>
@@ -1852,8 +1850,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-8">
                     <div>
-                      <h3 className="text-base font-black text-white uppercase tracking-tight">Transfer & Movement Logs</h3>
-                      <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Verified Career Transitions</p>
+                      <h3 className="text-base font-black text-white tracking-tight">Transfer & Movement Logs</h3>
+                      <p className="text-[9px] font-bold text-slate-500 tracking-wide mt-0.5">Verified Career Transitions</p>
                     </div>
                     <button 
                       onClick={() => { setEditingTransfer(null); setShowTransferModal(true); }}
@@ -1865,26 +1863,26 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
 
                   {playerTransfers.length === 0 ? (
                     <div className="py-16 text-center bg-white/5 rounded-[1.5rem] border border-white/5 backdrop-blur-sm">
-                      <p className="text-slate-500 text-xs font-bold uppercase tracking-widest italic">Awaiting movement records...</p>
+                      <p className="text-slate-500 text-sm font-bold tracking-wide">Awaiting movement records...</p>
                     </div>
                   ) : (
                     <div className="overflow-x-auto rounded-[1.5rem] border border-white/5 bg-white/5 backdrop-blur-md">
                       <table className="w-full text-left border-collapse whitespace-nowrap">
                         <thead>
                           <tr className="border-b border-white/10">
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-500">Season / Date</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-500">From Club</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-500">To Club</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-500">League</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-500 text-center">Fee</th>
-                            <th className="px-4 py-4 text-[8px] font-black uppercase tracking-widest text-slate-500 text-right">Actions</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-500">Season / Date</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-500">From Club</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-500">To Club</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-500">League</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-500 text-center">Fee</th>
+                            <th className="px-4 py-4 text-[8px] font-black tracking-wide text-slate-500 text-right">Actions</th>
                           </tr>
                         </thead>
                         <tbody className="text-[11px] font-bold text-slate-300 divide-y divide-white/5">
                           {playerTransfers.map((transfer) => (
                             <tr key={transfer.id} className="hover:bg-white/5 transition-colors group/row border-b border-white/5 last:border-0 font-medium">
                               <td className="px-4 py-5 align-middle">
-                                <div className="text-white font-bold italic tracking-tighter text-[11px]">{transfer.season}</div>
+                                <div className="text-white font-bold tracking-tighter text-[11px]">{transfer.season}</div>
                                 <div className="text-[8px] text-slate-500 font-bold mt-0.5">{transfer.transfer_date ? <DateDisplay date={transfer.transfer_date} /> : 'N/A'}</div>
                               </td>
                               <td className="px-4 py-5 align-middle text-slate-400 font-bold tracking-tight text-[10px]">{toTitleCase(transfer.from_club_name)}</td>
@@ -1908,14 +1906,14 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                                   )}
                                   <span 
                                     title={transfer.league_name || undefined}
-                                    className="px-2 py-0.5 bg-white/10 rounded-full text-[9px] font-bold uppercase text-slate-300 cursor-help"
+                                    className="px-2 py-0.5 bg-white/10 rounded-full text-[9px] font-bold text-slate-300 cursor-help"
                                   >
                                     {shortenLeagueName(transfer.league_name)}
                                   </span>
                                 </div>
                               </td>
                               <td className="px-4 py-5 text-center align-middle">
-                                <span className="text-[#ef4444] font-bold tracking-widest text-[10px] uppercase">{transfer.transfer_fee || 'FREE'}</span>
+                                <span className="text-[#ef4444] font-bold tracking-wide text-[10px]">{transfer.transfer_fee || 'FREE'}</span>
                               </td>
                               <td className="px-4 py-5 text-right align-middle">
                                 <div className="flex items-center justify-end gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity">
@@ -1974,8 +1972,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       <FileText className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Athlete Biography</h3>
-                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Professional Background & Story</p>
+                      <h3 className="text-base font-bold text-slate-900 tracking-wide">Athlete Biography</h3>
+                      <p className="text-[8px] font-black text-slate-400 tracking-[0.2em] mt-1">Professional Background & Story</p>
                     </div>
                   </div>
                   <button 
@@ -2001,8 +1999,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       placeholder="Share the professional journey, key milestones, and personal story of this athlete..."
                     />
                     <div className="flex gap-4">
-                      <button onClick={handleSaveChanges} className="px-10 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] hover:bg-indigo-600 transition-all shadow-lg shadow-slate-200">Save Biography</button>
-                      <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-10 py-4 bg-white text-slate-400 border border-slate-200 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all">Cancel</button>
+                      <button onClick={handleSaveChanges} className="px-10 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black tracking-[0.2em] hover:bg-indigo-600 transition-all shadow-lg shadow-slate-200">Save Biography</button>
+                      <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-10 py-4 bg-white text-slate-400 border border-slate-200 rounded-2xl text-[10px] font-black tracking-wide hover:bg-slate-50 transition-all">Cancel</button>
                     </div>
                   </div>
                 ) : (
@@ -2028,8 +2026,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       <Trophy className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Career Honours</h3>
-                      <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">Medals, Trophies & Individual Awards</p>
+                      <h3 className="text-base font-bold text-slate-900 tracking-wide">Career Honours</h3>
+                      <p className="text-[8px] font-black text-slate-400 tracking-[0.2em] mt-1">Medals, Trophies & Individual Awards</p>
                     </div>
                   </div>
                   <button 
@@ -2048,7 +2046,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                          placeholder="Search trophies, years, organizations..."
                          value={achievementSearch}
                          onChange={(e) => { setAchievementSearch(e.target.value); setAchievementPage(1); }}
-                         className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-4 py-3.5 text-xs font-bold text-slate-600 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500/50 outline-none transition-all shadow-inner"
+                         className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-4 py-3.5 text-sm font-bold text-slate-600 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500/50 outline-none transition-all shadow-inner"
                       />
                    </div>
                    <div className="w-full md:w-44 relative">
@@ -2056,7 +2054,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       <select 
                          value={achievementCategoryFilter}
                          onChange={(e) => { setAchievementCategoryFilter(e.target.value); setAchievementPage(1); }}
-                         className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-4 py-3.5 text-xs font-bold text-slate-600 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500/50 outline-none transition-all appearance-none cursor-pointer"
+                         className="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-11 pr-4 py-3.5 text-sm font-bold text-slate-600 focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500/50 outline-none transition-all appearance-none cursor-pointer"
                       >
                          <option value="All">All Categories</option>
                          <option value="Club">Club Honours</option>
@@ -2074,7 +2072,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                   {isLoadingAchievements ? (
                     <div className="py-20 flex flex-col items-center justify-center space-y-4">
                       <div className="w-10 h-10 border-4 border-slate-100 border-t-yellow-500 rounded-full animate-spin"></div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Loading Honours...</p>
+                      <p className="text-[10px] font-bold text-slate-400 tracking-wide">Loading Honours...</p>
                     </div>
                   ) : filteredAchievements.length > 0 ? (
                     <>
@@ -2089,15 +2087,15 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                             
                             <div className="flex-1 min-w-0">
                                <div className="flex items-center gap-3 mb-1.5">
-                                  <span className="px-2 py-0.5 bg-white border border-slate-100 rounded-md text-[7px] font-black text-slate-400 uppercase tracking-widest shadow-sm">{h.category}</span>
+                                  <span className="px-2 py-0.5 bg-white border border-slate-100 rounded-md text-[7px] font-black text-slate-400 tracking-wide shadow-sm">{h.category}</span>
                                   {h.year && (
-                                     <div className="flex items-center gap-1.5 px-2 py-0.5 bg-yellow-50 text-yellow-700 rounded-md text-[8px] font-black uppercase tracking-widest border border-yellow-100/50">
+                                     <div className="flex items-center gap-1.5 px-2 py-0.5 bg-yellow-50 text-yellow-700 rounded-md text-[8px] font-black tracking-wide border border-yellow-100/50">
                                         <Calendar className="w-2.5 h-2.5" />
                                         {h.year}
                                      </div>
                                   )}
                                </div>
-                               <h4 className="text-[13px] font-bold text-slate-900 uppercase tracking-tight mb-0.5">{h.title}</h4>
+                               <h4 className="text-[13px] font-bold text-slate-900 tracking-tight mb-0.5">{h.title}</h4>
                                {h.organization && (
                                   <div className="flex items-center gap-1.5 text-[10px] font-medium text-slate-400">
                                      <Building2 className="w-3 h-3" />
@@ -2127,7 +2125,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       {/* Achievement Pagination */}
                       {totalAchievementPages > 1 && (
                         <div className="flex items-center justify-between mt-10 pt-10 border-t border-slate-100">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                          <p className="text-[10px] font-bold text-slate-400 tracking-wide">
                             Showing {Math.min(filteredAchievements.length, achievementsPerPage)} of {filteredAchievements.length} Results
                           </p>
                           <div className="flex items-center gap-2">
@@ -2159,11 +2157,11 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-sm border border-slate-100">
                         <Trophy className="w-10 h-10 text-slate-100" />
                       </div>
-                      <h4 className="text-sm font-bold text-slate-400 uppercase tracking-widest">No achievements yet</h4>
+                      <h4 className="text-base font-bold text-slate-400 tracking-wide">No achievements yet</h4>
                       <p className="text-[10px] text-slate-400 mt-2 max-w-full max-w-[240px] text-center">Start adding official trophies, medals, and awards to showcase this player&apos;s success.</p>
                       <button 
                         onClick={() => { setEditingAchievement(null); setShowAchievementModal(true); }}
-                        className="mt-8 px-4 md:px-8 py-3 bg-white text-slate-900 border border-slate-200 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all shadow-sm"
+                        className="mt-8 px-4 md:px-8 py-3 bg-white text-slate-900 border border-slate-200 rounded-xl text-[10px] font-bold tracking-wide hover:bg-slate-50 transition-all shadow-sm"
                       >
                         + Add First Achievement
                       </button>
@@ -2192,8 +2190,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                     <ImageIcon className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-slate-900 uppercase tracking-tight">Athlete Media</h3>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Video Highlights & Action Shots</p>
+                    <h3 className="text-xl font-bold text-slate-900 tracking-tight">Athlete Media</h3>
+                    <p className="text-[10px] font-bold text-slate-400 tracking-wide mt-1">Video Highlights & Action Shots</p>
                   </div>
                 </div>
                 
@@ -2202,7 +2200,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                     href={player.media_gallery.external_gallery_url.startsWith('http') ? player.media_gallery.external_gallery_url : `https://${player.media_gallery.external_gallery_url}`} 
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 md:px-8 py-4 bg-slate-50 text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-100 transition-all flex items-center gap-3 border border-slate-200"
+                    className="px-4 md:px-8 py-4 bg-slate-50 text-slate-900 rounded-2xl text-[10px] font-black tracking-wide hover:bg-slate-100 transition-all flex items-center gap-3 border border-slate-200"
                   >
                     Visit Global Portfolio <ExternalLink className="w-3.5 h-3.5" />
                   </a>
@@ -2215,7 +2213,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                     <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
                        <Activity className="w-4 h-4" />
                     </div>
-                    <h4 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Featured Highlight Vid</h4>
+                    <h4 className="text-base font-bold text-slate-900 tracking-wide">Featured Highlight Vid</h4>
                  </div>
                  
                  <div className="aspect-video rounded-[2rem] overflow-hidden bg-slate-900 border border-slate-100 shadow-2xl relative group/video">
@@ -2231,7 +2229,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                           <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center">
                              <Activity className="w-10 h-10" />
                           </div>
-                          <p className="text-xs font-bold uppercase tracking-widest">No highlight video added</p>
+                          <p className="text-sm font-bold tracking-wide">No highlight video added</p>
                        </div>
                     )}
                  </div>
@@ -2241,7 +2239,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
               {/* Action Grid */}
               <div className="space-y-6">
                  <div className="flex items-center justify-between px-2">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Latest Action Images</h4>
+                    <h4 className="text-[10px] font-black text-slate-400 tracking-[0.2em]">Latest Action Images</h4>
                     <span className="text-[10px] font-bold text-slate-400">Total: {player.media_gallery?.action_images?.filter(img => img && img.trim() !== '').length || 0}</span>
                  </div>
                  <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -2272,7 +2270,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                  <div className="flex justify-center pt-10 pb-4">
                     <button 
                        onClick={() => setShowMediaModal(true)}
-                       className="px-12 py-5 bg-slate-900 text-white rounded-[2rem] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-indigo-600 transition-all flex items-center gap-3 shadow-xl hover:shadow-indigo-500/20 active:scale-95"
+                       className="px-12 py-5 bg-slate-900 text-white rounded-[2rem] text-[10px] font-black tracking-[0.2em] hover:bg-indigo-600 transition-all flex items-center gap-3 shadow-xl hover:shadow-indigo-500/20 active:scale-95"
                     >
                        <Edit className="w-4 h-4" /> Manage Media Gallery
                     </button>
@@ -2298,8 +2296,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       <Newspaper className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">Press Tags</h3>
-                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Manage tags to connect news stories</p>
+                      <h3 className="text-xl font-black text-slate-900 tracking-tight">Press Tags</h3>
+                      <p className="text-[9px] font-bold text-slate-400 tracking-wide mt-1">Manage tags to connect news stories</p>
                     </div>
                   </div>
                 </div>
@@ -2320,7 +2318,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                             setNewTagInput('');
                           }
                         }}
-                        className="w-full bg-slate-50 border-none rounded-2xl px-5 py-4 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a]/20 transition-all shadow-inner"
+                        className="w-full bg-slate-50 border-none rounded-2xl px-5 py-4 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a]/20 transition-all shadow-inner"
                       />
                     </div>
                     <button 
@@ -2333,7 +2331,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                         }
                       }}
                       disabled={isUpdatingTags || !newTagInput.trim()}
-                      className="bg-[#b50a0a] hover:bg-black text-white px-4 md:px-8 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg active:scale-95 disabled:opacity-50"
+                      className="bg-[#b50a0a] hover:bg-black text-white px-4 md:px-8 rounded-2xl font-black text-[10px] tracking-wide transition-all shadow-lg active:scale-95 disabled:opacity-50"
                     >
                       {isUpdatingTags ? 'Syncing...' : 'Add Tag'}
                     </button>
@@ -2343,7 +2341,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                     {profileTags.length > 0 ? (
                       profileTags.map((tag, idx) => (
                         <div key={idx} className="flex items-center gap-2 bg-slate-50 border border-slate-100 px-4 py-2.5 rounded-xl group hover:border-[#b50a0a]/30 transition-all">
-                          <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest">{tag}</span>
+                          <span className="text-[10px] font-black text-slate-700 tracking-wide">{tag}</span>
                           <button 
                             onClick={() => handleUpdateTags(profileTags.filter(t => t !== tag))}
                             className="text-slate-300 hover:text-[#b50a0a] transition-colors"
@@ -2353,7 +2351,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                         </div>
                       ))
                     ) : (
-                      <div className="text-[9px] font-bold text-slate-300 uppercase italic tracking-widest py-2">No tags assigned yet</div>
+                      <div className="text-[9px] font-bold text-slate-300 tracking-wide py-2">No tags assigned yet</div>
                     )}
                   </div>
                 </div>
@@ -2361,14 +2359,14 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
 
               <div className="flex items-center gap-3 mb-6">
                 <hr className="flex-1 border-slate-100" />
-                <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">Latest Feed</span>
+                <span className="text-[9px] font-black text-slate-300 tracking-[0.2em]">Latest Feed</span>
                 <hr className="flex-1 border-slate-100" />
               </div>
               <div className="grid grid-cols-1 gap-6">
                 {isLoadingNews ? (
                   <div className="py-20 text-center bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200">
                     <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Searching tagged stories...</p>
+                    <p className="text-[10px] font-black text-slate-400 tracking-wide">Searching tagged stories...</p>
                   </div>
                 ) : playerNews.length > 0 ? (
                   playerNews.map((news) => (
@@ -2384,20 +2382,20 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                       <div className="flex-1 p-4 md:p-8 flex flex-col justify-between">
                         <div>
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-[9px] font-black uppercase text-[#b50a0a] tracking-widest">{news.category?.name || 'Story'}</span>
+                            <span className="text-[9px] font-black text-[#b50a0a] tracking-wide">{news.category?.name || 'Story'}</span>
                             {news.is_pinned && <Star className="w-3 h-3 text-orange-400 fill-orange-400" />}
                           </div>
-                          <h4 className="text-sm font-black uppercase leading-tight text-slate-900 line-clamp-2">{news.title}</h4>
+                          <h4 className="text-base font-black leading-tight text-slate-900 line-clamp-2">{news.title}</h4>
                         </div>
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center gap-2">
                              <Calendar className="w-3 h-3 text-slate-300" />
-                             <DateDisplay date={news.published_at} className="text-[9px] font-bold text-slate-400 uppercase" />
+                             <DateDisplay date={news.published_at} className="text-[9px] font-bold text-slate-400" />
                           </div>
                           <Link 
                             href={`/news/${news.slug}`}
                             target="_blank"
-                            className="text-[9px] font-black uppercase tracking-widest flex items-center gap-2 text-slate-400 hover:text-[#b50a0a] transition-all"
+                            className="text-[9px] font-black tracking-wide flex items-center gap-2 text-slate-400 hover:text-[#b50a0a] transition-all"
                           >
                             View Post <ExternalLink className="w-3 h-3" />
                           </Link>
@@ -2408,7 +2406,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                 ) : (
                   <div className="py-20 text-center bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200">
                     <MessageSquare className="w-10 h-10 text-slate-200 mx-auto mb-4" />
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">No stories tagged for this athlete yet.</p>
+                    <p className="text-[10px] font-black text-slate-400 tracking-wide">No stories tagged for this athlete yet.</p>
                   </div>
                 )}
               </div>
@@ -2428,17 +2426,17 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                         <Shield className="w-5 h-5 text-[#b50a0a]" />
                       </div>
                       <div>
-                        <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">Subscription Status</h3>
-                        <p className="text-sm font-black uppercase text-white mt-0.5 tracking-tight">{player.is_subscribed ? 'Active Pro Member' : 'Free Prospect Plan'}</p>
+                        <h3 className="text-[9px] font-black tracking-[0.3em] text-slate-400">Subscription Status</h3>
+                        <p className="text-base font-black text-white mt-0.5 tracking-tight">{player.is_subscribed ? 'Active Pro Member' : 'Free Prospect Plan'}</p>
                       </div>
                     </div>
-                    <span className={`${player.is_subscribed ? 'bg-emerald-500 text-white' : 'bg-blue-600 text-white'} px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-black/20`}>
+                    <span className={`${player.is_subscribed ? 'bg-emerald-500 text-white' : 'bg-blue-600 text-white'} px-6 py-2 rounded-xl text-[9px] font-black tracking-[0.2em] shadow-2xl shadow-black/20`}>
                       {player.is_subscribed ? 'PRO' : 'FREE'}
                     </span>
                   </div>
                   <div className="relative z-10">
-                    <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1.5 px-1">Cycle End Date</p>
-                    <p className="text-3xl font-black italic tracking-tighter">
+                    <p className="text-[8px] font-bold text-slate-500 tracking-wide mb-1.5 px-1">Cycle End Date</p>
+                    <p className="text-3xl font-black tracking-tighter">
                       {player.users?.subscriptions?.[0]?.current_period_end ? (
                         <DateDisplay date={player.users.subscriptions[0].current_period_end} />
                       ) : 'NOT CONFIGURED'}
@@ -2449,7 +2447,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                 {/* Ledger Card - Full Width */}
                 <div className="bg-white rounded-[2.5rem] p-10 border border-slate-100 shadow-sm">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10 pb-10 border-b border-slate-50">
-                    <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight flex items-center gap-4">
+                    <h3 className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-4">
                       <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center">
                         <CreditCard className="w-5 h-5 text-[#b50a0a]" />
                       </div>
@@ -2488,7 +2486,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                     {isLoadingTransactions ? (
                       <div className="py-20 text-center">
                         <div className="w-10 h-10 border-4 border-slate-100 border-t-[#b50a0a] rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Accessing records...</p>
+                        <p className="text-[10px] font-black text-slate-400 tracking-wide">Accessing records...</p>
                       </div>
                     ) : filteredTransactions.length > 0 ? (
                       <>
@@ -2496,33 +2494,33 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                           {paginatedTransactions.map((tx, i) => (
                             <div key={i} className="flex items-center justify-between p-6 bg-slate-50/50 rounded-3xl border border-slate-50 hover:border-[#b50a0a]/10 hover:bg-white transition-all group">
                               <div className="flex items-center gap-6">
-                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-sm font-black shadow-sm ${
-                                  tx.status === 'confirmed' || tx.status === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
-                                }`}>
+                                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-base font-black shadow-sm ${
+ tx.status === 'confirmed' || tx.status === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
+ }`}>
                                   {tx.currency === 'USD' ? '$' : tx.currency === 'NGN' ? '₦' : tx.currency}
                                 </div>
                                 <div>
-                                  <p className="text-[11px] font-black text-slate-900 uppercase leading-none mb-1.5 tracking-tight">
+                                  <p className="text-[11px] font-black text-slate-900 leading-none mb-1.5 tracking-tight">
                                     {tx.reference?.split('_')[0] || 'Member Base Payment'}
                                     <span className="ml-2 text-[8px] font-bold text-slate-300 normal-case tracking-normal">ref: {tx.reference}</span>
                                   </p>
                                   <div className="flex items-center gap-3">
                                     <div className="flex items-center gap-1.5">
                                       <Calendar className="w-3 h-3 text-slate-300" />
-                                      <DateDisplay date={tx.created_at} className="text-[9px] font-bold text-slate-400 uppercase tracking-wider" />
+                                      <DateDisplay date={tx.created_at} className="text-[9px] font-bold text-slate-400 tracking-wide" />
                                     </div>
                                     <div className="w-1 h-1 rounded-full bg-slate-200"></div>
-                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">{tx.currency} GATEWAY</p>
+                                    <p className="text-[9px] font-bold text-slate-400 tracking-wide">{tx.currency} GATEWAY</p>
                                   </div>
                                 </div>
                               </div>
                               <div className="text-right">
-                                <p className="text-lg font-black text-slate-900 italic tracking-tighter">
+                                <p className="text-lg font-black text-slate-900 tracking-tighter">
                                   {tx.currency === 'USD' ? '$' : tx.currency === 'NGN' ? '₦' : ''}{(tx.amount / 100).toLocaleString()}
                                 </p>
-                                <span className={`text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-1 rounded-lg ${
-                                  tx.status === 'confirmed' || tx.status === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
-                                }`}>{tx.status}</span>
+                                <span className={`text-[8px] font-black tracking-[0.2em] px-2.5 py-1 rounded-lg ${
+ tx.status === 'confirmed' || tx.status === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
+ }`}>{tx.status}</span>
                               </div>
                             </div>
                           ))}
@@ -2530,7 +2528,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
 
                         {/* Pagination Footer */}
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-8 pt-8 border-t border-slate-50">
-                          <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                          <p className="text-[9px] font-bold text-slate-400 tracking-wide">
                             Showing <span className="text-slate-900">{Math.min(filteredTransactions.length, (txPage - 1) * txPerPage + 1)}</span> to <span className="text-slate-900">{Math.min(filteredTransactions.length, txPage * txPerPage)}</span> of <span className="text-slate-900">{filteredTransactions.length}</span> transactions
                           </p>
                           <div className="flex items-center gap-2">
@@ -2557,8 +2555,8 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                     ) : (
                       <div className="py-24 text-center bg-slate-50 rounded-[2rem] border border-dashed border-slate-200">
                         <CreditCard className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">No activity matches your filters</p>
-                        <button onClick={() => { setTxSearch(''); setTxStatusFilter('all'); }} className="mt-4 text-[9px] font-black text-[#b50a0a] uppercase tracking-widest hover:underline">Clear all filters</button>
+                        <p className="text-[10px] font-black text-slate-400 tracking-wide">No activity matches your filters</p>
+                        <button onClick={() => { setTxSearch(''); setTxStatusFilter('all'); }} className="mt-4 text-[9px] font-black text-[#b50a0a] tracking-wide hover:underline">Clear all filters</button>
                       </div>
                     )}
                   </div>

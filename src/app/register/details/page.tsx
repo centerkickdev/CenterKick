@@ -118,15 +118,15 @@ function RegisterDetailsContent() {
             </div>
 
             <div className="text-center mb-16 px-4">
-               <span className="text-[#a20000] font-black text-xs uppercase tracking-[0.4em] mb-4 block underline underline-offset-4">{role} Profile</span>
-               <h1 className="text-4xl lg:text-7xl font-black text-gray-900 uppercase tracking-tighter leading-none mb-6">
+               <span className="text-[#a20000] font-black text-sm tracking-[0.4em] mb-4 block underline underline-offset-4">{role} Profile</span>
+               <h1 className="text-4xl lg:text-7xl font-black text-gray-900 tracking-tighter leading-none mb-6">
                   Final <br />
                   <span className="text-[#a20000]">Onboarding</span>
                </h1>
             </div>
 
             {error && (
-               <div className="max-w-[800px] mx-auto mb-8 p-5 bg-red-50 border border-red-100 rounded-2xl text-red-700 text-xs font-black uppercase tracking-widest animate-in fade-in slide-in-from-top-2">
+               <div className="max-w-[800px] mx-auto mb-8 p-5 bg-red-50 border border-red-100 rounded-2xl text-red-700 text-sm font-black tracking-wide animate-in fade-in slide-in-from-top-2">
                   {error}
                </div>
             )}
@@ -141,13 +141,13 @@ function RegisterDetailsContent() {
                   <div className="flex flex-col items-center">
                      <div className="w-32 h-32 rounded-[40px] bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-900 group cursor-pointer hover:border-[#a20000] hover:bg-red-50 transition-all shadow-sm">
                         <Camera className="w-8 h-8 mb-1 group-hover:text-[#a20000] transition-colors" />
-                        <span className="text-[10px] font-black uppercase tracking-widest">Upload Photo</span>
+                        <span className="text-[10px] font-black tracking-wide">Upload Photo</span>
                      </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                      <div className="space-y-4">
-                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Full Name</label>
+                        <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Full Name</label>
                         <input 
                            name="fullName"
                            required
@@ -155,24 +155,24 @@ function RegisterDetailsContent() {
                            onChange={handleInputChange}
                            type="text" 
                            placeholder="John Doe" 
-                           className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
+                           className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
                         />
                      </div>
                      <div className="space-y-4">
-                        <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Date of Birth</label>
+                        <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Date of Birth</label>
                         <input 
                            name="dob"
                            required
                            value={formData.dob || ''}
                            onChange={handleInputChange}
                            type="date" 
-                           className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black" 
+                           className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black" 
                         />
                      </div>
                   </div>
 
                   <div className="space-y-4">
-                     <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Country</label>
+                     <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Country</label>
                      <div className="relative">
                         <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 text-black w-4 h-4" />
                         <input 
@@ -182,14 +182,14 @@ function RegisterDetailsContent() {
                            onChange={handleInputChange}
                            type="text" 
                            placeholder="Nigeria" 
-                           className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
+                           className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
                         />
                      </div>
                   </div>
 
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-4">
-                         <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1 flex justify-between">
+                         <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1 flex justify-between">
                             <span>Email Address</span>
                             {isCheckingEmail && <span className="text-[7px] text-[#a20000] animate-pulse">Checking...</span>}
                          </label>
@@ -200,18 +200,18 @@ function RegisterDetailsContent() {
                             onChange={handleInputChange}
                             type="email" 
                             placeholder="john@example.com" 
-                            className={`w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900 ${emailStatus === 'REGISTERED' ? 'ring-2 ring-red-500 bg-red-50/10' : ''}`} 
+                            className={`w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900 ${emailStatus === 'REGISTERED' ? 'ring-2 ring-red-500 bg-red-50/10' : ''}`} 
                          />
                          {emailStatus === 'REGISTERED' && (
                            <div className="flex items-center gap-2 mt-2 px-4 py-2 bg-red-50 rounded-xl border border-red-100">
                               <AlertCircle className="w-3.5 h-3.5 text-red-500" />
-                              <p className="text-[9px] font-black text-red-600 uppercase tracking-widest">Email already registered. Please login.</p>
+                              <p className="text-[9px] font-black text-red-600 tracking-wide">Email already registered. Please login.</p>
                            </div>
                          )}
                          {emailStatus === 'PROSPECT' && (
                            <div className="flex items-center gap-2 mt-2 px-4 py-2 bg-green-50 rounded-xl border border-green-100 animate-in fade-in zoom-in">
                               <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
-                              <p className="text-[9px] font-black text-green-600 uppercase tracking-widest">Welcome back! We found your profile.</p>
+                              <p className="text-[9px] font-black text-green-600 tracking-wide">Welcome back! We found your profile.</p>
                            </div>
                          )}
                       </div>
@@ -222,7 +222,7 @@ function RegisterDetailsContent() {
                   </div>
 
                   <div className="space-y-4">
-                     <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Phone Number</label>
+                     <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Phone Number</label>
                      <input 
                         name="phone"
                         required
@@ -230,7 +230,7 @@ function RegisterDetailsContent() {
                         onChange={handleInputChange}
                         type="tel" 
                         placeholder="+234..." 
-                        className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
+                        className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
                      />
                   </div>
 
@@ -238,16 +238,16 @@ function RegisterDetailsContent() {
                      <div className="pt-12 border-t border-gray-100 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
                         <div className="flex items-center gap-4 mb-2">
                            <div className="h-0.5 w-8 bg-[#a20000]"></div>
-                           <h3 className="text-xs font-black uppercase tracking-widest text-gray-900">League & Team Selection</h3>
+                           <h3 className="text-sm font-black tracking-wide text-gray-900">League & Team Selection</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                            <div className="space-y-4">
-                              <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Tournament League</label>
+                              <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Tournament League</label>
                               <select 
                                  name="tournament_id"
                                  value={selectedTournament}
                                  onChange={(e) => setSelectedTournament(e.target.value)}
-                                 className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none appearance-none text-black"
+                                 className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none appearance-none text-black"
                               >
                                  <option value="">Select Tournament League</option>
                                  {tournaments.map((t: any) => (
@@ -256,13 +256,13 @@ function RegisterDetailsContent() {
                               </select>
                            </div>
                            <div className="space-y-4">
-                              <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Team</label>
+                              <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Team</label>
                               <select 
                                  name="tournament_team_id"
                                  value={selectedTeam}
                                  onChange={(e) => setSelectedTeam(e.target.value)}
                                  disabled={!selectedTournament}
-                                 className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none appearance-none text-black disabled:opacity-50"
+                                 className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none appearance-none text-black disabled:opacity-50"
                               >
                                  <option value="">Select Team</option>
                                  {teams.map((t: any) => (
@@ -279,17 +279,17 @@ function RegisterDetailsContent() {
                      <div className="pt-12 border-t border-gray-100 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
                         <div className="flex items-center gap-4 mb-2">
                            <div className="h-0.5 w-8 bg-[#a20000]"></div>
-                           <h3 className="text-xs font-black uppercase tracking-widest text-gray-900">Career Stats</h3>
+                           <h3 className="text-sm font-black tracking-wide text-gray-900">Career Stats</h3>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                            <div className="space-y-4">
-                               <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Position</label>
+                               <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Position</label>
                                <select 
                                   name="position"
                                   required
                                   value={formData.position || ''}
                                   onChange={handleInputChange}
-                                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none appearance-none text-black"
+                                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none appearance-none text-black"
                                >
                                   <option value="" className="text-black">Select Position</option>
                                   <option className="text-black">Forward</option>
@@ -299,12 +299,12 @@ function RegisterDetailsContent() {
                                </select>
                            </div>
                            <div className="space-y-4">
-                               <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Preferred Foot</label>
+                               <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Preferred Foot</label>
                                <select 
                                   name="preferredFoot"
                                   value={formData.preferredFoot || ''}
                                   onChange={handleInputChange}
-                                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none appearance-none text-black"
+                                  className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none appearance-none text-black"
                                >
                                   <option value="" className="text-black">Select Foot</option>
                                   <option className="text-black">Right</option>
@@ -320,10 +320,10 @@ function RegisterDetailsContent() {
                      <div className="pt-12 border-t border-gray-100 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
                         <div className="flex items-center gap-4 mb-2">
                            <div className="h-0.5 w-8 bg-[#a20000]"></div>
-                           <h3 className="text-xs font-black uppercase tracking-widest text-gray-900">Agency Data</h3>
+                           <h3 className="text-sm font-black tracking-wide text-gray-900">Agency Data</h3>
                         </div>
                         <div className="space-y-4">
-                            <label className="text-[10px] font-black text-gray-900 uppercase tracking-widest ml-1">Agency Name</label>
+                            <label className="text-[10px] font-black text-gray-900 tracking-wide ml-1">Agency Name</label>
                             <input 
                                name="agencyName"
                                required
@@ -331,7 +331,7 @@ function RegisterDetailsContent() {
                                onChange={handleInputChange}
                                type="text" 
                                placeholder="Apex Sports Management" 
-                               className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
+                               className="w-full bg-gray-50 border-none rounded-2xl px-6 py-5 text-base font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
                             />
                         </div>
                      </div>
@@ -339,14 +339,14 @@ function RegisterDetailsContent() {
 
                   <div className="pt-10 flex gap-6">
                      <Link href="/register" className="flex-1">
-                        <button type="button" className="w-full bg-gray-100 text-gray-900 py-6 rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-gray-200 transition-all transform active:scale-95">
+                        <button type="button" className="w-full bg-gray-100 text-gray-900 py-6 rounded-2xl font-black tracking-wide text-[11px] hover:bg-gray-200 transition-all transform active:scale-95">
                            Back
                         </button>
                      </Link>
                      <button 
                         type="submit" 
                         disabled={isLoading}
-                        className="flex-[2] bg-black text-white py-6 rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-gray-900 transition-all flex items-center justify-center gap-4 shadow-[0_30px_60px_rgba(0,0,0,0.1)] transform active:scale-95 disabled:opacity-50"
+                        className="flex-[2] bg-black text-white py-6 rounded-2xl font-black tracking-wide text-[11px] hover:bg-gray-900 transition-all flex items-center justify-center gap-4 shadow-[0_30px_60px_rgba(0,0,0,0.1)] transform active:scale-95 disabled:opacity-50"
                      >
                         {isLoading ? (
                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -367,7 +367,7 @@ export default function RegisterDetailsPage() {
    return (
       <div className="min-h-screen bg-white">
          <Navbar />
-         <Suspense fallback={<div className="pt-32 text-center font-black uppercase tracking-widest animate-pulse">Loading Profile...</div>}>
+         <Suspense fallback={<div className="pt-32 text-center font-black tracking-wide animate-pulse">Loading Profile...</div>}>
             <RegisterDetailsContent />
          </Suspense>
          <Footer />

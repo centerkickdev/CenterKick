@@ -22,12 +22,12 @@ export function BannerManager({ status }: BannerManagerProps) {
               <AlertTriangle className="w-4 h-4 text-white" />
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest leading-none mb-1">Attention Required</p>
-              <p className="text-[11px] font-bold text-white/80 uppercase tracking-tight">Your profile is currently <span className="text-white underline underline-offset-2">restricted</span>. Complete your profile and activate your subscription to go public.</p>
+              <p className="text-sm font-black tracking-wide leading-none mb-1">Attention Required</p>
+              <p className="text-[11px] font-bold text-white/80 tracking-tight">Your profile is currently <span className="text-white underline underline-offset-2">restricted</span>. Complete your profile and activate your subscription to go public.</p>
             </div>
           </div>
           <Link href="/dashboard/subscription" className="relative z-10">
-            <button className="bg-white text-[#b50a0a] px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center gap-2 shadow-xl shadow-black/20 transform active:scale-95">
+            <button className="bg-white text-[#b50a0a] px-5 py-2 rounded-lg text-[10px] font-black tracking-wide hover:bg-gray-100 transition-all flex items-center gap-2 shadow-xl shadow-black/20 transform active:scale-95">
               Activate Now <ChevronRight className="w-3 h-3" />
             </button>
           </Link>
@@ -42,8 +42,8 @@ export function BannerManager({ status }: BannerManagerProps) {
               <Info className="w-4 h-4" />
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-[#b50a0a] leading-none mb-1">New Feature</p>
-              <p className="text-[11px] font-bold text-gray-500 uppercase tracking-tight">You can now track your profile views in real-time. Check the <span className="text-gray-900">Analytics</span> tab for details.</p>
+              <p className="text-sm font-black tracking-wide text-[#b50a0a] leading-none mb-1">New Feature</p>
+              <p className="text-[11px] font-bold text-gray-500 tracking-tight">You can now track your profile views in real-time. Check the <span className="text-gray-900">Analytics</span> tab for details.</p>
             </div>
           </div>
           <button 

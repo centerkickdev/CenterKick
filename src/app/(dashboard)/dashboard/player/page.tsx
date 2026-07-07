@@ -5,7 +5,7 @@ export default function PlayerDashboard() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Player Dashboard</h1>
-        <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1 border border-yellow-200">
+        <span className="bg-yellow-100 text-yellow-800 text-sm font-medium px-2.5 py-1 rounded-full flex items-center gap-1 border border-yellow-200">
           <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
           Profile Pending
         </span>
@@ -15,15 +15,15 @@ export default function PlayerDashboard() {
         <h2 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">Profile Information</h2>
         <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+            <label className="block text-base font-medium text-gray-700 mb-1">First Name</label>
             <input type="text" className="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="John" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+            <label className="block text-base font-medium text-gray-700 mb-1">Last Name</label>
             <input type="text" className="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Doe" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Position</label>
+            <label className="block text-base font-medium text-gray-700 mb-1">Position</label>
             <select className="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none bg-white">
               <option>Striker</option>
               <option>Midfielder</option>
@@ -32,11 +32,11 @@ export default function PlayerDashboard() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
+            <label className="block text-base font-medium text-gray-700 mb-1">Country</label>
             <input type="text" className="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Nigeria" />
           </div>
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Bio & Experience</label>
+            <label className="block text-base font-medium text-gray-700 mb-1">Bio & Experience</label>
             <textarea rows={4} className="w-full rounded-lg border-gray-300 border px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Tell scouts about your journey..."></textarea>
           </div>
         </form>
@@ -48,8 +48,8 @@ export default function PlayerDashboard() {
           <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mb-3">
             <UploadCloud className="w-6 h-6 text-primary" />
           </div>
-          <p className="text-sm font-medium text-gray-900">Click to upload video highlights</p>
-          <p className="text-xs text-gray-500 mt-1">MP4, WebM up to 50MB</p>
+          <p className="text-base font-medium text-gray-900">Click to upload video highlights</p>
+          <p className="text-sm text-gray-500 mt-1">MP4, WebM up to 50MB</p>
         </div>
       </div>
 

@@ -106,7 +106,7 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
           <input
             type="text"
             placeholder="Search articles by title or summary..."
-            className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl pl-11 pr-4 py-3 text-xs font-semibold focus:ring-4 focus:ring-black/5 focus:bg-white transition-all text-black placeholder:text-gray-300"
+            className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl pl-11 pr-4 py-3 text-sm font-semibold focus:ring-4 focus:ring-black/5 focus:bg-white transition-all text-black placeholder:text-gray-300"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -116,7 +116,7 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
           <div className="relative w-full md:w-64 group">
             <select
               suppressHydrationWarning
-              className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-4 py-3 text-xs font-black uppercase tracking-wider text-black focus:ring-4 focus:ring-black/5 transition-all appearance-none cursor-pointer pr-10"
+              className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-4 py-3 text-sm font-black tracking-wide text-black focus:ring-4 focus:ring-black/5 transition-all appearance-none cursor-pointer pr-10"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
@@ -136,17 +136,17 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
       {filteredPosts.length === 0 ? (
         <div className="px-4 md:px-8 py-20 text-center">
           <FileText className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-          <p className="text-xs font-black uppercase tracking-widest text-gray-400">No matching content found.</p>
+          <p className="text-sm font-black tracking-wide text-gray-400">No matching content found.</p>
         </div>
       ) : (
         <div className="w-full overflow-x-auto">
-          <table className="w-full text-left text-sm text-gray-600 table-fixed border-collapse whitespace-nowrap">
+          <table className="w-full text-left text-base text-gray-600 table-fixed border-collapse whitespace-nowrap">
             <thead className="bg-[#f8f9fa] border-b border-gray-100">
               <tr>
-                <th className="px-4 md:px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400 text-left">Title &amp; Excerpt</th>
-                <th className="hidden sm:table-cell w-[18%] px-4 md:px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400 text-left">Category</th>
-                <th className="hidden sm:table-cell w-[15%] px-4 md:px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400 text-left">Status</th>
-                <th className="w-full max-w-[130px] px-4 md:px-8 py-5 text-[10px] font-black uppercase tracking-widest text-gray-400 text-right">Actions</th>
+                <th className="px-4 md:px-8 py-5 text-[10px] font-black tracking-wide text-gray-400 text-left">Title &amp; Excerpt</th>
+                <th className="hidden sm:table-cell w-[18%] px-4 md:px-8 py-5 text-[10px] font-black tracking-wide text-gray-400 text-left">Category</th>
+                <th className="hidden sm:table-cell w-[15%] px-4 md:px-8 py-5 text-[10px] font-black tracking-wide text-gray-400 text-left">Status</th>
+                <th className="w-full max-w-[130px] px-4 md:px-8 py-5 text-[10px] font-black tracking-wide text-gray-400 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -156,7 +156,7 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
                     <div className="max-w-full space-y-1.5">
                       <p className="font-bold text-gray-900 leading-tight group-hover:text-[#b50a0a] transition-colors line-clamp-1 break-words">{post.title}</p>
                       <p className="text-[10px] text-gray-400 line-clamp-1 break-words">{post.excerpt || 'No excerpt provided...'}</p>
-                      <div className="flex flex-wrap items-center gap-2 text-[9px] font-black uppercase tracking-widest text-gray-400">
+                      <div className="flex flex-wrap items-center gap-2 text-[9px] font-black tracking-wide text-gray-400">
                         <span className="text-gray-500 lowercase font-bold normal-case truncate max-w-full max-w-[150px] block" title={post.author?.email}>
                           {post.author?.email || 'System'}
                         </span>
@@ -166,7 +166,7 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
                     </div>
                   </td>
                   <td className="hidden sm:table-cell px-4 md:px-8 py-6 whitespace-nowrap">
-                    <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest inline-block truncate max-w-full">
+                    <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-[9px] font-black tracking-wide inline-block truncate max-w-full">
                       {post.category?.name || 'Uncategorized'}
                     </span>
                   </td>
@@ -177,7 +177,7 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
                       className="flex items-center gap-2 group/status"
                     >
                       <div className={`w-1.5 h-1.5 rounded-full transition-transform group-hover/status:scale-150 ${post.published_at ? 'bg-green-500 shadow-sm shadow-green-500/50' : 'bg-gray-300'}`}></div>
-                      <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${post.published_at ? 'text-green-600 hover:text-green-700' : 'text-gray-400 hover:text-gray-600'}`}>
+                      <span className={`text-[10px] font-black tracking-wide transition-colors ${post.published_at ? 'text-green-600 hover:text-green-700' : 'text-gray-400 hover:text-gray-600'}`}>
                         {post.published_at ? 'Published' : 'Draft'}
                       </span>
                       {loadingId === post.id && <Loader2 className="w-3 h-3 animate-spin text-gray-400" />}
@@ -193,7 +193,7 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </Link>
-                        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-[8px] font-black uppercase tracking-widest rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-[8px] font-black tracking-wide rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
                           View
                         </span>
                       </div>
@@ -205,7 +205,7 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
                         >
                           <Edit3 className="w-3.5 h-3.5" />
                         </Link>
-                        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-[8px] font-black uppercase tracking-widest rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-[8px] font-black tracking-wide rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
                           Edit
                         </span>
                       </div>
@@ -218,7 +218,7 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
                         >
                           {loadingId === post.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
                         </button>
-                        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-[8px] font-black uppercase tracking-widest rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
+                        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-[8px] font-black tracking-wide rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
                           Delete
                         </span>
                       </div>
@@ -234,7 +234,7 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
       {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="p-6 border-t border-gray-100 bg-white flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+          <p className="text-[10px] font-black text-gray-400 tracking-wide">
             Showing <span className="text-black">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
             <span className="text-black">
               {Math.min(currentPage * itemsPerPage, filteredPosts.length)}
@@ -255,10 +255,10 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`w-9 h-9 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${currentPage === page
-                    ? 'bg-slate-900 text-white shadow-md'
-                    : 'border border-gray-100 hover:bg-gray-50'
-                  }`}
+                className={`w-9 h-9 rounded-xl text-[10px] font-black tracking-wide transition-all ${currentPage === page
+ ? 'bg-slate-900 text-white shadow-md'
+ : 'border border-gray-100 hover:bg-gray-50'
+ }`}
               >
                 {page}
               </button>

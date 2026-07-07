@@ -39,8 +39,8 @@ export async function sendAdminInvitationEmail(email: string, role: string, invi
                 <div style="display: inline-block; padding: 12px; border-radius: 12px; background-color: #b50a0a; margin-bottom: 16px;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
-                <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0; text-transform: uppercase; letter-spacing: -0.025em;">CenterKick Admin</h1>
-                <p style="font-size: 14px; font-weight: 600; color: #b50a0a; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.1em;">Secure Invitation</p>
+                <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0; text-transform: ; letter-spacing: -0.025em;">CenterKick Admin</h1>
+                <p style="font-size: 14px; font-weight: 600; color: #b50a0a; margin-top: 4px; text-transform: ; letter-spacing: 0.1em;">Secure Invitation</p>
             </div>
             
             <div style="margin-bottom: 32px;">
@@ -50,12 +50,12 @@ export async function sendAdminInvitationEmail(email: string, role: string, invi
                 </p>
                 
                 <div style="background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 12px; padding: 20px; margin-bottom: 24px; text-align: center;">
-                    <p style="font-size: 13px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Your Role</p>
+                    <p style="font-size: 13px; font-weight: 700; color: #6b7280; text-transform: ; letter-spacing: 0.05em; margin-bottom: 8px;">Your Role</p>
                     <p style="font-size: 18px; font-weight: 800; color: #111827; margin: 0;">${role.toUpperCase()}</p>
                 </div>
                 
                 <div style="text-align: center;">
-                    <a href="${invitationLink}" style="display: inline-block; padding: 16px 32px; background-color: #b50a0a; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease;">
+                    <a href="${invitationLink}" style="display: inline-block; padding: 16px 32px; background-color: #b50a0a; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: ; letter-spacing: 0.05em; transition: all 0.2s ease;">
                         Complete Your Signup
                     </a>
                 </div>
@@ -68,7 +68,7 @@ export async function sendAdminInvitationEmail(email: string, role: string, invi
                 <p style="font-size: 12px; color: #6b7280; word-break: break-all; margin-bottom: 24px;">
                     ${invitationLink}
                 </p>
-                <p style="font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 700;">
+                <p style="font-size: 11px; color: #9ca3af; text-transform: ; font-weight: 700;">
                     &copy; 2026 CenterKick. All rights reserved.
                 </p>
             </div>
@@ -93,8 +93,8 @@ export async function sendPasswordResetEmail(email: string, resetLink: string) {
                 <div style="display: inline-block; padding: 12px; border-radius: 12px; background-color: #a20000; margin-bottom: 16px;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
-                <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0; text-transform: uppercase; letter-spacing: -0.025em;">CenterKick</h1>
-                <p style="font-size: 14px; font-weight: 600; color: #a20000; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.1em;">Security Center</p>
+                <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0; text-transform: ; letter-spacing: -0.025em;">CenterKick</h1>
+                <p style="font-size: 14px; font-weight: 600; color: #a20000; margin-top: 4px; text-transform: ; letter-spacing: 0.1em;">Security Center</p>
             </div>
             
             <div style="margin-bottom: 32px;">
@@ -104,7 +104,7 @@ export async function sendPasswordResetEmail(email: string, resetLink: string) {
                 </p>
                 
                 <div style="text-align: center; margin-bottom: 32px;">
-                    <a href="${resetLink}" style="display: inline-block; padding: 18px 36px; background-color: #a20000; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease; box-shadow: 0 10px 15px -3px rgba(162, 0, 0, 0.3);">
+                    <a href="${resetLink}" style="display: inline-block; padding: 18px 36px; background-color: #a20000; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; text-transform: ; letter-spacing: 0.05em; transition: all 0.2s ease; box-shadow: 0 10px 15px -3px rgba(162, 0, 0, 0.3);">
                         Reset My Password
                     </a>
                 </div>
@@ -121,7 +121,7 @@ export async function sendPasswordResetEmail(email: string, resetLink: string) {
                 <p style="font-size: 12px; color: #6b7280; word-break: break-all; margin-bottom: 24px;">
                     ${resetLink}
                 </p>
-                <p style="font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 700;">
+                <p style="font-size: 11px; color: #9ca3af; text-transform: ; font-weight: 700;">
                     &copy; 2026 CenterKick. All rights reserved.
                 </p>
             </div>
@@ -147,8 +147,8 @@ export async function sendOtpEmail(email: string, otp: string) {
                 <div style="display: inline-block; padding: 12px; border-radius: 12px; background-color: #a20000; margin-bottom: 16px;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
-                <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0; text-transform: uppercase; letter-spacing: -0.025em;">CenterKick</h1>
-                <p style="font-size: 14px; font-weight: 600; color: #a20000; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.1em;">Security Center</p>
+                <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0; text-transform: ; letter-spacing: -0.025em;">CenterKick</h1>
+                <p style="font-size: 14px; font-weight: 600; color: #a20000; margin-top: 4px; text-transform: ; letter-spacing: 0.1em;">Security Center</p>
             </div>
             
             <div style="margin-bottom: 32px; text-align: center;">
@@ -170,7 +170,7 @@ export async function sendOtpEmail(email: string, otp: string) {
                 <p style="font-size: 12px; color: #9ca3af; margin-bottom: 8px;">
                     If you did not request this code, you can safely ignore this email.
                 </p>
-                <p style="font-size: 11px; color: #9ca3af; text-transform: uppercase; font-weight: 700;">
+                <p style="font-size: 11px; color: #9ca3af; text-transform: ; font-weight: 700;">
                     &copy; 2026 CenterKick. All rights reserved.
                 </p>
             </div>

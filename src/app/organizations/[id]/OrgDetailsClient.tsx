@@ -39,7 +39,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                   <button 
                      onClick={() => router.back()}
-                     className="group inline-flex items-center gap-2 text-gray-500 hover:text-black font-bold text-xs uppercase tracking-widest transition-colors"
+                     className="group inline-flex items-center gap-2 text-gray-500 hover:text-black font-bold text-sm tracking-wide transition-colors"
                   >
                      <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> 
                      Back
@@ -68,11 +68,11 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                      )}
                   </div>
                   <div className="mt-6 text-center z-20">
-                     <h1 className="text-2xl sm:text-4xl font-black text-white uppercase tracking-tighter drop-shadow-2xl">
+                     <h1 className="text-2xl sm:text-4xl font-black text-white tracking-tighter drop-shadow-2xl">
                         {displayName}
                      </h1>
                      <div className="flex items-center justify-center gap-2 mt-2">
-                        <span className="inline-block bg-[#a20000] text-white text-[9px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-md">
+                        <span className="inline-block bg-[#a20000] text-white text-[9px] font-bold tracking-wide px-3 py-1 rounded-full shadow-md">
                            {profile.role === 'organization' ? 'Academy Partner' : 'Club Partner'}
                         </span>
                      </div>
@@ -88,9 +88,9 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
-                           className={`px-8 py-6 text-[11px] font-black uppercase tracking-[0.2em] transition-all relative shrink-0 ${
-                              activeTab === tab ? "text-[#a20000]" : "text-gray-400 hover:text-gray-600"
-                           }`}
+                           className={`px-8 py-6 text-[11px] font-black tracking-[0.2em] transition-all relative shrink-0 ${
+ activeTab === tab ? "text-[#a20000]" : "text-gray-400 hover:text-gray-600"
+ }`}
                         >
                            {tab}
                            {activeTab === tab && (
@@ -101,7 +101,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                   </div>
                   <div className="hidden lg:flex items-center gap-4">
                      <Link href="/register">
-                        <button className="bg-[#a20000] hover:bg-[#8a0000] text-white px-6 py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all">
+                        <button className="bg-[#a20000] hover:bg-[#8a0000] text-white px-6 py-2.5 rounded-lg text-[10px] font-bold tracking-wide transition-all">
                            Connect Partner
                         </button>
                      </Link>
@@ -116,7 +116,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                      <div className="md:col-span-2 space-y-12">
                         {/* Summary Details */}
                         <section>
-                           <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-6 pb-2 border-b border-gray-100">
+                           <h2 className="text-sm font-black text-gray-900 tracking-wide mb-6 pb-2 border-b border-gray-100">
                               Overview Info
                            </h2>
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -125,8 +125,8 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                                     <MapPin className="w-5 h-5 text-gray-500" />
                                  </div>
                                  <div>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Country / Region</span>
-                                    <span className="text-sm font-black text-gray-800 uppercase mt-0.5 block">{profile.country || 'Global'}</span>
+                                    <span className="text-[10px] font-bold text-gray-400 tracking-wide block">Country / Region</span>
+                                    <span className="text-base font-black text-gray-800 mt-0.5 block">{profile.country || 'Global'}</span>
                                  </div>
                               </div>
 
@@ -135,8 +135,8 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                                     <ShieldCheck className="w-5 h-5 text-gray-500" />
                                  </div>
                                  <div>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Registration / License</span>
-                                    <span className="text-sm font-black text-gray-800 uppercase mt-0.5 block">{profile.license || 'Verified Organization'}</span>
+                                    <span className="text-[10px] font-bold text-gray-400 tracking-wide block">Registration / License</span>
+                                    <span className="text-base font-black text-gray-800 mt-0.5 block">{profile.license || 'Verified Organization'}</span>
                                  </div>
                               </div>
 
@@ -145,8 +145,8 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                                     <Award className="w-5 h-5 text-gray-500" />
                                  </div>
                                  <div>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">League / Association</span>
-                                    <span className="text-sm font-black text-gray-800 uppercase mt-0.5 block">{profile.league || 'Development League'}</span>
+                                    <span className="text-[10px] font-bold text-gray-400 tracking-wide block">League / Association</span>
+                                    <span className="text-base font-black text-gray-800 mt-0.5 block">{profile.league || 'Development League'}</span>
                                  </div>
                               </div>
 
@@ -155,8 +155,8 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                                     <Users2 className="w-5 h-5 text-gray-500" />
                                  </div>
                                  <div>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Preferred Formation</span>
-                                    <span className="text-sm font-black text-gray-800 uppercase mt-0.5 block">{profile.formation || '4-3-3 / Development'}</span>
+                                    <span className="text-[10px] font-bold text-gray-400 tracking-wide block">Preferred Formation</span>
+                                    <span className="text-base font-black text-gray-800 mt-0.5 block">{profile.formation || '4-3-3 / Development'}</span>
                                  </div>
                               </div>
                            </div>
@@ -164,10 +164,10 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
 
                         {/* Description */}
                         <section>
-                           <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-6 pb-2 border-b border-gray-100">
+                           <h2 className="text-sm font-black text-gray-900 tracking-wide mb-6 pb-2 border-b border-gray-100">
                               About Our Academy
                            </h2>
-                           <p className="text-gray-600 text-sm leading-relaxed font-medium">
+                           <p className="text-gray-600 text-base leading-relaxed font-medium">
                               {profile.bio || 'Premium sports organization committed to developing academy prospects and providing professional infrastructure.'}
                            </p>
                         </section>
@@ -175,27 +175,27 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
 
                      {/* Sidebar Contact Info */}
                      <div className="space-y-8 bg-gray-50 p-8 rounded-3xl border border-gray-100 h-fit">
-                        <h3 className="text-xs font-black text-gray-900 uppercase tracking-widest">
+                        <h3 className="text-sm font-black text-gray-900 tracking-wide">
                            Contact Office
                         </h3>
 
                         <div className="space-y-4">
-                           <div className="flex items-center gap-3 text-xs text-gray-600">
+                           <div className="flex items-center gap-3 text-sm text-gray-600">
                               <Mail className="w-4 h-4 text-gray-400 shrink-0" />
                               <span className="truncate">{profile.contact_email || 'office@centerkick.com'}</span>
                            </div>
-                           <div className="flex items-center gap-3 text-xs text-gray-600">
+                           <div className="flex items-center gap-3 text-sm text-gray-600">
                               <Phone className="w-4 h-4 text-gray-400 shrink-0" />
                               <span>{profile.phone_number || '+234 Verified Phone'}</span>
                            </div>
-                           <div className="flex items-center gap-3 text-xs text-gray-600">
+                           <div className="flex items-center gap-3 text-sm text-gray-600">
                               <Globe className="w-4 h-4 text-gray-400 shrink-0" />
                               <span>www.centerkick.com</span>
                            </div>
                         </div>
 
                         <Link href="/register" className="block w-full">
-                           <button className="w-full bg-[#a20000] hover:bg-black text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[9px] transition-all flex items-center justify-center gap-2">
+                           <button className="w-full bg-[#a20000] hover:bg-black text-white py-3.5 rounded-xl font-bold tracking-wide text-[9px] transition-all flex items-center justify-center gap-2">
                               Send Message <ArrowRight className="w-3.5 h-3.5" />
                            </button>
                         </Link>
@@ -205,7 +205,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
 
                 {activeTab === "Members" && (
                    <div className="max-w-[1000px]">
-                      <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-6 pb-2 border-b border-gray-100">
+                      <h2 className="text-sm font-black text-gray-900 tracking-wide mb-6 pb-2 border-b border-gray-100">
                          Registered Members & Staff
                       </h2>
                       {members.length > 0 ? (
@@ -224,10 +224,10 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                                            )}
                                         </div>
                                         <div>
-                                           <h3 className="text-sm font-black text-gray-900 uppercase tracking-tight line-clamp-1 group-hover:text-[#a20000] transition-colors">
+                                           <h3 className="text-base font-black text-gray-900 tracking-tight line-clamp-1 group-hover:text-[#a20000] transition-colors">
                                               {member.first_name} {member.last_name}
                                            </h3>
-                                           <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mt-1">
+                                           <p className="text-[9px] font-bold text-gray-500 tracking-wide mt-1">
                                               {member.role} • {member.position || member.country || 'Global'}
                                            </p>
                                         </div>
@@ -239,7 +239,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                       ) : (
                          <div className="py-16 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
                             <Users2 className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                            <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">No members linked to this organization yet.</p>
+                            <p className="text-gray-500 text-sm font-bold tracking-wide">No members linked to this organization yet.</p>
                          </div>
                       )}
                    </div>
@@ -247,10 +247,10 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
 
                {activeTab === "Bio" && (
                   <div className="max-w-[700px]">
-                     <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-6 pb-2 border-b border-gray-100">
+                     <h2 className="text-sm font-black text-gray-900 tracking-wide mb-6 pb-2 border-b border-gray-100">
                         Academy Bio / History
                      </h2>
-                     <p className="text-gray-600 text-sm leading-relaxed font-medium">
+                     <p className="text-gray-600 text-base leading-relaxed font-medium">
                         {profile.bio || 'This organization has not completed its full historical biography. Sign up to manage this profile and update details.'}
                      </p>
                   </div>
@@ -258,13 +258,13 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
 
                {activeTab === "Achievements" && (
                   <div className="max-w-[700px]">
-                     <h2 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-6 pb-2 border-b border-gray-100">
+                     <h2 className="text-sm font-black text-gray-900 tracking-wide mb-6 pb-2 border-b border-gray-100">
                         Registered Achievements
                      </h2>
                      {profile.achievements && profile.achievements.length > 0 ? (
                         <ul className="space-y-4">
                            {profile.achievements.map((ach: string, i: number) => (
-                              <li key={i} className="flex gap-3 text-sm text-gray-600">
+                              <li key={i} className="flex gap-3 text-base text-gray-600">
                                  <Award className="w-5 h-5 text-amber-500 shrink-0" />
                                  <span>{ach}</span>
                               </li>
@@ -273,7 +273,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                      ) : (
                         <div className="py-12 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
                            <Award className="w-8 h-8 text-gray-300 mx-auto mb-2" />
-                           <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">No achievements registered yet.</p>
+                           <p className="text-gray-500 text-sm font-bold tracking-wide">No achievements registered yet.</p>
                         </div>
                      )}
                   </div>

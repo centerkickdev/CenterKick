@@ -8,7 +8,7 @@ export default function FootballDataPage() {
       <div className="mb-8 flex items-center justify-between">
         <Link 
           href="/admin/settings"
-          className="group flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-all font-bold text-xs uppercase tracking-widest"
+          className="group flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-all font-bold text-sm tracking-wide"
         >
           <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
           Back to System Settings

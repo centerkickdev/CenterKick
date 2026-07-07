@@ -46,14 +46,14 @@ export default function ResetPasswordPage() {
 
          {/* Navigation */}
          <div className="absolute top-8 left-8 z-20">
-            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[10px] font-black uppercase tracking-widest bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[10px] font-black tracking-wide bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
                <ArrowLeft className="w-4 h-4" /> Back to Home
             </Link>
          </div>
 
          <div className="relative z-10 max-w-md w-full px-6 py-12 bg-white/95 backdrop-blur-md rounded-[40px] shadow-2xl border border-white/20 animate-in fade-in zoom-in duration-700">
             <div className="text-center mb-10">
-               <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tighter leading-none mb-3">
+               <h1 className="text-3xl font-black text-gray-900 tracking-tighter leading-none mb-3">
                   New <span className="text-[#a20000]">Security</span>
                </h1>
             </div>
@@ -61,7 +61,7 @@ export default function ResetPasswordPage() {
             {status && (
                <div className={`mb-8 p-5 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-top-2 duration-500 ${status.type === 'success' ? 'bg-green-50 border border-green-100 text-green-700' : 'bg-red-50 border border-red-100 text-red-700'}`}>
                   {status.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
-                  <p className="text-[10px] font-black uppercase tracking-widest leading-relaxed">{status.message}</p>
+                  <p className="text-[10px] font-black tracking-wide leading-relaxed">{status.message}</p>
                </div>
             )}
 
@@ -80,7 +80,7 @@ export default function ResetPasswordPage() {
                   <button
                      type="submit"
                      disabled={isLoading}
-                     className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
+                     className="w-full bg-gray-900 text-white py-5 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
                   >
                      {isLoading ? (
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -92,7 +92,7 @@ export default function ResetPasswordPage() {
             )}
 
             <div className="mt-12 text-center">
-               <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+               <p className="text-[10px] font-black text-gray-400 tracking-wide">
                   Process completed?
                   <Link href="/login" className="text-[#a20000] ml-2 hover:underline font-black">Proceed to Login</Link>
                </p>

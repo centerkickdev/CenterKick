@@ -319,7 +319,7 @@ export function PlayersClient({
               <select 
                 onChange={(e) => handleFilterChange('position', e.target.value)}
                 value={searchParams.get('position') || ''}
-                className="bg-gray-50 border-none rounded-lg text-[9px] font-black uppercase tracking-widest px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
+                className="bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
               >
                  <option value="" className="text-gray-900">Pos</option>
                  <option value="Forward" className="text-gray-900">Forward</option>
@@ -330,7 +330,7 @@ export function PlayersClient({
               <select 
                 onChange={(e) => handleFilterChange('gender', e.target.value)}
                 value={searchParams.get('gender') || ''}
-                className="bg-gray-50 border-none rounded-lg text-[9px] font-black uppercase tracking-widest px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
+                className="bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
               >
                  <option value="" className="text-gray-900">Gen</option>
                  <option value="Male" className="text-gray-900">Male</option>
@@ -339,7 +339,7 @@ export function PlayersClient({
               <select 
                 onChange={(e) => handleFilterChange('foot', e.target.value)}
                 value={searchParams.get('foot') || ''}
-                className="bg-gray-50 border-none rounded-lg text-[9px] font-black uppercase tracking-widest px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
+                className="bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
               >
                  <option value="" className="text-gray-900">Foot</option>
                  <option value="Left" className="text-gray-900">Left</option>
@@ -352,7 +352,7 @@ export function PlayersClient({
                    placeholder="Country"
                    onChange={(e) => handleFilterChange('country', e.target.value)}
                    value={searchParams.get('country') || ''}
-                   className="w-32 bg-gray-50 border-none rounded-lg text-[9px] font-black uppercase tracking-widest pl-3 pr-8 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-300"
+                   className="w-32 bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide pl-3 pr-8 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-300"
                  />
                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[#b50a0a]" />
               </div>
@@ -361,7 +361,7 @@ export function PlayersClient({
                     <option key={c.id} value={c.name} />
                  ))}
               </datalist>
-              <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg font-black text-[9px] uppercase tracking-widest hover:bg-[#b50a0a] transition-all">
+              <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg font-black text-[9px] tracking-wide hover:bg-[#b50a0a] transition-all">
                 Search
               </button>
            </div>
@@ -369,15 +369,15 @@ export function PlayersClient({
 
         {/* Players Table */}
         <div className="overflow-x-auto -mx-6">
-          <table className="w-full text-left text-sm text-gray-600 whitespace-nowrap">
+          <table className="w-full text-left text-base text-gray-600 whitespace-nowrap">
             <thead className="bg-[#f8f9fa] border-b border-gray-100">
               <tr>
-                <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-[#b50a0a]">Athlete Information</th>
-                <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-[#b50a0a]">Gender</th>
-                <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-[#b50a0a]">Country</th>
-                <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-[#b50a0a]">Role / Position</th>
-                <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-[#b50a0a]">Subscription</th>
-                <th className="px-6 py-4 text-[9px] font-black uppercase tracking-widest text-[#b50a0a] text-right">Actions</th>
+                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Athlete Information</th>
+                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Gender</th>
+                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Country</th>
+                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Role / Position</th>
+                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Subscription</th>
+                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a] text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -385,7 +385,7 @@ export function PlayersClient({
                 <tr>
                   <td colSpan={6} className="px-6 py-20 text-center">
                      <Users className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                     <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">No players matches your search criteria.</p>
+                     <p className="text-[10px] font-black tracking-wide text-gray-400">No players matches your search criteria.</p>
                   </td>
                 </tr>
               ) : (
@@ -398,7 +398,7 @@ export function PlayersClient({
                     <td className="px-6 py-4">
                        <div className="flex items-center gap-3">
                            <div className="relative group/avatar">
-                             <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center font-black text-white text-xs shrink-0 overflow-hidden shadow-sm relative">
+                             <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center font-black text-white text-sm shrink-0 overflow-hidden shadow-sm relative">
                                {player.avatar_url ? (
                                  <Image 
                                    src={player.avatar_url} 
@@ -433,25 +433,25 @@ export function PlayersClient({
                              <p className="font-black text-gray-900 leading-none truncate text-[11px] mb-1.5 flex items-center gap-2">
                                {player.first_name} {player.last_name} 
                                <span className="text-[8px] font-bold text-gray-400">•</span>
-                               <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest">{calculateSimpleAge(player.date_of_birth)} YRS</span>
+                               <span className="text-[8px] font-bold text-gray-400 tracking-wide">{calculateSimpleAge(player.date_of_birth)} YRS</span>
                              </p>
-                             <p className="text-[8px] font-bold text-gray-400 uppercase tracking-widest truncate">{player.users?.email || player.email || 'No email'}</p>
+                             <p className="text-[8px] font-bold text-gray-400 tracking-wide truncate">{player.users?.email || player.email || 'No email'}</p>
                           </div>
                        </div>
                     </td>
                     <td className="px-6 py-4 text-center">
-                       <span className="text-[10px] font-black text-gray-900 uppercase tracking-widest">{player.gender || 'Unset'}</span>
+                       <span className="text-[10px] font-black text-gray-900 tracking-wide">{player.gender || 'Unset'}</span>
                     </td>
                     <td className="px-6 py-4">
                        <div className="flex items-center gap-1.5">
                           <FlagIcon country={player.country} className="w-5 h-3.5" />
-                          <span className="text-[10px] font-black text-gray-900 uppercase tracking-widest">{player.country || 'N/A'}</span>
+                          <span className="text-[10px] font-black text-gray-900 tracking-wide">{player.country || 'N/A'}</span>
                        </div>
                     </td>
                     <td className="px-6 py-4">
                        <div className="flex flex-col">
-                          <span className="text-[10px] font-black text-gray-900 uppercase tracking-tighter">{player.position || 'Unset'}</span>
-                          <span className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mt-0.5 italic">{player.foot || 'N/A'} Foot</span>
+                          <span className="text-[10px] font-black text-gray-900 tracking-tighter">{player.position || 'Unset'}</span>
+                          <span className="text-[8px] font-bold text-gray-400 tracking-wide mt-0.5">{player.foot || 'N/A'} Foot</span>
                        </div>
                     </td>
                     <td className="px-6 py-4">
@@ -461,7 +461,7 @@ export function PlayersClient({
                          <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
                                <div className={`w-1.5 h-1.5 rounded-full ${player.is_subscribed ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'bg-gray-300'}`}></div>
-                               <span className={`text-[9px] font-black uppercase tracking-widest ${player.is_subscribed ? 'text-green-600' : 'text-gray-400'}`}>
+                               <span className={`text-[9px] font-black tracking-wide ${player.is_subscribed ? 'text-green-600' : 'text-gray-400'}`}>
                                   {player.is_subscribed ? 'Pro' : 'Free'}
                                </span>
                             </div>
@@ -471,7 +471,7 @@ export function PlayersClient({
                                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                                const isExpiringSoon = diffDays <= 7;
                                return (
-                                 <span className={`text-[8px] font-bold uppercase tracking-widest ${isExpiringSoon ? 'text-red-600' : 'text-gray-400'}`}>
+                                 <span className={`text-[8px] font-bold tracking-wide ${isExpiringSoon ? 'text-red-600' : 'text-gray-400'}`}>
                                      Expires: <DateDisplay date={expiryDate} />
                                  </span>
                                );
@@ -499,7 +499,7 @@ export function PlayersClient({
 
         {/* Pagination */}
         <div className="flex items-center justify-between pt-6 border-t border-gray-50">
-           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+           <p className="text-[10px] font-black text-gray-400 tracking-wide">
               Showing <span className="text-gray-900">{initialPlayers.length}</span> of <span className="text-gray-900">{totalCount}</span> Players
            </p>
            <div className="flex items-center gap-3">
@@ -511,7 +511,7 @@ export function PlayersClient({
                       else showToast(res.error || "Migration failed", "error");
                    }
                 }}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-5 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all flex items-center gap-2"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-5 py-3 rounded-xl font-black text-[9px] tracking-wide transition-all flex items-center gap-2"
              >
                 <RefreshCcw className="w-3.5 h-3.5" /> Fix Slugs
              </button>
@@ -551,10 +551,10 @@ export function PlayersClient({
            <div className="bg-white w-full max-w-xl max-h-[90vh] rounded-[1.5rem] shadow-2xl overflow-hidden relative flex flex-col">
               <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
                  <div>
-                    <h3 className="text-xl font-black italic uppercase tracking-tighter">
+                    <h3 className="text-xl font-black tracking-tighter">
                        <span className="text-gray-900">Enroll New</span> <span className="text-[#b50a0a]">Athlete</span>
                     </h3>
-                    <p className="text-[8px] font-bold text-gray-900 uppercase tracking-widest mt-1">Direct enrollment & automated onboarding</p>
+                    <p className="text-[8px] font-bold text-gray-900 tracking-wide mt-1">Direct enrollment & automated onboarding</p>
                  </div>
                  <button onClick={closeAddModal} className="w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center hover:bg-gray-100 transition-all border border-gray-100">
                     <X className="w-4 h-4 text-gray-400" />
@@ -583,15 +583,15 @@ export function PlayersClient({
               }} className="p-6 space-y-4 overflow-y-auto">
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                     <div className="space-y-1">
-                       <label className="text-[8px] font-black text-gray-900 uppercase tracking-widest ml-1">First Name</label>
+                       <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">First Name</label>
                        <input name="first_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-900" placeholder="Ex: John" />
                     </div>
                     <div className="space-y-1">
-                       <label className="text-[8px] font-black text-gray-900 uppercase tracking-widest ml-1">Last Name</label>
+                       <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Last Name</label>
                        <input name="last_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-900" placeholder="Ex: Doe" />
                     </div>
                     <div className="md:col-span-2 space-y-1">
-                       <label className="text-[8px] font-black text-gray-900 uppercase tracking-widest ml-1 flex justify-between">
+                       <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1 flex justify-between">
                           <span>Email Address</span>
                            {isCheckingEmail && <span className="text-[7px] text-[#b50a0a] animate-pulse">Checking status...</span>}
                        </label>
@@ -607,18 +607,18 @@ export function PlayersClient({
                        {emailStatus === 'REGISTERED' && (
                          <div className="flex items-center gap-2 mt-1 px-2 py-1 bg-red-50 rounded-lg border border-red-100">
                             <AlertCircle className="w-3 h-3 text-red-500" />
-                            <p className="text-[8px] font-black text-red-600 uppercase tracking-widest">Email already registered as a member.</p>
+                            <p className="text-[8px] font-black text-red-600 tracking-wide">Email already registered as a member.</p>
                          </div>
                        )}
                        {emailStatus === 'PROSPECT' && (
                          <div className="flex items-center justify-between mt-1 px-2 py-1 bg-blue-50 rounded-lg border border-blue-100">
                             <div className="flex items-center gap-2">
                                <Info className="w-3 h-3 text-blue-500" />
-                               <p className="text-[8px] font-black text-blue-600 uppercase tracking-widest">Enrolled as prospect (Not yet joined).</p>
+                               <p className="text-[8px] font-black text-blue-600 tracking-wide">Enrolled as prospect (Not yet joined).</p>
                             </div>
                             <button 
                               onClick={handleResendInv}
-                              className="text-[8px] font-black underline text-[#b50a0a] hover:text-black uppercase tracking-widest"
+                              className="text-[8px] font-black underline text-[#b50a0a] hover:text-black tracking-wide"
                             >
                                Resend Invitation?
                             </button>
@@ -626,7 +626,7 @@ export function PlayersClient({
                        )}
                     </div>                     <div className="p-4 bg-gray-50/50 rounded-2xl md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-100">
                         <div className="space-y-1">
-                           <label className="text-[8px] font-black text-gray-900 uppercase tracking-widest ml-1">Primary Role</label>
+                           <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Primary Role</label>
                            <select name="position" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black">
                               <option value="Forward" className="text-black">Forward</option>
                               <option value="Midfielder" className="text-black">Midfielder</option>
@@ -635,7 +635,7 @@ export function PlayersClient({
                            </select>
                         </div>
                         <div className="space-y-1">
-                           <label className="text-[8px] font-black text-gray-900 uppercase tracking-widest ml-1">Main Foot</label>
+                           <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Main Foot</label>
                            <select name="foot" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black">
                               <option value="Right" className="text-black">Right</option>
                               <option value="Left" className="text-black">Left</option>
@@ -644,7 +644,7 @@ export function PlayersClient({
                         </div>
                         
                         <div className="space-y-1">
-                           <label className="text-[8px] font-black text-gray-900 uppercase tracking-widest ml-1">League</label>
+                           <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">League</label>
                            <select 
                              name="league" 
                              className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black"
@@ -658,7 +658,7 @@ export function PlayersClient({
                            </select>
                         </div>
                         <div className="space-y-1">
-                           <label className="text-[8px] font-black text-gray-900 uppercase tracking-widest ml-1">Current Club</label>
+                           <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Current Club</label>
                            <select name="current_club" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black">
                               <option value="">Unattached</option>
                               {clubs.filter((c: Record<string, any>) => c.leagues?.name === selectedLeague).map((club: Record<string, any>) => (
@@ -669,7 +669,7 @@ export function PlayersClient({
 
                         <div className="space-y-1">
                            <div className="flex items-center justify-between ml-1">
-                              <label className="text-[8px] font-black text-gray-900 uppercase tracking-widest">Country</label>
+                              <label className="text-[8px] font-black text-gray-900 tracking-wide">Country</label>
                            </div>
                            <div className="relative group">
                               <div className="absolute left-3 top-1/2 -translate-y-1/2">
@@ -697,9 +697,9 @@ export function PlayersClient({
                         </div>
                          <div className="space-y-1">
                              <div className="flex items-center justify-between ml-1">
-                                <label className="text-[8px] font-black text-red-500 uppercase tracking-widest">Birthdate</label>
+                                <label className="text-[8px] font-black text-red-500 tracking-wide">Birthdate</label>
                                 {calculatedAge && (
-                                   <span className="text-[9px] font-black text-[#b50a0a] italic animate-in fade-in zoom-in duration-300">
+                                   <span className="text-[9px] font-black text-[#b50a0a] animate-in fade-in zoom-in duration-300">
                                       {calculatedAge}
                                    </span>
                                 )}
@@ -740,22 +740,22 @@ export function PlayersClient({
                           </div>
                     </div>
                     <div className="space-y-1 md:col-span-2">
-                       <label className="text-[8px] font-black text-gray-900 uppercase tracking-widest ml-1">Gender</label>
+                       <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Gender</label>
                        <div className="flex gap-2">
                           {['Male', 'Female'].map(g => (
                             <label key={g} className="flex-1 flex items-center justify-center gap-2 p-2.5 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-transparent has-[:checked]:border-[#b50a0a] has-[:checked]:bg-red-50/30">
                                <input type="radio" name="gender" value={g} defaultChecked={g === 'Male'} className="w-3 translate-y-[1px] accent-[#b50a0a]" />
-                               <span className="text-[10px] font-black uppercase tracking-widest text-gray-900">{g}</span>
+                               <span className="text-[10px] font-black tracking-wide text-gray-900">{g}</span>
                             </label>
                           ))}
                        </div>
                     </div>
                  </div>
                  <div className="pt-2">
-                    <button type="submit" className="w-full bg-[#b50a0a] text-white py-3.5 rounded-xl font-black uppercase tracking-widest shadow-xl shadow-red-900/10 hover:bg-black transition-all text-[10px] active:scale-[0.98]">
+                    <button type="submit" className="w-full bg-[#b50a0a] text-white py-3.5 rounded-xl font-black tracking-wide shadow-xl shadow-red-900/10 hover:bg-black transition-all text-[10px] active:scale-[0.98]">
                         Create Profile
                     </button>
-                    <p className="text-[7px] text-gray-900 text-center uppercase font-bold tracking-widest mt-2 italic opacity-60">An automated enrollment email will be sent immediately.</p>
+                    <p className="text-[7px] text-gray-900 text-center font-bold tracking-wide mt-2 opacity-60">An automated enrollment email will be sent immediately.</p>
                  </div>
               </form>
            </div>

@@ -91,14 +91,14 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
              <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#b50a0a]/5 rounded-full blur-3xl pointer-events-none" />
              
              <div className="max-w-[1200px] mx-auto px-4 lg:px-0 relative z-10 flex flex-col items-center text-center">
-                <div className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-red-50 text-[#b50a0a] text-[10px] font-black uppercase tracking-[0.2em] mb-6">
+                <div className="inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-red-50 text-[#b50a0a] text-[10px] font-black tracking-[0.2em] mb-6">
                    <span className="w-1.5 h-1.5 rounded-full bg-[#b50a0a] animate-pulse" />
                    Live Updates
                 </div>
-                <h1 className="text-gray-900 text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase italic leading-[0.9]">
+                <h1 className="text-gray-900 text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9]">
                    {header.title?.split(' ')[0]} <span className="text-[#b50a0a]">{header.title?.split(' ').slice(1).join(' ')}</span>
                 </h1>
-                <p className="text-gray-500 text-sm md:text-base font-bold mt-6 max-w-xl mx-auto">{header.subtitle}</p>
+                <p className="text-gray-500 text-base md:text-base font-bold mt-6 max-w-xl mx-auto">{header.subtitle}</p>
              </div>
           </div>
         );
@@ -108,7 +108,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
           <section key={key} className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-16 animate-in fade-in duration-1000 mt-12">
              <div className="flex items-center gap-4 mb-10">
                 <div className="w-10 h-10 rounded-full bg-[#b50a0a] flex items-center justify-center shadow-lg shadow-red-900/10"><Star className="w-5 h-5 text-white" /></div>
-                <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight">Featured Stories</h2>
+                <h2 className="text-xl font-black text-gray-900 tracking-tight">Featured Stories</h2>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:p-8">
                 {latestPosts.map((post) => (
@@ -116,15 +116,15 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                       <div className="h-64 overflow-hidden relative">
                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors z-10" />
                          <img src={post.cover_image_url || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest text-gray-900 z-20">
+                         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[8px] font-black tracking-wide text-gray-900 z-20">
                             {post.category?.name || 'News'}
                          </div>
                       </div>
                       <div className="p-4 md:p-8 flex flex-col flex-1 justify-between">
-                         <h3 className="font-black text-gray-900 text-xl leading-tight mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 italic tracking-tighter uppercase">{post.title}</h3>
+                         <h3 className="font-black text-gray-900 text-xl leading-tight mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 tracking-tighter">{post.title}</h3>
                          <div className="flex items-center gap-2 text-gray-400">
                             <CalendarIcon className="w-3.5 h-3.5" />
-                            <DateDisplay date={post.published_at} className="text-[10px] font-black uppercase tracking-widest" />
+                            <DateDisplay date={post.published_at} className="text-[10px] font-black tracking-wide" />
                          </div>
                       </div>
                    </Link>
@@ -140,7 +140,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                   <div className="flex items-center gap-3">
                      <button 
                         onClick={() => setShowFilters(!showFilters)} 
-                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${showFilters ? 'bg-black text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}`}
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-[10px] font-black tracking-wide transition-all ${showFilters ? 'bg-black text-white' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}`}
                      >
                         <Filter className="w-4 h-4" />
                         {showFilters ? 'Hide Filters' : 'Filter / Search'}
@@ -148,11 +148,11 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                      {(selectedCategory || selectedTag || searchQuery) && (
                         <div className="hidden md:flex items-center gap-2">
                            <span className="w-1.5 h-1.5 rounded-full bg-[#b50a0a] animate-pulse"></span>
-                           <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Active Filters</span>
+                           <span className="text-[9px] font-bold text-gray-400 tracking-wide">Active Filters</span>
                         </div>
                      )}
                   </div>
-                  <div className="text-[10px] font-black uppercase tracking-widest text-gray-400 hidden sm:block">
+                  <div className="text-[10px] font-black tracking-wide text-gray-400 hidden sm:block">
                      Showing {paginatedPosts.length} of {filteredPosts.length} Articles
                   </div>
                </div>
@@ -161,9 +161,9 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                   <div className="max-w-[1200px] mx-auto px-4 lg:px-0 pt-6 mt-4 border-t border-gray-100 animate-in slide-in-from-top-4 duration-300">
                      <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
                         <div className="flex items-center gap-4 overflow-x-auto pb-2 md:pb-0 [&::-webkit-scrollbar]:hidden w-full md:w-auto">
-                           <button onClick={() => { setSelectedCategory(null); setSelectedTag(null); }} className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full transition-all whitespace-nowrap ${!selectedCategory && !selectedTag ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`}>All Feed</button>
+                           <button onClick={() => { setSelectedCategory(null); setSelectedTag(null); }} className={`text-[10px] font-black tracking-wide px-4 py-2 rounded-full transition-all whitespace-nowrap ${!selectedCategory && !selectedTag ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`}>All Feed</button>
                            {categories.map(cat => (
-                              <button key={cat.id} onClick={() => { setSelectedCategory(cat.id); setSelectedTag(null); }} className={`text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full transition-all whitespace-nowrap ${selectedCategory === cat.id ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`}>{cat.name}</button>
+                              <button key={cat.id} onClick={() => { setSelectedCategory(cat.id); setSelectedTag(null); }} className={`text-[10px] font-black tracking-wide px-4 py-2 rounded-full transition-all whitespace-nowrap ${selectedCategory === cat.id ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`}>{cat.name}</button>
                            ))}
                         </div>
                         <div className="relative w-full md:w-full max-w-[400px]">
@@ -172,9 +172,9 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                         </div>
                      </div>
                      <div className="flex items-center gap-3 mt-6 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden">
-                        <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest shrink-0">Popular Tags:</span>
+                        <span className="text-[8px] font-black text-gray-300 tracking-wide shrink-0">Popular Tags:</span>
                         {tags.map((tag: Tag) => (
-                           <button key={tag.id} onClick={() => { setSelectedTag(selectedTag === tag.id ? null : tag.id); setSelectedCategory(null); }} className={`text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-lg border transition-all whitespace-nowrap flex items-center gap-1 ${selectedTag === tag.id ? 'bg-black border-black text-white' : 'bg-white border-gray-100 text-gray-400 hover:border-gray-300'}`}>
+                           <button key={tag.id} onClick={() => { setSelectedTag(selectedTag === tag.id ? null : tag.id); setSelectedCategory(null); }} className={`text-[8px] font-black tracking-wide px-3 py-1 rounded-lg border transition-all whitespace-nowrap flex items-center gap-1 ${selectedTag === tag.id ? 'bg-black border-black text-white' : 'bg-white border-gray-100 text-gray-400 hover:border-gray-300'}`}>
                               <TagIcon className="w-2.5 h-2.5" /> {tag.name}
                            </button>
                         ))}
@@ -184,7 +184,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
             </div>
             <div className="max-w-[1200px] mx-auto px-4 lg:px-0 pb-20 mt-8">
                {(selectedCategory || selectedTag) && (
-                  <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight mb-10">
+                  <h2 className="text-xl font-black text-gray-900 tracking-tight mb-10">
                      {selectedCategory ? `${categories.find(c => c.id === selectedCategory)?.name} Archive` : `Tag: ${tags.find(t => t.id === selectedTag)?.name}`}
                   </h2>
                )}
@@ -192,8 +192,8 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                   {paginatedPosts.length === 0 ? (
                      <div className="col-span-1 md:col-span-3 py-20 text-center bg-gray-50 rounded-[40px] border border-gray-100">
                         <Newspaper className="w-12 h-12 text-gray-200 mx-auto mb-4" />
-                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest">No articles found matching your criteria.</p>
-                        <button onClick={() => { setSelectedCategory(null); setSelectedTag(null); setSearchQuery(''); }} className="mt-6 text-[#b50a0a] text-[9px] font-black uppercase tracking-widest hover:underline">Clear all filters</button>
+                        <p className="text-[11px] font-black text-gray-400 tracking-wide">No articles found matching your criteria.</p>
+                        <button onClick={() => { setSelectedCategory(null); setSelectedTag(null); setSearchQuery(''); }} className="mt-6 text-[#b50a0a] text-[9px] font-black tracking-wide hover:underline">Clear all filters</button>
                      </div>
                   ) : (
                      paginatedPosts.map((post) => (
@@ -203,10 +203,10 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                               <img src={post.cover_image_url || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                            </div>
                            <div className="p-6 flex flex-col flex-1 justify-between">
-                              <h3 className="font-black text-gray-900 text-[13px] leading-snug mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 uppercase italic tracking-tighter">{post.title}</h3>
+                              <h3 className="font-black text-gray-900 text-[13px] leading-snug mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 tracking-tighter">{post.title}</h3>
                               <div className="flex items-center justify-between">
-                                 <DateDisplay date={post.published_at} className="text-[9px] font-black text-gray-400 uppercase tracking-widest" />
-                                 <span className="text-[8px] font-black text-[#b50a0a] uppercase tracking-widest group-hover:translate-x-1 transition-transform flex items-center gap-1">Read Article <ArrowRight className="w-3 h-3" /></span>
+                                 <DateDisplay date={post.published_at} className="text-[9px] font-black text-gray-400 tracking-wide" />
+                                 <span className="text-[8px] font-black text-[#b50a0a] tracking-wide group-hover:translate-x-1 transition-transform flex items-center gap-1">Read Article <ArrowRight className="w-3 h-3" /></span>
                               </div>
                            </div>
                         </Link>

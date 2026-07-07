@@ -14,7 +14,7 @@ function renderContentWithCaptions(content: string): string {
     if (caption && caption.trim() !== '') {
       return `<figure class="blog-figure my-8 flex flex-col items-center">
         <img ${attributes}>
-        <figcaption class="text-center text-[10px] font-black text-gray-400 uppercase tracking-widest mt-3 italic font-sans bg-gray-50 px-4 py-1.5 rounded-full border border-gray-100/50">${caption}</figcaption>
+        <figcaption class="text-center text-[10px] font-black text-gray-400  tracking-wide mt-3  font-sans bg-gray-50 px-4 py-1.5 rounded-full border border-gray-100/50">${caption}</figcaption>
       </figure>`;
     }
     return match;
@@ -23,7 +23,7 @@ function renderContentWithCaptions(content: string): string {
 
 export function NewsContentClient({ content }: { content: string }) {
   return (
-    <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:italic prose-headings:tracking-tighter prose-a:text-[#b50a0a] prose-strong:text-gray-900 prose-img:rounded-3xl prose-blockquote:border-[#b50a0a] prose-blockquote:bg-red-50/50 prose-blockquote:p-8 prose-blockquote:rounded-3xl prose-blockquote:italic">
+    <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none prose-headings:font-black prose-headings: prose-headings: prose-headings:tracking-tighter prose-a:text-[#b50a0a] prose-strong:text-gray-900 prose-img:rounded-3xl prose-blockquote:border-[#b50a0a] prose-blockquote:bg-red-50/50 prose-blockquote:p-8 prose-blockquote:rounded-3xl prose-blockquote:">
       {parse(renderContentWithCaptions(content), {
          replace: (domNode) => {
             if (domNode instanceof Element && domNode.name === 'a' && domNode.attribs && domNode.attribs.href) {

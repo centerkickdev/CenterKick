@@ -125,11 +125,25 @@ export default async function Home() {
       });
    };
 
-   // Shuffle and pass profiles (capped at 10 items per section)
-   const selectedPlayers = pseudoShuffle(playersList).slice(0, 10);
-   const selectedCoaches = pseudoShuffle(coachesList).slice(0, 10);
-   const selectedAgentsScouts = pseudoShuffle(agentsScoutsList).slice(0, 10);
-   const selectedOrganizations = pseudoShuffle(organizationsList).slice(0, 10);
+   // Rotate array based on UTC day so all profiles eventually get visibility
+   const cycleProfiles = <T extends { id: string }>(array: T[], limit: number): T[] => {
+      if (!array || array.length === 0) return [];
+      const shuffled = pseudoShuffle(array);
+      if (shuffled.length <= limit) return shuffled;
+      
+      const dayNumber = Math.floor(Date.now() / 86400000);
+      const offset = (dayNumber * limit) % shuffled.length;
+      
+      // Rotate the array by the offset
+      const rotated = [...shuffled.slice(offset), ...shuffled.slice(0, offset)];
+      return rotated.slice(0, limit);
+   };
+
+   // Shuffle, cycle and cap at 10 items per section
+   const selectedPlayers = cycleProfiles(playersList, 10);
+   const selectedCoaches = cycleProfiles(coachesList, 10);
+   const selectedAgentsScouts = cycleProfiles(agentsScoutsList, 10);
+   const selectedOrganizations = cycleProfiles(organizationsList, 10);
 
    return (
       <HomeClient 
