@@ -7,7 +7,6 @@ import {
   History, 
   Check, 
   ChevronRight, 
-  Star, 
   Zap, 
   Calendar, 
   Globe, 
@@ -152,138 +151,151 @@ export default function SubscriptionPage() {
           <h1 className="text-3xl font-black text-gray-900 tracking-tighter">Billing & <span className="text-[#b50a0a]">Subscription</span></h1>
           <p className="text-gray-500 text-[10px] font-bold tracking-wide mt-1">Manage your professional tier and payment confirmation.</p>
         </div>
+        
+        {/* Global Account Status & Pricing */}
+        <div className={`${
+          plan.status === 'Active' ? 'bg-green-50 border-green-100' : 
+          plan.status === 'Pending Approval' ? 'bg-blue-50 border-blue-100' :
+          'bg-red-50 border-red-100'
+        } border px-6 py-4 rounded-[20px] shadow-sm flex items-center gap-6`}>
+           <div>
+              <p className="text-[9px] font-black tracking-wide mb-1 text-gray-900">Account Status</p>
+              <p className={`text-xl font-black tracking-tighter ${
+                 plan.status === 'Active' ? 'text-green-600' : 
+                 plan.status === 'Pending Approval' ? 'text-blue-600' :
+                 'text-[#b50a0a]'
+              }`}>
+                 {plan.status === 'Active' ? 'Paid' : plan.status === 'Unverified' ? 'Unpaid' : plan.status}
+              </p>
+           </div>
+           
+           <div className={`border-l pl-6 ${
+              plan.status === 'Active' ? 'border-green-200' : 
+              plan.status === 'Pending Approval' ? 'border-blue-200' :
+              'border-red-200'
+           }`}>
+              <div className="flex flex-col gap-0.5">
+                 <span className={`text-lg font-black ${
+                    plan.status === 'Active' ? 'text-gray-900' : 'text-[#b50a0a]'
+                 }`}>{plan.price}</span>
+                 <div className="flex items-baseline gap-1">
+                    <p className="text-[9px] font-bold text-gray-900">~ {plan.usdEquivalent}</p>
+                    <span className="text-[9px] font-bold text-gray-900">{plan.period}</span>
+                 </div>
+              </div>
+           </div>
+        </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-12">
-        {/* Navigation Sidebar */}
-        <aside className="lg:w-1/4">
-          <nav className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0">
-            {[
-              { id: 'My Plan', icon: ShieldCheck },
-              { id: 'History', icon: History },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 px-6 py-4 rounded-2xl text-[10px] font-black tracking-wide transition-all whitespace-nowrap lg:w-full ${activeTab === tab.id ? 'bg-gray-900 text-white shadow-lg shadow-black/20' : 'text-gray-500 hover:bg-gray-100'}`}
-              >
-                <tab.icon className="w-4 h-4" />
-                {tab.id}
-              </button>
-            ))}
-          </nav>
-        </aside>
+      <div className="flex flex-col gap-8">
+        {/* Top Navigation Tabs */}
+        <nav className="flex gap-2 overflow-x-auto pb-4 border-b border-gray-100 hide-scrollbar">
+          {[
+            { id: 'My Plan', icon: ShieldCheck },
+            { id: 'History', icon: History },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-3 px-8 py-4 rounded-2xl text-[10px] font-black tracking-wide transition-all whitespace-nowrap ${activeTab === tab.id ? 'bg-gray-900 text-white shadow-lg shadow-black/20' : 'text-gray-500 hover:bg-gray-100'}`}
+            >
+              <tab.icon className="w-4 h-4" />
+              {tab.id}
+            </button>
+          ))}
+        </nav>
 
         {/* Main Content Area */}
-        <div className="flex-1">
+        <div className="w-full">
           {activeTab === 'My Plan' && (
             <div className="space-y-8 animate-in fade-in duration-500">
                {/* Current Status Card */}
                <div className="relative group overflow-hidden bg-white rounded-[40px] border border-gray-100 shadow-sm p-4 md:p-8 md:p-12">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-[#b50a0a] blur-[150px] opacity-10 -translate-y-1/2 translate-x-1/2"></div>
                   
-                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:p-8 relative z-10">
-                     <div className="space-y-6 flex-1">
-                        <div className="bg-[#b50a0a] w-fit px-4 py-1.5 rounded-full text-[9px] font-black tracking-wide text-white shadow-lg flex items-center gap-2">
-                           <Star className="w-3 h-3 fill-current" /> Professional Tier
+                  <div className="flex flex-col gap-10 md:p-8 relative z-10">
+                     {/* Payment Routes (Visible only if Unverified) */}
+                     {plan.status === 'Unverified' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-50">
+                           
+                           {/* Route 1: Online Payment */}
+                           <div className="space-y-6 bg-white p-6 rounded-[30px] border border-gray-100 shadow-sm flex flex-col items-start">
+                              <div>
+                                <span className="inline-block px-3 py-1 bg-gray-900 text-white text-[8px] font-black tracking-widest rounded-full mb-3 uppercase">Route 1: Automated</span>
+                                <h3 className="text-lg font-black text-gray-900">Instant Online Activation</h3>
+                                <p className="text-[10px] font-bold text-gray-500 tracking-wide mt-2">Pay securely online to activate your professional badge and unlock all features instantly.</p>
+                              </div>
+                              <div className="pt-2 w-full">
+                                <a 
+                                   href={paymentSettings?.paymentLink || '#'} 
+                                   target="_blank" 
+                                   rel="noopener noreferrer"
+                                   className="flex items-center justify-center gap-3 w-full bg-gray-900 text-white px-8 py-4 rounded-2xl text-[11px] font-black tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl hover:-translate-y-1 uppercase"
+                                >
+                                   Subscribe Now <ChevronRight className="w-4 h-4" />
+                                </a>
+                              </div>
+                           </div>
+
+                           {/* Route 2: Manual Payment */}
+                           {paymentSettings?.bankName && (
+                              <div className="space-y-6 bg-white p-6 rounded-[30px] border border-gray-100 shadow-sm flex flex-col h-full">
+                                 <div>
+                                   <span className="inline-block px-3 py-1 bg-gray-900 text-white text-[8px] font-black tracking-widest rounded-full mb-3 uppercase">Route 2: Manual</span>
+                                   <h3 className="text-lg font-black text-gray-900">Direct Bank Transfer</h3>
+                                   <p className="text-[10px] font-bold text-gray-500 tracking-wide mt-2">Transfer to our account, then upload your receipt below to notify the admin.</p>
+                                 </div>
+
+                                 <div className="bg-gray-50 p-5 rounded-[20px] border border-gray-100">
+                                     <div className="grid grid-cols-2 gap-3">
+                                         <div>
+                                             <p className="text-[8px] font-black text-gray-400 tracking-wide uppercase">Bank</p>
+                                             <p className="text-[11px] font-bold text-gray-900">{paymentSettings.bankName}</p>
+                                         </div>
+                                         <div>
+                                             <p className="text-[8px] font-black text-gray-400 tracking-wide uppercase">Name</p>
+                                             <p className="text-[11px] font-bold text-gray-900">{paymentSettings.accountName}</p>
+                                         </div>
+                                         <div className="col-span-2">
+                                             <p className="text-[8px] font-black text-gray-400 tracking-wide uppercase">Account Number</p>
+                                             <p className="text-base font-black tracking-widest text-[#b50a0a]">{paymentSettings.accountNumber}</p>
+                                         </div>
+                                     </div>
+                                 </div>
+
+                                 <div className="mt-auto border-t border-gray-100 pt-6">
+                                    <form onSubmit={handleClaimVerification} className="space-y-3">
+                                       <p className="text-[9px] font-black tracking-wide text-gray-900 mb-1">Claim Payment</p>
+                                       <input 
+                                          name="payment_reference"
+                                          type="text" 
+                                          placeholder="Transaction Ref/ID" 
+                                          required
+                                          className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all"
+                                       />
+                                       <input 
+                                          name="payment_receipt"
+                                          type="file" 
+                                          accept="image/*,.pdf"
+                                          className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-4 py-2 text-[10px] font-bold text-gray-500 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[9px] file:font-bold file:bg-gray-200 file:text-gray-700 hover:file:bg-gray-300"
+                                       />
+                                       <button 
+                                          disabled={isSubmitting}
+                                          className="w-full bg-white border border-gray-200 text-gray-900 py-3 rounded-xl text-[9px] font-black tracking-wide hover:border-[#b50a0a] hover:text-[#b50a0a] transition-all disabled:opacity-50 mt-2"
+                                       >
+                                          {isSubmitting ? 'Processing...' : 'Notify Admin'}
+                                       </button>
+                                       {msg && (
+                                          <div className={`mt-2 p-3 rounded-xl text-[9px] font-bold tracking-wide ${msg.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                                             {msg.text}
+                                          </div>
+                                       )}
+                                    </form>
+                                 </div>
+                              </div>
+                           )}
                         </div>
-                        <h2 className="text-4xl font-black text-gray-900 tracking-tight">{plan.name}</h2>
-                         <div className="flex flex-col gap-1">
-                            <div className="flex items-baseline gap-2">
-                               <span className="text-3xl font-black text-[#b50a0a]">{plan.price}</span>
-                               <span className="text-[10px] font-black text-gray-400 tracking-wide">{plan.period}</span>
-                            </div>
-                            <p className="text-[11px] font-bold text-gray-400 lowercase tracking-wide">
-                               ~ {plan.usdEquivalent} usd conversion
-                            </p>
-                         </div>
-                        
-                        {plan.status === 'Unverified' && (
-                           <div className="pt-6 space-y-6">
-                              <p className="text-[10px] font-bold text-gray-500 tracking-wide leading-relaxed">To activate your professional badge and unlock all features, please complete payment using the secure link below.</p>
-                               <a 
-                                 href={paymentSettings?.paymentLink || '#'} 
-                                 target="_blank" 
-                                 rel="noopener noreferrer"
-                                 className="inline-flex items-center gap-3 bg-gray-900 text-white px-10 py-5 rounded-2xl text-sm font-black tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl hover:-translate-y-1"
-                              >
-                                 Subscribe Now <ChevronRight className="w-5 h-5" />
-                              </a>
-                           </div>
-                        )}
-
-                        {plan.status === 'Unverified' && paymentSettings?.bankName && (
-                           <div className="pt-8 border-t border-gray-50 mt-8 space-y-4">
-                               <p className="text-[9px] font-black tracking-wide text-gray-400">OR PAY VIA DIRECT BANK TRANSFER</p>
-                               <div className="bg-gray-50 p-6 rounded-[24px] border border-gray-100">
-                                   <div className="grid grid-cols-2 gap-4">
-                                       <div>
-                                           <p className="text-[8px] font-black text-gray-400 tracking-wide uppercase">Bank Name</p>
-                                           <p className="text-[12px] font-bold text-gray-900">{paymentSettings.bankName}</p>
-                                       </div>
-                                       <div>
-                                           <p className="text-[8px] font-black text-gray-400 tracking-wide uppercase">Account Name</p>
-                                           <p className="text-[12px] font-bold text-gray-900">{paymentSettings.accountName}</p>
-                                       </div>
-                                       <div className="col-span-2">
-                                           <p className="text-[8px] font-black text-gray-400 tracking-wide uppercase">Account Number</p>
-                                           <p className="text-[18px] font-black tracking-widest text-[#b50a0a]">{paymentSettings.accountNumber}</p>
-                                       </div>
-                                   </div>
-                               </div>
-                           </div>
-                        )}
-                     </div>
-
-                     <div className="w-full md:w-64 space-y-4">
-                        <div className={`${
- plan.status === 'Active' ? 'bg-green-50 border-green-100' : 
- plan.status === 'Pending Approval' ? 'bg-blue-50 border-blue-100' :
- 'bg-red-50 border-red-100'
- } border px-6 py-6 rounded-[30px] shadow-sm`}>
-                           <p className={`text-[9px] font-black tracking-wide mb-1 ${
- plan.status === 'Active' ? 'text-green-700' : 
- plan.status === 'Pending Approval' ? 'text-blue-700' :
- 'text-red-700'
- }`}>Account Status</p>
-                           <p className={`text-xl font-black tracking-tighter ${
- plan.status === 'Active' ? 'text-green-800' : 
- plan.status === 'Pending Approval' ? 'text-blue-800' :
- 'text-red-800'
- }`}>{plan.status}</p>
-                        </div>
-
-                        {plan.status === 'Unverified' && (
-                           <form onSubmit={handleClaimVerification} className="space-y-4 bg-gray-50 p-6 rounded-[30px] border border-gray-100">
-                              <p className="text-[9px] font-black tracking-wide text-gray-400 mb-2">Claim Payment</p>
-                              <input 
-                                 name="payment_reference"
-                                 type="text" 
-                                 placeholder="Transaction Ref/ID" 
-                                 required
-                                 className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all"
-                              />
-                              <input 
-                                 name="payment_receipt"
-                                 type="file" 
-                                 accept="image/*,.pdf"
-                                 className="w-full bg-white border border-gray-100 rounded-xl px-4 py-2 text-[10px] font-bold text-gray-500 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[9px] file:font-bold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-                              />
-                              <button 
-                                 disabled={isSubmitting}
-                                 className="w-full bg-white border border-gray-200 text-gray-900 py-3 rounded-xl text-[9px] font-black tracking-wide hover:border-[#b50a0a] hover:text-[#b50a0a] transition-all disabled:opacity-50"
-                              >
-                                 {isSubmitting ? 'Processing...' : 'Notify Admin'}
-                              </button>
-                           </form>
-                        )}
-
-                        {msg && (
-                           <div className={`p-4 rounded-2xl text-[9px] font-bold tracking-wide ${msg.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-                              {msg.text}
-                           </div>
-                        )}
-                     </div>
+                     )}
                   </div>
 
                   <div className="mt-12 pt-12 border-t border-gray-50">

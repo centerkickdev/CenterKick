@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Users, Shield, Settings } from 'lucide-react';
-import { SignOutButton } from '@/components/dashboard/SignOutButton';
 
 interface DashboardSidebarNavProps {
   role: string;
@@ -63,10 +62,6 @@ export function DashboardSidebarNav({ role, isSubscribed = false }: DashboardSid
           <Settings className={getIconClasses('/dashboard/settings')} />
           <span className="text-base tracking-wide">Settings</span>
         </Link>
-        
-        <div className="scale-95 origin-left mt-2">
-          <SignOutButton />
-        </div>
       </div>
     </nav>
   );

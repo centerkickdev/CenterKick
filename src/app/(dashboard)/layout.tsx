@@ -114,6 +114,10 @@ export default async function DashboardLayout({
             </Link>
           </div>
           <DashboardSidebarNav role={role} isSubscribed={isSubscribed ?? false} />
+          {/* Footer */}
+          <div className="p-6 border-t border-gray-800 shrink-0">
+            <SignOutButton />
+          </div>
         </aside>
 
         {/* Main Content */}
