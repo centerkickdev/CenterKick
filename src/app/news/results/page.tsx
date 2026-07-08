@@ -206,7 +206,7 @@ const RESULTS = [
          {
             id: 16,
             timeLabel: "Yesterday",
-            team1: "Köln",
+            team1: "KÃ¶ln",
             team2: "Mainz",
             logo1: "https://upload.wikimedia.org/wikipedia/en/thumb/5/53/1._FC_K%C3%B6ln_logo.svg/1200px-1._FC_K%C3%B6ln_logo.svg.png",
             logo2: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/FSV_Mainz_05_Logo.svg/1200px-FSV_Mainz_05_Logo.svg.png",
@@ -311,7 +311,7 @@ export default function ResultsPage() {
             {/* Page Header */}
             <div className="bg-[#383838] py-8">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
-                  <h1 className="text-white text-3xl font-black tracking-wide">Results</h1>
+                  <h1 className="text-white text-3xl font-bold tracking-wide">Results</h1>
                </div>
             </div>
 
@@ -320,27 +320,27 @@ export default function ResultsPage() {
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                   <ul className="flex items-center gap-8 overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth whitespace-nowrap">
                      <li>
-                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-xs font-bold tracking-wide py-4 block">
                            All News
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/fixtures" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news/fixtures" className="text-white hover:text-[#b50a0a] transition-colors text-xs font-bold tracking-wide py-4 block">
                            Match Fixtures
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/results" className="text-[#b50a0a] text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news/results" className="text-[#b50a0a] text-xs font-bold tracking-wide py-4 block">
                            Results
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/tables" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news/tables" className="text-white hover:text-[#b50a0a] transition-colors text-xs font-bold tracking-wide py-4 block">
                            Tables
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/live-scores" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news/live-scores" className="text-white hover:text-[#b50a0a] transition-colors text-xs font-bold tracking-wide py-4 block">
                            Live Scores
                         </Link>
                      </li>
@@ -354,22 +354,22 @@ export default function ResultsPage() {
                {/* Filters / Toolbar */}
                <div className="flex flex-wrap items-center gap-4 border-y border-gray-300 py-3 mb-8">
                   <div className="flex items-center gap-2 border-r border-gray-300 pr-6">
-                     <span className="text-[10px] font-bold text-[#b50a0a] tracking-wide">Filter By Date:</span>
-                     <button className="flex items-center gap-1 text-[11px] font-black text-gray-900 ml-1">
+                     <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By Date:</span>
+                     <button className="flex items-center gap-1 text-xs font-bold text-gray-900 ml-1">
                         Yesterday <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
                   
                   <div className="flex items-center gap-2 border-r border-gray-300 pr-6 pl-2">
-                     <span className="text-[10px] font-bold text-[#b50a0a] tracking-wide">Filter By:</span>
-                     <button className="flex items-center gap-1 text-[11px] font-black text-gray-900 ml-1">
+                     <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By:</span>
+                     <button className="flex items-center gap-1 text-xs font-bold text-gray-900 ml-1">
                         ALL <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
 
                   <div className="flex items-center gap-2 pl-2 flex-1">
                      <Search className="w-4 h-4 text-gray-400" />
-                     <input type="text" placeholder="Search Teams" className="bg-transparent border-none focus:outline-none text-[11px] font-bold w-full tracking-wide placeholder:text-gray-400" />
+                     <input type="text" placeholder="Search Teams" className="bg-transparent border-none focus:outline-none text-xs font-bold w-full tracking-wide placeholder:text-gray-400" />
                   </div>
                </div>
 
@@ -383,8 +383,8 @@ export default function ResultsPage() {
                                {/* League Wide Top Info just for visual consistency if needed, but going with rows */}
                                <div className="flex justify-center mb-6">
                                     <div className="text-center">
-                                       <span className="text-[9px] font-bold text-gray-400 tracking-wide block mb-1">Match details/info</span>
-                                       <span className="text-[11px] font-black text-gray-900 tracking-wide">Recent Results</span>
+                                       <span className="text-xs font-bold text-gray-400 tracking-wide block mb-1">Match details/info</span>
+                                       <span className="text-xs font-bold text-gray-900 tracking-wide">Recent Results</span>
                                     </div>
                                  </div>
 
@@ -393,7 +393,7 @@ export default function ResultsPage() {
                                     <div key={match.id} className="relative flex items-center justify-between py-4 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors rounded px-2">
                                        
                                        {/* Date/Time indicator */}
-                                       <div className="absolute left-2 text-[8px] font-bold text-gray-400 tracking-wide w-16">
+                                       <div className="absolute left-2 text-xs font-bold text-gray-400 tracking-wide w-16">
                                           {match.timeLabel}
                                        </div>
 
@@ -409,7 +409,7 @@ export default function ResultsPage() {
                                           
                                           {/* Score Box */}
                                           <div className="w-[30%] flex justify-center">
-                                             <div className={`font-black text-[15px] px-4 py-1.5 rounded-sm ${match.isLive ? 'text-[#b50a0a] bg-red-50 border border-red-100 animate-pulse' : 'text-gray-900 bg-gray-100'}`}>
+                                             <div className={`font-bold text-[15px] px-4 py-1.5 rounded-sm ${match.isLive ? 'text-[#b50a0a] bg-red-50 border border-red-100 animate-pulse' : 'text-gray-900 bg-gray-100'}`}>
                                                 {match.score}
                                              </div>
                                           </div>
@@ -427,11 +427,11 @@ export default function ResultsPage() {
                                        {/* Optional Event icon spacing (e.g for goals/cards) */}
                                        <div className="absolute right-4 hidden md:flex items-center gap-2">
                                           {match.isLive ? (
-                                             <span className="text-[9px] font-black text-red-500 flex items-center gap-1">
+                                             <span className="text-xs font-bold text-red-500 flex items-center gap-1">
                                                 <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div> LIVE
                                              </span>
                                           ) : (
-                                             <span className="text-[10px] font-black text-gray-400">FT</span>
+                                             <span className="text-xs font-bold text-gray-400">FT</span>
                                           )}
                                        </div>
 
@@ -444,7 +444,7 @@ export default function ResultsPage() {
 
                         {/* Load More Button for current League */}
                         <div className="flex justify-center mt-2 mb-4">
-                           <button className="bg-[#b50a0a] hover:bg-[#8b0000] text-white font-bold text-[10px] tracking-wide px-10 py-3 rounded shadow-md transition-colors">
+                           <button className="bg-[#b50a0a] hover:bg-[#8b0000] text-white font-bold text-xs tracking-wide px-10 py-3 rounded shadow-md transition-colors">
                               LOAD MORE
                            </button>
                         </div>

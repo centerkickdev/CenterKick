@@ -59,10 +59,10 @@ export default function ManageUIClient({ pages }: ManageUIClientProps) {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-12 rounded-[3.5rem] border border-gray-100 shadow-sm relative overflow-hidden">
         <div className="relative z-10">
-           <h1 className="text-4xl font-black text-gray-900 tracking-tighter">
+           <h1 className="text-4xl font-bold text-gray-900 tracking-tighter">
              Site <span className="text-[#b50a0a]">Manager</span>
            </h1>
-           <p className="text-gray-900 text-[11px] font-bold tracking-[0.25em] mt-3 flex items-center gap-3">
+           <p className="text-gray-900 text-xs font-bold tracking-[0.25em] mt-3 flex items-center gap-3">
               <span className="w-2 h-2 rounded-full bg-[#b50a0a] animate-pulse"></span>
               Full control over frontend layouts and content
            </p>
@@ -73,15 +73,15 @@ export default function ManageUIClient({ pages }: ManageUIClientProps) {
               <button 
                 onClick={handleSeed}
                 disabled={isSeeding}
-                className="bg-black text-white px-6 py-4 rounded-3xl font-black text-[10px] tracking-wide hover:bg-[#b50a0a] transition-all flex items-center gap-2 shadow-xl shadow-gray-200"
+                className="bg-black text-white px-6 py-4 rounded-3xl font-bold text-xs tracking-wide hover:bg-[#b50a0a] transition-all flex items-center gap-2 shadow-xl shadow-gray-200"
               >
                 {isSeeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Settings className="w-4 h-4" />}
                 Initialize Default Pages
               </button>
            )}
            <div className="bg-gray-50 px-6 py-4 rounded-3xl border border-gray-100">
-              <p className="text-[9px] font-black text-gray-900 tracking-wide mb-1 text-center">Manageable Views</p>
-              <p className="text-2xl font-black text-gray-900 tracking-tight text-center">{pages.length}</p>
+              <p className="text-xs font-bold text-gray-900 tracking-wide mb-1 text-center">Manageable Views</p>
+              <p className="text-2xl font-bold text-gray-900 tracking-tight text-center">{pages.length}</p>
            </div>
         </div>
 
@@ -92,8 +92,8 @@ export default function ManageUIClient({ pages }: ManageUIClientProps) {
       {pages.length === 0 && (
         <div className="bg-white p-20 rounded-[3.5rem] border border-gray-100 shadow-sm text-center">
            <Layout className="w-20 h-20 text-gray-100 mx-auto mb-8" />
-           <h3 className="text-2xl font-black text-gray-900 tracking-tighter">No manageable pages found</h3>
-           <p className="text-gray-900 text-[10px] font-black tracking-wide mt-2 px-12">It seems the database hasn't been initialized with the layout schema yet. Click the button above to seed the default system pages.</p>
+           <h3 className="text-2xl font-bold text-gray-900 tracking-tighter">No manageable pages found</h3>
+           <p className="text-gray-900 text-xs font-bold tracking-wide mt-2 px-12">It seems the database hasn't been initialized with the layout schema yet. Click the button above to seed the default system pages.</p>
         </div>
       )}
 
@@ -110,9 +110,9 @@ export default function ManageUIClient({ pages }: ManageUIClientProps) {
             </div>
             
             <div className="space-y-2">
-               <p className="text-[10px] font-black text-[#b50a0a] tracking-wide">{getCategory(page.slug)}</p>
-               <h3 className="text-2xl font-black text-gray-900 tracking-tighter group-hover: transition-all">{page.name}</h3>
-               <p className="text-[9px] font-bold text-gray-900 tracking-[0.2em]">{page.slug === '/' ? 'Main Entry Point' : page.slug}</p>
+               <p className="text-xs font-bold text-[#b50a0a] tracking-wide">{getCategory(page.slug)}</p>
+               <h3 className="text-2xl font-bold text-gray-900 tracking-tighter group-hover: transition-all">{page.name}</h3>
+               <p className="text-xs font-bold text-gray-900 tracking-[0.2em]">{page.slug === '/' ? 'Main Entry Point' : page.slug}</p>
             </div>
 
             <div className="mt-10 w-full pt-8 border-t border-gray-50 flex items-center justify-between">
@@ -126,7 +126,7 @@ export default function ManageUIClient({ pages }: ManageUIClientProps) {
                     </div>
                   )}
                </div>
-               <div className="flex items-center gap-2 text-[10px] font-black text-gray-900 tracking-wide opacity-0 group-hover:opacity-100 transition-all">
+               <div className="flex items-center gap-2 text-xs font-bold text-gray-900 tracking-wide opacity-0 group-hover:opacity-100 transition-all">
                   Customize
                   <ChevronRight className="w-4 h-4 text-[#b50a0a]" />
                </div>

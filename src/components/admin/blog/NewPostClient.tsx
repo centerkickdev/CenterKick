@@ -90,10 +90,10 @@ const LinkPreviewExtension = Node.create({
       [
         'div',
         { class: 'flex-1 min-w-0 space-y-2', style: 'text-align: left;' },
-        ['span', { class: 'text-[9px] font-black  text-[#b50a0a] tracking-wide block', style: 'margin-bottom: 4px;' }, 'External Link'],
-        ['h4', { class: 'text-base font-black text-slate-900  tracking-tight line-clamp-2 no-underline', style: 'margin: 0; color: #0f172a; text-decoration: none !important;' }, title],
-        ['p', { class: 'text-[11px] font-bold text-slate-500 line-clamp-2 leading-relaxed no-underline', style: 'margin: 4px 0 0 0; color: #64748b; text-decoration: none !important;' }, description],
-        ['span', { class: 'text-[9px] font-black text-slate-400  tracking-wide block', style: 'margin-top: 4px; color: #94a3b8;' }, domain],
+        ['span', { class: 'text-xs font-bold  text-[#b50a0a] tracking-wide block', style: 'margin-bottom: 4px;' }, 'External Link'],
+        ['h4', { class: 'text-base font-bold text-slate-900  tracking-tight line-clamp-2 no-underline', style: 'margin: 0; color: #0f172a; text-decoration: none !important;' }, title],
+        ['p', { class: 'text-xs font-bold text-slate-500 line-clamp-2 leading-relaxed no-underline', style: 'margin: 4px 0 0 0; color: #64748b; text-decoration: none !important;' }, description],
+        ['span', { class: 'text-xs font-bold text-slate-400  tracking-wide block', style: 'margin-top: 4px; color: #94a3b8;' }, domain],
       ],
       ...(image ? [
         [
@@ -117,7 +117,7 @@ function ImageCaptionInput({ editor }: { editor: any }) {
     <input
       type="text"
       placeholder="Image Caption / Photo Credit..."
-      className="px-3 py-1.5 bg-gray-50 rounded-xl text-[10px] font-bold text-black border border-gray-100 focus:ring-0 focus:border-[#b50a0a]/30 w-44"
+      className="px-3 py-1.5 bg-gray-50 rounded-xl text-xs font-bold text-black border border-gray-100 focus:ring-0 focus:border-[#b50a0a]/30 w-44"
       value={caption}
       onChange={(e) => setCaption(e.target.value)}
       onBlur={() => {
@@ -570,7 +570,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link 
             href="/admin/blog" 
-            className="flex items-center gap-2 text-[10px] font-black tracking-wide text-black hover:text-[#b50a0a] transition-all group shrink-0"
+            className="flex items-center gap-2 text-xs font-bold tracking-wide text-black hover:text-[#b50a0a] transition-all group shrink-0"
           >
             <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Post Dashboard
@@ -578,7 +578,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
           
           <div className="flex items-center gap-4">
             {lastSaved && (
-              <div className="hidden sm:flex items-center gap-2 text-[8px] font-black tracking-wide text-gray-400">
+              <div className="hidden sm:flex items-center gap-2 text-xs font-bold tracking-wide text-gray-400">
                 <History className="w-3 h-3" />
                 Last Saved {lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </div>
@@ -588,7 +588,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
               <button 
                 onClick={() => setShowSaveOptions(!showSaveOptions)}
                 disabled={isLoading}
-                className="flex items-center gap-3 px-6 py-2.5 bg-black text-white rounded-xl text-[10px] font-black tracking-wide hover:bg-[#b50a0a] transition-all shadow-lg active:scale-95 group"
+                className="flex items-center gap-3 px-6 py-2.5 bg-black text-white rounded-xl text-xs font-bold tracking-wide hover:bg-[#b50a0a] transition-all shadow-lg active:scale-95 group"
               >
                 {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
                 Save Post
@@ -606,14 +606,14 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                     <div className="p-2 space-y-1">
                       <button 
                         onClick={() => handleSaveAction('draft')}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-[10px] font-black tracking-wide text-gray-600 hover:bg-gray-50 hover:text-black rounded-lg transition-all"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold tracking-wide text-gray-600 hover:bg-gray-50 hover:text-black rounded-lg transition-all"
                       >
                         <FileText className="w-4 h-4 text-gray-400" />
                         Save to Draft
                       </button>
                       <button 
                         onClick={() => handleSaveAction('publish')}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-[10px] font-black tracking-wide text-gray-600 hover:bg-[#b50a0a]/5 hover:text-[#b50a0a] rounded-lg transition-all"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold tracking-wide text-gray-600 hover:bg-[#b50a0a]/5 hover:text-[#b50a0a] rounded-lg transition-all"
                       >
                         <Send className="w-4 h-4 text-[#b50a0a]/60" />
                         Publish Now
@@ -621,7 +621,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                       <div className="h-px bg-gray-50 my-1"></div>
                       <button 
                         onClick={() => handleSaveAction('delete')}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-[10px] font-black tracking-wide text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold tracking-wide text-red-600 hover:bg-red-50 rounded-lg transition-all"
                       >
                         <Trash className="w-4 h-4 text-red-500/60" />
                         Delete Post
@@ -640,11 +640,11 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
           <div className="p-4 md:p-8 sm:p-12 space-y-12">
              <div className="space-y-8">
                 <div className="space-y-2 group">
-                   <label className="text-[10px] font-black text-black tracking-wide ml-1 opacity-100">Title</label>
+                   <label className="text-xs font-bold text-black tracking-wide ml-1 opacity-100">Title</label>
                    <textarea 
                       rows={1}
                       placeholder="The Title of Your Story..." 
-                      className="w-full bg-transparent border-none p-0 text-xl sm:text-3xl font-black text-black placeholder:text-gray-200 focus:ring-0 leading-tight transition-all resize-none min-h-[1em] overflow-hidden"
+                      className="w-full bg-transparent border-none p-0 text-xl sm:text-3xl font-bold text-black placeholder:text-gray-200 focus:ring-0 leading-tight transition-all resize-none min-h-[1em] overflow-hidden"
                       value={formData.title}
                       onChange={(e) => {
                         setFormData({ ...formData, title: e.target.value });
@@ -655,22 +655,22 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                 </div>
  
                 <div className="space-y-2">
-                   <label className="text-[10px] font-black text-black tracking-wide ml-1">Slug</label>
-                   <div className="flex items-center gap-2 text-[10px] font-bold text-gray-900 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100 w-full max-w-2xl group focus-within:border-black/10 transition-all">
+                   <label className="text-xs font-bold text-black tracking-wide ml-1">Slug</label>
+                   <div className="flex items-center gap-2 text-xs font-bold text-gray-900 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100 w-full max-w-2xl group focus-within:border-black/10 transition-all">
                       <LinkIcon className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                       <span className="opacity-40 shrink-0">centerkick.com/news/</span>
                       <input 
                          type="text" 
                          maxLength={60}
                          placeholder="post-url-identifier"
-                         className={`bg-transparent border-none p-0 text-[10px] focus:ring-0 flex-1 font-black transition-colors ${
+                         className={`bg-transparent border-none p-0 text-xs focus:ring-0 flex-1 font-bold transition-colors ${
  slugStatus === 'unique' ? 'text-green-600' : 'text-black'
  }`}
                          value={formData.slug}
                          onChange={(e) => handleSlugChange(e.target.value)}
                       />
                       <div className="flex items-center gap-2 shrink-0 border-l border-gray-200 pl-3 ml-1">
-                        <span className="text-[8px] text-gray-400 font-black tracking-tighter">{formData.slug.length}/60</span>
+                        <span className="text-xs text-gray-400 font-bold tracking-tighter">{formData.slug.length}/60</span>
                         {slugStatus === 'checking' && <Loader2 className="w-3 h-3 animate-spin text-gray-400" />}
                         {slugStatus === 'unique' && <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" />}
                       </div>
@@ -679,13 +679,13 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
              </div>
 
              <div className="space-y-2">
-                <label className="text-[10px] font-black text-black tracking-wide ml-1">
+                <label className="text-xs font-bold text-black tracking-wide ml-1">
                   {isHighlight ? 'External Link (YouTube, etc.)' : 'Excerpt'} <span className="text-[#b50a0a] ml-0.5">*</span>
                 </label>
                 <textarea 
                    rows={isHighlight ? 1 : 3} 
                    placeholder={isHighlight ? "https://www.youtube.com/watch?v=..." : "Short summary for the index page..."}
-                   className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 text-[11px] font-bold focus:ring-4 focus:ring-black/5 transition-all text-black placeholder:text-gray-300 resize-none shadow-sm"
+                   className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 text-xs font-bold focus:ring-4 focus:ring-black/5 transition-all text-black placeholder:text-gray-300 resize-none shadow-sm"
                    value={formData.excerpt}
                    onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                 />
@@ -696,7 +696,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
              {!isHighlight && (
                <div className="space-y-8">
                   <div className="flex items-center justify-between ml-1 leading-none">
-                     <label className="text-[10px] font-black text-black tracking-wide">Body Content</label>
+                     <label className="text-xs font-bold text-black tracking-wide">Body Content</label>
                   </div>
                   <MenuBar />
                 <div className="relative editor-content-area">
@@ -711,7 +711,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                             setGalleryUsage('editor');
                             setIsGalleryOpen(true);
                           }}
-                          className="px-3 py-2 hover:bg-gray-50 rounded-xl text-black flex items-center gap-2 text-[9px] font-black tracking-wide transition-all shrink-0"
+                          className="px-3 py-2 hover:bg-gray-50 rounded-xl text-black flex items-center gap-2 text-xs font-bold tracking-wide transition-all shrink-0"
                         >
                           <ImageIcon className="w-3.5 h-3.5 text-[#b50a0a]" />
                           Replace
@@ -721,7 +721,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                         <div className="w-px h-4 bg-gray-100 self-center shrink-0"></div>
                         <button 
                           onClick={() => editor?.chain().focus().deleteSelection().run()}
-                          className="px-3 py-2 hover:bg-red-50 rounded-xl text-red-600 flex items-center gap-2 text-[9px] font-black tracking-wide transition-all shrink-0"
+                          className="px-3 py-2 hover:bg-red-50 rounded-xl text-red-600 flex items-center gap-2 text-xs font-bold tracking-wide transition-all shrink-0"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                           Delete
@@ -739,18 +739,18 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
               <div className="space-y-10">
                  <div className="space-y-2">
-                    <h4 className="text-[11px] font-black text-black tracking-[0.2em] flex items-center gap-2">
+                    <h4 className="text-xs font-bold text-black tracking-[0.2em] flex items-center gap-2">
                        <Settings className="w-4 h-4 text-[#b50a0a]" />
                        Post Settings
                     </h4>
-                    <p className="text-[9px] text-gray-500 font-black tracking-wide">Metadata & Discovery</p>
+                    <p className="text-xs text-gray-500 font-bold tracking-wide">Metadata & Discovery</p>
                  </div>
                  
                  <div className="space-y-4">
-                    <label className="text-[10px] font-black text-black tracking-wide ml-1">Category</label>
+                    <label className="text-xs font-bold text-black tracking-wide ml-1">Category</label>
                     <div className="relative group">
                       <select 
-                        className="w-full bg-white border border-gray-100 rounded-2xl p-4 text-[10px] font-black tracking-wide text-black focus:ring-4 focus:ring-black/5 transition-all appearance-none cursor-pointer pr-12 shadow-sm"
+                        className="w-full bg-white border border-gray-100 rounded-2xl p-4 text-xs font-bold tracking-wide text-black focus:ring-4 focus:ring-black/5 transition-all appearance-none cursor-pointer pr-12 shadow-sm"
                         value={formData.category_id}
                         onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
                       >
@@ -767,20 +767,20 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
 
                  {/* Backdating Published Date Selection */}
                  <div className="space-y-4">
-                    <label className="text-[10px] font-black text-black tracking-wide ml-1">Published Date (Backdate)</label>
+                    <label className="text-xs font-bold text-black tracking-wide ml-1">Published Date (Backdate)</label>
                     <input 
                        type="datetime-local" 
-                       className="w-full bg-white border border-gray-100 rounded-2xl p-4 text-[10px] font-black tracking-wide text-black focus:ring-4 focus:ring-black/5 transition-all shadow-sm"
+                       className="w-full bg-white border border-gray-100 rounded-2xl p-4 text-xs font-bold tracking-wide text-black focus:ring-4 focus:ring-black/5 transition-all shadow-sm"
                        value={formData.published_at}
                        onChange={(e) => setFormData({ ...formData, published_at: e.target.value })}
                     />
-                    <p className="text-[8px] font-bold text-gray-400 pl-1 tracking-wide">Leave blank to use current time on publish, or select a date/time to backdate.</p>
+                    <p className="text-xs font-bold text-gray-400 pl-1 tracking-wide">Leave blank to use current time on publish, or select a date/time to backdate.</p>
                  </div>
 
                  <div className="space-y-6">
                     <div className="flex items-center justify-between ml-1">
-                       <label className="text-[10px] font-black text-black tracking-wide">Tags</label>
-                       <span className="text-[9px] font-black text-gray-900 tracking-wide opacity-40">{selectedTags.length} SELECTED</span>
+                       <label className="text-xs font-bold text-black tracking-wide">Tags</label>
+                       <span className="text-xs font-bold text-gray-900 tracking-wide opacity-40">{selectedTags.length} SELECTED</span>
                     </div>
                     
                     <div className="flex flex-wrap gap-2.5 min-h-[60px] p-5 bg-white rounded-2xl border border-gray-100 shadow-sm relative group focus-within:border-[#b50a0a]/20 transition-all">
@@ -791,7 +791,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                             <button 
                               key={tag.id || tag.name}
                               onClick={() => setSelectedTags(selectedTags.filter(id => id !== (tag.id || tag.name)))}
-                              className="px-3 py-2 rounded-xl bg-gray-50 border border-gray-100 text-[10px] font-black text-black hover:bg-black hover:text-white transition-all flex items-center gap-2 group/tag shadow-sm tracking-tighter"
+                              className="px-3 py-2 rounded-xl bg-gray-50 border border-gray-100 text-xs font-bold text-black hover:bg-black hover:text-white transition-all flex items-center gap-2 group/tag shadow-sm tracking-tighter"
                             >
                               {tag.name}
                               <X className="w-3 h-3 text-gray-300 group-hover/tag:text-white transition-colors" />
@@ -799,7 +799,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                           );
                        })}
                        {selectedTags.length === 0 && (
-                          <span className="text-[10px] font-black text-gray-200 tracking-wide w-full text-center py-2 font-serif">Connect keywords...</span>
+                          <span className="text-xs font-bold text-gray-200 tracking-wide w-full text-center py-2 font-serif">Connect keywords...</span>
                        )}
                     </div>
                     
@@ -809,7 +809,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                           <input 
                              type="text" 
                              placeholder="Search tags..."
-                             className="flex-1 bg-transparent border-none text-[11px] font-bold text-black placeholder:text-gray-300 focus:ring-0 py-2.5"
+                             className="flex-1 bg-transparent border-none text-xs font-bold text-black placeholder:text-gray-300 focus:ring-0 py-2.5"
                              value={tagSearch}
                              onChange={(e) => {
                                setTagSearch(e.target.value);
@@ -835,7 +835,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                                  }}
                                  className="w-full text-left px-4 py-3 hover:bg-[#b50a0a] rounded-xl flex items-center justify-between group transition-all"
                                 >
-                                 <span className="text-[10px] font-black text-black group-hover:text-white tracking-wide">{tag.name}</span>
+                                 <span className="text-xs font-bold text-black group-hover:text-white tracking-wide">{tag.name}</span>
                                  <Plus className="w-4 h-4 text-gray-100 opacity-0 group-hover:opacity-100 transition-opacity" />
                                </button>
                              ))}
@@ -846,7 +846,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                                  disabled={isCreatingTag}
                                  className="w-full text-left px-4 py-4 bg-[#b50a0a]/5 hover:bg-[#b50a0a] rounded-xl flex items-center justify-between group border border-dashed border-[#b50a0a]/20 transition-all mt-4"
                                >
-                                 <span className="text-[10px] font-black text-[#b50a0a] group-hover:text-white">Add Tag: &quot;{tagSearch}&quot;</span>
+                                 <span className="text-xs font-bold text-[#b50a0a] group-hover:text-white">Add Tag: &quot;{tagSearch}&quot;</span>
                                  {isCreatingTag ? <Loader2 className="w-4 h-4 animate-spin text-[#b50a0a]" /> : <Plus className="w-4 h-4 text-[#b50a0a] group-hover:text-white" />}
                                </button>
                              )}
@@ -859,11 +859,11 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
 
               <div className="space-y-10">
                  <div className="space-y-2">
-                    <h4 className="text-[11px] font-black text-black tracking-[0.2em] flex items-center gap-2">
+                    <h4 className="text-xs font-bold text-black tracking-[0.2em] flex items-center gap-2">
                        <ImageIcon className="w-4 h-4 text-[#b50a0a]" />
                        Featured Image
                     </h4>
-                    <p className="text-[9px] text-gray-500 font-black tracking-wide">Article Cover View</p>
+                    <p className="text-xs text-gray-500 font-bold tracking-wide">Article Cover View</p>
                  </div>
 
                  <div 
@@ -877,7 +877,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                        <>
                           <NextImage src={formData.cover_image_url} className="w-full h-full object-cover" alt="Cover" fill />
                           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                             <p className="text-[10px] font-black text-white tracking-wide">Change Visual</p>
+                             <p className="text-xs font-bold text-white tracking-wide">Change Visual</p>
                           </div>
                           <button onClick={(e) => { e.stopPropagation(); setFormData({ ...formData, cover_image_url: '' }); }}
                             className="absolute top-4 right-4 w-9 h-9 bg-white/90 backdrop-blur-md rounded-2xl flex items-center justify-center text-black hover:bg-black hover:text-white transition-all shadow-xl"
@@ -891,8 +891,8 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                              <Plus className="w-6 h-6" />
                           </div>
                           <div className="space-y-1">
-                             <p className="text-[10px] font-black text-black tracking-wide group-hover:text-[#b50a0a] transition-colors">Select from Gallery</p>
-                             <p className="text-[8px] font-bold text-gray-400">Dimensions: 1920x1080 recommended</p>
+                             <p className="text-xs font-bold text-black tracking-wide group-hover:text-[#b50a0a] transition-colors">Select from Gallery</p>
+                             <p className="text-xs font-bold text-gray-400">Dimensions: 1920x1080 recommended</p>
                           </div>
                        </div>
                     )}
@@ -903,34 +903,34 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
             {/* SEO Section: Full Width */}
             <div className="p-4 md:p-8 sm:p-12 space-y-12 border-t border-gray-100 bg-white shadow-[0_-8px_30px_rgba(0,0,0,0.02)] mt-24">
                <div className="space-y-2">
-                  <h4 className="text-[11px] font-black text-black tracking-[0.2em] flex items-center gap-2">
+                  <h4 className="text-xs font-bold text-black tracking-[0.2em] flex items-center gap-2">
                      <Globe className="w-4 h-4 text-[#b50a0a]" />
                      SEO Meta Settings
                   </h4>
-                  <p className="text-[9px] text-gray-500 font-black tracking-wide">The algorithm&apos;s perspective</p>
+                  <p className="text-xs text-gray-500 font-bold tracking-wide">The algorithm&apos;s perspective</p>
                </div>
                
                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                   <div className="space-y-4">
-                     <label className="text-[10px] font-black text-black tracking-wide ml-1">Meta Title</label>
+                     <label className="text-xs font-bold text-black tracking-wide ml-1">Meta Title</label>
                      <input 
                         type="text" 
                         placeholder="SEO hook title..."
-                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-[10px] font-bold text-black focus:ring-4 focus:ring-black/5 shadow-inner transition-all"
+                        className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-xs font-bold text-black focus:ring-4 focus:ring-black/5 shadow-inner transition-all"
                         value={formData.meta_title}
                         onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
                      />
                   </div>
                    <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                         <label className="text-[10px] font-black text-black tracking-wide ml-1">Meta Description</label>
-                         <span className="text-[8px] font-black text-gray-400 tracking-wide">{formData.meta_description.length}/140</span>
+                         <label className="text-xs font-bold text-black tracking-wide ml-1">Meta Description</label>
+                         <span className="text-xs font-bold text-gray-400 tracking-wide">{formData.meta_description.length}/140</span>
                       </div>
                       <textarea 
                          rows={1}
                          maxLength={140}
                          placeholder="Index page snippet..."
-                         className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-[10px] font-bold text-black focus:ring-4 focus:ring-black/5 shadow-inner transition-all resize-none overflow-hidden"
+                         className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-xs font-bold text-black focus:ring-4 focus:ring-black/5 shadow-inner transition-all resize-none overflow-hidden"
                          value={formData.meta_description}
                          onChange={(e) => {
                            setFormData({ ...formData, meta_description: e.target.value });

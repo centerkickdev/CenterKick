@@ -89,8 +89,8 @@ export default async function AdminLayout({
                      <Shield className="text-white w-6 h-6" />
                   </div>
                   <div className="flex flex-col">
-                     <span className="text-xl font-black text-white tracking-tighter leading-none">Admin</span>
-                     <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide mt-1">Control Panel</span>
+                     <span className="text-xl font-bold text-white tracking-tighter leading-none">Admin</span>
+                     <span className="text-xs font-bold text-[#b50a0a] tracking-wide mt-1">Control Panel</span>
                   </div>
                </>
             )}
@@ -118,10 +118,10 @@ export default async function AdminLayout({
             <NotificationBell initialNotifications={notifications || []} />
             <div className="flex items-center gap-3 pl-4 sm:pl-6 border-l border-gray-100">
                <div className="text-right hidden md:block">
-                  <p className="text-[10px] font-black text-gray-900">{user?.email}</p>
-                  <p className="text-[8px] font-bold text-[#b50a0a] tracking-[0.2em]">{userRecord?.role || 'Admin'}</p>
+                  <p className="text-xs font-bold text-gray-900">{user?.email}</p>
+                  <p className="text-xs font-bold text-[#b50a0a] tracking-[0.2em]">{userRecord?.role || 'Admin'}</p>
                </div>
-               <div className="w-10 h-10 rounded-xl bg-gray-900 border-2 border-gray-800 flex items-center justify-center font-black text-white shadow-lg shrink-0">
+               <div className="w-10 h-10 rounded-xl bg-gray-900 border-2 border-gray-800 flex items-center justify-center font-bold text-white shadow-lg shrink-0">
                   {user?.email?.[0]?.toUpperCase() || 'U'}
                </div>
             </div>

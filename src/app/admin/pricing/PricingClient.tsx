@@ -42,13 +42,13 @@ export function PricingClient({ initialPlans }: { initialPlans: any[] }) {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-black text-gray-900 tracking-tight">Active Plans</h2>
+        <h2 className="text-xl font-bold text-gray-900 tracking-tight">Active Plans</h2>
         <button 
           onClick={() => {
             setEditingPlan(null);
             setIsModalOpen(true);
           }}
-          className="bg-[#b50a0a] text-white px-4 py-2 rounded-lg font-black text-[11px] tracking-wide hover:bg-black transition-all flex items-center gap-2"
+          className="bg-[#b50a0a] text-white px-4 py-2 rounded-lg font-bold text-xs tracking-wide hover:bg-black transition-all flex items-center gap-2"
         >
           <Plus className="w-4 h-4" /> Add Plan
         </button>
@@ -58,7 +58,7 @@ export function PricingClient({ initialPlans }: { initialPlans: any[] }) {
         {plans.map(plan => (
           <div key={plan.id} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative overflow-hidden group">
             {!plan.is_active && (
-              <div className="absolute top-4 right-4 px-2 py-1 bg-gray-100 text-gray-500 text-[10px] font-black rounded uppercase tracking-wider">
+              <div className="absolute top-4 right-4 px-2 py-1 bg-gray-100 text-gray-500 text-xs font-bold rounded uppercase tracking-wider">
                 Inactive
               </div>
             )}
@@ -67,13 +67,13 @@ export function PricingClient({ initialPlans }: { initialPlans: any[] }) {
                 <Shield className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[10px] font-black tracking-widest text-gray-400 uppercase">{plan.role}</p>
-                <h3 className="text-lg font-black text-gray-900">{plan.plan_name}</h3>
+                <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">{plan.role}</p>
+                <h3 className="text-lg font-bold text-gray-900">{plan.plan_name}</h3>
               </div>
             </div>
             
             <div className="mb-6">
-              <span className="text-3xl font-black text-gray-900">${plan.amount}</span>
+              <span className="text-3xl font-bold text-gray-900">${plan.amount}</span>
               <span className="text-gray-500 text-sm font-bold"> / {plan.duration_months} mo</span>
             </div>
 
@@ -83,7 +83,7 @@ export function PricingClient({ initialPlans }: { initialPlans: any[] }) {
                   setEditingPlan(plan);
                   setIsModalOpen(true);
                 }}
-                className="flex-1 bg-gray-50 text-gray-900 px-4 py-2 rounded-lg font-black text-[11px] tracking-wide hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
+                className="flex-1 bg-gray-50 text-gray-900 px-4 py-2 rounded-lg font-bold text-xs tracking-wide hover:bg-gray-100 transition-all flex items-center justify-center gap-2"
               >
                 <Edit className="w-3 h-3" /> Edit
               </button>
@@ -108,7 +108,7 @@ export function PricingClient({ initialPlans }: { initialPlans: any[] }) {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col">
             <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-              <h3 className="font-black text-lg text-gray-900">{editingPlan ? 'Edit Plan' : 'New Plan'}</h3>
+              <h3 className="font-bold text-lg text-gray-900">{editingPlan ? 'Edit Plan' : 'New Plan'}</h3>
               <button onClick={() => setIsModalOpen(false)} className="p-1 hover:bg-gray-200 rounded-lg transition-colors">
                 <X className="w-5 h-5 text-gray-500" />
               </button>
@@ -118,24 +118,24 @@ export function PricingClient({ initialPlans }: { initialPlans: any[] }) {
               {editingPlan && <input type="hidden" name="id" value={editingPlan.id} />}
               
               <div className="space-y-1">
-                <label className="text-[10px] font-black text-gray-900 uppercase tracking-wide">Target Role</label>
+                <label className="text-xs font-bold text-gray-900 uppercase tracking-wide">Target Role</label>
                 <select name="role" defaultValue={editingPlan?.role || 'player'} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a]">
                   {roles.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-black text-gray-900 uppercase tracking-wide">Plan Name</label>
+                <label className="text-xs font-bold text-gray-900 uppercase tracking-wide">Plan Name</label>
                 <input required type="text" name="plan_name" defaultValue={editingPlan?.plan_name} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a]" placeholder="e.g. Pro Player Yearly" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black text-gray-900 uppercase tracking-wide">Amount ($)</label>
+                  <label className="text-xs font-bold text-gray-900 uppercase tracking-wide">Amount ($)</label>
                   <input required type="number" step="0.01" name="amount" defaultValue={editingPlan?.amount} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a]" placeholder="0.00" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black text-gray-900 uppercase tracking-wide">Duration (Months)</label>
+                  <label className="text-xs font-bold text-gray-900 uppercase tracking-wide">Duration (Months)</label>
                   <input required type="number" min="1" name="duration_months" defaultValue={editingPlan?.duration_months || 12} className="w-full bg-gray-50 border border-gray-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a]" />
                 </div>
               </div>
@@ -148,7 +148,7 @@ export function PricingClient({ initialPlans }: { initialPlans: any[] }) {
               </div>
 
               <div className="pt-4">
-                <button type="submit" className="w-full bg-[#b50a0a] text-white py-3 rounded-xl font-black tracking-wide hover:bg-black transition-colors">
+                <button type="submit" className="w-full bg-[#b50a0a] text-white py-3 rounded-xl font-bold tracking-wide hover:bg-black transition-colors">
                   Save Plan
                 </button>
               </div>

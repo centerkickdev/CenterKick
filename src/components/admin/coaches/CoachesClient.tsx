@@ -172,14 +172,14 @@ export function CoachesClient({
                 placeholder="Search name, email or league..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 border-none rounded-lg text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 placeholder:text-gray-900"
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 border-none rounded-lg text-xs font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 placeholder:text-gray-900"
               />
            </div>
            <div className="flex flex-wrap gap-2">
               <select 
                 onChange={(e) => handleFilterChange('position', e.target.value)}
                 value={searchParams.get('position') || ''}
-                className="bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
+                className="bg-gray-50 border-none rounded-lg text-xs font-bold tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
               >
                  <option value="" className="text-gray-900">Role</option>
                  <option value="Head Coach">Head Coach</option>
@@ -190,7 +190,7 @@ export function CoachesClient({
               <select 
                 onChange={(e) => handleFilterChange('gender', e.target.value)}
                 value={searchParams.get('gender') || ''}
-                className="bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
+                className="bg-gray-50 border-none rounded-lg text-xs font-bold tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
               >
                  <option value="" className="text-gray-900">Gen</option>
                  <option value="Male" className="text-gray-900">Male</option>
@@ -201,7 +201,7 @@ export function CoachesClient({
                 placeholder="Age"
                 onChange={(e) => handleFilterChange('age', e.target.value)}
                 value={searchParams.get('age') || ''}
-                className="w-16 bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-300"
+                className="w-16 bg-gray-50 border-none rounded-lg text-xs font-bold tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-300"
               />
               <div className="relative">
                  <input 
@@ -209,7 +209,7 @@ export function CoachesClient({
                    placeholder="Country"
                    onChange={(e) => handleFilterChange('country', e.target.value)}
                    value={searchParams.get('country') || ''}
-                   className="w-32 bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide pl-3 pr-8 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-900"
+                   className="w-32 bg-gray-50 border-none rounded-lg text-xs font-bold tracking-wide pl-3 pr-8 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-900"
                  />
                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[#b50a0a]" />
               </div>
@@ -218,7 +218,7 @@ export function CoachesClient({
                     <option key={c.id} value={c.name} />
                  ))}
               </datalist>
-              <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg font-black text-[9px] tracking-wide hover:bg-[#b50a0a] transition-all">
+              <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg font-bold text-xs tracking-wide hover:bg-[#b50a0a] transition-all">
                 Search
               </button>
            </div>
@@ -229,10 +229,10 @@ export function CoachesClient({
           <table className="w-full text-left text-base text-gray-600 whitespace-nowrap">
             <thead className="bg-[#f8f9fa] border-b border-gray-100">
               <tr>
-                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Coach Information</th>
-                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Specialization</th>
-                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">League / Credentials</th>
-                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a] text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Coach Information</th>
+                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Specialization</th>
+                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">League / Credentials</th>
+                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a] text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -240,7 +240,7 @@ export function CoachesClient({
                 <tr>
                   <td colSpan={4} className="px-6 py-20 text-center">
                      <UserCheck className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                     <p className="text-[10px] font-black tracking-wide text-gray-400">No coaches matches your search criteria.</p>
+                     <p className="text-xs font-bold tracking-wide text-gray-400">No coaches matches your search criteria.</p>
                   </td>
                 </tr>
               ) : (
@@ -252,37 +252,37 @@ export function CoachesClient({
                   >
                     <td className="px-6 py-4">
                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center font-black text-white text-sm shrink-0">
+                          <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white text-sm shrink-0">
                              {coach.email?.[0]?.toUpperCase() || 'C'}
                           </div>
                           <div className="min-w-0">
-                             <p className="font-black text-gray-900 leading-none truncate text-[11px] mb-1">{coach.first_name} {coach.last_name}</p>
+                             <p className="font-bold text-gray-900 leading-none truncate text-xs mb-1">{coach.first_name} {coach.last_name}</p>
                              <div className="flex items-center gap-1.5">
-                                <span className="text-[8px] font-bold text-gray-400 tracking-wide flex items-center gap-1">
+                                <span className="text-xs font-bold text-gray-400 tracking-wide flex items-center gap-1">
                                    <FlagIcon country={coach.country || ''} className="w-3 h-2" /> {coach.country || 'N/A'}
                                 </span>
-                                <span className="text-[8px] font-bold text-gray-400">•</span>
-                                <span className="text-[8px] font-bold text-gray-400 tracking-wide">{coach.age || '--'} YRS</span>
+                                <span className="text-xs font-bold text-gray-400">â€¢</span>
+                                <span className="text-xs font-bold text-gray-400 tracking-wide">{coach.age || '--'} YRS</span>
                              </div>
                           </div>
                        </div>
                     </td>
                     <td className="px-6 py-4">
                        <div className="flex flex-col">
-                          <span className="text-[10px] font-black text-gray-900 tracking-tighter">{coach.position || 'Head Coach'}</span>
-                          <span className="text-[8px] font-bold text-gray-400 tracking-wide mt-0.5">Expert Member</span>
+                          <span className="text-xs font-bold text-gray-900 tracking-tighter">{coach.position || 'Head Coach'}</span>
+                          <span className="text-xs font-bold text-gray-400 tracking-wide mt-0.5">Expert Member</span>
                        </div>
                     </td>
                     <td className="px-6 py-4">
                        <div className="flex flex-col">
-                          <span className="text-[10px] font-black text-gray-900 tracking-tighter truncate max-w-full max-w-[150px]">{coach.league || 'Independent'}</span>
+                          <span className="text-xs font-bold text-gray-900 tracking-tighter truncate max-w-full max-w-[150px]">{coach.league || 'Independent'}</span>
                           <div className="flex items-center gap-2 mt-1">
                              {role === 'operations' ? (
                                <RestrictedAccessInline />
                              ) : (
                                <>
                                  <div className={`w-1.5 h-1.5 rounded-full ${coach.is_subscribed ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'bg-gray-300'}`}></div>
-                                 <span className={`text-[8px] font-black tracking-wide ${coach.is_subscribed ? 'text-green-600' : 'text-gray-400'}`}>
+                                 <span className={`text-xs font-bold tracking-wide ${coach.is_subscribed ? 'text-green-600' : 'text-gray-400'}`}>
                                     {coach.is_subscribed ? 'PRO' : 'Standard'}
                                  </span>
                                </>
@@ -304,7 +304,7 @@ export function CoachesClient({
 
         {/* Pagination */}
         <div className="flex items-center justify-between pt-6 border-t border-gray-50">
-           <p className="text-[10px] font-black text-gray-400 tracking-wide">
+           <p className="text-xs font-bold text-gray-400 tracking-wide">
               Showing <span className="text-gray-900">{initialCoaches.length}</span> of <span className="text-gray-900">{totalCount}</span> Coaches
            </p>
            <div className="flex items-center gap-3">
@@ -316,7 +316,7 @@ export function CoachesClient({
                       else showToast(res.error || "Migration failed", "error");
                    }
                 }}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-5 py-3 rounded-xl font-black text-[9px] tracking-wide transition-all flex items-center gap-2"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-5 py-3 rounded-xl font-bold text-xs tracking-wide transition-all flex items-center gap-2"
              >
                 <RefreshCcw className="w-3.5 h-3.5" /> Fix Slugs
              </button>
@@ -334,7 +334,7 @@ export function CoachesClient({
                     <button 
                       key={i} 
                       onClick={() => navigateToPage(i + 1)}
-                      className={`w-8 h-8 rounded-lg text-[10px] font-black transition-all ${currentPage === i + 1 ? 'bg-[#b50a0a] text-white' : 'hover:bg-gray-50 text-gray-400'}`}
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${currentPage === i + 1 ? 'bg-[#b50a0a] text-white' : 'hover:bg-gray-50 text-gray-400'}`}
                     >
                        {i + 1}
                     </button>
@@ -357,10 +357,10 @@ export function CoachesClient({
            <div className="bg-white w-full max-w-xl max-h-[90vh] rounded-[1.5rem] shadow-2xl overflow-hidden relative flex flex-col">
               <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
                  <div>
-                    <h3 className="text-xl font-black tracking-tighter">
+                    <h3 className="text-xl font-bold tracking-tighter">
                        <span className="text-gray-900">Enroll New</span> <span className="text-[#b50a0a]">Coach</span>
                     </h3>
-                    <p className="text-[8px] font-bold text-gray-900 tracking-wide mt-1">Direct enrollment & automated onboarding</p>
+                    <p className="text-xs font-bold text-gray-900 tracking-wide mt-1">Direct enrollment & automated onboarding</p>
                  </div>
                  <button onClick={closeAddModal} className="w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center hover:bg-gray-100 transition-all border border-gray-100">
                     <X className="w-4 h-4 text-gray-400" />
@@ -382,15 +382,15 @@ export function CoachesClient({
                }} className="p-6 space-y-4 overflow-y-auto">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                      <div className="space-y-1">
-                        <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">First Name</label>
-                        <input name="first_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900" placeholder="Ex: John" />
+                        <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">First Name</label>
+                        <input name="first_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900" placeholder="Ex: John" />
                      </div>
                      <div className="space-y-1">
-                        <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Last Name</label>
-                        <input name="last_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900" placeholder="Ex: Doe" />
+                        <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Last Name</label>
+                        <input name="last_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900" placeholder="Ex: Doe" />
                      </div>
                       <div className="md:col-span-2 space-y-1">
-                         <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1 flex justify-between">
+                         <label className="text-xs font-bold text-gray-900 tracking-wide ml-1 flex justify-between">
                             <span>Email Address</span>
                             {isCheckingEmail && <span className="text-[7px] text-[#b50a0a] animate-pulse">Checking status...</span>}
                          </label>
@@ -400,24 +400,24 @@ export function CoachesClient({
                            type="email" 
                            value={email}
                            onChange={(e) => setEmail(e.target.value)}
-                           className={`w-full bg-gray-50 border-none rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-900 ${emailStatus === 'REGISTERED' ? 'ring-1 ring-red-500 bg-red-50/10' : ''}`} 
+                           className={`w-full bg-gray-50 border-none rounded-xl p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-900 ${emailStatus === 'REGISTERED' ? 'ring-1 ring-red-500 bg-red-50/10' : ''}`} 
                            placeholder="coach@centerkick.com" 
                          />
                          {emailStatus === 'REGISTERED' && (
                            <div className="flex items-center gap-2 mt-1 px-2 py-1 bg-red-50 rounded-lg border border-red-100">
                               <AlertCircle className="w-3 h-3 text-red-500" />
-                              <p className="text-[8px] font-black text-red-600 tracking-wide">Email already registered as a member.</p>
+                              <p className="text-xs font-bold text-red-600 tracking-wide">Email already registered as a member.</p>
                            </div>
                          )}
                          {emailStatus === 'PROSPECT' && (
                            <div className="flex items-center justify-between mt-1 px-2 py-1 bg-blue-50 rounded-lg border border-blue-100">
                               <div className="flex items-center gap-2">
                                  <Info className="w-3 h-3 text-blue-500" />
-                                 <p className="text-[8px] font-black text-blue-600 tracking-wide">Enrolled as prospect (Not yet joined).</p>
+                                 <p className="text-xs font-bold text-blue-600 tracking-wide">Enrolled as prospect (Not yet joined).</p>
                               </div>
                               <button 
                                  onClick={handleResendInv}
-                                 className="text-[8px] font-black underline text-[#b50a0a] hover:text-black tracking-wide"
+                                 className="text-xs font-bold underline text-[#b50a0a] hover:text-black tracking-wide"
                               >
                                  Resend Invitation?
                               </button>
@@ -426,8 +426,8 @@ export function CoachesClient({
                       </div>
                      <div className="p-4 bg-gray-50/50 rounded-2xl md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-100">
                          <div className="space-y-1">
-                            <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Coaching Role</label>
-                            <select name="position" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900">
+                            <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Coaching Role</label>
+                            <select name="position" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900">
                                <option value="Head Coach">Head Coach</option>
                                <option value="Assistant Coach">Assistant Coach</option>
                                <option value="Goalkeeping Coach">Goalkeeping Coach</option>
@@ -437,10 +437,10 @@ export function CoachesClient({
                             </select>
                          </div>
                          <div className="space-y-1">
-                            <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">League</label>
+                            <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">League</label>
                             <select 
                               name="league" 
-                              className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900"
+                              className="w-full bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900"
                               onChange={(e) => setSelectedLeague(e.target.value)}
                               value={selectedLeague}
                             >
@@ -451,8 +451,8 @@ export function CoachesClient({
                             </select>
                          </div>
                          <div className="space-y-1">
-                            <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Current Club</label>
-                            <select name="current_club" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900">
+                            <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Current Club</label>
+                            <select name="current_club" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900">
                                <option value="">Unattached</option>
                                {clubs.filter((c: any) => c.leagues?.name === selectedLeague).map((club: any) => (
                                  <option key={club.id} value={club.name}>{club.name}</option>
@@ -460,7 +460,7 @@ export function CoachesClient({
                             </select>
                          </div>
                          <div className="space-y-1">
-                            <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Country</label>
+                            <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Country</label>
                             <div className="relative group">
                                <div className="absolute left-3 top-1/2 -translate-y-1/2">
                                  <FlagIcon 
@@ -475,7 +475,7 @@ export function CoachesClient({
                                  type="text" 
                                  value={selectedCountry}
                                  onChange={(e) => setSelectedCountry(e.target.value)}
-                                 className="w-full bg-white border border-gray-100 rounded-lg pl-9 pr-3 py-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-900" 
+                                 className="w-full bg-white border border-gray-100 rounded-lg pl-9 pr-3 py-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-900" 
                                  placeholder="Ex: Nigeria" 
                                />
                             </div>
@@ -488,8 +488,8 @@ export function CoachesClient({
 
                          {/* Agent Selection */}
                          <div className="space-y-1">
-                            <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Assigned Agent</label>
-                            <select name="agent_id" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900">
+                            <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Assigned Agent</label>
+                            <select name="agent_id" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900">
                                <option value="">Independent (No Agent)</option>
                                {agents.map((a: any) => (
                                  <option key={a.id} value={a.user_id}>{a.first_name} {a.last_name} {a.agency_name ? `(${a.agency_name})` : ''}</option>
@@ -499,16 +499,16 @@ export function CoachesClient({
 
                          <div className="space-y-1">
                             <div className="flex items-center justify-between ml-1">
-                               <label className="text-[8px] font-black text-red-500 tracking-wide">Birthdate</label>
+                               <label className="text-xs font-bold text-red-500 tracking-wide">Birthdate</label>
                                {calculatedAge && (
-                                  <span className="text-[9px] font-black text-[#b50a0a] animate-in fade-in zoom-in duration-300">
+                                  <span className="text-xs font-bold text-[#b50a0a] animate-in fade-in zoom-in duration-300">
                                      {calculatedAge}
                                   </span>
                                )}
                             </div>
                             <div className="flex gap-2">
                                <select 
-                                 className="flex-1 bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900"
+                                 className="flex-1 bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900"
                                  onChange={(e) => setDob(prev => ({ ...prev, day: e.target.value }))}
                                  required
                                >
@@ -518,7 +518,7 @@ export function CoachesClient({
                                   ))}
                                </select>
                                <select 
-                                 className="flex-1 bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900"
+                                 className="flex-1 bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900"
                                  onChange={(e) => setDob(prev => ({ ...prev, month: e.target.value }))}
                                  required
                                >
@@ -528,7 +528,7 @@ export function CoachesClient({
                                   ))}
                                </select>
                                <select 
-                                 className="flex-1 bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900"
+                                 className="flex-1 bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-gray-900"
                                  onChange={(e) => setDob(prev => ({ ...prev, year: e.target.value }))}
                                  required
                                >
@@ -542,19 +542,19 @@ export function CoachesClient({
                          </div>
                     </div>
                     <div className="space-y-1 md:col-span-2">
-                       <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Gender</label>
+                       <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Gender</label>
                        <div className="flex gap-2">
                           {['Male', 'Female'].map(g => (
                             <label key={g} className="flex-1 flex items-center justify-center gap-2 p-2.5 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-all border border-transparent has-[:checked]:border-[#b50a0a] has-[:checked]:bg-red-50/30">
                                <input type="radio" name="gender" value={g} defaultChecked={g === 'Male'} className="w-3 translate-y-[1px] accent-[#b50a0a]" />
-                               <span className="text-[10px] font-black tracking-wide text-gray-900">{g}</span>
+                               <span className="text-xs font-bold tracking-wide text-gray-900">{g}</span>
                             </label>
                           ))}
                        </div>
                     </div>
                  </div>
                  <div className="pt-2">
-                    <button type="submit" className="w-full bg-[#b50a0a] text-white py-3.5 rounded-xl font-black tracking-wide shadow-xl shadow-red-900/10 hover:bg-black transition-all text-[10px] active:scale-[0.98]">
+                    <button type="submit" className="w-full bg-[#b50a0a] text-white py-3.5 rounded-xl font-bold tracking-wide shadow-xl shadow-red-900/10 hover:bg-black transition-all text-xs active:scale-[0.98]">
                         Create Profile
                     </button>
                     <p className="text-[7px] text-gray-900 text-center font-bold tracking-wide mt-2 opacity-60">An automated enrollment email will be sent immediately.</p>

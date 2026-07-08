@@ -87,7 +87,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
-                           className={`px-8 py-6 text-[11px] font-black tracking-[0.2em] transition-all relative shrink-0 ${
+                           className={`px-8 py-6 text-xs font-bold tracking-[0.2em] transition-all relative shrink-0 ${
  activeTab === tab ? "text-[#a20000]" : "text-gray-400 hover:text-gray-600"
  }`}
                         >
@@ -99,7 +99,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                      ))}
                   </div>
                   <div className="hidden lg:flex items-center gap-4">
-                     <button className="bg-[#a20000] hover:bg-[#8a0000] text-white px-6 py-2.5 rounded-lg text-[10px] font-bold tracking-wide transition-all">
+                     <button className="bg-[#a20000] hover:bg-[#8a0000] text-white px-6 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all">
                         Hire Coach
                      </button>
                   </div>
@@ -113,7 +113,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                      
                      <section>
                         <div className="mb-12">
-                           <h2 className="text-3xl font-black text-gray-700 tracking-tighter inline-block relative">
+                           <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative">
                               Performance Status
                               <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-gray-300"></span>
                            </h2>
@@ -123,7 +123,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                            <div className="space-y-12">
                               <div className="relative group">
                                  <div className="mb-6">
-                                    <h3 className="text-2xl font-black text-[#a20000] tracking-tight">2023/2024 Season</h3>
+                                    <h3 className="text-2xl font-bold text-[#a20000] tracking-tight">2023/2024 Season</h3>
                                     <p className="text-sm font-bold text-gray-400 tracking-wide mt-2 underline decoration-[#a20000]/20 underline-offset-4 decoration-2">Manager Performance Statistics</p>
                                  </div>
                               </div>
@@ -134,8 +134,8 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                                        <Users className="w-6 h-6 text-[#a20000]" />
                                     </div>
                                     <div>
-                                       <span className="text-3xl font-black text-gray-900 block leading-none">{stats.matches}</span>
-                                       <span className="text-[10px] font-bold text-gray-400 tracking-wide">Matches</span>
+                                       <span className="text-3xl font-bold text-gray-900 block leading-none">{stats.matches}</span>
+                                       <span className="text-xs font-bold text-gray-400 tracking-wide">Matches</span>
                                     </div>
                                  </div>
                                  <div className="flex items-center gap-4 bg-gray-50 p-6 rounded-3xl border border-gray-100">
@@ -143,8 +143,8 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                                        <Target className="w-6 h-6 text-[#a20000]" />
                                     </div>
                                     <div>
-                                       <span className="text-3xl font-black text-gray-900 block leading-none">{stats.goalsFor}:{stats.goalsAgainst}</span>
-                                       <span className="text-[10px] font-bold text-gray-400 tracking-wide">Goals F/A</span>
+                                       <span className="text-3xl font-bold text-gray-900 block leading-none">{stats.goalsFor}:{stats.goalsAgainst}</span>
+                                       <span className="text-xs font-bold text-gray-400 tracking-wide">Goals F/A</span>
                                     </div>
                                  </div>
                                  <div className="flex items-center gap-4 bg-gray-50 p-6 rounded-3xl border border-gray-100">
@@ -152,8 +152,8 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                                        <TrendingUp className="w-6 h-6 text-[#a20000]" />
                                     </div>
                                     <div>
-                                       <span className="text-3xl font-black text-gray-900 block leading-none">{stats.wins}:{stats.draws}:{stats.losses}</span>
-                                       <span className="text-[10px] font-bold text-gray-400 tracking-wide">W/D/L</span>
+                                       <span className="text-3xl font-bold text-gray-900 block leading-none">{stats.wins}:{stats.draws}:{stats.losses}</span>
+                                       <span className="text-xs font-bold text-gray-400 tracking-wide">W/D/L</span>
                                     </div>
                                  </div>
                                  <div className="flex items-center gap-4 bg-gray-50 p-6 rounded-3xl border border-gray-100">
@@ -161,8 +161,8 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                                        <Trophy className="w-6 h-6 text-[#a20000]" />
                                     </div>
                                     <div>
-                                       <span className="text-3xl font-black text-gray-900 block leading-none">{stats.points}</span>
-                                       <span className="text-[10px] font-bold text-gray-400 tracking-wide">Points</span>
+                                       <span className="text-3xl font-bold text-gray-900 block leading-none">{stats.points}</span>
+                                       <span className="text-xs font-bold text-gray-400 tracking-wide">Points</span>
                                     </div>
                                  </div>
                               </div>
@@ -170,7 +170,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
 
                            <div className="relative group">
                               <div className="mb-6">
-                                 <h3 className="text-xl font-black text-gray-800 tracking-tighter underline underline-offset-8 decoration-[#a20000]/30">Primary Formation</h3>
+                                 <h3 className="text-xl font-bold text-gray-800 tracking-tighter underline underline-offset-8 decoration-[#a20000]/30">Primary Formation</h3>
                               </div>
                               <div className="bg-[#1a472a] rounded-2xl overflow-hidden aspect-[4/3] shadow-2xl relative border-4 border-gray-200">
                                  <div className="absolute inset-0 flex items-center justify-center p-8">
@@ -180,8 +180,8 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                                     </div>
                                  </div>
                                  <div className="absolute bottom-6 left-8 bg-black/40 backdrop-blur-md px-4 py-2 rounded-lg">
-                                    <span className="text-[10px] font-bold text-white tracking-wide block">Main Formation</span>
-                                    <span className="text-2xl font-black text-white leading-none">{profile.formation || "4-3-3"}</span>
+                                    <span className="text-xs font-bold text-white tracking-wide block">Main Formation</span>
+                                    <span className="text-2xl font-bold text-white leading-none">{profile.formation || "4-3-3"}</span>
                                  </div>
                               </div>
                            </div>
@@ -190,7 +190,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
 
                      <section>
                         <div className="mb-12">
-                           <h2 className="text-3xl font-black text-gray-700 tracking-tighter inline-block relative">
+                           <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative">
                               Profile Details
                               <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-gray-300"></span>
                            </h2>
@@ -205,7 +205,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                                  value: profile.agent?.profiles ? (
                                    <Link href={`/agents/${profile.agent.id}`} className="hover:text-[#a20000] transition-all underline">
                                      {profile.agent.profiles.first_name} {profile.agent.profiles.last_name}
-                                     <span className="text-[10px] ml-2 text-gray-400 font-bold">({profile.agent.profiles.agency_name || 'Independent'})</span>
+                                     <span className="text-xs ml-2 text-gray-400 font-bold">({profile.agent.profiles.agency_name || 'Independent'})</span>
                                    </Link>
                                  ) : "Independent" 
                               },
@@ -218,8 +218,8 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                               { label: "Technical License", value: profile.license || "Professional" }
                            ].map((item, idx) => (
                               <div key={idx} className="flex items-center justify-between border-b border-gray-200/50 pb-4">
-                                 <span className="text-[11px] font-bold text-gray-400 tracking-wide">{item.label}</span>
-                                 <span className="text-[13px] font-black text-gray-900">{item.value}</span>
+                                 <span className="text-xs font-bold text-gray-400 tracking-wide">{item.label}</span>
+                                 <span className="text-[13px] font-bold text-gray-900">{item.value}</span>
                               </div>
                            ))}
                         </div>
@@ -230,7 +230,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                {activeTab === "Bio" && (
                   <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
                      <div className="mb-12">
-                        <h2 className="text-3xl font-black text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
+                        <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
                            Biography
                         </h2>
                      </div>
@@ -247,7 +247,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                {activeTab === "Statistics" && (
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                      <div className="mb-12">
-                        <h2 className="text-3xl font-black text-gray-700 tracking-tighter inline-block relative">
+                        <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative">
                            Detailed Statistics
                            <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-gray-300"></span>
                         </h2>
@@ -266,7 +266,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
             <div className="bg-[#fcfafa] py-24 mb-10 w-full overflow-hidden relative">
                <div className="max-w-[1000px] mx-auto px-4 lg:px-0">
                   <div className="bg-gray-950 rounded-[40px] shadow-2xl relative text-center py-24 px-8 border-[12px] border-gray-900">
-                     <span className="text-[#a20000] text-[10px] font-black tracking-[0.3em] mt-6 block mb-4">
+                     <span className="text-[#a20000] text-xs font-bold tracking-[0.3em] mt-6 block mb-4">
                         Join CenterKick
                      </span>
                      <h2 className="text-4xl md:text-5xl font-black text-white mb-10 tracking-tighter leading-tight drop-shadow-2xl">
@@ -274,7 +274,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                         <span className="text-[#a20000]">Showcase Your Talent NOW</span>
                      </h2>
                      <Link href="/register">
-                       <button className="bg-white text-gray-900 hover:text-[#a20000] font-black text-sm tracking-[0.2em] px-12 py-5 rounded-2xl shadow-xl hover:shadow-[0_20px_40px_rgba(162,0,0,0.2)] transition-all inline-flex items-center gap-4 group">
+                       <button className="bg-white text-gray-900 hover:text-[#a20000] font-bold text-sm tracking-[0.2em] px-12 py-5 rounded-2xl shadow-xl hover:shadow-[0_20px_40px_rgba(162,0,0,0.2)] transition-all inline-flex items-center gap-4 group">
                           Get Started <ArrowRight className="w-5 h-5 text-[#a20000] group-hover:translate-x-2 transition-transform" />
                        </button>
                      </Link>

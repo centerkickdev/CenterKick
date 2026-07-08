@@ -28,7 +28,7 @@ export default function AgentsClient({ agents }: { agents: any[] }) {
       <div className="max-w-[1200px] mx-auto px-4 lg:px-0 py-10 sm:py-16">
          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-8 border-b border-gray-100">
             <div>
-               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tighter">Certified Agents</h2>
+               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter">Certified Agents</h2>
                <p className="text-sm font-bold text-gray-400 tracking-wide mt-1">Connect with verified representatives</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -63,10 +63,10 @@ export default function AgentsClient({ agents }: { agents: any[] }) {
                               alt={name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" loading="lazy" decoding="async" />
                         </div>
                         <div className="p-4">
-                           <span className="text-[#a20000] text-[9px] font-black tracking-wide block mb-1">{agent.country || 'Global'}</span>
-                           <h3 className="text-gray-900 font-black text-base leading-tight tracking-tight line-clamp-1 group-hover:text-[#a20000] transition-colors">{name}</h3>
+                           <span className="text-[#a20000] text-xs font-bold tracking-wide block mb-1">{agent.country || 'Global'}</span>
+                           <h3 className="text-gray-900 font-bold text-base leading-tight tracking-tight line-clamp-1 group-hover:text-[#a20000] transition-colors">{name}</h3>
                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
-                              <span className="text-gray-400 text-[9px] font-bold tracking-wide truncate">{agent.agency_name || 'Independent'}</span>
+                              <span className="text-gray-400 text-xs font-bold tracking-wide truncate">{agent.agency_name || 'Independent'}</span>
                               <ArrowRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#a20000] group-hover:translate-x-0.5 transition-all shrink-0" />
                            </div>
                         </div>

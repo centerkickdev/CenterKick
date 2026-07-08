@@ -106,7 +106,7 @@ export function CountrySelect({ value, onChange, className = '', required }: Cou
           {/* Country List */}
           <div className="max-h-52 overflow-y-auto overscroll-contain">
             {filtered.length === 0 ? (
-              <p className="px-4 py-6 text-center text-[10px] font-black text-slate-400 tracking-wide">No countries found</p>
+              <p className="px-4 py-6 text-center text-xs font-bold text-slate-400 tracking-wide">No countries found</p>
             ) : (
               <div className="p-2">
                 {filtered.map(country => (

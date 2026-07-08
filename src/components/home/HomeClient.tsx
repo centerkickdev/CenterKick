@@ -63,7 +63,7 @@ export function ProfileCarousel({ items, renderItem, mobileLimit }: ProfileCarou
     return (
       <div className="w-full py-16 bg-white border border-dashed border-gray-200 rounded-[2.5rem] text-center shadow-sm">
         <Users className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-        <h4 className="text-sm font-black text-gray-400 tracking-wide mb-1">No Active Profiles Found</h4>
+        <h4 className="text-sm font-bold text-gray-400 tracking-wide mb-1">No Active Profiles Found</h4>
         <p className="text-gray-400 text-sm max-w-xs mx-auto">Be the first to register and showcase your profile on our premium homepage!</p>
       </div>
     );
@@ -185,7 +185,7 @@ export function HomeClient({
         <section className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-20">
           <div className="flex items-center gap-3 mb-6">
             <span className="w-8 h-[2px] bg-[#b50a0a]"></span>
-            <span className="text-[10px] font-black tracking-[0.3em] text-[#b50a0a]">Global Updates</span>
+            <span className="text-xs font-bold tracking-[0.3em] text-[#b50a0a]">Global Updates</span>
           </div>
           
           {mainNews ? (
@@ -209,7 +209,7 @@ export function HomeClient({
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute top-6 left-6 z-20">
-                        <span className="bg-[#b50a0a] text-white text-[8px] font-black tracking-wide px-3 py-1.5 rounded-full shadow-lg">
+                        <span className="bg-[#b50a0a] text-white text-xs font-bold tracking-wide px-3 py-1.5 rounded-full shadow-lg">
                           Featured News
                         </span>
                       </div>
@@ -217,15 +217,15 @@ export function HomeClient({
                     {/* Text Area */}
                     <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white text-left">
                       <div className="flex flex-col">
-                        <DateDisplay date={mainNews.published_at} className="text-gray-400 text-[9px] font-bold tracking-wide mb-3 block" />
-                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-gray-900 leading-tight mb-4 tracking-tighter group-hover:text-[#b50a0a] transition-colors">
+                        <DateDisplay date={mainNews.published_at} className="text-gray-400 text-xs font-bold tracking-wide mb-3 block" />
+                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-tight mb-4 tracking-tighter group-hover:text-[#b50a0a] transition-colors">
                           {mainNews.title}
                         </h2>
                         <p className="text-gray-600 text-base font-medium leading-relaxed line-clamp-4 lg:line-clamp-6">
                           {mainNews.excerpt}
                         </p>
                       </div>
-                      <div className="mt-6 flex items-center gap-2 text-sm font-black text-[#b50a0a] tracking-wide group-hover:translate-x-2 transition-transform duration-300">
+                      <div className="mt-6 flex items-center gap-2 text-sm font-bold text-[#b50a0a] tracking-wide group-hover:translate-x-2 transition-transform duration-300">
                         Read Full Story <ArrowRight className="w-4 h-4" />
                       </div>
                     </div>
@@ -251,15 +251,15 @@ export function HomeClient({
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute top-3 left-3 z-20">
-                        <span className="bg-[#b50a0a] text-white text-[8px] font-black tracking-wide px-2.5 py-1 rounded-full shadow-md">
+                        <span className="bg-[#b50a0a] text-white text-xs font-bold tracking-wide px-2.5 py-1 rounded-full shadow-md">
                           Hot Story
                         </span>
                       </div>
                     </div>
                     {/* Text Area */}
                     <div className="flex-1 flex flex-col justify-center py-2 text-left">
-                      <DateDisplay date={news.published_at} className="text-gray-400 text-[8px] font-bold tracking-wide mb-2 block" />
-                      <h3 className="text-base sm:text-base font-black text-gray-900 leading-snug tracking-tight line-clamp-3 group-hover:text-[#b50a0a] transition-colors">
+                      <DateDisplay date={news.published_at} className="text-gray-400 text-xs font-bold tracking-wide mb-2 block" />
+                      <h3 className="text-base sm:text-base font-bold text-gray-900 leading-snug tracking-tight line-clamp-3 group-hover:text-[#b50a0a] transition-colors">
                         {news.title}
                       </h3>
                       {news.excerpt && (
@@ -281,7 +281,7 @@ export function HomeClient({
           ) : (
             <div className="w-full py-24 bg-white border border-gray-100 rounded-[2.5rem] text-center shadow-sm mb-8">
               <Activity className="w-12 h-12 text-gray-300 mx-auto mb-4 animate-pulse" />
-              <h3 className="text-lg font-black text-gray-800 tracking-wide mb-2">No News Available</h3>
+              <h3 className="text-lg font-bold text-gray-800 tracking-wide mb-2">No News Available</h3>
               <p className="text-gray-400 text-base max-w-sm mx-auto">Check back later for recent football news, updates, and releases.</p>
             </div>
           )}
@@ -289,7 +289,7 @@ export function HomeClient({
           {/* Row 2: 7 news cards with auto scrolling carousel */}
           {carouselNews.length > 0 && (
             <div className="mt-12 bg-white/50 backdrop-blur-sm border border-gray-100 p-8 rounded-[2.5rem] shadow-sm">
-              <h4 className="text-sm font-black tracking-wide text-gray-400 mb-6 text-left">More Recent Stories</h4>
+              <h4 className="text-sm font-bold tracking-wide text-gray-400 mb-6 text-left">More Recent Stories</h4>
               <ProfileCarousel 
                 items={carouselNews}
                 renderItem={(news) => (
@@ -309,8 +309,8 @@ export function HomeClient({
                     </div>
                     {/* Text Area */}
                     <div className="p-4 flex-1 flex flex-col justify-between text-left">
-                      <DateDisplay date={news.published_at} className="text-gray-400 text-[8px] font-bold tracking-wide mb-1.5 block" />
-                      <h5 className="text-sm font-black text-gray-900 leading-snug line-clamp-3 group-hover:text-[#b50a0a] transition-colors">
+                      <DateDisplay date={news.published_at} className="text-gray-400 text-xs font-bold tracking-wide mb-1.5 block" />
+                      <h5 className="text-sm font-bold text-gray-900 leading-snug line-clamp-3 group-hover:text-[#b50a0a] transition-colors">
                         {news.title}
                       </h5>
                     </div>
@@ -327,15 +327,15 @@ export function HomeClient({
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-black tracking-[0.25em] text-[#b50a0a]">Talent Discovery</span>
+                <span className="text-xs font-bold tracking-[0.25em] text-[#b50a0a]">Talent Discovery</span>
               </div>
-              <h2 className="text-3xl font-black text-gray-900 tracking-tighter">
-                Players <span className="text-[#b50a0a] font-black">Profiles</span>
+              <h2 className="text-3xl font-bold text-gray-900 tracking-tighter">
+                Players <span className="text-[#b50a0a] font-bold">Profiles</span>
               </h2>
             </div>
             <Link 
               href="/players" 
-              className="group/link inline-flex items-center gap-2 text-sm font-black text-[#b50a0a] tracking-wide hover:text-black transition-colors"
+              className="group/link inline-flex items-center gap-2 text-sm font-bold text-[#b50a0a] tracking-wide hover:text-black transition-colors"
             >
               Explore All Players <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
@@ -356,17 +356,17 @@ export function HomeClient({
                 />
                 
                 <div className="absolute top-4 right-4 z-20 bg-black/40 backdrop-blur-md rounded-full px-3 py-1 border border-white/10">
-                  <span className="text-[8px] font-black text-white tracking-wide">Active</span>
+                  <span className="text-xs font-bold text-white tracking-wide">Active</span>
                 </div>
 
                 <div className="absolute bottom-0 left-0 p-6 z-20 w-full">
-                  <span className="text-red-500 text-sm font-black tracking-[0.2em] block mb-1">
+                  <span className="text-red-500 text-sm font-bold tracking-[0.2em] block mb-1">
                     {player.position || 'Footballer'}
                   </span>
-                  <h3 className="text-xl font-black text-white leading-tight tracking-tight group-hover:text-[#b50a0a] transition-colors">
+                  <h3 className="text-xl font-bold text-white leading-tight tracking-tight group-hover:text-[#b50a0a] transition-colors">
                     {getDisplayName(player)}
                   </h3>
-                  <div className="flex items-center gap-1.5 text-white/60 text-[9px] font-bold tracking-wide mt-2.5">
+                  <div className="flex items-center gap-1.5 text-white/60 text-xs font-bold tracking-wide mt-2.5">
                     <MapPin className="w-3 h-3 text-[#b50a0a]" />
                     <span>{player.country || 'Global'}</span>
                   </div>
@@ -380,10 +380,10 @@ export function HomeClient({
             <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-[#b50a0a]/10 rounded-full blur-[100px] pointer-events-none group-hover:bg-[#b50a0a]/15 transition-colors"></div>
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               <div className="max-w-xl">
-                <span className="bg-[#b50a0a]/10 border border-[#b50a0a]/20 text-[#ff4d4d] text-[8px] font-black tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
+                <span className="bg-[#b50a0a]/10 border border-[#b50a0a]/20 text-[#ff4d4d] text-xs font-bold tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
                   Athlete Management
                 </span>
-                <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-4 leading-tight">
+                <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tighter mb-4 leading-tight">
                   Take Your Football Career <span className="text-[#b50a0a]">To The Next Level</span>
                 </h3>
                 <p className="text-gray-400 text-base font-medium leading-relaxed">
@@ -392,7 +392,7 @@ export function HomeClient({
               </div>
               <div className="flex flex-wrap gap-4 shrink-0">
                 <Link href="/register">
-                  <button className="bg-[#b50a0a] hover:bg-white text-white hover:text-black font-black text-[10px] tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
+                  <button className="bg-[#b50a0a] hover:bg-white text-white hover:text-black font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
                     Register Profile <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
@@ -407,15 +407,15 @@ export function HomeClient({
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-black tracking-[0.25em] text-[#b50a0a]">Tactical Experts</span>
+                <span className="text-xs font-bold tracking-[0.25em] text-[#b50a0a]">Tactical Experts</span>
               </div>
-              <h2 className="text-3xl font-black text-gray-900 tracking-tighter">
-                Coaches <span className="text-[#b50a0a] font-black">Profiles</span>
+              <h2 className="text-3xl font-bold text-gray-900 tracking-tighter">
+                Coaches <span className="text-[#b50a0a] font-bold">Profiles</span>
               </h2>
             </div>
             <Link 
               href="/coaches" 
-              className="group/link inline-flex items-center gap-2 text-sm font-black text-[#b50a0a] tracking-wide hover:text-black transition-colors"
+              className="group/link inline-flex items-center gap-2 text-sm font-bold text-[#b50a0a] tracking-wide hover:text-black transition-colors"
             >
               Explore All Coaches <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
@@ -436,19 +436,19 @@ export function HomeClient({
                 />
                 
                 <div className="absolute top-4 left-4 z-20">
-                  <span className="bg-white/95 text-gray-900 text-[8px] font-black tracking-wide px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
+                  <span className="bg-white/95 text-gray-900 text-xs font-bold tracking-wide px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
                     <ShieldCheck className="w-3 h-3 text-[#b50a0a]" /> Certified
                   </span>
                 </div>
 
                 <div className="absolute bottom-0 left-0 p-6 z-20 w-full">
-                  <span className="text-red-500 text-sm font-black tracking-[0.2em] block mb-1">
+                  <span className="text-red-500 text-sm font-bold tracking-[0.2em] block mb-1">
                     {coach.position || 'Professional Coach'}
                   </span>
-                  <h3 className="text-xl font-black text-white leading-tight tracking-tight">
+                  <h3 className="text-xl font-bold text-white leading-tight tracking-tight">
                     {getDisplayName(coach)}
                   </h3>
-                  <div className="flex items-center gap-1.5 text-white/70 text-[9px] font-bold tracking-wide mt-2.5">
+                  <div className="flex items-center gap-1.5 text-white/70 text-xs font-bold tracking-wide mt-2.5">
                     <MapPin className="w-3 h-3 text-[#b50a0a]" />
                     <span>{coach.country || 'Global'}</span>
                   </div>
@@ -462,10 +462,10 @@ export function HomeClient({
             <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-white/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-white/10 transition-colors"></div>
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               <div className="max-w-xl">
-                <span className="bg-white/10 border border-white/20 text-white text-[8px] font-black tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
+                <span className="bg-white/10 border border-white/20 text-white text-xs font-bold tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
                   Staff Recruitment
                 </span>
-                <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-4 leading-tight">
+                <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tighter mb-4 leading-tight">
                   Join Our Global <span className="underline decoration-white/20 underline-offset-8">Coaching Registry</span>
                 </h3>
                 <p className="text-white/80 text-base font-medium leading-relaxed">
@@ -474,7 +474,7 @@ export function HomeClient({
               </div>
               <div className="flex flex-wrap gap-4 shrink-0">
                 <Link href="/register">
-                  <button className="bg-white hover:bg-black text-black hover:text-white font-black text-[10px] tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
+                  <button className="bg-white hover:bg-black text-black hover:text-white font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
                     Create Coach Profile <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
@@ -489,15 +489,15 @@ export function HomeClient({
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-black tracking-[0.25em] text-[#b50a0a]">Representation Network</span>
+                <span className="text-xs font-bold tracking-[0.25em] text-[#b50a0a]">Representation Network</span>
               </div>
-              <h2 className="text-3xl font-black text-gray-900 tracking-tighter">
-                Agents & Scouts <span className="text-[#b50a0a] font-black">Profiles</span>
+              <h2 className="text-3xl font-bold text-gray-900 tracking-tighter">
+                Agents & Scouts <span className="text-[#b50a0a] font-bold">Profiles</span>
               </h2>
             </div>
             <Link 
               href="/agents" 
-              className="group/link inline-flex items-center gap-2 text-sm font-black text-[#b50a0a] tracking-wide hover:text-black transition-colors"
+              className="group/link inline-flex items-center gap-2 text-sm font-bold text-[#b50a0a] tracking-wide hover:text-black transition-colors"
             >
               Explore All Representatives <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
@@ -520,17 +520,17 @@ export function HomeClient({
                   </div>
                   
                   <div className="text-center mb-4">
-                    <span className={`inline-block text-[8px] font-black tracking-wide px-2.5 py-1 rounded-full mb-2 ${
+                    <span className={`inline-block text-xs font-bold tracking-wide px-2.5 py-1 rounded-full mb-2 ${
  (agent.users?.role === 'scout') 
  ? 'bg-blue-50 text-blue-600 border border-blue-100' 
  : 'bg-[#b50a0a]/5 text-[#b50a0a] border border-[#b50a0a]/10'
  }`}>
                       {agent.users?.role === 'scout' ? 'Scout' : 'Agent'}
                     </span>
-                    <h3 className="text-lg font-black text-gray-900 tracking-tight line-clamp-1 group-hover:text-[#b50a0a] transition-colors">
+                    <h3 className="text-lg font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-[#b50a0a] transition-colors">
                       {getDisplayName(agent)}
                     </h3>
-                    <span className="text-gray-400 text-[9px] font-bold tracking-wide block mt-1">
+                    <span className="text-gray-400 text-xs font-bold tracking-wide block mt-1">
                       {agent.country || 'Global Representative'}
                     </span>
                   </div>
@@ -541,7 +541,7 @@ export function HomeClient({
                 </div>
 
                 <Link href={`/agents/${agent.slug}`} className="w-full">
-                  <button className="w-full bg-gray-50 hover:bg-[#b50a0a] text-gray-700 hover:text-white border border-gray-100 hover:border-[#b50a0a] text-[9px] font-black tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                  <button className="w-full bg-gray-50 hover:bg-[#b50a0a] text-gray-700 hover:text-white border border-gray-100 hover:border-[#b50a0a] text-xs font-bold tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                     View Portfolio <ExternalLink className="w-3 h-3" />
                   </button>
                 </Link>
@@ -554,10 +554,10 @@ export function HomeClient({
             <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-blue-500/10 transition-colors"></div>
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               <div className="max-w-xl">
-                <span className="bg-white/5 border border-white/10 text-white/90 text-[8px] font-black tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
+                <span className="bg-white/5 border border-white/10 text-white/90 text-xs font-bold tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
                   Recruit Talent
                 </span>
-                <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-4 leading-tight">
+                <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tighter mb-4 leading-tight">
                   Access Premium <span className="text-blue-400">Scouting Intelligence</span>
                 </h3>
                 <p className="text-gray-400 text-base font-medium leading-relaxed">
@@ -566,7 +566,7 @@ export function HomeClient({
               </div>
               <div className="flex flex-wrap gap-4 shrink-0">
                 <Link href="/register">
-                  <button className="bg-white hover:bg-[#b50a0a] text-black hover:text-white font-black text-[10px] tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
+                  <button className="bg-white hover:bg-[#b50a0a] text-black hover:text-white font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
                     Join As Scout / Agent <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
@@ -581,15 +581,15 @@ export function HomeClient({
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-black tracking-[0.25em] text-[#b50a0a]">Development Centers</span>
+                <span className="text-xs font-bold tracking-[0.25em] text-[#b50a0a]">Development Centers</span>
               </div>
-              <h2 className="text-3xl font-black text-gray-900 tracking-tighter">
-                Organizations <span className="text-[#b50a0a] font-black">Profiles</span>
+              <h2 className="text-3xl font-bold text-gray-900 tracking-tighter">
+                Organizations <span className="text-[#b50a0a] font-bold">Profiles</span>
               </h2>
             </div>
             <Link 
               href="/register" 
-              className="group/link inline-flex items-center gap-2 text-sm font-black text-[#b50a0a] tracking-wide hover:text-black transition-colors"
+              className="group/link inline-flex items-center gap-2 text-sm font-bold text-[#b50a0a] tracking-wide hover:text-black transition-colors"
             >
               Partner Academies <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
@@ -605,13 +605,13 @@ export function HomeClient({
                   </div>
                   
                   <div className="text-center mb-4">
-                    <span className="inline-block bg-amber-50 text-amber-600 border border-amber-100 text-[8px] font-black tracking-wide px-2.5 py-0.5 rounded-full mb-2">
+                    <span className="inline-block bg-amber-50 text-amber-600 border border-amber-100 text-xs font-bold tracking-wide px-2.5 py-0.5 rounded-full mb-2">
                       Academy Partner
                     </span>
-                    <h3 className="text-base font-black text-gray-900 tracking-tight line-clamp-1 group-hover:text-amber-600 transition-colors">
+                    <h3 className="text-base font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-amber-600 transition-colors">
                       {getDisplayName(org)}
                     </h3>
-                    <span className="text-gray-400 text-[9px] font-bold tracking-wide block mt-1">
+                    <span className="text-gray-400 text-xs font-bold tracking-wide block mt-1">
                       {org.country || 'Global Club'}
                     </span>
                   </div>
@@ -622,7 +622,7 @@ export function HomeClient({
                 </div>
 
                 <Link href={`/organizations/${org.slug}`} className="w-full">
-                  <button className="w-full bg-gray-50 hover:bg-amber-600 text-gray-700 hover:text-white border border-gray-100 hover:border-amber-600 text-[9px] font-black tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                  <button className="w-full bg-gray-50 hover:bg-amber-600 text-gray-700 hover:text-white border border-gray-100 hover:border-amber-600 text-xs font-bold tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                     View Portfolio <ArrowRight className="w-3 h-3" />
                   </button>
                 </Link>
@@ -635,10 +635,10 @@ export function HomeClient({
             <div className="absolute -right-32 -bottom-32 w-96 h-96 bg-amber-500/5 rounded-full blur-[100px] pointer-events-none group-hover:bg-amber-500/10 transition-colors"></div>
             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
               <div className="max-w-xl">
-                <span className="bg-amber-50 border border-amber-100 text-amber-700 text-[8px] font-black tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
+                <span className="bg-amber-50 border border-amber-100 text-amber-700 text-xs font-bold tracking-[0.2em] px-3.5 py-1.5 rounded-full mb-4 inline-block">
                   Academy Development
                 </span>
-                <h3 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tighter mb-4 leading-tight">
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tighter mb-4 leading-tight">
                   List Your Academy <span className="text-amber-600">On CenterKick</span>
                 </h3>
                 <p className="text-gray-500 text-base font-medium leading-relaxed">
@@ -647,7 +647,7 @@ export function HomeClient({
               </div>
               <div className="flex flex-wrap gap-4 shrink-0">
                 <Link href="/register">
-                  <button className="bg-gray-900 hover:bg-amber-600 text-white font-black text-[10px] tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
+                  <button className="bg-gray-900 hover:bg-amber-600 text-white font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
                     Register Organisation <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
@@ -661,15 +661,15 @@ export function HomeClient({
         <section className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-28">
           <div className="flex items-center gap-3 mb-2">
             <span className="w-8 h-[2px] bg-[#b50a0a]"></span>
-            <span className="text-[10px] font-black tracking-[0.3em] text-[#b50a0a]">Skill Showreel</span>
+            <span className="text-xs font-bold tracking-[0.3em] text-[#b50a0a]">Skill Showreel</span>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <h2 className="text-3xl font-black text-gray-900 tracking-tighter">
+            <h2 className="text-3xl font-bold text-gray-900 tracking-tighter">
               Featured <span className="text-[#b50a0a]">Highlights</span>
             </h2>
             <Link 
               href="/news" 
-              className="group/link inline-flex items-center gap-2 text-sm font-black text-[#b50a0a] tracking-wide hover:text-black transition-colors"
+              className="group/link inline-flex items-center gap-2 text-sm font-bold text-[#b50a0a] tracking-wide hover:text-black transition-colors"
             >
               Browse All Reels <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
             </Link>
@@ -699,10 +699,10 @@ export function HomeClient({
                 </div>
 
                 <div className="absolute bottom-0 left-0 p-5 z-20 w-full">
-                  <span className="text-[#ff4d4d] text-[8px] font-black tracking-wide mb-1.5 block flex items-center gap-1.5">
+                  <span className="text-[#ff4d4d] text-xs font-bold tracking-wide mb-1.5 block flex items-center gap-1.5">
                     <Video className="w-3.5 h-3.5" /> video clip
                   </span>
-                  <h3 className="text-sm font-black text-white leading-snug line-clamp-2 drop-shadow-sm group-hover:text-[#ff4d4d] transition-colors">
+                  <h3 className="text-sm font-bold text-white leading-snug line-clamp-2 drop-shadow-sm group-hover:text-[#ff4d4d] transition-colors">
                     {post.title}
                   </h3>
                 </div>
@@ -712,7 +712,7 @@ export function HomeClient({
             {highlights.length === 0 && (
               <div className="col-span-full py-16 text-center bg-white border border-dashed border-gray-200 rounded-[2rem] p-8">
                 <PlayCircle className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                <h4 className="text-sm font-black text-gray-400 tracking-wide">No highlight clips currently active.</h4>
+                <h4 className="text-sm font-bold text-gray-400 tracking-wide">No highlight clips currently active.</h4>
               </div>
             )}
           </div>
@@ -729,7 +729,7 @@ export function HomeClient({
                 <Trophy className="w-6 h-6 text-white" />
               </div>
               
-              <span className="text-white/80 text-[10px] md:text-sm font-black tracking-[0.4em] mb-4">
+              <span className="text-white/80 text-xs md:text-sm font-bold tracking-[0.4em] mb-4">
                 Corporate & Sponsorship Network
               </span>
               
@@ -743,12 +743,12 @@ export function HomeClient({
 
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                 <Link href="/contact">
-                  <button className="w-full sm:w-auto bg-white hover:bg-black text-[#b50a0a] hover:text-white px-12 py-5 rounded-2xl text-[10px] font-black tracking-[0.2em] shadow-2xl transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
+                  <button className="w-full sm:w-auto bg-white hover:bg-black text-[#b50a0a] hover:text-white px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] shadow-2xl transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
                     Contact Business Team <ArrowRight className="w-4 h-4" />
                   </button>
                 </Link>
                 <Link href="/about">
-                  <button className="w-full sm:w-auto bg-transparent text-white border-2 border-white/20 hover:bg-white/10 px-12 py-5 rounded-2xl text-[10px] font-black tracking-[0.2em] transition-all hover:-translate-y-0.5 active:scale-95">
+                  <button className="w-full sm:w-auto bg-transparent text-white border-2 border-white/20 hover:bg-white/10 px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] transition-all hover:-translate-y-0.5 active:scale-95">
                     View Partnership Deck
                   </button>
                 </Link>

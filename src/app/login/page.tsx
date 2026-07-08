@@ -47,7 +47,7 @@ function LoginContent() {
    return (
       <div className="relative z-10 max-w-md w-full px-5 py-8 sm:px-6 sm:py-12 bg-white/95 backdrop-blur-md rounded-[32px] sm:rounded-[40px] shadow-2xl border border-white/20 animate-in fade-in zoom-in duration-700 my-auto">
          <div className="text-center mb-8 sm:mb-10">
-            <h1 className="text-3xl font-black text-gray-900 tracking-tighter leading-none mb-3">
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tighter leading-none mb-3">
                Welcome <span className="text-[#a20000]">Back</span>
             </h1>
          </div>
@@ -55,7 +55,7 @@ function LoginContent() {
          {status && (
             <div className={`mb-8 p-4 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-top-2 duration-500 ${status.type === 'success' ? 'bg-green-50 border border-green-100 text-green-700' : 'bg-red-50 border border-red-100 text-red-700'}`}>
                {status.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
-               <p className="text-[10px] font-black tracking-wide">{status.message}</p>
+               <p className="text-xs font-bold tracking-wide">{status.message}</p>
             </div>
          )}
 
@@ -73,7 +73,7 @@ function LoginContent() {
                      }
                   });
                }}
-               className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl border border-gray-100 hover:bg-gray-50 transition-all text-xs font-black tracking-wide text-gray-600 shadow-sm"
+               className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl border border-gray-100 hover:bg-gray-50 transition-all text-xs font-bold tracking-wide text-gray-600 shadow-sm"
             >
                <svg viewBox="0 0 24 24" className="w-4 h-4" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -85,7 +85,7 @@ function LoginContent() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
                <div className="space-y-2">
-                  <label className="text-xs font-black text-gray-500 tracking-wide ml-1">Professional Email</label>
+                  <label className="text-xs font-bold text-gray-500 tracking-wide ml-1">Professional Email</label>
                   <div className="relative">
                      <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                      <input
@@ -102,14 +102,14 @@ function LoginContent() {
                   name="password"
                   label="Password"
                   rightElement={
-                     <Link href="/forgot-password" className="text-xs font-black text-[#a20000] tracking-wide hover:underline">Forgot Password?</Link>
+                     <Link href="/forgot-password" className="text-xs font-bold text-[#a20000] tracking-wide hover:underline">Forgot Password?</Link>
                   }
                />
 
                <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-gray-900 text-white py-4 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
+                  className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
                >
                   {isLoading ? (
                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -121,9 +121,9 @@ function LoginContent() {
          </div>
 
          <div className="mt-8 text-center">
-            <p className="text-xs font-black text-gray-500 tracking-wide">
+            <p className="text-xs font-bold text-gray-500 tracking-wide">
                No account yet?
-               <Link href="/register" className="text-[#a20000] ml-2 hover:underline font-black">Register</Link>
+               <Link href="/register" className="text-[#a20000] ml-2 hover:underline font-bold">Register</Link>
             </p>
          </div>
       </div>
@@ -145,12 +145,12 @@ export default function LoginPage() {
 
          {/* Navigation */}
          <div className="absolute top-4 left-4 sm:top-8 sm:left-8 z-20">
-            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[10px] font-black tracking-wide bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs font-bold tracking-wide bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
                <ArrowLeft className="w-4 h-4" /> Back to Home
             </Link>
          </div>
 
-         <Suspense fallback={<div className="text-center font-black tracking-wide animate-pulse text-[#a20000] text-sm z-10">Accessing Dashboard...</div>}>
+         <Suspense fallback={<div className="text-center font-bold tracking-wide animate-pulse text-[#a20000] text-sm z-10">Accessing Dashboard...</div>}>
             <LoginContent />
          </Suspense>
       </div>

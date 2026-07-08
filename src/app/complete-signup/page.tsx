@@ -31,9 +31,9 @@ export default async function CompleteSignupPage({
           <div className="w-16 h-16 bg-red-50 text-[#b50a0a] rounded-2xl flex items-center justify-center mx-auto mb-6">
             <Shield className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl font-black text-gray-900 tracking-tighter mb-2">Invalid or Expired Invitation</h1>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tighter mb-2">Invalid or Expired Invitation</h1>
           <p className="text-gray-900 text-base font-medium mb-8">This invitation link is no longer valid or has already been used. Please contact your administrator for a new one.</p>
-          <a href="/login" className="inline-block w-full py-4 bg-gray-900 hover:bg-black text-white rounded-xl font-black text-sm tracking-wide transition-all">
+          <a href="/login" className="inline-block w-full py-4 bg-gray-900 hover:bg-black text-white rounded-xl font-bold text-sm tracking-wide transition-all">
             Return to Login
           </a>
         </div>
@@ -48,15 +48,15 @@ export default async function CompleteSignupPage({
           <div className="w-16 h-16 bg-[#b50a0a] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-red-900/20">
             <Shield className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tighter leading-none">Complete <span className="text-[#b50a0a]">Signup</span></h1>
-          <p className="text-gray-900 text-[10px] font-black tracking-[0.2em] mt-3">Finish setting up your administrative account</p>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tighter leading-none">Complete <span className="text-[#b50a0a]">Signup</span></h1>
+          <p className="text-gray-900 text-xs font-bold tracking-[0.2em] mt-3">Finish setting up your administrative account</p>
         </div>
 
         <div className="bg-white rounded-3xl p-8 shadow-2xl shadow-gray-200 border border-gray-100">
            <div className="mb-8 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-              <p className="text-[10px] font-black text-gray-900 tracking-wide mb-1">Invited Role</p>
+              <p className="text-xs font-bold text-gray-900 tracking-wide mb-1">Invited Role</p>
               <p className="text-base font-bold text-gray-900">{invitation.role}</p>
-              <p className="text-[10px] text-gray-900 font-medium mt-1">{invitation.email}</p>
+              <p className="text-xs text-gray-900 font-medium mt-1">{invitation.email}</p>
            </div>
            
            <SignupForm email={invitation.email} role={invitation.role} />

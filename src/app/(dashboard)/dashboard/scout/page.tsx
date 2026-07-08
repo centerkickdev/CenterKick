@@ -44,10 +44,10 @@ export default function ScoutDashboard() {
               <div className="p-5">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-bold text-lg text-gray-900">{player.name}</h3>
-                  <span className="text-primary font-black">{player.rating}</span>
+                  <span className="text-primary font-bold">{player.rating}</span>
                 </div>
                 <div className="text-base text-gray-500 mb-4">
-                  {player.age} yrs • Free Agent
+                  {player.age} yrs â€¢ Free Agent
                 </div>
                 <button className="w-full py-2 bg-gray-50 hover:bg-red-50 text-gray-800 hover:text-primary rounded-lg font-medium text-base transition-colors border border-gray-100">
                   View Full Profile

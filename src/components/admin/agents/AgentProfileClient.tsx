@@ -219,7 +219,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
     return (
       <div className="flex items-center gap-2 mt-1 animate-in fade-in slide-in-from-left-2 duration-300">
-        <div className="bg-yellow-50 border border-yellow-100 px-2 py-0.5 rounded text-[10px] font-bold text-yellow-700 flex items-center gap-1.5 shadow-sm">
+        <div className="bg-yellow-50 border border-yellow-100 px-2 py-0.5 rounded text-xs font-bold text-yellow-700 flex items-center gap-1.5 shadow-sm">
           <span className="opacity-50">PROPOSED:</span> {edit.new_value}
         </div>
         <div className="flex items-center gap-1">
@@ -283,17 +283,17 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                 </div>
               </div>
               <div>
-                <h1 className="text-lg font-black text-slate-900 tracking-tighter leading-none flex items-center gap-3">
+                <h1 className="text-lg font-bold text-slate-900 tracking-tighter leading-none flex items-center gap-3">
                   {agent.first_name} <span className="text-[#b50a0a]">{agent.last_name}</span>
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-black tracking-wide ${
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-bold tracking-wide ${
  agent.is_subscribed ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500'
  }`}>
                     {agent.is_subscribed ? 'PRO' : 'NEW'}
                   </span>
                 </h1>
-                <p className="text-[9px] font-bold text-slate-400 tracking-[0.2em] mt-1 flex items-center gap-2">
+                <p className="text-xs font-bold text-slate-400 tracking-[0.2em] mt-1 flex items-center gap-2">
                   <FlagIcon country={agent.country || ''} className="w-3.5 h-2.5" />
-                  {agent.email || 'NO EMAIL'} • {agent.agency_name}
+                  {agent.email || 'NO EMAIL'} â€¢ {agent.agency_name}
                 </p>
               </div>
             </div>
@@ -303,7 +303,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
             <Link 
               href={`/agents/${agent.slug}`} 
               target="_blank"
-              className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 rounded-lg text-[9px] font-black tracking-wide hover:bg-slate-100 transition-all border border-slate-100"
+              className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 rounded-lg text-xs font-bold tracking-wide hover:bg-slate-100 transition-all border border-slate-100"
             >
               View Public <ExternalLink className="w-3 h-3" />
             </Link>
@@ -326,7 +326,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
             {agent.avatar_url ? (
               <Image src={agent.avatar_url} alt={`${agent.first_name} ${agent.last_name}`} fill className="w-full aspect-square object-cover border-2 border-slate-50 shadow-inner transition-transform duration-700 group-hover:scale-110" />
             ) : (
-              <div className="w-full aspect-square bg-slate-100 flex items-center justify-center text-slate-300 text-4xl font-black">
+              <div className="w-full aspect-square bg-slate-100 flex items-center justify-center text-slate-300 text-4xl font-bold">
                 {agent.first_name[0]}{agent.last_name[0]}
               </div>
             )}
@@ -342,7 +342,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
               <button
                 key={tab.id}
                 onClick={() => { setActiveTab(tab.id as any); setEditingSection(null); }}
-                className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-[10px] font-black tracking-wide transition-all group ${
+                className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-xs font-bold tracking-wide transition-all group ${
  activeTab === tab.id 
  ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/20 translate-x-1' 
  : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
@@ -356,10 +356,10 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
           <div className="mt-auto pt-6 border-t border-slate-50">
             <div className="bg-slate-50 rounded-2xl p-4">
-              <p className="text-[8px] font-black text-slate-400 tracking-wide mb-1">Managed Profiles</p>
+              <p className="text-xs font-bold text-slate-400 tracking-wide mb-1">Managed Profiles</p>
               <div className="flex items-center gap-2">
                  <Users className="w-4 h-4 text-slate-900" />
-                 <p className="text-xl font-black tracking-tighter text-slate-900">{clients.length} Profile{clients.length !== 1 ? 's' : ''}</p>
+                 <p className="text-xl font-bold tracking-tighter text-slate-900">{clients.length} Profile{clients.length !== 1 ? 's' : ''}</p>
               </div>
             </div>
           </div>
@@ -379,7 +379,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                         <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
                           <UserCircle className="w-6 h-6" />
                         </div>
-                        <h3 className="text-base font-black text-slate-900 tracking-tight">Identity Details</h3>
+                        <h3 className="text-base font-bold text-slate-900 tracking-tight">Identity Details</h3>
                       </div>
                       <button 
                         onClick={() => setEditingSection(editingSection === 'identity' ? null : 'identity')}
@@ -399,13 +399,13 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                         { label: 'Gender', value: agent.gender, field: 'gender', type: 'select', options: ['Male', 'Female', 'Other'] },
                       ].map((item, i) => (
                         <div key={i} className="flex flex-col gap-1">
-                          <span className="text-[9px] font-black text-slate-400 tracking-wide">{item.label}</span>
+                          <span className="text-xs font-bold text-slate-400 tracking-wide">{item.label}</span>
                           {editingSection === 'identity' ? (
                             item.type === 'select' ? (
                               <select 
                                 value={displayValue(item.field as any, item.value || '') as string}
                                 onChange={(e) => updateField(item.field as any, e.target.value)}
-                                className="w-full bg-slate-50 border-none rounded-lg p-2 text-[12px] font-bold text-slate-900 focus:ring-1 focus:ring-[#b50a0a]"
+                                className="w-full bg-slate-50 border-none rounded-lg p-2 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-[#b50a0a]"
                               >
                                 {(item.options || []).map((opt: string) => (
                                   <option key={opt} value={opt}>{opt}</option>
@@ -416,7 +416,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                                 type={item.type}
                                 value={displayValue(item.field as any, item.value || '') as string}
                                 onChange={(e) => updateField(item.field as any, e.target.value)}
-                                className="w-full bg-slate-50 border-none rounded-lg p-2 text-[12px] font-bold text-slate-900 focus:ring-1 focus:ring-[#b50a0a]"
+                                className="w-full bg-slate-50 border-none rounded-lg p-2 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-[#b50a0a]"
                               />
                             )
                           ) : (
@@ -431,8 +431,8 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
                     {editingSection === 'identity' && (
                       <div className="mt-8 flex gap-3 animate-in fade-in slide-in-from-top-2">
-                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-black tracking-wide hover:bg-[#b50a0a] transition-all">Save Changes</button>
-                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black tracking-wide hover:bg-slate-200 transition-all">Cancel</button>
+                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold tracking-wide hover:bg-[#b50a0a] transition-all">Save Changes</button>
+                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-xs font-bold tracking-wide hover:bg-slate-200 transition-all">Cancel</button>
                       </div>
                     )}
                   </div>
@@ -447,7 +447,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                         <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
                           <Briefcase className="w-6 h-6" />
                         </div>
-                        <h3 className="text-base font-black text-slate-900 tracking-tight">Agency Operations</h3>
+                        <h3 className="text-base font-bold text-slate-900 tracking-tight">Agency Operations</h3>
                       </div>
                       <button 
                          onClick={() => setEditingSection(editingSection === 'agency' ? null : 'agency')}
@@ -464,13 +464,13 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                         { label: 'Status', value: agent.status, field: 'status', type: 'select', options: ['active', 'pending', 'suspended'] },
                       ].map((item, i) => (
                         <div key={i} className="flex flex-col gap-1">
-                          <span className="text-[9px] font-black text-slate-400 tracking-wide">{item.label}</span>
+                          <span className="text-xs font-bold text-slate-400 tracking-wide">{item.label}</span>
                           {editingSection === 'agency' ? (
                             item.type === 'select' ? (
                               <select 
                                 value={displayValue(item.field as any, item.value || '') as string}
                                 onChange={(e) => updateField(item.field as any, e.target.value)}
-                                className="w-full bg-slate-50 border-none rounded-lg p-2 text-[12px] font-bold text-slate-900 focus:ring-1 focus:ring-[#b50a0a]"
+                                className="w-full bg-slate-50 border-none rounded-lg p-2 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-[#b50a0a]"
                               >
                                 {(item.options || []).map((opt: string) => (
                                   <option key={opt} value={opt}>{opt}</option>
@@ -481,7 +481,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                                 type={item.type}
                                 value={displayValue(item.field as any, item.value || '') as string}
                                 onChange={(e) => updateField(item.field as any, e.target.value)}
-                                className="w-full bg-slate-50 border-none rounded-lg p-2 text-[12px] font-bold text-slate-900 focus:ring-1 focus:ring-[#b50a0a]"
+                                className="w-full bg-slate-50 border-none rounded-lg p-2 text-xs font-bold text-slate-900 focus:ring-1 focus:ring-[#b50a0a]"
                               />
                             )
                           ) : (
@@ -496,8 +496,8 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
                     {editingSection === 'agency' && (
                       <div className="mt-8 flex gap-3 animate-in fade-in slide-in-from-top-2">
-                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-[10px] font-black tracking-wide hover:bg-[#b50a0a] transition-all">Save Changes</button>
-                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-[10px] font-black tracking-wide hover:bg-slate-200 transition-all">Cancel</button>
+                        <button onClick={handleSaveChanges} className="px-6 py-2 bg-slate-900 text-white rounded-lg text-xs font-bold tracking-wide hover:bg-[#b50a0a] transition-all">Save Changes</button>
+                        <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-6 py-2 bg-slate-100 text-slate-500 rounded-lg text-xs font-bold tracking-wide hover:bg-slate-200 transition-all">Cancel</button>
                       </div>
                     )}
                   </div>
@@ -518,7 +518,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                     </div>
                     <div>
                       <h3 className="text-base font-bold text-slate-900 tracking-wide">Company Profile</h3>
-                      <p className="text-[8px] font-black text-slate-400 tracking-[0.2em] mt-1">Agency Brand & History</p>
+                      <p className="text-xs font-bold text-slate-400 tracking-[0.2em] mt-1">Agency Brand & History</p>
                     </div>
                   </div>
                   <button 
@@ -539,8 +539,8 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                       placeholder="Describe your agency&apos;s mission, key achievements, and roster focus..."
                     />
                     <div className="flex gap-4">
-                      <button onClick={handleSaveChanges} className="px-10 py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-lg shadow-slate-200">Save Biography</button>
-                      <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-10 py-4 bg-white text-slate-400 border border-slate-200 rounded-2xl text-[10px] font-black tracking-wide hover:bg-slate-50 transition-all">Cancel</button>
+                      <button onClick={handleSaveChanges} className="px-10 py-4 bg-slate-900 text-white rounded-2xl text-xs font-bold tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-lg shadow-slate-200">Save Biography</button>
+                      <button onClick={() => { setEditingSection(null); setEditedFields({}); }} className="px-10 py-4 bg-white text-slate-400 border border-slate-200 rounded-2xl text-xs font-bold tracking-wide hover:bg-slate-50 transition-all">Cancel</button>
                     </div>
                   </div>
                 ) : (
@@ -560,12 +560,12 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
                <div className="flex items-center justify-between mb-8">
                   <div>
-                    <h3 className="text-xl font-black tracking-tighter text-slate-900">Talent <span className="text-[#b50a0a]">Roster</span></h3>
-                    <p className="text-[10px] font-black tracking-wide text-slate-400 mt-1">Manage linked athletes and representation status</p>
+                    <h3 className="text-xl font-bold tracking-tighter text-slate-900">Talent <span className="text-[#b50a0a]">Roster</span></h3>
+                    <p className="text-xs font-bold tracking-wide text-slate-400 mt-1">Manage linked athletes and representation status</p>
                   </div>
                   <button 
                     onClick={() => setIsAddTalentModalOpen(true)}
-                    className="bg-black hover:bg-[#b50a0a] text-white px-6 py-3 rounded-2xl font-black text-[10px] tracking-wide transition-all flex items-center gap-2 shadow-xl shadow-black/10"
+                    className="bg-black hover:bg-[#b50a0a] text-white px-6 py-3 rounded-2xl font-bold text-xs tracking-wide transition-all flex items-center gap-2 shadow-xl shadow-black/10"
                   >
                     <UserPlus className="w-3.5 h-3.5" /> Add Talent
                   </button>
@@ -576,12 +576,12 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                     <table className="w-full text-left border-collapse whitespace-nowrap">
                       <thead>
                         <tr className="bg-slate-50/50 border-b border-slate-100">
-                          <th className="px-4 md:px-8 py-5 text-[10px] font-black tracking-wide text-slate-400">Athlete</th>
-                          <th className="px-6 py-5 text-[10px] font-black tracking-wide text-slate-400">Role</th>
-                          <th className="px-6 py-5 text-[10px] font-black tracking-wide text-slate-400">Country</th>
-                          <th className="px-6 py-5 text-[10px] font-black tracking-wide text-slate-400">Status</th>
-                          <th className="px-6 py-5 text-[10px] font-black tracking-wide text-slate-400">Contract</th>
-                          <th className="px-4 md:px-8 py-5 text-[10px] font-black tracking-wide text-slate-400 text-right">Actions</th>
+                          <th className="px-4 md:px-8 py-5 text-xs font-bold tracking-wide text-slate-400">Athlete</th>
+                          <th className="px-6 py-5 text-xs font-bold tracking-wide text-slate-400">Role</th>
+                          <th className="px-6 py-5 text-xs font-bold tracking-wide text-slate-400">Country</th>
+                          <th className="px-6 py-5 text-xs font-bold tracking-wide text-slate-400">Status</th>
+                          <th className="px-6 py-5 text-xs font-bold tracking-wide text-slate-400">Contract</th>
+                          <th className="px-4 md:px-8 py-5 text-xs font-bold tracking-wide text-slate-400 text-right">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -589,7 +589,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                           <tr key={client.id} className="border-b border-slate-50 last:border-none hover:bg-slate-50/50 transition-colors group">
                             <td className="px-4 md:px-8 py-4">
                               <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center font-black text-white text-[10px] overflow-hidden shrink-0 shadow-sm relative">
+                                <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center font-bold text-white text-xs overflow-hidden shrink-0 shadow-sm relative">
                                   {client.avatar_url ? (
                                     <Image src={client.avatar_url} alt={`${client.first_name} ${client.last_name}`} fill className="w-full h-full object-cover" />
                                   ) : (
@@ -599,7 +599,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                                 <div className="min-w-0">
                                   <Link 
                                     href={`/admin/${client.role === 'coach' ? 'coaches' : 'players'}/${client.slug}`}
-                                    className="font-black text-slate-900 text-sm leading-none mb-1 truncate block hover:text-[#b50a0a] transition-colors"
+                                    className="font-bold text-slate-900 text-sm leading-none mb-1 truncate block hover:text-[#b50a0a] transition-colors"
                                   >
                                     {client.first_name} {client.last_name}
                                   </Link>
@@ -607,24 +607,24 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                               </div>
                             </td>
                             <td className="px-6 py-4">
-                              <span className="text-[10px] font-black text-slate-600 tracking-wide bg-slate-100 px-2 py-1 rounded-md">
+                              <span className="text-xs font-bold text-slate-600 tracking-wide bg-slate-100 px-2 py-1 rounded-md">
                                 {client.role}
                               </span>
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex items-center gap-2">
                                 <FlagIcon country={client.country || ''} className="w-4 h-3 shadow-sm" />
-                                <span className="text-[10px] font-black text-slate-600 tracking-wide">{client.country || 'N/A'}</span>
+                                <span className="text-xs font-bold text-slate-600 tracking-wide">{client.country || 'N/A'}</span>
                               </div>
                             </td>
                             <td className="px-6 py-4">
                                <div className="flex flex-col">
-                                  <span className="text-[10px] font-black text-slate-900">Professional</span>
-                                  <span className="text-[8px] font-bold text-slate-400 tracking-wide mt-0.5">Active Agent</span>
+                                  <span className="text-xs font-bold text-slate-900">Professional</span>
+                                  <span className="text-xs font-bold text-slate-400 tracking-wide mt-0.5">Active Agent</span>
                                </div>
                             </td>
                             <td className="px-6 py-4">
-                              <span className={`text-[9px] font-black tracking-wide px-3 py-1 rounded-full ${client.agent_status === 'accepted' ? 'bg-green-100 text-green-600 shadow-sm shadow-green-100/50' : 'bg-amber-100 text-amber-600 shadow-sm shadow-amber-100/50'}`}>
+                              <span className={`text-xs font-bold tracking-wide px-3 py-1 rounded-full ${client.agent_status === 'accepted' ? 'bg-green-100 text-green-600 shadow-sm shadow-green-100/50' : 'bg-amber-100 text-amber-600 shadow-sm shadow-amber-100/50'}`}>
                                 {client.agent_status || 'Pending'}
                               </span>
                             </td>
@@ -656,11 +656,11 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                      <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                         <Users className="w-8 h-8 text-slate-200" />
                      </div>
-                     <h4 className="text-base font-black tracking-wide text-slate-400">No athletes linked</h4>
-                     <p className="text-[10px] text-slate-400 mt-2 max-w-xs mx-auto font-medium">Link players and coaches to manage their representation from this dashboard.</p>
+                     <h4 className="text-base font-bold tracking-wide text-slate-400">No athletes linked</h4>
+                     <p className="text-xs text-slate-400 mt-2 max-w-xs mx-auto font-medium">Link players and coaches to manage their representation from this dashboard.</p>
                      <button 
                         onClick={() => setIsAddTalentModalOpen(true)}
-                        className="mt-8 bg-black text-white px-4 md:px-8 py-3 rounded-2xl font-black text-[10px] tracking-wide hover:bg-[#b50a0a] transition-all"
+                        className="mt-8 bg-black text-white px-4 md:px-8 py-3 rounded-2xl font-bold text-xs tracking-wide hover:bg-[#b50a0a] transition-all"
                      >
                         Link First Athlete
                      </button>
@@ -676,23 +676,23 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                   <div className="absolute top-0 right-0 w-64 h-64 bg-[#b50a0a]/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-12">
-                       <h3 className="text-[12px] font-black tracking-[0.3em] text-slate-500">Subscription Hub</h3>
-                       <span className={`${agent.is_subscribed ? 'bg-emerald-500 shadow-lg shadow-emerald-500/20' : 'bg-slate-700'} px-4 md:px-8 py-2.5 rounded-full text-[12px] font-black tracking-wide transition-all`}>
+                       <h3 className="text-xs font-bold tracking-[0.3em] text-slate-500">Subscription Hub</h3>
+                       <span className={`${agent.is_subscribed ? 'bg-emerald-500 shadow-lg shadow-emerald-500/20' : 'bg-slate-700'} px-4 md:px-8 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all`}>
                           {agent.is_subscribed ? 'Agency Premium' : 'Network Access'}
                        </span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                        <div>
-                          <p className="text-[10px] font-bold text-slate-500 tracking-wide mb-3">Expiration Date</p>
-                          <p className="text-4xl font-black tracking-tighter">
+                          <p className="text-xs font-bold text-slate-500 tracking-wide mb-3">Expiration Date</p>
+                          <p className="text-4xl font-bold tracking-tighter">
                              {agent.users?.subscriptions?.[0]?.current_period_end ? (
                                 <DateDisplay date={agent.users.subscriptions[0].current_period_end} />
                              ) : 'UNSET'}
                           </p>
                        </div>
                        <div className="flex flex-col justify-end items-end">
-                          <p className="text-[10px] font-bold text-slate-500 tracking-wide mb-3">Service Level</p>
-                          <p className="text-xl font-black tracking-tighter text-right">
+                          <p className="text-xs font-bold text-slate-500 tracking-wide mb-3">Service Level</p>
+                          <p className="text-xl font-bold tracking-tighter text-right">
                              {agent.is_subscribed ? 'Active Management' : 'Restricted Access'}
                           </p>
                        </div>
@@ -708,8 +708,8 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                         <CreditCard className="w-6 h-6" />
                       </div>
                       <div>
-                        <h3 className="text-xl font-black text-slate-900 tracking-tight">Financial Ledger</h3>
-                        <p className="text-[9px] font-bold text-slate-400 tracking-wide mt-1">Direct payment records and history</p>
+                        <h3 className="text-xl font-bold text-slate-900 tracking-tight">Financial Ledger</h3>
+                        <p className="text-xs font-bold text-slate-400 tracking-wide mt-1">Direct payment records and history</p>
                       </div>
                     </div>
                   </div>
@@ -718,38 +718,38 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                     {isLoadingTransactions ? (
                       <div className="py-20 text-center">
                         <div className="w-10 h-10 border-4 border-slate-100 border-t-[#b50a0a] rounded-full animate-spin mx-auto mb-4"></div>
-                        <p className="text-[10px] font-black text-slate-400 tracking-wide">Accessing records...</p>
+                        <p className="text-xs font-bold text-slate-400 tracking-wide">Accessing records...</p>
                       </div>
                     ) : playerTransactions.length > 0 ? (
                       <div className="grid grid-cols-1 gap-3">
                         {playerTransactions.map((tx, i) => (
                           <div key={i} className="flex items-center justify-between p-6 bg-slate-50/50 rounded-3xl border border-slate-50 hover:border-[#b50a0a]/10 hover:bg-white transition-all group">
                             <div className="flex items-center gap-6">
-                              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-base font-black shadow-sm ${
+                              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-base font-bold shadow-sm ${
  tx.status === 'confirmed' || tx.status === 'success' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
  }`}>
-                                {tx.currency === 'USD' ? '$' : tx.currency === 'NGN' ? '₦' : tx.currency}
+                                {tx.currency === 'USD' ? '$' : tx.currency === 'NGN' ? 'â‚¦' : tx.currency}
                               </div>
                               <div>
-                                <p className="text-[11px] font-black text-slate-900 leading-none mb-1.5 tracking-tight">
+                                <p className="text-xs font-bold text-slate-900 leading-none mb-1.5 tracking-tight">
                                   {tx.reference?.split('_')[0] || 'Member Base Payment'}
-                                  <span className="ml-2 text-[8px] font-bold text-slate-300 transform tracking-wide opacity-50">REF: {tx.reference}</span>
+                                  <span className="ml-2 text-xs font-bold text-slate-300 transform tracking-wide opacity-50">REF: {tx.reference}</span>
                                 </p>
                                 <div className="flex items-center gap-3">
                                   <div className="flex items-center gap-1.5">
                                     <Calendar className="w-3 h-3 text-slate-300" />
-                                    <DateDisplay date={tx.created_at} className="text-[9px] font-bold text-slate-400 tracking-wide" />
+                                    <DateDisplay date={tx.created_at} className="text-xs font-bold text-slate-400 tracking-wide" />
                                   </div>
                                   <div className="w-1 h-1 rounded-full bg-slate-200"></div>
-                                  <p className="text-[9px] font-bold text-slate-400 tracking-wide">{tx.currency} GATEWAY</p>
+                                  <p className="text-xs font-bold text-slate-400 tracking-wide">{tx.currency} GATEWAY</p>
                                 </div>
                               </div>
                             </div>
                             <div className="text-right">
-                              <p className="text-lg font-black text-slate-900 tracking-tighter">
-                                {tx.currency === 'USD' ? '$' : tx.currency === 'NGN' ? '₦' : ''}{(tx.amount / 100).toLocaleString()}
+                              <p className="text-lg font-bold text-slate-900 tracking-tighter">
+                                {tx.currency === 'USD' ? '$' : tx.currency === 'NGN' ? 'â‚¦' : ''}{(tx.amount / 100).toLocaleString()}
                               </p>
-                              <span className={`text-[8px] font-black tracking-[0.2em] px-2.5 py-1 rounded-lg ${
+                              <span className={`text-xs font-bold tracking-[0.2em] px-2.5 py-1 rounded-lg ${
  tx.status === 'confirmed' || tx.status === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
  }`}>{tx.status}</span>
                             </div>
@@ -759,7 +759,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                     ) : (
                       <div className="py-20 text-center bg-slate-50 rounded-[2.5rem] border border-dashed border-slate-200">
                         <CreditCard className="w-10 h-10 text-slate-200 mx-auto mb-4" />
-                        <p className="text-[10px] font-black text-slate-400 tracking-wide">No transactions recorded yet</p>
+                        <p className="text-xs font-bold text-slate-400 tracking-wide">No transactions recorded yet</p>
                       </div>
                     )}
                   </div>
@@ -776,8 +776,8 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
            <div className="bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
               <div className="p-4 md:p-8 border-b border-slate-100 flex items-center justify-between shrink-0">
                  <div>
-                    <h3 className="text-base md:text-xl font-black tracking-tighter text-slate-900">Link New <span className="text-[#b50a0a]">Talent</span></h3>
-                    <p className="text-[9px] font-black text-slate-400 tracking-wide mt-1">Search and represent athletes within your agency</p>
+                    <h3 className="text-base md:text-xl font-bold tracking-tighter text-slate-900">Link New <span className="text-[#b50a0a]">Talent</span></h3>
+                    <p className="text-xs font-bold text-slate-400 tracking-wide mt-1">Search and represent athletes within your agency</p>
                  </div>
                  <button onClick={() => setIsAddTalentModalOpen(false)} className="w-10 h-10 bg-slate-50 rounded-2xl flex items-center justify-center hover:bg-slate-100 transition-all border border-slate-100">
                     <X className="w-4 h-4 text-slate-400" />
@@ -792,7 +792,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                        placeholder="Search athlete by name..."
                        value={talentSearchQuery}
                        onChange={(e) => handleTalentSearch(e.target.value)}
-                       className="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-4 py-4 text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-slate-900 placeholder:text-slate-400"
+                       className="w-full bg-slate-50 border-none rounded-2xl pl-12 pr-4 py-4 text-xs font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-slate-900 placeholder:text-slate-400"
                     />
                     {isSearchingTalent && (
                        <RefreshCcw className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b50a0a] animate-spin" />
@@ -807,7 +807,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                              className="flex items-center justify-between p-4 bg-slate-50/50 border border-slate-100 rounded-[1.5rem] hover:bg-white hover:border-[#b50a0a]/20 transition-all group"
                           >
                              <div className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center font-black text-white text-[10px] overflow-hidden shrink-0">
+                                <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center font-bold text-white text-xs overflow-hidden shrink-0">
                                    {talent.avatar_url ? (
                                       <img src={talent.avatar_url} alt="" className="w-full h-full object-cover" />
                                    ) : (
@@ -815,11 +815,11 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                                    )}
                                 </div>
                                 <div className="min-w-0">
-                                   <p className="text-[11px] font-black text-slate-900 leading-none mb-1 truncate">{talent.first_name} {talent.last_name}</p>
+                                   <p className="text-xs font-bold text-slate-900 leading-none mb-1 truncate">{talent.first_name} {talent.last_name}</p>
                                    <div className="flex items-center gap-2">
-                                      <span className="text-[7px] font-black text-slate-400 tracking-[0.2em]">{talent.role}</span>
-                                      <span className="text-[7px] font-black text-slate-200 tracking-wide">•</span>
-                                      <span className="text-[7px] font-black text-slate-400 tracking-[0.2em] flex items-center gap-1">
+                                      <span className="text-[7px] font-bold text-slate-400 tracking-[0.2em]">{talent.role}</span>
+                                      <span className="text-[7px] font-bold text-slate-200 tracking-wide">â€¢</span>
+                                      <span className="text-[7px] font-bold text-slate-400 tracking-[0.2em] flex items-center gap-1">
                                          <FlagIcon country={talent.country || ''} className="w-2 h-1.5" /> {talent.country || 'N/A'}
                                       </span>
                                    </div>
@@ -827,7 +827,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                              </div>
                              <button 
                                 onClick={() => handleLinkTalent(talent.id)}
-                                className="px-4 py-2 bg-black text-white rounded-xl font-black text-[8px] tracking-wide hover:bg-[#b50a0a] transition-all shadow-lg shadow-black/5 shrink-0"
+                                className="px-4 py-2 bg-black text-white rounded-xl font-bold text-xs tracking-wide hover:bg-[#b50a0a] transition-all shadow-lg shadow-black/5 shrink-0"
                              >
                                 Link Profile
                              </button>
@@ -835,18 +835,18 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                        ))
                     ) : talentSearchQuery.length >= 2 ? (
                        <div className="text-center py-8">
-                          <p className="text-[10px] font-black text-slate-400 tracking-wide">No available talent found for "{talentSearchQuery}"</p>
+                          <p className="text-xs font-bold text-slate-400 tracking-wide">No available talent found for "{talentSearchQuery}"</p>
                        </div>
                     ) : (
                        <div className="text-center py-8">
-                          <p className="text-[10px] font-black text-slate-400 tracking-wide">Start typing to search available athletes</p>
+                          <p className="text-xs font-bold text-slate-400 tracking-wide">Start typing to search available athletes</p>
                        </div>
                     )}
                  </div>
               </div>
 
               <div className="p-4 md:p-8 pt-0 mt-auto shrink-0">
-                 <p className="text-[8px] font-bold text-slate-400 tracking-[0.2em] text-center">Athletes already linked to an agent will not appear in search.</p>
+                 <p className="text-xs font-bold text-slate-400 tracking-[0.2em] text-center">Athletes already linked to an agent will not appear in search.</p>
               </div>
            </div>
         </div>

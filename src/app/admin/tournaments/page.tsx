@@ -20,15 +20,15 @@ export default async function AdminTournamentsPage() {
             <div className="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center border border-red-100 shadow-sm">
               <Trophy className="w-5 h-5 text-[#b50a0a]" />
             </div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tighter">Manage Tournaments</h1>
+            <h1 className="text-4xl font-bold text-gray-900 tracking-tighter">Manage Tournaments</h1>
           </div>
-          <p className="text-gray-500 font-bold text-[11px] tracking-[0.2em] ml-1">
+          <p className="text-gray-500 font-bold text-xs tracking-[0.2em] ml-1">
             Global Tournament Control Center
           </p>
         </div>
 
         <Link href="/admin/tournaments/new">
-          <button className="bg-gray-900 text-white px-4 md:px-8 py-5 rounded-[20px] font-black tracking-wide text-[10px] hover:bg-[#b50a0a] transition-all flex items-center gap-3 shadow-xl transform active:scale-95 group">
+          <button className="bg-gray-900 text-white px-4 md:px-8 py-5 rounded-[20px] font-bold tracking-wide text-xs hover:bg-[#b50a0a] transition-all flex items-center gap-3 shadow-xl transform active:scale-95 group">
             <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform" /> 
             Create Tournament
           </button>
@@ -48,7 +48,7 @@ export default async function AdminTournamentsPage() {
               )}
               
               <div className="absolute top-6 right-6">
-                <span className={`px-4 py-2 rounded-full text-[9px] font-black tracking-wide ${tournament.is_active ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-gray-100 text-gray-400 border border-gray-200'}`}>
+                <span className={`px-4 py-2 rounded-full text-xs font-bold tracking-wide ${tournament.is_active ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-gray-100 text-gray-400 border border-gray-200'}`}>
                   {tournament.is_active ? 'Active' : 'Archived'}
                 </span>
               </div>
@@ -56,10 +56,10 @@ export default async function AdminTournamentsPage() {
 
             <div className="p-10 flex-1 flex flex-col">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-[9px] font-black text-[#b50a0a] tracking-wide">{tournament.type} Tournament</span>
+                <span className="text-xs font-bold text-[#b50a0a] tracking-wide">{tournament.type} Tournament</span>
               </div>
               
-              <h3 className="text-2xl font-black text-gray-900 tracking-tight mb-4 group-hover:text-[#b50a0a] transition-colors">
+              <h3 className="text-2xl font-bold text-gray-900 tracking-tight mb-4 group-hover:text-[#b50a0a] transition-colors">
                 {tournament.name}
               </h3>
               
@@ -71,23 +71,23 @@ export default async function AdminTournamentsPage() {
                 <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
                   <div className="flex items-center gap-2 mb-1">
                     <Calendar className="w-3 h-3 text-gray-400" />
-                    <span className="text-[8px] font-black text-gray-400 tracking-wide">Starts</span>
+                    <span className="text-xs font-bold text-gray-400 tracking-wide">Starts</span>
                   </div>
-                  <p className="text-[10px] font-black text-gray-900">
+                  <p className="text-xs font-bold text-gray-900">
                     {tournament.start_date ? format(new Date(tournament.start_date), 'MMM dd, yyyy') : 'TBA'}
                   </p>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
                   <div className="flex items-center gap-2 mb-1">
                     <Settings2 className="w-3 h-3 text-gray-400" />
-                    <span className="text-[8px] font-black text-gray-400 tracking-wide">Season</span>
+                    <span className="text-xs font-bold text-gray-400 tracking-wide">Season</span>
                   </div>
-                  <p className="text-[10px] font-black text-gray-900">2026/27</p>
+                  <p className="text-xs font-bold text-gray-900">2026/27</p>
                 </div>
               </div>
 
               <div className="mt-auto pt-6 border-t border-gray-100 flex items-center justify-between">
-                <Link href={`/admin/tournaments/${tournament.id}`} className="flex items-center gap-2 text-[10px] font-black tracking-wide text-gray-900 hover:text-[#b50a0a] transition-colors">
+                <Link href={`/admin/tournaments/${tournament.id}`} className="flex items-center gap-2 text-xs font-bold tracking-wide text-gray-900 hover:text-[#b50a0a] transition-colors">
                   Manage <ArrowRight className="w-3 h-3" />
                 </Link>
                 <button className="p-3 rounded-xl bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-all border border-gray-100">
@@ -104,7 +104,7 @@ export default async function AdminTournamentsPage() {
               <Trophy className="w-8 h-8 text-gray-200" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-black text-gray-900">No Tournaments Found</h3>
+              <h3 className="text-xl font-bold text-gray-900">No Tournaments Found</h3>
               <p className="text-sm font-bold text-gray-400 tracking-wide">Get started by creating your first professional tournament.</p>
             </div>
           </div>

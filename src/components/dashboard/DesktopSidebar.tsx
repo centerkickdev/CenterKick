@@ -37,9 +37,9 @@ export function DesktopSidebar({ role, isSubscribed, sidebarLogoUrl, brandName }
           ) : (
              <>
                 <div className="w-10 h-10 rounded-xl bg-[#b50a0a] flex items-center justify-center shadow-lg shadow-red-900/40 shrink-0">
-                  <span className="text-white font-black text-xl">C</span>
+                  <span className="text-white font-bold text-xl">C</span>
                 </div>
-                {!isCollapsed && <span className="text-2xl font-black text-white tracking-tighter underline underline-offset-4 decoration-[#b50a0a] truncate">{brandName}</span>}
+                {!isCollapsed && <span className="text-2xl font-bold text-white tracking-tighter underline underline-offset-4 decoration-[#b50a0a] truncate">{brandName}</span>}
              </>
           )}
         </Link>

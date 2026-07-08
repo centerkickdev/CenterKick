@@ -60,12 +60,12 @@ export function DashboardNotificationBell({ initialNotifications }: { initialNot
           <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-white border border-gray-100 rounded-3xl shadow-2xl z-50 overflow-hidden animate-in fade-in duration-200">
             <div className="p-6 border-b border-gray-50 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-black text-gray-900 tracking-tight">Notifications</h3>
+                <h3 className="text-base font-bold text-gray-900 tracking-tight">Notifications</h3>
               </div>
               {unreadCount > 0 && (
                 <button 
                   onClick={handleMarkAllRead}
-                  className="text-[10px] font-black text-[#b50a0a] hover:text-black tracking-wide flex items-center gap-1 transition-colors"
+                  className="text-xs font-bold text-[#b50a0a] hover:text-black tracking-wide flex items-center gap-1 transition-colors"
                 >
                   <Check className="w-3 h-3" /> Mark All Read
                 </button>
@@ -75,7 +75,7 @@ export function DashboardNotificationBell({ initialNotifications }: { initialNot
             <div className="max-h-[60vh] overflow-y-auto">
               {notifications.length === 0 ? (
                 <div className="py-12 text-center">
-                  <p className="text-[10px] font-black text-gray-400 tracking-wide">No notifications yet</p>
+                  <p className="text-xs font-bold text-gray-400 tracking-wide">No notifications yet</p>
                 </div>
               ) : (
                 <div className="divide-y divide-gray-50">
@@ -93,10 +93,10 @@ export function DashboardNotificationBell({ initialNotifications }: { initialNot
                           {getTypeIcon(notif.type)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className={`text-[11px] font-black tracking-tight ${!notif.is_read ? 'text-gray-900' : 'text-gray-500'}`}>
+                          <h4 className={`text-xs font-bold tracking-tight ${!notif.is_read ? 'text-gray-900' : 'text-gray-500'}`}>
                              {notif.title}
                           </h4>
-                          <p className={`text-[10px] mt-1 leading-relaxed ${!notif.is_read ? 'text-gray-600' : 'text-gray-400'}`}>
+                          <p className={`text-xs mt-1 leading-relaxed ${!notif.is_read ? 'text-gray-600' : 'text-gray-400'}`}>
                              {notif.message}
                           </p>
                           
@@ -105,7 +105,7 @@ export function DashboardNotificationBell({ initialNotifications }: { initialNot
                                <Link 
                                  href={notif.action_url}
                                  onClick={() => setIsOpen(false)}
-                                 className="text-[9px] font-black text-[#b50a0a] hover:underline"
+                                 className="text-xs font-bold text-[#b50a0a] hover:underline"
                                >
                                   View Details
                                </Link>
@@ -113,7 +113,7 @@ export function DashboardNotificationBell({ initialNotifications }: { initialNot
                              {!notif.is_read && (
                                <button 
                                  onClick={() => handleMarkRead(notif.id)}
-                                 className="text-[9px] font-black text-gray-400 hover:text-black"
+                                 className="text-xs font-bold text-gray-400 hover:text-black"
                                >
                                   Dismiss
                                </button>

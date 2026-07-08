@@ -133,11 +133,11 @@ export default async function AdminPlayersPage({
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 tracking-tighter leading-none">Player&apos;s <span className="text-[#b50a0a]">Profiles</span></h1>
-          <p className="text-gray-400 text-[9px] font-black tracking-[0.2em] mt-2">Manage players profile and subscriptions.</p>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tighter leading-none">Player&apos;s <span className="text-[#b50a0a]">Profiles</span></h1>
+          <p className="text-gray-400 text-xs font-bold tracking-[0.2em] mt-2">Manage players profile and subscriptions.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/admin/players?add=true" className="bg-[#b50a0a] hover:bg-black text-white px-5 py-3 rounded-xl font-black text-[9px] tracking-wide transition-all flex items-center gap-2 shadow-xl shadow-red-900/10 active:scale-95">
+          <Link href="/admin/players?add=true" className="bg-[#b50a0a] hover:bg-black text-white px-5 py-3 rounded-xl font-bold text-xs tracking-wide transition-all flex items-center gap-2 shadow-xl shadow-red-900/10 active:scale-95">
             <UserPlus className="w-3.5 h-3.5" /> Enroll New Player
           </Link>
         </div>
@@ -155,8 +155,8 @@ export default async function AdminPlayersPage({
               <stat.icon className="w-4 h-4" />
             </div>
             <div className="space-y-0.5">
-              <p className={`text-[9px] font-black tracking-wide ${tab === stat.tab ? 'text-gray-900' : 'text-gray-400'}`}>{stat.label}</p>
-              <p className={`text-2xl font-black tracking-tighter ${tab === stat.tab ? 'text-[#b50a0a]' : 'text-gray-900'}`}>{stat.value}</p>
+              <p className={`text-xs font-bold tracking-wide ${tab === stat.tab ? 'text-gray-900' : 'text-gray-400'}`}>{stat.label}</p>
+              <p className={`text-2xl font-bold tracking-tighter ${tab === stat.tab ? 'text-[#b50a0a]' : 'text-gray-900'}`}>{stat.value}</p>
             </div>
             {tab === stat.tab && (
               <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-[#b50a0a] rounded-full"></div>

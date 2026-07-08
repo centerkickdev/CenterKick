@@ -63,7 +63,7 @@ export default function TablesPage() {
             {/* Page Header */}
             <div className="bg-[#383838] py-8">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
-                  <h1 className="text-white text-3xl font-black tracking-wide">Tables</h1>
+                  <h1 className="text-white text-3xl font-bold tracking-wide">Tables</h1>
                </div>
             </div>
 
@@ -72,27 +72,27 @@ export default function TablesPage() {
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                   <ul className="flex items-center gap-8 overflow-x-auto [&::-webkit-scrollbar]:hidden scroll-smooth whitespace-nowrap">
                      <li>
-                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news" className="text-white hover:text-[#b50a0a] transition-colors text-xs font-bold tracking-wide py-4 block">
                            All News
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/fixtures" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news/fixtures" className="text-white hover:text-[#b50a0a] transition-colors text-xs font-bold tracking-wide py-4 block">
                            Match Fixtures
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/results" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news/results" className="text-white hover:text-[#b50a0a] transition-colors text-xs font-bold tracking-wide py-4 block">
                            Results
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/tables" className="text-[#b50a0a] text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news/tables" className="text-[#b50a0a] text-xs font-bold tracking-wide py-4 block">
                            Tables
                         </Link>
                      </li>
                      <li>
-                        <Link href="/news/live-scores" className="text-white hover:text-[#b50a0a] transition-colors text-[10px] font-bold tracking-wide py-4 block">
+                        <Link href="/news/live-scores" className="text-white hover:text-[#b50a0a] transition-colors text-xs font-bold tracking-wide py-4 block">
                            Live Scores
                         </Link>
                      </li>
@@ -106,35 +106,35 @@ export default function TablesPage() {
                {/* Filters Bar */}
                <div className="flex flex-wrap items-center border border-gray-200 py-3 px-6 mb-12 shadow-sm rounded-sm">
                   <div className="flex flex-col border-r border-gray-200 pr-8">
-                     <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide">Filter By Competition:</span>
-                     <button className="flex items-center gap-1 text-[13px] font-black text-gray-900 mt-1">
+                     <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By Competition:</span>
+                     <button className="flex items-center gap-1 text-[13px] font-bold text-gray-900 mt-1">
                         Nigeria League <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
                   
                   <div className="flex flex-col border-r border-gray-200 px-8">
-                     <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide">Filter By Season:</span>
-                     <button className="flex items-center gap-1 text-[13px] font-black text-gray-900 mt-1">
+                     <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By Season:</span>
+                     <button className="flex items-center gap-1 text-[13px] font-bold text-gray-900 mt-1">
                         2022/23 <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
 
                   <div className="flex flex-col border-r border-gray-200 px-8">
-                     <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide">Filter By Matchweek:</span>
-                     <button className="flex items-center gap-1 text-[13px] font-black text-gray-900 mt-1">
+                     <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By Matchweek:</span>
+                     <button className="flex items-center gap-1 text-[13px] font-bold text-gray-900 mt-1">
                         All Matchweeks <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
 
                   <div className="flex flex-col border-r border-gray-200 px-8">
-                     <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide">Filter By Home / Away:</span>
-                     <button className="flex items-center gap-1 text-[13px] font-black text-gray-900 mt-1">
+                     <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By Home / Away:</span>
+                     <button className="flex items-center gap-1 text-[13px] font-bold text-gray-900 mt-1">
                         All Matches <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
 
                   <div className="flex flex-col pl-8 ml-auto">
-                     <button className="flex items-center gap-2 text-[11px] font-black text-gray-900 hover:text-[#b50a0a] transition-colors">
+                     <button className="flex items-center gap-2 text-xs font-bold text-gray-900 hover:text-[#b50a0a] transition-colors">
                         <RotateCcw className="w-3 h-3" /> Reset Filters
                      </button>
                   </div>
@@ -154,45 +154,45 @@ export default function TablesPage() {
 
                {/* Group A Table */}
                <div className="mb-16">
-                  <h2 className="text-lg font-black text-gray-900 tracking-wide mb-6">Group A</h2>
+                  <h2 className="text-lg font-bold text-gray-900 tracking-wide mb-6">Group A</h2>
                   
                   <div className="w-full overflow-x-auto">
                      <table className="w-full text-left border-collapse min-w-[800px]">
                         <thead>
                            <tr className="bg-[#e5e5e5] border-b-2 border-white">
-                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3 text-center w-12">Pos</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3">Club</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Played</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Won</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Drawn</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Lost</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GF</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GA</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GD</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-16">Points</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3 text-center w-40">Form</th>
+                              <th className="font-bold text-xs text-gray-500 px-4 py-3 text-center w-12">Pos</th>
+                              <th className="font-bold text-xs text-gray-500 px-4 py-3">Club</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">Played</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">Won</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">Drawn</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">Lost</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">GF</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">GA</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">GD</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-16">Points</th>
+                              <th className="font-bold text-xs text-gray-500 px-4 py-3 text-center w-40">Form</th>
                            </tr>
                         </thead>
                         <tbody>
                            {GROUP_A.map((row) => (
                               <tr key={row.pos} className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
-                                 <td className={`font-bold text-[11px] px-4 py-3 text-center ${row.posColor}`}>
+                                 <td className={`font-bold text-xs px-4 py-3 text-center ${row.posColor}`}>
                                     {row.pos}
                                  </td>
                                  <td className="px-4 py-3">
                                     <div className="flex items-center gap-3">
                                        <img src={row.logo} className="w-6 h-6 object-contain" alt={row.club} />
-                                       <span className="font-black text-[11px] text-gray-700">{row.club}</span>
+                                       <span className="font-bold text-xs text-gray-700">{row.club}</span>
                                     </div>
                                  </td>
-                                 <td className="font-bold text-[11px] text-gray-400 text-center px-2 py-3">{row.p}</td>
-                                 <td className="font-bold text-[11px] text-gray-700 text-center px-2 py-3">{row.w}</td>
-                                 <td className="font-bold text-[11px] text-gray-700 text-center px-2 py-3">{row.d}</td>
-                                 <td className="font-bold text-[11px] text-gray-700 text-center px-2 py-3">{row.l}</td>
-                                 <td className="font-bold text-[11px] text-gray-400 text-center px-2 py-3">{row.gf}</td>
-                                 <td className="font-bold text-[11px] text-gray-400 text-center px-2 py-3">{row.ga}</td>
-                                 <td className="font-bold text-[11px] text-gray-400 text-center px-2 py-3">{row.gd}</td>
-                                 <td className="font-black text-[12px] text-gray-900 text-center px-2 py-3">{row.pts}</td>
+                                 <td className="font-bold text-xs text-gray-400 text-center px-2 py-3">{row.p}</td>
+                                 <td className="font-bold text-xs text-gray-700 text-center px-2 py-3">{row.w}</td>
+                                 <td className="font-bold text-xs text-gray-700 text-center px-2 py-3">{row.d}</td>
+                                 <td className="font-bold text-xs text-gray-700 text-center px-2 py-3">{row.l}</td>
+                                 <td className="font-bold text-xs text-gray-400 text-center px-2 py-3">{row.gf}</td>
+                                 <td className="font-bold text-xs text-gray-400 text-center px-2 py-3">{row.ga}</td>
+                                 <td className="font-bold text-xs text-gray-400 text-center px-2 py-3">{row.gd}</td>
+                                 <td className="font-bold text-xs text-gray-900 text-center px-2 py-3">{row.pts}</td>
                                  <td className="px-4 py-3">
                                     <div className="flex items-center justify-center gap-1.5">
                                        {row.form.map((f, i) => (
@@ -209,45 +209,45 @@ export default function TablesPage() {
 
                {/* Group B Table */}
                <div>
-                  <h2 className="text-lg font-black text-gray-900 tracking-wide mb-6">Group B</h2>
+                  <h2 className="text-lg font-bold text-gray-900 tracking-wide mb-6">Group B</h2>
                   
                   <div className="w-full overflow-x-auto">
                      <table className="w-full text-left border-collapse min-w-[800px]">
                         <thead>
                            <tr className="bg-[#e5e5e5] border-b-2 border-white">
-                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3 text-center w-12">Pos</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3">Club</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Played</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Won</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Drawn</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">Lost</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GF</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GA</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-12">GD</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-2 py-3 text-center w-16">Points</th>
-                              <th className="font-bold text-[9px] text-gray-500 px-4 py-3 text-center w-40">Form</th>
+                              <th className="font-bold text-xs text-gray-500 px-4 py-3 text-center w-12">Pos</th>
+                              <th className="font-bold text-xs text-gray-500 px-4 py-3">Club</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">Played</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">Won</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">Drawn</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">Lost</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">GF</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">GA</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-12">GD</th>
+                              <th className="font-bold text-xs text-gray-500 px-2 py-3 text-center w-16">Points</th>
+                              <th className="font-bold text-xs text-gray-500 px-4 py-3 text-center w-40">Form</th>
                            </tr>
                         </thead>
                         <tbody>
                            {GROUP_B.map((row) => (
                               <tr key={row.pos} className="border-b border-gray-100 last:border-0 hover:bg-gray-50 transition-colors">
-                                 <td className={`font-bold text-[11px] px-4 py-3 text-center ${row.posColor}`}>
+                                 <td className={`font-bold text-xs px-4 py-3 text-center ${row.posColor}`}>
                                     {row.pos}
                                  </td>
                                  <td className="px-4 py-3">
                                     <div className="flex items-center gap-3">
                                        <img src={row.logo} className="w-6 h-6 object-contain" alt={row.club} />
-                                       <span className="font-black text-[11px] text-gray-700">{row.club}</span>
+                                       <span className="font-bold text-xs text-gray-700">{row.club}</span>
                                     </div>
                                  </td>
-                                 <td className="font-bold text-[11px] text-gray-400 text-center px-2 py-3">{row.p}</td>
-                                 <td className="font-bold text-[11px] text-gray-700 text-center px-2 py-3">{row.w}</td>
-                                 <td className="font-bold text-[11px] text-gray-700 text-center px-2 py-3">{row.d}</td>
-                                 <td className="font-bold text-[11px] text-gray-700 text-center px-2 py-3">{row.l}</td>
-                                 <td className="font-bold text-[11px] text-gray-400 text-center px-2 py-3">{row.gf}</td>
-                                 <td className="font-bold text-[11px] text-gray-400 text-center px-2 py-3">{row.ga}</td>
-                                 <td className="font-bold text-[11px] text-gray-400 text-center px-2 py-3">{row.gd}</td>
-                                 <td className="font-black text-[12px] text-gray-900 text-center px-2 py-3">{row.pts}</td>
+                                 <td className="font-bold text-xs text-gray-400 text-center px-2 py-3">{row.p}</td>
+                                 <td className="font-bold text-xs text-gray-700 text-center px-2 py-3">{row.w}</td>
+                                 <td className="font-bold text-xs text-gray-700 text-center px-2 py-3">{row.d}</td>
+                                 <td className="font-bold text-xs text-gray-700 text-center px-2 py-3">{row.l}</td>
+                                 <td className="font-bold text-xs text-gray-400 text-center px-2 py-3">{row.gf}</td>
+                                 <td className="font-bold text-xs text-gray-400 text-center px-2 py-3">{row.ga}</td>
+                                 <td className="font-bold text-xs text-gray-400 text-center px-2 py-3">{row.gd}</td>
+                                 <td className="font-bold text-xs text-gray-900 text-center px-2 py-3">{row.pts}</td>
                                  <td className="px-4 py-3">
                                     <div className="flex items-center justify-center gap-1.5">
                                        {row.form.map((f, i) => (

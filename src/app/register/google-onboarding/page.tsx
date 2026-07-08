@@ -103,7 +103,7 @@ export default function GoogleOnboardingPage() {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center">
         <div className="w-12 h-12 rounded-full border-4 border-slate-100 border-t-[#a20000] animate-spin mb-4"></div>
-        <p className="text-[10px] font-black text-slate-400 tracking-wide animate-pulse">Initializing Setup Wizard...</p>
+        <p className="text-xs font-bold text-slate-400 tracking-wide animate-pulse">Initializing Setup Wizard...</p>
       </div>
     );
   }
@@ -118,18 +118,18 @@ export default function GoogleOnboardingPage() {
           {/* Custom Wizard Progress Bar */}
           <div className="flex items-center justify-center mb-16">
             <div className="flex items-center gap-4">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-sm ${step === 1 ? 'bg-[#a20000] text-white animate-pulse' : 'bg-green-500 text-white'}`}>
-                {step === 1 ? '1' : '✓'}
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${step === 1 ? 'bg-[#a20000] text-white animate-pulse' : 'bg-green-500 text-white'}`}>
+                {step === 1 ? '1' : 'âœ“'}
               </div>
               <div className={`w-24 h-1 rounded-full ${step === 2 ? 'bg-green-500' : 'bg-slate-100'}`}></div>
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-sm ${step === 2 ? 'bg-[#a20000] text-white animate-pulse' : 'bg-slate-100 text-slate-400'}`}>
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${step === 2 ? 'bg-[#a20000] text-white animate-pulse' : 'bg-slate-100 text-slate-400'}`}>
                 2
               </div>
             </div>
           </div>
 
           <div className="text-center mb-12">
-            <span className="text-[#a20000] font-black text-sm tracking-[0.4em] mb-4 block">Google Partner Portal</span>
+            <span className="text-[#a20000] font-bold text-sm tracking-[0.4em] mb-4 block">Google Partner Portal</span>
             <h1 className="text-4xl lg:text-6xl font-black text-slate-900 tracking-tighter leading-none mb-4">
               Complete Your <br />
               <span className="text-[#a20000]">E-Profile Setup</span>
@@ -140,7 +140,7 @@ export default function GoogleOnboardingPage() {
           </div>
 
           {error && (
-            <div className="mb-8 p-5 bg-red-50 border border-red-100 rounded-3xl text-red-700 text-sm font-black tracking-wide flex items-center gap-3">
+            <div className="mb-8 p-5 bg-red-50 border border-red-100 rounded-3xl text-red-700 text-sm font-bold tracking-wide flex items-center gap-3">
               <AlertCircle className="w-5 h-5 shrink-0" />
               <span>{error}</span>
             </div>
@@ -152,7 +152,7 @@ export default function GoogleOnboardingPage() {
             {step === 1 ? (
               <div className="space-y-10 animate-in fade-in duration-500">
                 <div className="text-center">
-                  <h2 className="text-xl font-black text-slate-900 tracking-tight">Step 1: Choose Your Role</h2>
+                  <h2 className="text-xl font-bold text-slate-900 tracking-tight">Step 1: Choose Your Role</h2>
                   <p className="text-sm text-slate-400 tracking-wide mt-1">This defines your visibility and access metrics across the platform</p>
                 </div>
 
@@ -176,8 +176,8 @@ export default function GoogleOnboardingPage() {
                         <item.icon className="w-6 h-6" />
                       </div>
                       <div>
-                        <h4 className="font-black text-sm tracking-tight text-slate-900">{item.label}</h4>
-                        <p className="text-[10px] text-slate-400 mt-2 leading-relaxed font-bold">{item.desc}</p>
+                        <h4 className="font-bold text-sm tracking-tight text-slate-900">{item.label}</h4>
+                        <p className="text-xs text-slate-400 mt-2 leading-relaxed font-bold">{item.desc}</p>
                       </div>
                     </button>
                   ))}
@@ -186,7 +186,7 @@ export default function GoogleOnboardingPage() {
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="w-full bg-slate-900 text-white py-6 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl"
+                  className="w-full bg-slate-900 text-white py-6 rounded-2xl font-bold tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl"
                 >
                   Continue to Details <ChevronRight className="w-4 h-4" />
                 </button>
@@ -194,13 +194,13 @@ export default function GoogleOnboardingPage() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in duration-500">
                 <div className="text-center">
-                  <h2 className="text-xl font-black text-slate-900 tracking-tight">Step 2: Profile Specifications</h2>
+                  <h2 className="text-xl font-bold text-slate-900 tracking-tight">Step 2: Profile Specifications</h2>
                   <p className="text-sm text-slate-400 tracking-wide mt-1">Please provide accurate personal records for verification</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-400 tracking-wide pl-1">Full Name</label>
+                    <label className="text-xs font-bold text-slate-400 tracking-wide pl-1">Full Name</label>
                     <div className="relative">
                       <User className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input
@@ -215,7 +215,7 @@ export default function GoogleOnboardingPage() {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-400 tracking-wide pl-1">Date of Birth</label>
+                    <label className="text-xs font-bold text-slate-400 tracking-wide pl-1">Date of Birth</label>
                     <div className="relative">
                       <Calendar className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input
@@ -231,7 +231,7 @@ export default function GoogleOnboardingPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-400 tracking-wide pl-1">Phone Number</label>
+                    <label className="text-xs font-bold text-slate-400 tracking-wide pl-1">Phone Number</label>
                     <div className="relative">
                       <Phone className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input
@@ -246,7 +246,7 @@ export default function GoogleOnboardingPage() {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-[10px] font-black text-slate-400 tracking-wide pl-1">Country Location</label>
+                    <label className="text-xs font-bold text-slate-400 tracking-wide pl-1">Country Location</label>
                     <div className="relative">
                       <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                       <input
@@ -265,14 +265,14 @@ export default function GoogleOnboardingPage() {
                   <button
                     type="button"
                     onClick={() => setStep(1)}
-                    className="px-8 py-5 bg-slate-100 text-slate-600 rounded-2xl text-sm font-black tracking-wide hover:bg-slate-200 transition-all"
+                    className="px-8 py-5 bg-slate-100 text-slate-600 rounded-2xl text-sm font-bold tracking-wide hover:bg-slate-200 transition-all"
                   >
                     Back
                   </button>
                   <button
                     type="submit"
                     disabled={isLoading}
-                    className="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50"
+                    className="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-bold tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl disabled:opacity-50"
                   >
                     {isLoading ? (
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

@@ -33,7 +33,7 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName, notifi
           <div className="flex items-center gap-3 pl-6 border-l border-gray-100">
             <div className="text-right hidden sm:block">
               <span className="text-gray-900 font-bold text-sm truncate max-w-full max-w-[150px]">{email}</span>
-              <p className="text-[10px] font-bold text-[#b50a0a] tracking-wide">{role}</p>
+              <p className="text-xs font-bold text-[#b50a0a] tracking-wide">{role}</p>
             </div>
             <div className="w-8 h-8 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white shadow-lg text-sm">
               {email?.[0]?.toUpperCase() || 'U'}
@@ -65,9 +65,9 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName, notifi
               ) : (
                  <>
                     <div className="w-8 h-8 rounded-lg bg-[#b50a0a] flex items-center justify-center shrink-0">
-                      <span className="text-white font-black text-base">C</span>
+                      <span className="text-white font-bold text-base">C</span>
                     </div>
-                    <span className="text-lg font-black text-white tracking-tighter">{brandName}</span>
+                    <span className="text-lg font-bold text-white tracking-tighter">{brandName}</span>
                  </>
               )}
             </Link>

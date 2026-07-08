@@ -53,7 +53,7 @@ export function ContactClient({ layout, content, navContent, footerContent, site
             return (
                <div key={key} className="w-full lg:w-1/3 flex flex-col gap-12">
                   <div>
-                     <h2 className="text-2xl font-black text-gray-900 mb-8 tracking-tight">Direct Contacts</h2>
+                     <h2 className="text-2xl font-bold text-gray-900 mb-8 tracking-tight">Direct Contacts</h2>
                      <div className="space-y-8">
                         <div className="group flex items-start gap-4 p-4 -ml-4 rounded-2xl hover:bg-gray-50 transition-colors">
                            <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shrink-0 group-hover:bg-[#b50a0a]/10 group-hover:text-[#b50a0a] transition-colors border border-gray-200 group-hover:border-[#b50a0a]/20">
@@ -89,7 +89,7 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                <div key={key} className="w-full lg:w-2/3">
                   <div className="bg-white rounded-3xl p-8 md:p-12 border border-gray-100 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.05)] relative overflow-hidden">
                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#b50a0a] to-[#ff4d4d]"></div>
-                     <h2 className="text-3xl font-black text-gray-900 mb-8 tracking-tight flex items-center gap-3">
+                     <h2 className="text-3xl font-bold text-gray-900 mb-8 tracking-tight flex items-center gap-3">
                         <MessageSquare className="w-8 h-8 text-[#b50a0a]" /> Send a Message
                      </h2>
                      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
@@ -99,7 +99,7 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                         </div>
                         <input type="text" placeholder="Subject" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] text-black placeholder:text-gray-900" />
                         <textarea rows={6} placeholder="Message" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] resize-none text-black placeholder:text-gray-900"></textarea>
-                        <button type="submit" className="bg-[#b50a0a] text-white font-black tracking-wide px-10 py-5 rounded-xl shadow-lg transition-all hover:-translate-y-1 group flex items-center gap-3">
+                        <button type="submit" className="bg-[#b50a0a] text-white font-bold tracking-wide px-10 py-5 rounded-xl shadow-lg transition-all hover:-translate-y-1 group flex items-center gap-3">
                             Send Message <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </button>
                      </form>
@@ -124,14 +124,14 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                   <div className="max-w-[800px] mx-auto">
                      <div className="text-center mb-16">
                         <span className="text-[#b50a0a] font-bold tracking-[0.2em] mb-4 block text-base">Got Questions?</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">❔ FAQs</h2>
+                        <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">â” FAQs</h2>
                      </div>
                      <div className="space-y-4">
                         {faqs.map((faq: { q: string; a: string }, idx: number) => (
                            <div key={idx} className={`bg-white border rounded-2xl overflow-hidden shadow-sm transition-all duration-300 ${openFaq === idx ? 'border-[#b50a0a]' : 'border-gray-200'}`}>
                               <button onClick={() => setOpenFaq(openFaq === idx ? null : idx)} className="w-full flex items-center justify-between p-6 md:p-8 text-left outline-none">
                                  <div className="flex items-center gap-4">
-                                    <span className={`font-black text-lg ${openFaq === idx ? 'text-[#b50a0a]' : 'text-gray-300'}`}>{(idx + 1).toString().padStart(2, '0')}</span>
+                                    <span className={`font-bold text-lg ${openFaq === idx ? 'text-[#b50a0a]' : 'text-gray-300'}`}>{(idx + 1).toString().padStart(2, '0')}</span>
                                     <h3 className="font-bold text-gray-900">{faq.q}</h3>
                                  </div>
                                  <ChevronDown className={`w-6 h-6 transition-transform ${openFaq === idx ? 'rotate-180 text-[#b50a0a]' : 'text-gray-400'}`} />

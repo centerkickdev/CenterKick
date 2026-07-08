@@ -88,8 +88,8 @@ export default async function AdminUsersPage({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tighter leading-none">Account <span className="text-[#b50a0a]">Management</span></h1>
-          <p className="text-gray-400 text-[10px] font-black tracking-[0.2em] mt-2 flex items-center gap-2">
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tighter leading-none">Account <span className="text-[#b50a0a]">Management</span></h1>
+          <p className="text-gray-400 text-xs font-bold tracking-[0.2em] mt-2 flex items-center gap-2">
             <Shield className="w-3 h-3 text-[#b50a0a]" /> Directory of all registered entities
           </p>
         </div>
@@ -102,8 +102,8 @@ export default async function AdminUsersPage({
             <div className={`w-12 h-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center mb-4`}>
               <stat.icon className="w-5 h-5" />
             </div>
-            <p className="text-[9px] font-black text-gray-400 tracking-wide">{stat.label}</p>
-            <p className="text-2xl font-black text-gray-900 tracking-tighter mt-1">{stat.value}</p>
+            <p className="text-xs font-bold text-gray-400 tracking-wide">{stat.label}</p>
+            <p className="text-2xl font-bold text-gray-900 tracking-tighter mt-1">{stat.value}</p>
           </div>
         ))}
       </div>
@@ -112,13 +112,13 @@ export default async function AdminUsersPage({
       <div className="bg-gray-900 rounded-[2rem] p-4 md:p-8 text-white flex flex-wrap gap-12 border border-white/5 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#b50a0a] rounded-full blur-[100px] opacity-10 -mr-32 -mt-32"></div>
         <div>
-          <p className="text-[8px] font-black text-[#b50a0a] tracking-[0.3em] mb-1">Role Distribution</p>
+          <p className="text-xs font-bold text-[#b50a0a] tracking-[0.3em] mb-1">Role Distribution</p>
           <div className="flex gap-4 md:p-8">
-            <div><p className="text-xl font-black">{playersCount || 0}</p><p className="text-[8px] font-bold text-gray-500 tracking-wide">Players</p></div>
-            <div><p className="text-xl font-black">{coachesCount || 0}</p><p className="text-[8px] font-bold text-gray-500 tracking-wide">Coaches</p></div>
-            <div><p className="text-xl font-black">{agentsCount || 0}</p><p className="text-[8px] font-bold text-gray-500 tracking-wide">Agents</p></div>
-            <div><p className="text-xl font-black">{scoutsCount || 0}</p><p className="text-[8px] font-bold text-gray-500 tracking-wide">Scouts</p></div>
-            <div><p className="text-xl font-black">{orgsCount || 0}</p><p className="text-[8px] font-bold text-gray-500 tracking-wide">Orgs</p></div>
+            <div><p className="text-xl font-bold">{playersCount || 0}</p><p className="text-xs font-bold text-gray-500 tracking-wide">Players</p></div>
+            <div><p className="text-xl font-bold">{coachesCount || 0}</p><p className="text-xs font-bold text-gray-500 tracking-wide">Coaches</p></div>
+            <div><p className="text-xl font-bold">{agentsCount || 0}</p><p className="text-xs font-bold text-gray-500 tracking-wide">Agents</p></div>
+            <div><p className="text-xl font-bold">{scoutsCount || 0}</p><p className="text-xs font-bold text-gray-500 tracking-wide">Scouts</p></div>
+            <div><p className="text-xl font-bold">{orgsCount || 0}</p><p className="text-xs font-bold text-gray-500 tracking-wide">Orgs</p></div>
           </div>
         </div>
       </div>

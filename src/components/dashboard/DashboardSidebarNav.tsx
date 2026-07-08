@@ -52,7 +52,7 @@ export function DashboardSidebarNav({ role, isSubscribed = false, isCollapsed = 
       )}
 
       <div className="pt-8 mt-8 border-t border-gray-800">
-        {!isCollapsed && <span className="px-4 text-[10px] font-black text-gray-500 tracking-[0.2em]">Management</span>}
+        {!isCollapsed && <span className="px-4 text-xs font-bold text-gray-500 tracking-[0.2em]">Management</span>}
         
         <Link href="/dashboard/subscription" className={`${getLinkClasses('/dashboard/subscription')} group mt-4`} title={isCollapsed ? "Subscription" : undefined}>
           <Shield className={getIconClasses('/dashboard/subscription')} />

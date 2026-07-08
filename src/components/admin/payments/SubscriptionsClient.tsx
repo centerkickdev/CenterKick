@@ -129,15 +129,15 @@ export function SubscriptionsClient({
          {/* Header */}
          <div className="flex items-center justify-between">
             <div>
-               <h1 className="text-3xl font-black text-gray-900 tracking-tighter">Subscription Registry</h1>
-               <p className="text-gray-900 text-[10px] font-bold tracking-[0.2em] mt-1">
+               <h1 className="text-3xl font-bold text-gray-900 tracking-tighter">Subscription Registry</h1>
+               <p className="text-gray-900 text-xs font-bold tracking-[0.2em] mt-1">
                   Centrally manage account growth rates, settlement channels, and gateway integrations.
                </p>
             </div>
             <button
                onClick={handleSave}
                disabled={isSaving}
-               className="bg-black text-white px-4 md:px-8 py-3.5 rounded-2xl font-black text-[10px] tracking-wide shadow-xl shadow-gray-200 hover:bg-[#b50a0a] transition-all flex items-center gap-3 disabled:opacity-50"
+               className="bg-black text-white px-4 md:px-8 py-3.5 rounded-2xl font-bold text-xs tracking-wide shadow-xl shadow-gray-200 hover:bg-[#b50a0a] transition-all flex items-center gap-3 disabled:opacity-50"
             >
                {isSaving ? 'Processing...' : 'Deploy Changes'}
                <Save className="w-4 h-4" />
@@ -147,7 +147,7 @@ export function SubscriptionsClient({
          {/* Validation Banner Summary */}
          {Object.keys(errors).length > 0 && (
             <div className="bg-red-50 border-2 border-red-200 p-6 rounded-[2rem] text-red-700 space-y-2 animate-in slide-in-from-top-4 duration-300">
-               <h4 className="text-sm font-black tracking-wide">Validation Errors Found ({Object.keys(errors).length})</h4>
+               <h4 className="text-sm font-bold tracking-wide">Validation Errors Found ({Object.keys(errors).length})</h4>
                <p className="text-sm font-medium">Please review and fix the highlighted fields below before submitting.</p>
             </div>
          )}
@@ -160,21 +160,21 @@ export function SubscriptionsClient({
                      <ExternalLink className="w-6 h-6" />
                   </div>
                   <div>
-                     <h3 className="text-base font-black text-gray-900">Legacy Checkout</h3>
-                     <p className="text-[10px] font-bold text-gray-900 tracking-wide mt-0.5">Universal Redirect Link</p>
+                     <h3 className="text-base font-bold text-gray-900">Legacy Checkout</h3>
+                     <p className="text-xs font-bold text-gray-900 tracking-wide mt-0.5">Universal Redirect Link</p>
                   </div>
                </div>
 
                <div className="space-y-4">
                   <div className="space-y-1.5">
-                     <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">External Payment URL</label>
+                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">External Payment URL</label>
                      <div className="relative group">
                         <input
                            type="text"
                            value={settings.paymentLink || ''}
                            onChange={(e) => setSettings({ ...settings, paymentLink: e.target.value })}
                            placeholder="https://..."
-                           className={`w-full bg-gray-50 border rounded-xl p-4 text-[10px] font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 ${errors.paymentLink ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
+                           className={`w-full bg-gray-50 border rounded-xl p-4 text-xs font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 ${errors.paymentLink ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
                         />
                         {settings.paymentLink && !errors.paymentLink && (
                            <a href={settings.paymentLink} target="_blank" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors">
@@ -182,16 +182,16 @@ export function SubscriptionsClient({
                            </a>
                         )}
                      </div>
-                     {errors.paymentLink && <p className="text-[9px] font-bold text-red-500 ml-1 mt-1">{errors.paymentLink}</p>}
+                     {errors.paymentLink && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.paymentLink}</p>}
                   </div>
                   <div className="space-y-1.5">
-                     <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Checkout Instructions</label>
+                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Checkout Instructions</label>
                      <textarea
                         rows={2}
                         value={settings.instructions || ''}
                         onChange={(e) => setSettings({ ...settings, instructions: e.target.value })}
                         placeholder="Instructions shown for manual/universal links..."
-                        className="w-full bg-gray-50 border-none rounded-xl p-4 text-[10px] font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 resize-none"
+                        className="w-full bg-gray-50 border-none rounded-xl p-4 text-xs font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 resize-none"
                      />
                   </div>
                </div>
@@ -204,44 +204,44 @@ export function SubscriptionsClient({
                      <DollarSign className="w-6 h-6" />
                   </div>
                   <div>
-                     <h3 className="text-base font-black text-gray-900">Bank Settlement</h3>
-                     <p className="text-[10px] font-bold text-gray-900 tracking-wide mt-0.5">Local Transfers</p>
+                     <h3 className="text-base font-bold text-gray-900">Bank Settlement</h3>
+                     <p className="text-xs font-bold text-gray-900 tracking-wide mt-0.5">Local Transfers</p>
                   </div>
                </div>
 
                <div className="grid grid-cols-1 gap-4">
                   <div className="grid grid-cols-1 gap-1.5">
-                     <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Institution</label>
+                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Institution</label>
                      <input
                         type="text"
                         value={settings.bankName || ''}
                         onChange={(e) => setSettings({ ...settings, bankName: e.target.value })}
                         placeholder="Bank name"
-                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-[10px] font-bold text-gray-900 focus:ring-2 focus:ring-amber-200 transition-all ${errors.bankName ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
+                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-amber-200 transition-all ${errors.bankName ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
                      />
-                     {errors.bankName && <p className="text-[9px] font-bold text-red-500 ml-1 mt-1">{errors.bankName}</p>}
+                     {errors.bankName && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.bankName}</p>}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      <div className="space-y-1.5">
-                        <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Acc. Name</label>
+                        <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Acc. Name</label>
                         <input
                            type="text"
                            value={settings.accountName || ''}
                            onChange={(e) => setSettings({ ...settings, accountName: e.target.value })}
-                           className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-[10px] font-bold text-gray-900"
+                           className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900"
                         />
                      </div>
                      <div className="space-y-1.5">
-                        <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Number</label>
+                        <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Number</label>
                         <input
                            type="text"
                            value={settings.accountNumber || ''}
                            onChange={(e) => setSettings({ ...settings, accountNumber: e.target.value })}
-                           className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-[10px] font-bold text-gray-900 focus:ring-2 focus:ring-amber-200 transition-all ${errors.accountNumber ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
+                           className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-amber-200 transition-all ${errors.accountNumber ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
                         />
                      </div>
                   </div>
-                  {errors.accountNumber && <p className="text-[9px] font-bold text-red-500 ml-1">{errors.accountNumber}</p>}
+                  {errors.accountNumber && <p className="text-xs font-bold text-red-500 ml-1">{errors.accountNumber}</p>}
                </div>
             </div>
          </div>
@@ -257,8 +257,8 @@ export function SubscriptionsClient({
                         <Zap className="w-6 h-6" />
                      </div>
                      <div>
-                        <h3 className="text-base font-black text-gray-900 tracking-tight">Paystack</h3>
-                        <p className="text-[9px] font-bold text-gray-900 tracking-wide mt-0.5">Automated Gateway</p>
+                        <h3 className="text-base font-bold text-gray-900 tracking-tight">Paystack</h3>
+                        <p className="text-xs font-bold text-gray-900 tracking-wide mt-0.5">Automated Gateway</p>
                      </div>
                   </div>
                   <button
@@ -271,19 +271,19 @@ export function SubscriptionsClient({
 
                <div className="space-y-4 relative z-10">
                   <div className="space-y-1.5">
-                     <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Secret Key</label>
+                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Secret Key</label>
                      <input
                         type="password"
                         value={settings.paystackSecret || ''}
                         onChange={(e) => setSettings({ ...settings, paystackSecret: e.target.value })}
                         placeholder="sk_live_..."
-                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-[10px] font-bold text-gray-900 focus:ring-2 focus:ring-teal-100 transition-all ${errors.paystackSecret ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
+                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-teal-100 transition-all ${errors.paystackSecret ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
                      />
-                     {errors.paystackSecret && <p className="text-[9px] font-bold text-red-500 ml-1 mt-1">{errors.paystackSecret}</p>}
+                     {errors.paystackSecret && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.paystackSecret}</p>}
                   </div>
                   <div className="space-y-1.5">
-                     <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Webhook URL</label>
-                     <div className="p-3 bg-gray-50 rounded-xl text-[9px] font-mono text-gray-400 break-all select-all">
+                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Webhook URL</label>
+                     <div className="p-3 bg-gray-50 rounded-xl text-xs font-mono text-gray-400 break-all select-all">
                         {typeof window !== 'undefined' ? `${window.location.origin}/api/hooks/paystack` : '.../api/hooks/paystack'}
                      </div>
                   </div>
@@ -299,8 +299,8 @@ export function SubscriptionsClient({
                         <CreditCard className="w-6 h-6" />
                      </div>
                      <div>
-                        <h3 className="text-base font-black text-gray-900 tracking-tight">Stripe</h3>
-                        <p className="text-[9px] font-bold text-gray-900 tracking-wide mt-0.5">Global Checkout</p>
+                        <h3 className="text-base font-bold text-gray-900 tracking-tight">Stripe</h3>
+                        <p className="text-xs font-bold text-gray-900 tracking-wide mt-0.5">Global Checkout</p>
                      </div>
                   </div>
                   <button
@@ -313,26 +313,26 @@ export function SubscriptionsClient({
 
                <div className="space-y-4 relative z-10">
                   <div className="space-y-1.5">
-                     <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Publishable Key</label>
+                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Publishable Key</label>
                      <input
                         type="text"
                         value={settings.stripeKey || ''}
                         onChange={(e) => setSettings({ ...settings, stripeKey: e.target.value })}
                         placeholder="pk_live_..."
-                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-[10px] font-bold text-gray-900 focus:ring-2 focus:ring-indigo-100 transition-all ${errors.stripeKey ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
+                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-indigo-100 transition-all ${errors.stripeKey ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
                      />
-                     {errors.stripeKey && <p className="text-[9px] font-bold text-red-500 ml-1 mt-1">{errors.stripeKey}</p>}
+                     {errors.stripeKey && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.stripeKey}</p>}
                   </div>
                   <div className="space-y-1.5">
-                     <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Secret Key</label>
+                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Secret Key</label>
                      <input
                         type="password"
                         value={settings.stripeSecret || ''}
                         onChange={(e) => setSettings({ ...settings, stripeSecret: e.target.value })}
                         placeholder="sk_live_..."
-                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-[10px] font-bold text-gray-900 focus:ring-2 focus:ring-indigo-100 transition-all ${errors.stripeSecret ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
+                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-indigo-100 transition-all ${errors.stripeSecret ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
                      />
-                     {errors.stripeSecret && <p className="text-[9px] font-bold text-red-500 ml-1 mt-1">{errors.stripeSecret}</p>}
+                     {errors.stripeSecret && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.stripeSecret}</p>}
                   </div>
                </div>
             </div>
@@ -346,8 +346,8 @@ export function SubscriptionsClient({
                         <DollarSign className="w-6 h-6" />
                      </div>
                      <div>
-                        <h3 className="text-base font-black text-gray-900 tracking-tight">PayPal</h3>
-                        <p className="text-[9px] font-bold text-gray-900 tracking-wide mt-0.5">Braintree/Legacy</p>
+                        <h3 className="text-base font-bold text-gray-900 tracking-tight">PayPal</h3>
+                        <p className="text-xs font-bold text-gray-900 tracking-wide mt-0.5">Braintree/Legacy</p>
                      </div>
                   </div>
                   <button
@@ -360,22 +360,22 @@ export function SubscriptionsClient({
 
                <div className="space-y-4 relative z-10">
                   <div className="space-y-1.5">
-                     <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Client ID</label>
+                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Client ID</label>
                      <input
                         type="text"
                         value={settings.paypalId || ''}
                         onChange={(e) => setSettings({ ...settings, paypalId: e.target.value })}
                         placeholder="AZ_..."
-                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-[10px] font-bold text-gray-900 focus:ring-2 focus:ring-blue-100 transition-all ${errors.paypalId ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
+                        className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-blue-100 transition-all ${errors.paypalId ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
                      />
-                     {errors.paypalId && <p className="text-[9px] font-bold text-red-500 ml-1 mt-1">{errors.paypalId}</p>}
+                     {errors.paypalId && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.paypalId}</p>}
                   </div>
                   <div className="space-y-1.5">
-                     <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Environment</label>
+                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Environment</label>
                      <select
                         value={settings.paypalEnv || 'sandbox'}
                         onChange={(e) => setSettings({ ...settings, paypalEnv: e.target.value })}
-                        className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-[10px] font-bold text-gray-900 focus:ring-2 focus:ring-blue-100 transition-all"
+                        className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-blue-100 transition-all"
                      >
                         <option value="sandbox" className="text-gray-900 bg-white">Sandbox (Testing)</option>
                         <option value="live" className="text-gray-900 bg-white">Live (Production)</option>
@@ -390,8 +390,8 @@ export function SubscriptionsClient({
             <div className="flex items-center gap-4">
                <div className="h-px flex-1 bg-gray-100"></div>
                <div className="text-center px-4">
-                  <h2 className="text-xl font-black text-gray-900 tracking-tighter">Charge Rate Management</h2>
-                  <p className="text-gray-900 text-[10px] font-bold tracking-[0.2em] mt-1">Configure subscription units for each account type.</p>
+                  <h2 className="text-xl font-bold text-gray-900 tracking-tighter">Charge Rate Management</h2>
+                  <p className="text-gray-900 text-xs font-bold tracking-[0.2em] mt-1">Configure subscription units for each account type.</p>
                </div>
                <div className="h-px flex-1 bg-gray-100"></div>
             </div>
@@ -410,12 +410,12 @@ export function SubscriptionsClient({
                                  <Icon className="w-5 h-5 text-white" />
                               </div>
                               <div className="flex-1">
-                                 <p className="text-[8px] font-black text-[#b50a0a] tracking-wide mb-0.5">{role.label}</p>
+                                 <p className="text-xs font-bold text-[#b50a0a] tracking-wide mb-0.5">{role.label}</p>
                                  <input
                                     type="text"
                                     value={plan.name || `CenterKick ${role.id.charAt(0).toUpperCase() + role.id.slice(1)} Pro`}
                                     onChange={(e) => updatePlan(role.id, 'name', e.target.value)}
-                                    className="bg-transparent border-none text-[11px] font-black tracking-[0.1em] focus:ring-0 p-0 w-full text-white"
+                                    className="bg-transparent border-none text-xs font-bold tracking-[0.1em] focus:ring-0 p-0 w-full text-white"
                                     placeholder="PLAN NAME"
                                  />
                               </div>
@@ -423,26 +423,26 @@ export function SubscriptionsClient({
 
                            <div className="space-y-4">
                               <div className="space-y-2">
-                                 <label className="text-[8px] font-black text-gray-200 tracking-wide ml-1">Amount / Charge Rate</label>
+                                 <label className="text-xs font-bold text-gray-200 tracking-wide ml-1">Amount / Charge Rate</label>
                                  <div className={`flex items-center gap-3 bg-white/5 border rounded-2xl p-4 focus-within:ring-2 focus-within:ring-[#b50a0a] transition-all ${errors[`plan_amount_${role.id}`] ? 'border-red-500' : 'border-white/10'}`}>
-                                    <span className="text-2xl font-black tracking-tighter text-white/40 select-none">$</span>
+                                    <span className="text-2xl font-bold tracking-tighter text-white/40 select-none">$</span>
                                     <input
                                        type="text"
                                        value={plan.amount || '0.00'}
                                        onChange={(e) => updatePlan(role.id, 'amount', e.target.value)}
-                                       className="bg-transparent border-none text-3xl font-black tracking-tighter focus:ring-0 p-0 w-full text-white"
+                                       className="bg-transparent border-none text-3xl font-bold tracking-tighter focus:ring-0 p-0 w-full text-white"
                                        placeholder="0.00"
                                     />
                                  </div>
-                                 {errors[`plan_amount_${role.id}`] && <p className="text-[9px] font-bold text-red-500 ml-1 mt-1">{errors[`plan_amount_${role.id}`]}</p>}
+                                 {errors[`plan_amount_${role.id}`] && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors[`plan_amount_${role.id}`]}</p>}
                               </div>
 
                               <div className="space-y-2">
-                                 <label className="text-[8px] font-black text-gray-200 tracking-wide ml-1">Billing Interval</label>
+                                 <label className="text-xs font-bold text-gray-200 tracking-wide ml-1">Billing Interval</label>
                                  <select
                                     value={plan.frequency || 'Lifetime Access'}
                                     onChange={(e) => updatePlan(role.id, 'frequency', e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl text-[10px] font-bold text-gray-300 tracking-wide px-4 py-3 focus:ring-1 focus:ring-[#b50a0a]"
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-gray-300 tracking-wide px-4 py-3 focus:ring-1 focus:ring-[#b50a0a]"
                                  >
                                     <option value="Lifetime Access" className="text-gray-900 bg-white">Lifetime Access</option>
                                     <option value="Monthly" className="text-gray-900 bg-white">Monthly Billing</option>
@@ -452,12 +452,12 @@ export function SubscriptionsClient({
                               </div>
 
                               <div className="space-y-2">
-                                 <label className="text-[8px] font-black text-gray-200 tracking-wide ml-1">Inclusions / Pitch</label>
+                                 <label className="text-xs font-bold text-gray-200 tracking-wide ml-1">Inclusions / Pitch</label>
                                  <textarea
                                     rows={3}
                                     value={plan.description || `Specialized tier for all ${role.id} profiles.`}
                                     onChange={(e) => updatePlan(role.id, 'description', e.target.value)}
-                                    className="w-full bg-white/5 border border-white/5 rounded-xl p-4 text-[10px] font-medium text-gray-200 focus:ring-1 focus:ring-[#b50a0a] resize-none leading-relaxed"
+                                    className="w-full bg-white/5 border border-white/5 rounded-xl p-4 text-xs font-medium text-gray-200 focus:ring-1 focus:ring-[#b50a0a] resize-none leading-relaxed"
                                     placeholder="Enter plan benefits..."
                                  />
                               </div>

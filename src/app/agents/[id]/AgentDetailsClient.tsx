@@ -74,7 +74,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                   </div>
 
                   <div className="flex-1 space-y-4 sm:space-y-6">
-                     <span className="text-[#a20000] font-black text-sm tracking-[0.4em] block">Certified Lead Agent</span>
+                     <span className="text-[#a20000] font-bold text-sm tracking-[0.4em] block">Certified Lead Agent</span>
                      <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white tracking-tighter leading-none">
                         {profile.first_name} <br />
                         <span className="text-[#a20000]">{profile.last_name}</span>
@@ -92,7 +92,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                   </div>
 
                   <div className="hidden lg:flex flex-col gap-4 shrink-0">
-                     <button className="bg-white text-black px-10 py-4 rounded-xl font-black tracking-wide text-[10px] hover:bg-[#a20000] hover:text-white transition-all shadow-xl">
+                     <button className="bg-white text-black px-10 py-4 rounded-xl font-bold tracking-wide text-xs hover:bg-[#a20000] hover:text-white transition-all shadow-xl">
                         Schedule Consultation
                      </button>
                   </div>
@@ -104,20 +104,20 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-12">
                      <div className="text-center md:text-left">
-                        <span className="text-[10px] font-black text-gray-400 tracking-wide block mb-2">Total Transfers</span>
-                        <span className="text-4xl font-black text-gray-900 leading-none">{metrics.transfers}+</span>
+                        <span className="text-xs font-bold text-gray-400 tracking-wide block mb-2">Total Transfers</span>
+                        <span className="text-4xl font-bold text-gray-900 leading-none">{metrics.transfers}+</span>
                      </div>
                      <div className="text-center md:text-left border-l border-gray-200 md:pl-12">
-                        <span className="text-[10px] font-black text-gray-400 tracking-wide block mb-2">Managed Talent</span>
-                        <span className="text-4xl font-black text-gray-900 leading-none">{metrics.talent}</span>
+                        <span className="text-xs font-bold text-gray-400 tracking-wide block mb-2">Managed Talent</span>
+                        <span className="text-4xl font-bold text-gray-900 leading-none">{metrics.talent}</span>
                      </div>
                      <div className="text-center md:text-left border-l border-gray-200 md:pl-12">
-                        <span className="text-[10px] font-black text-gray-400 tracking-wide block mb-2">Portfolio Value</span>
-                        <span className="text-4xl font-black text-[#a20000] leading-none">{metrics.value}</span>
+                        <span className="text-xs font-bold text-gray-400 tracking-wide block mb-2">Portfolio Value</span>
+                        <span className="text-4xl font-bold text-[#a20000] leading-none">{metrics.value}</span>
                      </div>
                      <div className="text-center md:text-left border-l border-gray-200 md:pl-12">
-                        <span className="text-[10px] font-black text-gray-400 tracking-wide block mb-2">Success Rate</span>
-                        <span className="text-4xl font-black text-gray-900 leading-none">{metrics.success}</span>
+                        <span className="text-xs font-bold text-gray-400 tracking-wide block mb-2">Success Rate</span>
+                        <span className="text-4xl font-bold text-gray-900 leading-none">{metrics.success}</span>
                      </div>
                   </div>
                </div>
@@ -130,7 +130,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                      <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`text-[10px] font-black tracking-[0.25em] h-full relative transition-all ${
+                        className={`text-xs font-bold tracking-[0.25em] h-full relative transition-all ${
  activeTab === tab ? "text-[#a20000]" : "text-gray-400 hover:text-gray-900"
  }`}
                      >
@@ -149,10 +149,10 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                {activeTab === "Portfolio" && (
                   <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
                      <div className="flex items-center justify-between mb-8">
-                        <h2 className="text-3xl font-black text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
+                        <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
                            Managed Talent Network
                         </h2>
-                        <span className="text-[10px] font-black text-gray-400 tracking-wide">{managedClients.length} Profiles Found</span>
+                        <span className="text-xs font-bold text-gray-400 tracking-wide">{managedClients.length} Profiles Found</span>
                      </div>
 
                      {managedClients.length > 0 ? (
@@ -174,18 +174,18 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                                           alt={client.full_name || 'Client Avatar'} 
                                           fill
                                        />
-                                       <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-[8px] font-black text-white tracking-wide border border-white/20">
+                                       <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white tracking-wide border border-white/20">
                                           {client.position || (isCoach ? 'Tactician' : 'Attack')}
                                        </div>
                                     </div>
                                     <div className="p-6">
-                                       <span className="text-[8px] font-black text-[#a20000] tracking-[0.3em] mb-1 block">
+                                       <span className="text-xs font-bold text-[#a20000] tracking-[0.3em] mb-1 block">
                                           {isCoach ? 'Technical Staff' : 'Professional Athlete'}
                                        </span>
-                                       <h4 className="text-lg font-black text-gray-900 tracking-tighter group-hover:text-[#a20000] transition-colors">
+                                       <h4 className="text-lg font-bold text-gray-900 tracking-tighter group-hover:text-[#a20000] transition-colors">
                                           {client.first_name} {client.last_name}
                                        </h4>
-                                       <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50 text-[10px] font-bold text-gray-400 tracking-wide">
+                                       <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-50 text-xs font-bold text-gray-400 tracking-wide">
                                           <div className="flex items-center gap-2">
                                              <Globe className="w-3 h-3" />
                                              {client.country || 'Nigeria'}
@@ -212,7 +212,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
                      <div className="lg:col-span-2 space-y-12">
                         <div>
-                           <h2 className="text-3xl font-black text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
+                           <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
                               Agent&apos;s Philosophy
                            </h2>
                         </div>
@@ -226,7 +226,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                      </div>
                      <div className="space-y-8">
                         <div className="bg-gray-50 rounded-[40px] p-10 border border-gray-100 shadow-sm">
-                           <h3 className="text-base font-black text-gray-900 tracking-wide mb-8 border-b border-gray-200 pb-4">Affiliations</h3>
+                           <h3 className="text-base font-bold text-gray-900 tracking-wide mb-8 border-b border-gray-200 pb-4">Affiliations</h3>
                            <div className="space-y-6">
                               {[
                                  { label: "License", value: profile.license_code || "FIFA Licensed Agent" },
@@ -234,8 +234,8 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                                  { label: "Country", value: profile.country || "Global" }
                               ].map((item, i) => (
                                  <div key={i}>
-                                    <span className="text-[10px] font-bold text-gray-400 tracking-wide block mb-1">{item.label}</span>
-                                    <span className="text-base font-black text-gray-900">{item.value}</span>
+                                    <span className="text-xs font-bold text-gray-400 tracking-wide block mb-1">{item.label}</span>
+                                    <span className="text-base font-bold text-gray-900">{item.value}</span>
                                  </div>
                               ))}
                            </div>
@@ -254,7 +254,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                   </h2>
                   <div className="flex flex-wrap justify-center gap-6">
                      <Link href="/register">
-                        <button className="bg-white text-black px-12 py-5 rounded-2xl font-black tracking-wide text-sm hover:bg-black hover:text-white transition-all shadow-2xl">
+                        <button className="bg-white text-black px-12 py-5 rounded-2xl font-bold tracking-wide text-sm hover:bg-black hover:text-white transition-all shadow-2xl">
                            Partner With Us
                         </button>
                      </Link>

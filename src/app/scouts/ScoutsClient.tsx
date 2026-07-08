@@ -27,7 +27,7 @@ export default function ScoutsClient({ scouts }: { scouts: any[] }) {
       <div className="max-w-[1200px] mx-auto px-4 lg:px-0 py-10 sm:py-16">
          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-8 border-b border-gray-100">
             <div>
-               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tighter">Verified Scouts</h2>
+               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter">Verified Scouts</h2>
                <p className="text-sm font-bold text-gray-400 tracking-wide mt-1">Certified talent identifiers</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -61,8 +61,8 @@ export default function ScoutsClient({ scouts }: { scouts: any[] }) {
                            alt={name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90" loading="lazy" decoding="async" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-4">
-                           <span className="text-[#ff4d4d] text-[9px] font-bold tracking-wide block mb-0.5">{scout.country || 'Global'}</span>
-                           <h3 className="text-white font-black text-base leading-tight tracking-tight line-clamp-2">{name}</h3>
+                           <span className="text-[#ff4d4d] text-xs font-bold tracking-wide block mb-0.5">{scout.country || 'Global'}</span>
+                           <h3 className="text-white font-bold text-base leading-tight tracking-tight line-clamp-2">{name}</h3>
                         </div>
                      </Link>
                   );

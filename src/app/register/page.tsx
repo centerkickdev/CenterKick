@@ -160,14 +160,14 @@ export default function RegisterPage() {
 
          {/* Navigation */}
          <div className="absolute top-4 left-4 sm:top-8 sm:left-8 z-20">
-            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[10px] font-black tracking-wide bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs font-bold tracking-wide bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
                <ArrowLeft className="w-4 h-4" /> Back to Home
             </Link>
          </div>
 
          <div className="relative z-10 max-w-md w-full px-5 py-8 sm:px-6 sm:py-12 bg-white/95 backdrop-blur-md rounded-[32px] sm:rounded-[40px] shadow-2xl border border-white/20 animate-in fade-in zoom-in duration-700 my-auto">
             <div className="text-center mb-8 sm:mb-10">
-               <h1 className="text-3xl font-black text-gray-900 tracking-tighter leading-none mb-3">
+               <h1 className="text-3xl font-bold text-gray-900 tracking-tighter leading-none mb-3">
                   Create <span className="text-[#a20000]">Account</span>
                </h1>
             </div>
@@ -175,7 +175,7 @@ export default function RegisterPage() {
             {status && (
                <div className={`mb-8 p-4 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-top-2 duration-500 ${status.type === 'success' ? 'bg-green-50 border border-green-100 text-green-700' : 'bg-red-50 border border-red-100 text-red-700'}`}>
                   {status.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
-                  <p className="text-[10px] font-black tracking-wide">{status.message}</p>
+                  <p className="text-xs font-bold tracking-wide">{status.message}</p>
                </div>
             )}
 
@@ -184,7 +184,7 @@ export default function RegisterPage() {
                   <>
                      <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                           <label className="text-xs font-black text-gray-500 tracking-wide ml-1">Account Type</label>
+                           <label className="text-xs font-bold text-gray-500 tracking-wide ml-1">Account Type</label>
                            <div className="relative">
                               <select
                                  name="role"
@@ -201,7 +201,7 @@ export default function RegisterPage() {
                         </div>
 
                         <div className="space-y-2">
-                           <label className="text-xs font-black text-gray-500 tracking-wide ml-1">Professional Email</label>
+                           <label className="text-xs font-bold text-gray-500 tracking-wide ml-1">Professional Email</label>
                            <div className="relative">
                               <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                               <input
@@ -217,7 +217,7 @@ export default function RegisterPage() {
                               />
                            </div>
                            {email.length > 0 && (
-                              <p className={`text-[10px] font-bold tracking-wide ml-2 ${emailIsValid ? 'text-green-600' : 'text-red-500'}`}>
+                              <p className={`text-xs font-bold tracking-wide ml-2 ${emailIsValid ? 'text-green-600' : 'text-red-500'}`}>
                                  {emailIsValid ? 'Valid email format' : 'Invalid format. Use name@domain.com'}
                               </p>
                            )}
@@ -242,7 +242,7 @@ export default function RegisterPage() {
                         <button
                            type="submit"
                            disabled={isLoading}
-                           className="w-full bg-gray-900 text-white py-4 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
+                           className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
                         >
                            {isLoading ? (
                               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -255,26 +255,26 @@ export default function RegisterPage() {
                ) : (
                      <form onSubmit={handleVerifyOtp} className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-500">
                      <div className="space-y-2">
-                        <label className="text-xs font-black text-gray-500 tracking-wide ml-1">Verification Code</label>
+                        <label className="text-xs font-bold text-gray-500 tracking-wide ml-1">Verification Code</label>
                         <input
                            type="text"
                            required
                            value={otp}
                            onChange={(e) => setOtp(e.target.value)}
                            placeholder="000000"
-                           className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-6 py-4 text-xl font-black tracking-[0.5em] text-center focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-gray-900 placeholder:text-gray-200"
+                           className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl px-6 py-4 text-xl font-bold tracking-[0.5em] text-center focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-gray-900 placeholder:text-gray-200"
                            maxLength={6}
                         />
                         <div className="flex flex-col items-center gap-2 mt-4">
-                           <p className="text-[9px] text-center text-gray-400 font-bold tracking-wide">
+                           <p className="text-xs text-center text-gray-400 font-bold tracking-wide">
                               Enter the 6-digit code sent to <span className="text-gray-900">{email}</span>
                            </p>
                            {timeLeft > 0 ? (
-                              <p className="text-[9px] font-black text-slate-500 tracking-wide">
+                              <p className="text-xs font-bold text-slate-500 tracking-wide">
                                  Code expires in <span className="text-[#a20000]">{Math.floor(timeLeft / 60)}:${('0' + (timeLeft % 60)).slice(-2)}</span>
                               </p>
                            ) : (
-                              <p className="text-[9px] font-black text-red-600 tracking-wide">
+                              <p className="text-xs font-bold text-red-600 tracking-wide">
                                  Code expired. Please request a new one.
                               </p>
                            )}
@@ -284,7 +284,7 @@ export default function RegisterPage() {
                      <button
                         type="submit"
                         disabled={isLoading || timeLeft === 0}
-                        className="w-full bg-gray-900 text-white py-4 rounded-2xl font-black tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
+                        className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
                      >
                         {isLoading ? (
                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -295,7 +295,7 @@ export default function RegisterPage() {
 
                      <div className="flex flex-col items-center gap-3 pt-2">
                         {resendCooldown > 0 ? (
-                           <span className="text-[9px] font-black text-gray-400 tracking-wide">
+                           <span className="text-xs font-bold text-gray-400 tracking-wide">
                               Resend code in {resendCooldown}s
                            </span>
                         ) : (
@@ -303,7 +303,7 @@ export default function RegisterPage() {
                               type="button"
                               onClick={handleResend}
                               disabled={isResending}
-                              className="text-[9px] font-black text-[#a20000] tracking-wide hover:underline disabled:opacity-50"
+                              className="text-xs font-bold text-[#a20000] tracking-wide hover:underline disabled:opacity-50"
                            >
                               {isResending ? 'Sending...' : 'Resend Verification Code'}
                            </button>
@@ -312,7 +312,7 @@ export default function RegisterPage() {
                         <button 
                            type="button"
                            onClick={() => setShowOtp(false)}
-                           className="text-center text-[9px] font-black text-gray-400 tracking-wide hover:text-gray-900 transition-colors"
+                           className="text-center text-xs font-bold text-gray-400 tracking-wide hover:text-gray-900 transition-colors"
                         >
                            Change Email Address
                         </button>
@@ -322,9 +322,9 @@ export default function RegisterPage() {
             </div>
 
             <div className="mt-8 text-center">
-               <p className="text-xs font-black text-gray-500 tracking-wide">
+               <p className="text-xs font-bold text-gray-500 tracking-wide">
                   Already have an account?
-                  <Link href="/login" className="text-[#a20000] ml-2 hover:underline font-black">Login Now</Link>
+                  <Link href="/login" className="text-[#a20000] ml-2 hover:underline font-bold">Login Now</Link>
                </p>
             </div>
          </div>

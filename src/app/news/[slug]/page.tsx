@@ -93,7 +93,7 @@ export default async function PostPage({ params }: Props) {
                <header className="mb-12 space-y-8 text-center lg:text-left">
                   <Link
                      href="/news"
-                     className="inline-flex items-center gap-2 text-[10px] font-black tracking-wide text-gray-400 hover:text-[#b50a0a] transition-all group mb-4"
+                     className="inline-flex items-center gap-2 text-xs font-bold tracking-wide text-gray-400 hover:text-[#b50a0a] transition-all group mb-4"
                   >
                      <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                      All News
@@ -107,7 +107,7 @@ export default async function PostPage({ params }: Props) {
                         {post.excerpt}
                      </p>
                      {post.category && (
-                        <span className="text-[10px] font-black tracking-[0.3em] text-[#b50a0a] bg-red-50 px-4 py-1.5 rounded-full inline-block">
+                        <span className="text-xs font-bold tracking-[0.3em] text-[#b50a0a] bg-red-50 px-4 py-1.5 rounded-full inline-block">
                            {post.category.name}
                         </span>
                      )}
@@ -119,8 +119,8 @@ export default async function PostPage({ params }: Props) {
                            <User className="w-5 h-5 text-gray-400" />
                         </div>
                         <div className="text-left">
-                           <p className="text-[8px] font-black text-gray-400 tracking-wide">Authored By</p>
-                           <p className="text-[10px] font-black text-gray-900">CenterKick Editor</p>
+                           <p className="text-xs font-bold text-gray-400 tracking-wide">Authored By</p>
+                           <p className="text-xs font-bold text-gray-900">CenterKick Editor</p>
                         </div>
                      </div>
                      <div className="flex items-center gap-3">
@@ -128,8 +128,8 @@ export default async function PostPage({ params }: Props) {
                            <Clock className="w-5 h-5 text-gray-400" />
                         </div>
                         <div className="text-left">
-                           <p className="text-[8px] font-black text-gray-400 tracking-wide">Published On</p>
-                           <p className="text-[10px] font-black text-gray-900">{new Date(post.published_at || post.created_at).toLocaleDateString()}</p>
+                           <p className="text-xs font-bold text-gray-400 tracking-wide">Published On</p>
+                           <p className="text-xs font-bold text-gray-900">{new Date(post.published_at || post.created_at).toLocaleDateString()}</p>
                         </div>
                      </div>
                      <div className="flex-1" />
@@ -161,11 +161,11 @@ export default async function PostPage({ params }: Props) {
                {post.post_tags && post.post_tags.length > 0 && (
                   <div className="mt-20 pt-12 border-t border-gray-100">
                      <div className="flex flex-wrap gap-3">
-                        <span className="text-[10px] font-black text-gray-300 tracking-wide mr-2 flex items-center gap-2">
+                        <span className="text-xs font-bold text-gray-300 tracking-wide mr-2 flex items-center gap-2">
                            <Tag className="w-3.5 h-3.5" /> Filed Under:
                         </span>
                         {post.post_tags.map((pt: any) => (
-                           <span key={pt.tag.name} className="bg-gray-50 text-gray-600 px-4 py-2 rounded-xl text-[9px] font-black tracking-wide hover:bg-gray-100 transition-colors cursor-default">
+                           <span key={pt.tag.name} className="bg-gray-50 text-gray-600 px-4 py-2 rounded-xl text-xs font-bold tracking-wide hover:bg-gray-100 transition-colors cursor-default">
                               #{pt.tag.name}
                            </span>
                         ))}
@@ -176,7 +176,7 @@ export default async function PostPage({ params }: Props) {
                {/* Related Posts */}
                {relatedPosts && relatedPosts.length > 0 && (
                   <section className="mt-32 pt-20 border-t-2 border-gray-900">
-                     <h3 className="text-2xl font-black text-gray-900 tracking-tighter mb-10 flex items-center justify-between">
+                     <h3 className="text-2xl font-bold text-gray-900 tracking-tighter mb-10 flex items-center justify-between">
                         Continue Reading
                         <ChevronRight className="w-6 h-6 text-[#b50a0a]" />
                      </h3>
@@ -190,10 +190,10 @@ export default async function PostPage({ params }: Props) {
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                  />
                               </div>
-                              <h4 className="text-base font-black text-gray-900 tracking-tighter group-hover:text-[#b50a0a] transition-colors leading-tight line-clamp-2">
+                              <h4 className="text-base font-bold text-gray-900 tracking-tighter group-hover:text-[#b50a0a] transition-colors leading-tight line-clamp-2">
                                  {related.title}
                               </h4>
-                              <p className="text-[9px] font-black text-gray-400 tracking-wide">
+                              <p className="text-xs font-bold text-gray-400 tracking-wide">
                                  {new Date(related.published_at || related.created_at).toLocaleDateString()}
                               </p>
                            </Link>

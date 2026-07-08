@@ -6,15 +6,15 @@ export function RestrictedAccess({ message = "Restricted Access", description = 
       <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center mb-4">
         <Lock className="w-5 h-5 text-gray-400" />
       </div>
-      <p className="text-[10px] font-black text-gray-900 tracking-wide">{message}</p>
-      <p className="text-[9px] font-bold text-gray-600 tracking-wide mt-1">{description}</p>
+      <p className="text-xs font-bold text-gray-900 tracking-wide">{message}</p>
+      <p className="text-xs font-bold text-gray-600 tracking-wide mt-1">{description}</p>
     </div>
   );
 }
 
 export function RestrictedAccessInline({ message = "Restricted" }: { message?: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 text-gray-700 text-[9px] font-black tracking-wide rounded-lg border border-gray-200">
+    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-bold tracking-wide rounded-lg border border-gray-200">
       <Lock className="w-3 h-3" />
       {message}
     </span>

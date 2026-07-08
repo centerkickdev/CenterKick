@@ -38,7 +38,7 @@ export default function UnlinkedAccountPage() {
 
          {/* Navigation */}
          <div className="absolute top-4 left-4 sm:top-8 sm:left-8 z-20">
-            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[10px] font-black tracking-wide bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+            <Link href="/" className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors text-xs font-bold tracking-wide bg-black/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
                <ArrowLeft className="w-4 h-4" /> Back to Home
             </Link>
          </div>
@@ -48,7 +48,7 @@ export default function UnlinkedAccountPage() {
                <AlertCircle className="w-8 h-8 text-red-600" />
             </div>
             
-            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tighter leading-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter leading-tight">
                No Linked Account
             </h1>
             
@@ -57,7 +57,7 @@ export default function UnlinkedAccountPage() {
             </p>
 
             <div className="pt-6">
-               <p className="text-xs font-black tracking-wide text-gray-400">
+               <p className="text-xs font-bold tracking-wide text-gray-400">
                   Redirecting to registration in <span className="text-[#a20000]">{timeLeft}</span> seconds...
                </p>
             </div>

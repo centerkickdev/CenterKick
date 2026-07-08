@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
                   </div>
                   <div className="w-full lg:w-1/3 flex justify-end">
                      <div className="text-right">
-                        <p className="text-[10px] font-black text-gray-400 tracking-wide">Last updated</p>
+                        <p className="text-xs font-bold text-gray-400 tracking-wide">Last updated</p>
                         <p className="text-base font-bold text-gray-900 mt-1">May 6, 2026</p>
                      </div>
                   </div>
@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
             <div className="max-w-[800px] mx-auto px-4 py-24 space-y-12">
                
                <section className="space-y-4">
-                  <h2 className="text-xl font-black text-gray-900 tracking-tight flex items-center gap-3">
+                  <h2 className="text-xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
                      <span className="text-[#a20000]">1.</span> Information We Collect
                   </h2>
                   <p className="text-gray-600 text-base leading-[1.8] font-light">
@@ -46,7 +46,7 @@ export default function PrivacyPolicyPage() {
                </section>
 
                <section className="space-y-4">
-                  <h2 className="text-xl font-black text-gray-900 tracking-tight flex items-center gap-3">
+                  <h2 className="text-xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
                      <span className="text-[#a20000]">2.</span> How We Use Your Data
                   </h2>
                   <p className="text-gray-600 text-base leading-[1.8] font-light font-sans">
@@ -55,7 +55,7 @@ export default function PrivacyPolicyPage() {
                </section>
 
                <section className="space-y-4">
-                  <h2 className="text-xl font-black text-gray-900 tracking-tight flex items-center gap-3">
+                  <h2 className="text-xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
                      <span className="text-[#a20000]">3.</span> Sharing and Exposure
                   </h2>
                   <p className="text-gray-600 text-base leading-[1.8] font-light">
@@ -64,7 +64,7 @@ export default function PrivacyPolicyPage() {
                </section>
 
                <section className="space-y-4">
-                  <h2 className="text-xl font-black text-gray-900 tracking-tight flex items-center gap-3">
+                  <h2 className="text-xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
                      <span className="text-[#a20000]">4.</span> Hardened Security
                   </h2>
                   <p className="text-gray-600 text-base leading-[1.8] font-light">
@@ -73,7 +73,7 @@ export default function PrivacyPolicyPage() {
                </section>
 
                <section className="space-y-4">
-                  <h2 className="text-xl font-black text-gray-900 tracking-tight flex items-center gap-3">
+                  <h2 className="text-xl font-bold text-gray-900 tracking-tight flex items-center gap-3">
                      <span className="text-[#a20000]">5.</span> Your Privacy Rights
                   </h2>
                   <p className="text-gray-600 text-base leading-[1.8] font-light">
@@ -86,11 +86,11 @@ export default function PrivacyPolicyPage() {
             {/* Bottom CTA Section */}
             <div className="bg-[#a20000] py-20 mb-10 overflow-hidden relative">
                <div className="max-w-[900px] mx-auto px-4 text-center relative z-10">
-                  <h2 className="text-3xl md:text-4xl font-black text-white mb-6 tracking-tighter leading-tight">
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tighter leading-tight">
                      Have questions about your data security?
                   </h2>
                   <Link href="/contact">
-                     <button className="bg-white text-gray-900 px-10 py-4 rounded-xl font-black tracking-wide text-sm hover:bg-gray-100 transition-all shadow-2xl inline-flex items-center gap-3">
+                     <button className="bg-white text-gray-900 px-10 py-4 rounded-xl font-bold tracking-wide text-sm hover:bg-gray-100 transition-all shadow-2xl inline-flex items-center gap-3">
                         Contact Support <ArrowRight className="w-5 h-5 text-[#a20000]" />
                      </button>
                   </Link>

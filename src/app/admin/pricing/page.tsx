@@ -29,7 +29,7 @@ export default async function AdminPricingPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-black text-gray-900 tracking-tighter">
+        <h1 className="text-3xl font-bold text-gray-900 tracking-tighter">
           Pricing <span className="text-[#b50a0a]">Plans</span>
         </h1>
         <p className="text-gray-500 font-bold text-sm mt-1">

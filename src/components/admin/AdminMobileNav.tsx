@@ -52,8 +52,8 @@ export function AdminMobileNav({ role, adminLogoUrl }: { role: string; adminLogo
                       <Shield className="text-white w-6 h-6" />
                     </div>
                     <div className="flex flex-col text-left">
-                      <span className="text-xl font-black text-white tracking-tighter leading-none">Admin</span>
-                      <span className="text-[8px] font-bold text-[#b50a0a] tracking-wide mt-1">Control Panel</span>
+                      <span className="text-xl font-bold text-white tracking-tighter leading-none">Admin</span>
+                      <span className="text-xs font-bold text-[#b50a0a] tracking-wide mt-1">Control Panel</span>
                     </div>
                   </>
                 )}
@@ -78,7 +78,7 @@ export function AdminMobileNav({ role, adminLogoUrl }: { role: string; adminLogo
             <div className="p-6 border-t border-gray-800 flex flex-col gap-4 shrink-0">
               <Link 
                 href="/dashboard" 
-                className="flex items-center gap-2 text-[10px] font-black tracking-wide text-gray-500 hover:text-white transition-colors"
+                className="flex items-center gap-2 text-xs font-bold tracking-wide text-gray-500 hover:text-white transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 <Home className="w-4 h-4" /> User Dashboard

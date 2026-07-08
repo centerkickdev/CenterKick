@@ -68,10 +68,10 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
                   {toast.type === 'loading' && <Loader2 className="w-5 h-5 animate-spin" />}
                 </div>
                 <div className="min-w-0 pr-4">
-                  <p className="text-[10px] font-black tracking-wide leading-tight">
+                  <p className="text-xs font-bold tracking-wide leading-tight">
                     {toast.type === 'success' ? 'Success' : toast.type === 'error' ? 'Attention Required' : toast.type === 'loading' ? 'Processing' : 'Information'}
                   </p>
-                  <p className="text-[11px] font-bold text-gray-500 mt-1 line-clamp-2">{toast.message}</p>
+                  <p className="text-xs font-bold text-gray-500 mt-1 line-clamp-2">{toast.message}</p>
                 </div>
                 <button 
                   onClick={() => hideToast(toast.id)}

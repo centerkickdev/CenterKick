@@ -84,30 +84,30 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
  : 'bg-white border-red-100 text-red-700'
  }`}>
           {toast.type === 'success' ? <CheckCircle className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
-          <p className="text-[10px] font-black tracking-wide">{toast.message}</p>
+          <p className="text-xs font-bold tracking-wide">{toast.message}</p>
         </div>
       )}
 
       {/* Account Status Actions */}
       <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6 space-y-4">
-        <h3 className="text-[10px] font-black text-gray-900 tracking-wide flex items-center gap-2">
+        <h3 className="text-xs font-bold text-gray-900 tracking-wide flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-[#b50a0a]" /> Account Controls
         </h3>
 
-        {/* Approve Pending — highest priority CTA */}
+        {/* Approve Pending â€” highest priority CTA */}
         {isPendingActivation && isParticipant && (
           <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 space-y-3">
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-              <p className="text-[10px] font-black text-amber-700 tracking-wide leading-relaxed">
-                Pending approval — review the profile and subscription before activating.
+              <p className="text-xs font-bold text-amber-700 tracking-wide leading-relaxed">
+                Pending approval â€” review the profile and subscription before activating.
               </p>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => runAction('approve', () => activateUser(userId))}
                 disabled={!!actionLoading}
-                className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-600 text-white text-[9px] font-black tracking-wide rounded-xl hover:bg-green-700 transition-all disabled:opacity-50"
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-600 text-white text-xs font-bold tracking-wide rounded-xl hover:bg-green-700 transition-all disabled:opacity-50"
               >
                 <BtnLoading id="approve" />
                 {actionLoading !== 'approve' && <CheckCircle className="w-3.5 h-3.5" />}
@@ -116,7 +116,7 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
               <button
                 onClick={() => setConfirmAction('reject')}
                 disabled={!!actionLoading}
-                className="flex-1 flex items-center justify-center gap-2 py-3 bg-red-50 text-red-600 text-[9px] font-black tracking-wide rounded-xl hover:bg-red-100 border border-red-100 transition-all disabled:opacity-50"
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-red-50 text-red-600 text-xs font-bold tracking-wide rounded-xl hover:bg-red-100 border border-red-100 transition-all disabled:opacity-50"
               >
                 <XCircle className="w-3.5 h-3.5" /> Reject
               </button>
@@ -125,18 +125,18 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
             {/* Reject confirmation */}
             {confirmAction === 'reject' && (
               <div className="bg-red-50 border border-red-200 rounded-xl p-3 space-y-2">
-                <p className="text-[9px] font-black text-red-700 tracking-wide">Confirm rejection? This will deactivate the account.</p>
+                <p className="text-xs font-bold text-red-700 tracking-wide">Confirm rejection? This will deactivate the account.</p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => runAction('reject', () => rejectUser(userId))}
                     disabled={!!actionLoading}
-                    className="flex-1 py-2 bg-red-600 text-white text-[9px] font-black rounded-lg hover:bg-red-700 transition-all"
+                    className="flex-1 py-2 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-all"
                   >
                     {actionLoading === 'reject' ? <RefreshCw className="w-3 h-3 animate-spin mx-auto" /> : 'Yes, Reject'}
                   </button>
                   <button
                     onClick={() => setConfirmAction(null)}
-                    className="flex-1 py-2 bg-white text-gray-500 text-[9px] font-black rounded-lg border border-gray-200 hover:bg-gray-50 transition-all"
+                    className="flex-1 py-2 bg-white text-gray-500 text-xs font-bold rounded-lg border border-gray-200 hover:bg-gray-50 transition-all"
                   >
                     Cancel
                   </button>
@@ -151,23 +151,23 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
           {isActive ? (
             confirmAction === 'deactivate' ? (
               <div className="bg-red-50 border border-red-200 rounded-xl p-3 space-y-2">
-                <p className="text-[9px] font-black text-red-700 tracking-wide">Deactivate this account? They will lose platform access immediately.</p>
+                <p className="text-xs font-bold text-red-700 tracking-wide">Deactivate this account? They will lose platform access immediately.</p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => runAction('deactivate', () => deactivateUser(userId))}
                     disabled={!!actionLoading}
-                    className="flex-1 py-2 bg-red-600 text-white text-[9px] font-black rounded-lg hover:bg-red-700 transition-all"
+                    className="flex-1 py-2 bg-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-all"
                   >
                     {actionLoading === 'deactivate' ? <RefreshCw className="w-3 h-3 animate-spin mx-auto" /> : 'Yes, Deactivate'}
                   </button>
-                  <button onClick={() => setConfirmAction(null)} className="flex-1 py-2 bg-white text-gray-500 text-[9px] font-black rounded-lg border border-gray-200 hover:bg-gray-50 transition-all">Cancel</button>
+                  <button onClick={() => setConfirmAction(null)} className="flex-1 py-2 bg-white text-gray-500 text-xs font-bold rounded-lg border border-gray-200 hover:bg-gray-50 transition-all">Cancel</button>
                 </div>
               </div>
             ) : (
               <button
                 onClick={() => setConfirmAction('deactivate')}
                 disabled={!!actionLoading}
-                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-red-100 text-red-600 text-[9px] font-black tracking-wide rounded-xl hover:bg-red-50 transition-all disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-3 border-2 border-red-100 text-red-600 text-xs font-bold tracking-wide rounded-xl hover:bg-red-50 transition-all disabled:opacity-50"
               >
                 <UserX className="w-3.5 h-3.5" /> Deactivate Account
               </button>
@@ -176,7 +176,7 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
             <button
               onClick={() => runAction('activate', () => activateUser(userId))}
               disabled={!!actionLoading}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-green-600 text-white text-[9px] font-black tracking-wide rounded-xl hover:bg-green-700 transition-all disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-3 bg-green-600 text-white text-xs font-bold tracking-wide rounded-xl hover:bg-green-700 transition-all disabled:opacity-50"
             >
               <BtnLoading id="activate" />
               {actionLoading !== 'activate' && <CheckCircle className="w-3.5 h-3.5" />}
@@ -188,14 +188,14 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
 
       {/* Role Management */}
       <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm p-6 space-y-4">
-        <h3 className="text-[10px] font-black text-gray-900 tracking-wide flex items-center gap-2">
+        <h3 className="text-xs font-bold text-gray-900 tracking-wide flex items-center gap-2">
           <Shield className="w-4 h-4 text-[#b50a0a]" /> Role Management
         </h3>
 
         <div className="relative">
           <button
             onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-            className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-[10px] font-black tracking-wide text-gray-900 hover:border-gray-300 transition-all"
+            className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold tracking-wide text-gray-900 hover:border-gray-300 transition-all"
           >
             <span>{ALL_ROLES.find(r => r.value === selectedRole)?.label || selectedRole}</span>
             <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${showRoleDropdown ? 'rotate-180' : ''}`} />
@@ -208,7 +208,7 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
                   <button
                     key={role.value}
                     onClick={() => { setSelectedRole(role.value); setShowRoleDropdown(false); }}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 text-[10px] font-black tracking-wide rounded-xl transition-all text-left ${
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold tracking-wide rounded-xl transition-all text-left ${
  selectedRole === role.value
  ? 'bg-[#b50a0a] text-white'
  : 'text-gray-600 hover:bg-gray-50'
@@ -226,7 +226,7 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
         <button
           onClick={handleRoleChange}
           disabled={!!actionLoading || selectedRole === currentRole}
-          className="w-full flex items-center justify-center gap-2 py-3 bg-gray-900 text-white text-[9px] font-black tracking-wide rounded-xl hover:bg-[#b50a0a] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-full flex items-center justify-center gap-2 py-3 bg-gray-900 text-white text-xs font-bold tracking-wide rounded-xl hover:bg-[#b50a0a] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <BtnLoading id="role" />
           {actionLoading !== 'role' && <Shield className="w-3.5 h-3.5" />}
@@ -234,7 +234,7 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
         </button>
 
         {selectedRole !== currentRole && (
-          <p className="text-[9px] text-amber-600 font-black tracking-wide flex items-center gap-1">
+          <p className="text-xs text-amber-600 font-bold tracking-wide flex items-center gap-1">
             <AlertTriangle className="w-3 h-3" />
             Changing role will update platform access immediately.
           </p>
@@ -243,12 +243,12 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
 
       {/* Quick Info */}
       <div className="bg-gray-50 rounded-[2rem] border border-gray-100 p-6 space-y-3">
-        <h3 className="text-[10px] font-black text-gray-400 tracking-wide">Quick Reference</h3>
-        <ul className="space-y-2 text-[10px] font-bold text-gray-500">
-          <li className="flex items-start gap-2"><CheckCircle className="w-3 h-3 text-green-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Approve</strong> — sets profile to active, grants full platform access.</span></li>
-          <li className="flex items-start gap-2"><XCircle className="w-3 h-3 text-red-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Reject</strong> — marks application rejected, deactivates account.</span></li>
-          <li className="flex items-start gap-2"><UserX className="w-3 h-3 text-red-400 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Deactivate</strong> — temporarily blocks access without deleting data.</span></li>
-          <li className="flex items-start gap-2"><Shield className="w-3 h-3 text-blue-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Role Change</strong> — updates JWT metadata and platform routing immediately.</span></li>
+        <h3 className="text-xs font-bold text-gray-400 tracking-wide">Quick Reference</h3>
+        <ul className="space-y-2 text-xs font-bold text-gray-500">
+          <li className="flex items-start gap-2"><CheckCircle className="w-3 h-3 text-green-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Approve</strong> â€” sets profile to active, grants full platform access.</span></li>
+          <li className="flex items-start gap-2"><XCircle className="w-3 h-3 text-red-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Reject</strong> â€” marks application rejected, deactivates account.</span></li>
+          <li className="flex items-start gap-2"><UserX className="w-3 h-3 text-red-400 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Deactivate</strong> â€” temporarily blocks access without deleting data.</span></li>
+          <li className="flex items-start gap-2"><Shield className="w-3 h-3 text-blue-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Role Change</strong> â€” updates JWT metadata and platform routing immediately.</span></li>
         </ul>
       </div>
     </div>

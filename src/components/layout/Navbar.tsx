@@ -165,11 +165,11 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
              ) : (
                <div className="flex items-center gap-3">
                  <div className="w-9 h-9 rounded-full bg-[#b50a0a] flex items-center justify-center shrink-0 shadow-lg relative overflow-hidden transition-transform group-hover:rotate-12">
-                    <svg className="w-5 h-5 text-white font-black" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="w-5 h-5 text-white font-bold" viewBox="0 0 24 24" fill="currentColor">
                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-2.49 0-4.5-2.01-4.5-4.5S8.51 7.5 11 7.5s4.5 2.01 4.5 4.5c0 .34-.04.68-.11 1h-2.12c.15-.31.23-.65.23-1 0-1.38-1.12-2.5-2.5-2.5S8.5 10.62 8.5 12 9.62 14.5 11 14.5c.66 0 1.25-.26 1.7-.68l1.45 1.45c-.83.76-1.92 1.23-3.15 1.23z"/>
                     </svg>
                  </div>
-                 <span className="self-center text-lg font-black whitespace-nowrap text-gray-900 group-hover:text-[#b50a0a] transition-all tracking-tighter">
+                 <span className="self-center text-lg font-bold whitespace-nowrap text-gray-900 group-hover:text-[#b50a0a] transition-all tracking-tighter">
                    {brandName}
                  </span>
                </div>
@@ -264,7 +264,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
         </div>
       </nav>
 
-      {/* MOBILE & TABLET NAV — FULL SCREEN OVERLAY */}
+      {/* MOBILE & TABLET NAV â€” FULL SCREEN OVERLAY */}
       <div className={`lg:hidden fixed inset-0 z-[200] transition-all duration-300 ${
  isOpen ? 'visible' : 'invisible pointer-events-none'
  }`}>
@@ -289,7 +289,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-2.49 0-4.5-2.01-4.5-4.5S8.51 7.5 11 7.5s4.5 2.01 4.5 4.5c0 .34-.04.68-.11 1h-2.12c.15-.31.23-.65.23-1 0-1.38-1.12-2.5-2.5-2.5S8.5 10.62 8.5 12 9.62 14.5 11 14.5c.66 0 1.25-.26 1.7-.68l1.45 1.45c-.83.76-1.92 1.23-3.15 1.23z"/>
                     </svg>
                   </div>
-                  <span className="self-center text-base font-black whitespace-nowrap text-gray-900 group-hover:text-[#b50a0a] transition-all tracking-tighter">
+                  <span className="self-center text-base font-bold whitespace-nowrap text-gray-900 group-hover:text-[#b50a0a] transition-all tracking-tighter">
                     {brandName}
                   </span>
                 </div>
@@ -312,7 +312,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                     <div className="flex flex-col">
                       <button
                         onClick={() => toggleDropdown(link.label)}
-                        className="flex items-center justify-between w-full py-4 text-base font-black tracking-wide text-gray-800 border-b border-gray-50"
+                        className="flex items-center justify-between w-full py-4 text-base font-bold tracking-wide text-gray-800 border-b border-gray-50"
                       >
                         <span>{link.label}</span>
                         <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${activeDropdown === link.label ? 'rotate-180 text-[#b50a0a]' : 'text-gray-400'}`} />
@@ -338,7 +338,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
                     <Link
                       href={link.href || '#'}
                       onClick={() => setIsOpen(false)}
-                      className={`block py-4 text-base font-black tracking-wide border-b border-gray-50 transition-colors ${
+                      className={`block py-4 text-base font-bold tracking-wide border-b border-gray-50 transition-colors ${
  isActive(link.href) ? 'text-[#b50a0a]' : 'text-gray-800 hover:text-[#b50a0a]'
  }`}
                     >
@@ -354,19 +354,19 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
           <div className="px-6 pb-10 pt-4 border-t border-gray-100 flex flex-col gap-3 shrink-0">
             {user ? (
               <Link href={dashboardHref} onClick={() => setIsOpen(false)}>
-                <button className="w-full bg-[#b50a0a] text-white font-black rounded-2xl text-sm tracking-wide py-4 shadow-md transition-all hover:bg-black">
+                <button className="w-full bg-[#b50a0a] text-white font-bold rounded-2xl text-sm tracking-wide py-4 shadow-md transition-all hover:bg-black">
                   Dashboard
                 </button>
               </Link>
             ) : (
               <>
                 <Link href="/register" onClick={() => setIsOpen(false)}>
-                  <button className="w-full bg-[#b50a0a] text-white font-black rounded-2xl text-sm tracking-wide py-4 shadow-md transition-all hover:bg-black">
+                  <button className="w-full bg-[#b50a0a] text-white font-bold rounded-2xl text-sm tracking-wide py-4 shadow-md transition-all hover:bg-black">
                     Register
                   </button>
                 </Link>
                 <Link href="/login" onClick={() => setIsOpen(false)}>
-                  <button className="w-full border border-gray-200 text-gray-700 font-black rounded-2xl text-sm tracking-wide py-4 transition-all hover:border-[#b50a0a] hover:text-[#b50a0a]">
+                  <button className="w-full border border-gray-200 text-gray-700 font-bold rounded-2xl text-sm tracking-wide py-4 transition-all hover:border-[#b50a0a] hover:text-[#b50a0a]">
                     Login
                   </button>
                 </Link>

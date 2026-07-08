@@ -60,7 +60,7 @@ export default function BlogManagementClient({
  }`}>
                 <item.icon className="w-3.5 h-3.5" />
               </div>
-              <span className="text-[9px] font-black tracking-wide text-slate-600 group-hover:text-slate-900 transition-colors">{item.label}</span>
+              <span className="text-xs font-bold tracking-wide text-slate-600 group-hover:text-slate-900 transition-colors">{item.label}</span>
             </div>
           );
 
@@ -97,13 +97,13 @@ export default function BlogManagementClient({
           <div className="fixed top-0 right-0 h-screen w-full max-w-xl bg-white z-[210] shadow-2xl p-0 animate-in slide-in-from-right duration-500 flex flex-col">
             <div className="p-4 md:p-8 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
                <div>
-                  <h3 className="text-2xl font-black tracking-tighter flex items-center gap-3">
+                  <h3 className="text-2xl font-bold tracking-tighter flex items-center gap-3">
                      {activeTab === 'categories' && <Folder className="w-6 h-6 text-[#b50a0a]" />}
                      {activeTab === 'tags' && <Tag className="w-6 h-6 text-[#b50a0a]" />}
                      {activeTab === 'assets' && <ImageIcon className="w-6 h-6 text-[#b50a0a]" />}
                      <span className="text-gray-900">{activeTab}</span>
                   </h3>
-                  <p className="text-[9px] font-bold text-gray-400 tracking-wide mt-1">Manage blog taxonomies and media assets</p>
+                  <p className="text-xs font-bold text-gray-400 tracking-wide mt-1">Manage blog taxonomies and media assets</p>
                </div>
                <button onClick={closePanel} className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center hover:bg-gray-100 transition-all border border-gray-100">
                   <X className="w-5 h-5 text-gray-400" />
@@ -119,7 +119,7 @@ export default function BlogManagementClient({
                     placeholder={`Search ${activeTab}...`}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl text-[11px] font-black tracking-wide focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
+                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-none rounded-2xl text-xs font-bold tracking-wide focus:ring-2 focus:ring-[#b50a0a] transition-all text-black placeholder:text-gray-300"
                   />
                </div>
 
@@ -136,7 +136,7 @@ export default function BlogManagementClient({
                          }
                         setIsLoading(false);
                      }} className="p-6 bg-gray-50 rounded-[2rem] border border-gray-100 space-y-4">
-                        <h4 className="text-[10px] font-black text-gray-900 tracking-wide mb-2 flex items-center gap-2">
+                        <h4 className="text-xs font-bold text-gray-900 tracking-wide mb-2 flex items-center gap-2">
                            {editingId ? 'Update' : 'Add New'} Category
                         </h4>
                         <div className="space-y-4">
@@ -144,26 +144,26 @@ export default function BlogManagementClient({
                              name="name" 
                              required 
                              placeholder="Category Name (e.g. Transfers)" 
-                             className="w-full bg-white border border-gray-100 rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-300"
+                             className="w-full bg-white border border-gray-100 rounded-xl p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-300"
                              defaultValue={editingId ? initialCategories.find(c => c.id === editingId)?.name : ''}
                            />
                            <input 
                              name="slug" 
                              placeholder="Custom Slug (Optional)" 
-                             className="w-full bg-white border border-gray-100 rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-300" 
+                             className="w-full bg-white border border-gray-100 rounded-xl p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-300" 
                              defaultValue={editingId ? initialCategories.find(c => c.id === editingId)?.slug : ''}
                            />
                            <textarea 
                              name="description" 
                              placeholder="Description..." 
                              rows={3}
-                             className="w-full bg-white border border-gray-100 rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-300 resize-none"
+                             className="w-full bg-white border border-gray-100 rounded-xl p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-300 resize-none"
                              defaultValue={editingId ? initialCategories.find(c => c.id === editingId)?.description : ''}
                            />
                            <button 
                              disabled={isLoading}
                              type="submit" 
-                             className="w-full bg-black text-white py-3.5 rounded-xl font-black tracking-wide hover:bg-[#b50a0a] transition-all text-[10px] flex items-center justify-center gap-2"
+                             className="w-full bg-black text-white py-3.5 rounded-xl font-bold tracking-wide hover:bg-[#b50a0a] transition-all text-xs flex items-center justify-center gap-2"
                            >
                               {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : (editingId ? 'Update' : 'Create')} Category
                            </button>
@@ -171,7 +171,7 @@ export default function BlogManagementClient({
                              <button 
                                type="button" 
                                onClick={() => setEditingId(null)}
-                               className="w-full py-2 text-[8px] font-black tracking-[0.3em] text-gray-400 hover:text-gray-900"
+                               className="w-full py-2 text-xs font-bold tracking-[0.3em] text-gray-400 hover:text-gray-900"
                              >
                                Cancel Edit
                              </button>
@@ -185,8 +185,8 @@ export default function BlogManagementClient({
                           .map(category => (
                            <div key={category.id} className="flex items-center justify-between p-5 bg-white border border-gray-100 rounded-2xl group hover:border-[#b50a0a]/20 transition-all">
                               <div>
-                                 <h5 className="text-[11px] font-black text-gray-900 tracking-tighter">{category.name}</h5>
-                                 <p className="text-[9px] text-gray-400 tracking-wide mt-0.5">{category.slug}</p>
+                                 <h5 className="text-xs font-bold text-gray-900 tracking-tighter">{category.name}</h5>
+                                 <p className="text-xs text-gray-400 tracking-wide mt-0.5">{category.slug}</p>
                               </div>
                               <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                  <button 
@@ -229,12 +229,12 @@ export default function BlogManagementClient({
                           name="name" 
                           required 
                           placeholder="Add New Tag..." 
-                          className="flex-1 bg-gray-50 border-none rounded-xl p-4 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-300"
+                          className="flex-1 bg-gray-50 border-none rounded-xl p-4 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-300"
                         />
                         <button 
                           disabled={isLoading}
                           type="submit" 
-                          className="bg-black text-white px-6 rounded-xl font-black tracking-wide hover:bg-[#b50a0a] transition-all text-[10px]"
+                          className="bg-black text-white px-6 rounded-xl font-bold tracking-wide hover:bg-[#b50a0a] transition-all text-xs"
                         >
                            {isLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Add'}
                         </button>
@@ -245,7 +245,7 @@ export default function BlogManagementClient({
                           .filter(t => t.name.toLowerCase().includes(searchQuery.toLowerCase()))
                           .map(tag => (
                            <div key={tag.id} className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full border border-gray-100 group transition-all hover:bg-white hover:border-[#b50a0a]/20">
-                              <span className="text-[9px] font-black text-gray-900 tracking-wide">{tag.name}</span>
+                              <span className="text-xs font-bold text-gray-900 tracking-wide">{tag.name}</span>
                               <button 
                                 onClick={async () => {
                                    if (confirm('Delete tag?')) {
@@ -293,8 +293,8 @@ export default function BlogManagementClient({
                         <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm group-hover:scale-110 transition-transform">
                            <Plus className="w-6 h-6 text-[#b50a0a]" />
                         </div>
-                        <p className="text-[10px] font-black text-gray-900 tracking-wide">Click to upload media</p>
-                        <p className="text-[8px] text-gray-400 tracking-wide mt-1">PNG, JPG or WebP (Max 5MB)</p>
+                        <p className="text-xs font-bold text-gray-900 tracking-wide">Click to upload media</p>
+                        <p className="text-xs text-gray-400 tracking-wide mt-1">PNG, JPG or WebP (Max 5MB)</p>
                      </div>
 
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -314,7 +314,7 @@ export default function BlogManagementClient({
                                        navigator.clipboard.writeText(asset.url);
                                        showToast('URL copied to clipboard', 'info');
                                     }}
-                                    className="w-full py-2 bg-white text-black rounded-lg text-[8px] font-black tracking-wide hover:bg-[#b50a0a] hover:text-white transition-all"
+                                    className="w-full py-2 bg-white text-black rounded-lg text-xs font-bold tracking-wide hover:bg-[#b50a0a] hover:text-white transition-all"
                                  >
                                     Copy Link
                                  </button>
@@ -324,7 +324,7 @@ export default function BlogManagementClient({
                                           await deleteAsset(asset.id, asset.filename);
                                        }
                                     }}
-                                    className="w-full py-2 bg-red-600/20 backdrop-blur-md border border-red-500/30 text-red-500 rounded-lg text-[8px] font-black tracking-wide hover:bg-red-600 hover:text-white transition-all"
+                                    className="w-full py-2 bg-red-600/20 backdrop-blur-md border border-red-500/30 text-red-500 rounded-lg text-xs font-bold tracking-wide hover:bg-red-600 hover:text-white transition-all"
                                  >
                                     Delete
                                  </button>

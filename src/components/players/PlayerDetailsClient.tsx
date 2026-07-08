@@ -38,7 +38,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                </div>
             </div>
 
-            {/* Hero — mobile stacked, desktop split */}
+            {/* Hero â€” mobile stacked, desktop split */}
             <div className="relative w-full bg-[#0a0a0b] overflow-hidden">
                {/* Background stadium image */}
                <div className="absolute inset-0 z-0">
@@ -62,28 +62,28 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                         loading="lazy"
                      />
                   </div>
-                  <span className="text-[#ff4d4d] font-bold tracking-[0.3em] mb-2 text-[10px]">{athlete.position || 'Elite Player'}</span>
-                  <h1 className="text-4xl font-black tracking-tight leading-none mb-4 drop-shadow-2xl">
+                  <span className="text-[#ff4d4d] font-bold tracking-[0.3em] mb-2 text-xs">{athlete.position || 'Elite Player'}</span>
+                  <h1 className="text-4xl font-bold tracking-tight leading-none mb-4 drop-shadow-2xl">
                      {firstName} <span className="text-white">{restOfName}</span>
                   </h1>
                   <div className="flex flex-wrap gap-3 justify-center mb-6">
                      <div className="bg-white/10 border border-white/15 px-4 py-2 rounded-xl flex flex-col items-center">
-                        <span className="text-[9px] font-bold text-gray-300 tracking-wide mb-0.5">Status</span>
-                        <span className="text-base font-black text-white capitalize">{athlete.status || 'Active'}</span>
+                        <span className="text-xs font-bold text-gray-300 tracking-wide mb-0.5">Status</span>
+                        <span className="text-base font-bold text-white capitalize">{athlete.status || 'Active'}</span>
                      </div>
                      <div className="bg-white/10 border border-white/15 px-4 py-2 rounded-xl flex flex-col items-center">
-                        <span className="text-[9px] font-bold text-gray-300 tracking-wide mb-0.5">Height</span>
-                        <span className="text-base font-black text-white">{athlete.height_cm ? `${athlete.height_cm}cm` : 'N/A'}</span>
+                        <span className="text-xs font-bold text-gray-300 tracking-wide mb-0.5">Height</span>
+                        <span className="text-base font-bold text-white">{athlete.height_cm ? `${athlete.height_cm}cm` : 'N/A'}</span>
                      </div>
                      <div className="bg-white/10 border border-white/15 px-4 py-2 rounded-xl flex flex-col items-center">
-                        <span className="text-[9px] font-bold text-gray-300 tracking-wide mb-0.5">Foot</span>
-                        <span className="text-base font-black text-white">{athlete.foot || 'Right'}</span>
+                        <span className="text-xs font-bold text-gray-300 tracking-wide mb-0.5">Foot</span>
+                        <span className="text-base font-bold text-white">{athlete.foot || 'Right'}</span>
                      </div>
                   </div>
                   <div className="flex items-center gap-3 text-base font-bold mb-8 text-white/80">
                      <MapPin className="w-3.5 h-3.5 text-[#b50a0a]" />
                      <span>{athlete.current_club || 'Free Agent'}</span>
-                     <span className="text-white/30">·</span>
+                     <span className="text-white/30">Â·</span>
                      <span>{athlete.country || 'Global'}</span>
                   </div>
                </div>
@@ -112,8 +112,8 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                            { label: 'Main Foot', value: athlete.foot || 'Right' },
                         ].map((s) => (
                            <div key={s.label} className="backdrop-blur-xl bg-white/5 border border-white/10 px-6 py-3.5 rounded-2xl flex flex-col">
-                              <span className="text-[9px] font-bold text-gray-200 tracking-[0.2em] mb-1">{s.label}</span>
-                              <span className="text-xl font-black text-white capitalize">{s.value}</span>
+                              <span className="text-xs font-bold text-gray-200 tracking-[0.2em] mb-1">{s.label}</span>
+                              <span className="text-xl font-bold text-white capitalize">{s.value}</span>
                            </div>
                         ))}
                      </div>
@@ -157,7 +157,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
-                           className={`relative text-[11px] font-bold tracking-wide whitespace-nowrap py-4 px-3 sm:px-4 hover:text-[#b50a0a] transition-colors ${activeTab === tab ? 'text-[#b50a0a] font-black' : 'text-gray-500'}`}
+                           className={`relative text-xs font-bold tracking-wide whitespace-nowrap py-4 px-3 sm:px-4 hover:text-[#b50a0a] transition-colors ${activeTab === tab ? 'text-[#b50a0a] font-bold' : 'text-gray-500'}`}
                         >
                            {tab}
                            {activeTab === tab && (
@@ -175,13 +175,13 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                   <div className="flex flex-col">
                      <div className="mb-12 pb-12 border-b border-gray-100 flex flex-col lg:flex-row gap-10 lg:gap-24">
                         <div className="w-full lg:w-[60%]">
-                           <h2 className="text-2xl sm:text-3xl font-black text-gray-600 mb-6">Bio</h2>
+                           <h2 className="text-2xl sm:text-3xl font-bold text-gray-600 mb-6">Bio</h2>
                            <p className="text-base leading-relaxed text-gray-600 font-medium">
                               {athlete.bio || `Meet ${athlete.first_name || ''} ${athlete.last_name || ''}, one of the talented players on CenterKick.`}
                            </p>
                         </div>
                         <div className="w-full lg:w-[40%]">
-                           <h2 className="text-2xl sm:text-3xl font-black text-gray-600 mb-6">Honours</h2>
+                           <h2 className="text-2xl sm:text-3xl font-bold text-gray-600 mb-6">Honours</h2>
                            {athlete.achievements && Array.isArray(athlete.achievements) && athlete.achievements.length > 0 ? (
                               <div className="space-y-3">
                                  {athlete.achievements.map((item: any, i: number) => (
@@ -198,7 +198,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                      </div>
 
                      <div>
-                        <h2 className="text-2xl sm:text-3xl font-black text-gray-600 mb-8">Player Data</h2>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-600 mb-8">Player Data</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                            {[
                               { label: 'Country', value: athlete.country || 'N/A' },
@@ -211,7 +211,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                            ].map((item, i) => (
                               <div key={i} className="flex py-3 border-b border-gray-50">
                                  <span className="w-2/5 text-sm font-bold text-gray-400 tracking-wide">{item.label}</span>
-                                 <span className="w-3/5 text-base font-black text-gray-900">{item.value}</span>
+                                 <span className="w-3/5 text-base font-bold text-gray-900">{item.value}</span>
                               </div>
                            ))}
                         </div>
@@ -221,12 +221,12 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
 
                {activeTab === "Gallery" && (
                   <div className="animate-in fade-in duration-500">
-                     <h2 className="text-2xl sm:text-3xl font-black text-gray-900 mb-8 tracking-tighter">Media <span className="text-[#b50a0a]">Gallery</span></h2>
+                     <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 tracking-tighter">Media <span className="text-[#b50a0a]">Gallery</span></h2>
                      
                      {/* Videos Section */}
                      {athlete.video_links && athlete.video_links.length > 0 && (
                         <div className="mb-12">
-                           <h3 className="text-sm font-black text-gray-500 tracking-[0.2em] mb-6 uppercase">Featured Videos</h3>
+                           <h3 className="text-sm font-bold text-gray-500 tracking-[0.2em] mb-6 uppercase">Featured Videos</h3>
                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               {athlete.video_links.map((url: string, i: number) => {
                                  let embedUrl = url;
@@ -261,7 +261,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                      {/* Photos Section */}
                      {athlete.gallery_urls && athlete.gallery_urls.length > 0 && (
                         <div>
-                           <h3 className="text-sm font-black text-gray-500 tracking-[0.2em] mb-6 uppercase">Action Shots</h3>
+                           <h3 className="text-sm font-bold text-gray-500 tracking-[0.2em] mb-6 uppercase">Action Shots</h3>
                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                               {athlete.gallery_urls.map((url: string, i: number) => (
                                  <div key={i} className="aspect-square bg-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 group cursor-pointer">
@@ -282,7 +282,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
 
                {activeTab !== "Profile" && activeTab !== "Gallery" && (
                   <div className="py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                     <p className="text-gray-400 text-sm font-bold tracking-wide">{activeTab} — Coming Soon</p>
+                     <p className="text-gray-400 text-sm font-bold tracking-wide">{activeTab} â€” Coming Soon</p>
                   </div>
                )}
             </div>

@@ -37,7 +37,7 @@ export default async function AgentsPage() {
          <main className="pt-32 sm:pt-40">
             <div className="bg-gradient-to-br from-[#0a0a0a] to-[#1a0000] py-12 sm:py-20 px-4">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0 text-center sm:text-left">
-                  <span className="text-[#a20000] font-black text-sm tracking-[0.4em] mb-3 block">Certified Network</span>
+                  <span className="text-[#a20000] font-bold text-sm tracking-[0.4em] mb-3 block">Certified Network</span>
                   <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black text-white leading-none mb-4 tracking-tighter">
                      Pro <span className="text-[#a20000]">Agents</span>
                   </h1>

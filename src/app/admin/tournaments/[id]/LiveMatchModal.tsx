@@ -85,8 +85,8 @@ export function LiveMatchModal({ fixture, tournamentId, matchEvents, onClose }: 
               <Activity className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-xl font-black text-gray-900 tracking-tight">Live Match Management</h3>
-              <p className="text-[10px] font-bold text-gray-400 tracking-wide">{fixture.round} • {format(new Date(fixture.match_date), 'MMM dd, yyyy')}</p>
+              <h3 className="text-xl font-bold text-gray-900 tracking-tight">Live Match Management</h3>
+              <p className="text-xs font-bold text-gray-400 tracking-wide">{fixture.round} • {format(new Date(fixture.match_date), 'MMM dd, yyyy')}</p>
             </div>
           </div>
           <button onClick={onClose} className="p-3 hover:bg-gray-200 rounded-xl transition-colors">
@@ -103,22 +103,22 @@ export function LiveMatchModal({ fixture, tournamentId, matchEvents, onClose }: 
               <div className="relative z-10 flex flex-col items-center gap-6">
                 <div className="w-full flex items-center justify-between gap-4">
                   <div className="flex-1 flex flex-col items-center gap-2">
-                    <span className="text-[10px] font-black text-gray-400 tracking-wide text-center">{fixture.home_team?.team_name}</span>
+                    <span className="text-xs font-bold text-gray-400 tracking-wide text-center">{fixture.home_team?.team_name}</span>
                     <div className="flex items-center gap-2 bg-white/10 p-2 rounded-2xl">
-                      <button onClick={() => setHomeScore(Math.max(0, homeScore - 1))} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 font-black">-</button>
-                      <span className="text-4xl font-black w-12 text-center">{homeScore}</span>
-                      <button onClick={() => setHomeScore(homeScore + 1)} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 font-black">+</button>
+                      <button onClick={() => setHomeScore(Math.max(0, homeScore - 1))} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 font-bold">-</button>
+                      <span className="text-4xl font-bold w-12 text-center">{homeScore}</span>
+                      <button onClick={() => setHomeScore(homeScore + 1)} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 font-bold">+</button>
                     </div>
                   </div>
                   
-                  <span className="text-2xl font-black text-gray-600">-</span>
+                  <span className="text-2xl font-bold text-gray-600">-</span>
                   
                   <div className="flex-1 flex flex-col items-center gap-2">
-                    <span className="text-[10px] font-black text-gray-400 tracking-wide text-center">{fixture.away_team?.team_name}</span>
+                    <span className="text-xs font-bold text-gray-400 tracking-wide text-center">{fixture.away_team?.team_name}</span>
                     <div className="flex items-center gap-2 bg-white/10 p-2 rounded-2xl">
-                      <button onClick={() => setAwayScore(Math.max(0, awayScore - 1))} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 font-black">-</button>
-                      <span className="text-4xl font-black w-12 text-center">{awayScore}</span>
-                      <button onClick={() => setAwayScore(awayScore + 1)} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 font-black">+</button>
+                      <button onClick={() => setAwayScore(Math.max(0, awayScore - 1))} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 font-bold">-</button>
+                      <span className="text-4xl font-bold w-12 text-center">{awayScore}</span>
+                      <button onClick={() => setAwayScore(awayScore + 1)} className="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/20 font-bold">+</button>
                     </div>
                   </div>
                 </div>
@@ -141,7 +141,7 @@ export function LiveMatchModal({ fixture, tournamentId, matchEvents, onClose }: 
                   <button 
                     onClick={handleUpdateMatchInfo}
                     disabled={isSavingScore}
-                    className="bg-[#b50a0a] text-white px-6 py-3 rounded-xl font-black tracking-wide text-[10px] hover:bg-white hover:text-gray-900 transition-all flex items-center gap-2"
+                    className="bg-[#b50a0a] text-white px-6 py-3 rounded-xl font-bold tracking-wide text-xs hover:bg-white hover:text-gray-900 transition-all flex items-center gap-2"
                   >
                     {isSavingScore ? 'Saving...' : 'Update Match'}
                   </button>
@@ -151,19 +151,19 @@ export function LiveMatchModal({ fixture, tournamentId, matchEvents, onClose }: 
 
             {/* Event Form */}
             <div className="bg-white border border-gray-100 rounded-[32px] p-4 md:p-8 shadow-sm">
-              <h4 className="text-[10px] font-black text-gray-400 tracking-wide mb-6">Log New Event</h4>
+              <h4 className="text-xs font-bold text-gray-400 tracking-wide mb-6">Log New Event</h4>
               <form onSubmit={handleAddEvent} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[9px] font-black text-gray-400 tracking-wide">Team</label>
-                    <select name="team_id" required className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-[10px] font-black text-gray-900 tracking-wide outline-none focus:ring-2 focus:ring-[#b50a0a]">
+                    <label className="text-xs font-bold text-gray-400 tracking-wide">Team</label>
+                    <select name="team_id" required className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 tracking-wide outline-none focus:ring-2 focus:ring-[#b50a0a]">
                       <option value={fixture.home_team_id}>{fixture.home_team?.team_name}</option>
                       <option value={fixture.away_team_id}>{fixture.away_team?.team_name}</option>
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[9px] font-black text-gray-400 tracking-wide">Type</label>
-                    <select name="event_type" required className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-[10px] font-black text-gray-900 tracking-wide outline-none focus:ring-2 focus:ring-[#b50a0a]">
+                    <label className="text-xs font-bold text-gray-400 tracking-wide">Type</label>
+                    <select name="event_type" required className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 tracking-wide outline-none focus:ring-2 focus:ring-[#b50a0a]">
                       <option value="goal">Goal</option>
                       <option value="yellow_card">Yellow Card</option>
                       <option value="red_card">Red Card</option>
@@ -182,19 +182,19 @@ export function LiveMatchModal({ fixture, tournamentId, matchEvents, onClose }: 
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="col-span-2 space-y-2">
-                    <label className="text-[9px] font-black text-gray-400 tracking-wide">Player Name</label>
-                    <input name="player_name" required placeholder="E.G. JOHN DOE" className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-[10px] font-black text-gray-900 tracking-wide outline-none focus:ring-2 focus:ring-[#b50a0a] placeholder:text-gray-300" />
+                    <label className="text-xs font-bold text-gray-400 tracking-wide">Player Name</label>
+                    <input name="player_name" required placeholder="E.G. JOHN DOE" className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 tracking-wide outline-none focus:ring-2 focus:ring-[#b50a0a] placeholder:text-gray-300" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[9px] font-black text-gray-400 tracking-wide">Minute</label>
-                    <input name="minute" type="number" required min="1" max="130" placeholder="45" className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-[10px] font-black text-gray-900 text-center tracking-wide outline-none focus:ring-2 focus:ring-[#b50a0a] placeholder:text-gray-300" />
+                    <label className="text-xs font-bold text-gray-400 tracking-wide">Minute</label>
+                    <input name="minute" type="number" required min="1" max="130" placeholder="45" className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 text-center tracking-wide outline-none focus:ring-2 focus:ring-[#b50a0a] placeholder:text-gray-300" />
                   </div>
                 </div>
 
                 <button 
                   type="submit" 
                   disabled={isSavingEvent}
-                  className="w-full bg-gray-100 text-gray-900 py-3 rounded-xl font-black tracking-wide text-[10px] hover:bg-[#b50a0a] hover:text-white transition-all mt-2"
+                  className="w-full bg-gray-100 text-gray-900 py-3 rounded-xl font-bold tracking-wide text-xs hover:bg-[#b50a0a] hover:text-white transition-all mt-2"
                 >
                   {isSavingEvent ? 'Adding...' : 'Add Event'}
                 </button>
@@ -204,20 +204,20 @@ export function LiveMatchModal({ fixture, tournamentId, matchEvents, onClose }: 
 
           {/* Right Column: Timeline */}
           <div className="w-full md:w-1/2 flex flex-col">
-            <h4 className="text-[10px] font-black text-gray-400 tracking-wide mb-4">Match Timeline</h4>
+            <h4 className="text-xs font-bold text-gray-400 tracking-wide mb-4">Match Timeline</h4>
             <div className="flex-1 bg-gray-50 border border-gray-100 rounded-[32px] p-6 overflow-y-auto min-h-[300px]">
               <div className="space-y-4">
                 {fixtureEvents.map((event, idx) => (
                   <div key={event.id || idx} className="flex gap-4 items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
-                    <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center font-black text-base shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center font-bold text-base shrink-0">
                       {event.minute}'
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <span className="text-lg leading-none">{getEventIcon(event.event_type)}</span>
-                        <p className="text-sm font-black text-gray-900 tracking-tight">{event.player_name}</p>
+                        <p className="text-sm font-bold text-gray-900 tracking-tight">{event.player_name}</p>
                       </div>
-                      <p className="text-[9px] font-bold text-gray-400 tracking-wide mt-1">
+                      <p className="text-xs font-bold text-gray-400 tracking-wide mt-1">
                         {event.team_id === fixture.home_team_id ? fixture.home_team?.team_name : fixture.away_team?.team_name}
                       </p>
                     </div>
@@ -227,8 +227,8 @@ export function LiveMatchModal({ fixture, tournamentId, matchEvents, onClose }: 
                 {fixtureEvents.length === 0 && (
                   <div className="h-full flex flex-col items-center justify-center text-center space-y-2 opacity-50 py-10">
                     <Clock className="w-8 h-8 text-gray-400 mb-2" />
-                    <p className="text-sm font-black text-gray-900">No Events Yet</p>
-                    <p className="text-[10px] font-bold text-gray-400 tracking-wide">Log events as they happen</p>
+                    <p className="text-sm font-bold text-gray-900">No Events Yet</p>
+                    <p className="text-xs font-bold text-gray-400 tracking-wide">Log events as they happen</p>
                   </div>
                 )}
               </div>

@@ -43,11 +43,11 @@ export function RoleDirectoryClient({
   const getStatusBadge = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'active':
-        return <span className="px-3 py-1 bg-green-50 text-green-700 text-[9px] font-black rounded-xl border border-green-100 flex items-center gap-1.5 w-fit"><CheckCircle className="w-3 h-3" /> Verified</span>;
+        return <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-xl border border-green-100 flex items-center gap-1.5 w-fit"><CheckCircle className="w-3 h-3" /> Verified</span>;
       case 'pending':
-        return <span className="px-3 py-1 bg-amber-50 text-amber-700 text-[9px] font-black rounded-xl border border-amber-100 flex items-center gap-1.5 w-fit"><Clock className="w-3 h-3" /> Pending</span>;
+        return <span className="px-3 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-xl border border-amber-100 flex items-center gap-1.5 w-fit"><Clock className="w-3 h-3" /> Pending</span>;
       default:
-        return <span className="px-3 py-1 bg-gray-50 text-gray-400 text-[9px] font-black rounded-xl border border-gray-100 flex items-center gap-1.5 w-fit"><Clock className="w-3 h-3" /> Unverified</span>;
+        return <span className="px-3 py-1 bg-gray-50 text-gray-400 text-xs font-bold rounded-xl border border-gray-100 flex items-center gap-1.5 w-fit"><Clock className="w-3 h-3" /> Unverified</span>;
     }
   };
 
@@ -60,7 +60,7 @@ export function RoleDirectoryClient({
           <input
             type="text"
             placeholder={`Search ${roleLabel.toLowerCase()}s by name, email or location...`}
-            className="w-full pl-12 pr-6 py-4 bg-white border border-gray-200 rounded-2xl text-[11px] font-bold focus:outline-none focus:ring-4 focus:ring-[#b50a0a]/5 focus:border-[#b50a0a] transition-all placeholder:text-gray-400 tracking-wide"
+            className="w-full pl-12 pr-6 py-4 bg-white border border-gray-200 rounded-2xl text-xs font-bold focus:outline-none focus:ring-4 focus:ring-[#b50a0a]/5 focus:border-[#b50a0a] transition-all placeholder:text-gray-400 tracking-wide"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -72,7 +72,7 @@ export function RoleDirectoryClient({
               <button
                 key={s}
                 onClick={() => setStatusFilter(s)}
-                className={`px-6 py-2.5 rounded-xl text-[9px] font-black tracking-[0.2em] transition-all ${
+                className={`px-6 py-2.5 rounded-xl text-xs font-bold tracking-[0.2em] transition-all ${
  statusFilter === s ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20' : 'text-gray-400 hover:text-gray-900'
  }`}
               >
@@ -92,11 +92,11 @@ export function RoleDirectoryClient({
         <table className="w-full text-left border-collapse whitespace-nowrap">
           <thead>
             <tr className="bg-gray-50/20">
-              <th className="px-10 py-6 text-[9px] font-black text-gray-400 tracking-[0.2em] border-b border-gray-50">Profile / Identity</th>
-              <th className="px-10 py-6 text-[9px] font-black text-gray-400 tracking-[0.2em] border-b border-gray-50">Location / Agency</th>
-              <th className="px-10 py-6 text-[9px] font-black text-gray-400 tracking-[0.2em] border-b border-gray-50">Status</th>
-              <th className="px-10 py-6 text-[9px] font-black text-gray-400 tracking-[0.2em] border-b border-gray-50">Join Date</th>
-              <th className="px-10 py-6 text-[9px] font-black text-gray-400 tracking-[0.2em] border-b border-gray-50 text-right">Actions</th>
+              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50">Profile / Identity</th>
+              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50">Location / Agency</th>
+              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50">Status</th>
+              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50">Join Date</th>
+              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -105,7 +105,7 @@ export function RoleDirectoryClient({
                 <td className="px-10 py-7">
                   <div className="flex items-center gap-5">
                     <div className="relative group/avatar">
-                       <div className="w-14 h-14 rounded-2xl bg-gray-900 border-2 border-white shadow-xl flex items-center justify-center font-black text-white text-lg overflow-hidden transition-transform group-hover/avatar:scale-105">
+                       <div className="w-14 h-14 rounded-2xl bg-gray-900 border-2 border-white shadow-xl flex items-center justify-center font-bold text-white text-lg overflow-hidden transition-transform group-hover/avatar:scale-105">
                           {item.avatar_url ? (
                              <img src={item.avatar_url} className="w-full h-full object-cover" alt="" />
                           ) : (
@@ -117,10 +117,10 @@ export function RoleDirectoryClient({
                        </div>
                     </div>
                     <div>
-                      <p className="text-base font-black text-gray-900 tracking-tight leading-none">
+                      <p className="text-base font-bold text-gray-900 tracking-tight leading-none">
                          {item.first_name} {item.last_name}
                       </p>
-                      <p className="text-[10px] font-bold text-gray-400 mt-1.5 flex items-center gap-1.5 tracking-wide">
+                      <p className="text-xs font-bold text-gray-400 mt-1.5 flex items-center gap-1.5 tracking-wide">
                          <Mail className="w-3 h-3" /> {item.email || item.users?.email}
                       </p>
                     </div>
@@ -130,11 +130,11 @@ export function RoleDirectoryClient({
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2 text-gray-900">
                       <MapPin className="w-3.5 h-3.5 text-[#b50a0a]" />
-                      <span className="text-[11px] font-black tracking-tight">{item.country || item.nationality || 'Unspecified'}</span>
+                      <span className="text-xs font-bold tracking-tight">{item.country || item.nationality || 'Unspecified'}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-400">
                       <Building2 className="w-3.5 h-3.5" />
-                      <span className="text-[9px] font-bold tracking-wide">{item.current_club || item.agency_name || 'Independent'}</span>
+                      <span className="text-xs font-bold tracking-wide">{item.current_club || item.agency_name || 'Independent'}</span>
                     </div>
                   </div>
                 </td>
@@ -144,7 +144,7 @@ export function RoleDirectoryClient({
                 <td className="px-10 py-7">
                   <div className="flex items-center gap-2 text-gray-500">
                     <Calendar className="w-3.5 h-3.5" />
-                    <span className="text-[10px] font-bold">{format(new Date(item.created_at), 'MMM dd, yyyy')}</span>
+                    <span className="text-xs font-bold">{format(new Date(item.created_at), 'MMM dd, yyyy')}</span>
                   </div>
                 </td>
                 <td className="px-10 py-7 text-right">
@@ -170,13 +170,13 @@ export function RoleDirectoryClient({
       <div className="p-4 md:p-8 border-t border-gray-50 flex items-center justify-between bg-gray-50/20">
         <div className="flex items-center gap-3">
            <div className="w-2 h-2 bg-[#b50a0a] rounded-full animate-pulse"></div>
-           <p className="text-[10px] font-black text-gray-500 tracking-wide">
+           <p className="text-xs font-bold text-gray-500 tracking-wide">
              Record Count: <span className="text-gray-900">{initialData.length}</span> / {totalCount} Entities
            </p>
         </div>
         <div className="flex gap-3">
-          <button className="px-6 py-3 bg-white border border-gray-200 rounded-xl text-[10px] font-black tracking-wide text-gray-400 cursor-not-allowed transition-all">Previous</button>
-          <button className="px-6 py-3 bg-gray-900 text-white border border-gray-900 rounded-xl text-[10px] font-black tracking-wide hover:bg-[#b50a0a] hover:border-[#b50a0a] transition-all shadow-lg shadow-gray-900/10 active:scale-95">Next Segment</button>
+          <button className="px-6 py-3 bg-white border border-gray-200 rounded-xl text-xs font-bold tracking-wide text-gray-400 cursor-not-allowed transition-all">Previous</button>
+          <button className="px-6 py-3 bg-gray-900 text-white border border-gray-900 rounded-xl text-xs font-bold tracking-wide hover:bg-[#b50a0a] hover:border-[#b50a0a] transition-all shadow-lg shadow-gray-900/10 active:scale-95">Next Segment</button>
         </div>
       </div>
     </div>

@@ -35,7 +35,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
          {/* Filter Bar */}
          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-8 border-b border-gray-100">
             <div>
-               <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tighter">Verified Athletes</h2>
+               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter">Verified Athletes</h2>
                <p className="text-sm font-bold text-gray-400 tracking-wide mt-1">Discover rising football talent</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -87,8 +87,8 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
-                           <span className="text-[#ff4d4d] text-[9px] font-bold tracking-wide block mb-0.5">{athlete.position || 'Player'}</span>
-                           <h3 className="text-white font-black text-base sm:text-base leading-tight tracking-tight line-clamp-2">{name}</h3>
+                           <span className="text-[#ff4d4d] text-xs font-bold tracking-wide block mb-0.5">{athlete.position || 'Player'}</span>
+                           <h3 className="text-white font-bold text-base sm:text-base leading-tight tracking-tight line-clamp-2">{name}</h3>
                         </div>
                      </Link>
                   );

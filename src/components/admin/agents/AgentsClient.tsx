@@ -147,14 +147,14 @@ export function AgentsClient({
                 placeholder="Search name, email or agency..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 border-none rounded-lg text-[11px] font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 placeholder:text-gray-900"
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 border-none rounded-lg text-xs font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all text-gray-900 placeholder:text-gray-900"
               />
            </div>
            <div className="flex flex-wrap gap-2">
               <select 
                 onChange={(e) => handleFilterChange('gender', e.target.value)}
                 value={searchParams.get('gender') || ''}
-                className="bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
+                className="bg-gray-50 border-none rounded-lg text-xs font-bold tracking-wide px-3 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22%23b50a0a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M2%204l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:10px_10px] bg-[right_0.5rem_center] bg-no-repeat pr-6"
               >
                  <option value="" className="text-gray-900">Gen</option>
                  <option value="Male" className="text-gray-900">Male</option>
@@ -166,7 +166,7 @@ export function AgentsClient({
                    placeholder="Country"
                    onChange={(e) => handleFilterChange('country', e.target.value)}
                    value={searchParams.get('country') || ''}
-                   className="w-32 bg-gray-50 border-none rounded-lg text-[9px] font-black tracking-wide pl-3 pr-8 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-900"
+                   className="w-32 bg-gray-50 border-none rounded-lg text-xs font-bold tracking-wide pl-3 pr-8 py-2 focus:ring-2 focus:ring-[#b50a0a] text-gray-900 placeholder:text-gray-900"
                  />
                  <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[#b50a0a]" />
               </div>
@@ -175,7 +175,7 @@ export function AgentsClient({
                     <option key={country} value={country} />
                  ))}
               </datalist>
-              <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg font-black text-[9px] tracking-wide hover:bg-[#b50a0a] transition-all">
+              <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg font-bold text-xs tracking-wide hover:bg-[#b50a0a] transition-all">
                 Search
               </button>
            </div>
@@ -186,10 +186,10 @@ export function AgentsClient({
           <table className="w-full text-left text-base text-gray-600 whitespace-nowrap">
             <thead className="bg-[#f8f9fa] border-b border-gray-100">
               <tr>
-                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Agent Details</th>
-                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Agency / Brand</th>
-                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a]">Manageable Assets</th>
-                <th className="px-6 py-4 text-[9px] font-black tracking-wide text-[#b50a0a] text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Agent Details</th>
+                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Agency / Brand</th>
+                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Manageable Assets</th>
+                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a] text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -197,7 +197,7 @@ export function AgentsClient({
                 <tr>
                   <td colSpan={4} className="px-6 py-20 text-center">
                      <Briefcase className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                     <p className="text-[10px] font-black tracking-wide text-gray-400">No agents matches your search criteria.</p>
+                     <p className="text-xs font-bold tracking-wide text-gray-400">No agents matches your search criteria.</p>
                   </td>
                 </tr>
               ) : (
@@ -209,34 +209,34 @@ export function AgentsClient({
                   >
                     <td className="px-6 py-4">
                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center font-black text-white text-sm shrink-0">
+                          <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white text-sm shrink-0">
                              {agent.email?.[0]?.toUpperCase() || 'A'}
                           </div>
                           <div className="min-w-0">
-                             <p className="font-black text-gray-900 leading-none truncate text-[11px] mb-1">{agent.first_name} {agent.last_name}</p>
+                             <p className="font-bold text-gray-900 leading-none truncate text-xs mb-1">{agent.first_name} {agent.last_name}</p>
                              <div className="flex items-center gap-1.5">
-                                <span className="text-[8px] font-bold text-gray-400 tracking-wide flex items-center gap-1">
+                                <span className="text-xs font-bold text-gray-400 tracking-wide flex items-center gap-1">
                                    <FlagIcon country={agent.country || ''} className="w-3 h-2" /> {agent.country || 'N/A'}
                                 </span>
-                                <span className="text-[8px] font-bold text-gray-400">•</span>
-                                <span className="text-[8px] font-bold text-gray-400 tracking-wide">Licensed Agent</span>
+                                <span className="text-xs font-bold text-gray-400">â€¢</span>
+                                <span className="text-xs font-bold text-gray-400 tracking-wide">Licensed Agent</span>
                              </div>
                           </div>
                        </div>
                     </td>
                     <td className="px-6 py-4">
                        <div className="flex flex-col">
-                          <span className="text-[10px] font-black text-gray-900 tracking-tighter truncate max-w-full max-w-[150px]">{agent.agency_name || 'Independent'}</span>
-                          <span className="text-[8px] font-bold text-gray-400 tracking-wide mt-0.5">Sports Management</span>
+                          <span className="text-xs font-bold text-gray-900 tracking-tighter truncate max-w-full max-w-[150px]">{agent.agency_name || 'Independent'}</span>
+                          <span className="text-xs font-bold text-gray-400 tracking-wide mt-0.5">Sports Management</span>
                        </div>
                     </td>
                     <td className="px-6 py-4">
                        <div className="flex items-center gap-3">
                           <div className="flex flex-col">
-                             <span className="text-[10px] font-black text-gray-900 tracking-tighter">{agent.clientCount || 0} Clients Linked</span>
+                             <span className="text-xs font-bold text-gray-900 tracking-tighter">{agent.clientCount || 0} Clients Linked</span>
                              <div className="flex items-center gap-2 mt-1">
                                 <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]"></div>
-                                <span className="text-[8px] font-black tracking-wide text-green-600">
+                                <span className="text-xs font-bold tracking-wide text-green-600">
                                    PRO
                                 </span>
                              </div>
@@ -257,7 +257,7 @@ export function AgentsClient({
 
         {/* Pagination & Tools */}
         <div className="flex items-center justify-between pt-6 border-t border-gray-50">
-           <p className="text-[10px] font-black text-gray-400 tracking-wide">
+           <p className="text-xs font-bold text-gray-400 tracking-wide">
               Showing <span className="text-gray-900">{initialAgents.length}</span> of <span className="text-gray-900">{totalCount}</span> Agents
            </p>
            <div className="flex items-center gap-3">
@@ -269,7 +269,7 @@ export function AgentsClient({
                        else showToast(res.error || "Migration failed", "error");
                     }
                  }}
-                 className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-5 py-3 rounded-xl font-black text-[9px] tracking-wide transition-all flex items-center gap-2"
+                 className="bg-gray-100 hover:bg-gray-200 text-gray-600 px-5 py-3 rounded-xl font-bold text-xs tracking-wide transition-all flex items-center gap-2"
               >
                  <RefreshCcw className="w-3.5 h-3.5" /> Fix Slugs
               </button>
@@ -287,7 +287,7 @@ export function AgentsClient({
                     <button 
                       key={i} 
                       onClick={() => navigateToPage(i + 1)}
-                      className={`w-8 h-8 rounded-lg text-[10px] font-black transition-all ${currentPage === i + 1 ? 'bg-[#b50a0a] text-white' : 'hover:bg-gray-50 text-gray-400'}`}
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${currentPage === i + 1 ? 'bg-[#b50a0a] text-white' : 'hover:bg-gray-50 text-gray-400'}`}
                     >
                        {i + 1}
                     </button>
@@ -310,10 +310,10 @@ export function AgentsClient({
            <div className="bg-white w-full max-w-xl max-h-[90vh] rounded-[1.5rem] shadow-2xl overflow-hidden relative flex flex-col">
               <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
                  <div>
-                    <h3 className="text-xl font-black tracking-tighter">
+                    <h3 className="text-xl font-bold tracking-tighter">
                        <span className="text-gray-900">Enroll New</span> <span className="text-[#b50a0a]">Agent</span>
                     </h3>
-                    <p className="text-[8px] font-bold text-gray-900 tracking-wide mt-1">Onboard agency partner & manage network</p>
+                    <p className="text-xs font-bold text-gray-900 tracking-wide mt-1">Onboard agency partner & manage network</p>
                  </div>
                  <button onClick={closeAddModal} className="w-8 h-8 bg-gray-50 rounded-full flex items-center justify-center hover:bg-gray-100 transition-all border border-gray-100">
                     <X className="w-4 h-4 text-gray-400" />
@@ -335,15 +335,15 @@ export function AgentsClient({
                }} className="p-6 space-y-4 overflow-y-auto">
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                     <div className="space-y-1">
-                       <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">First Name</label>
-                       <input name="first_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" placeholder="Ex: Alex" />
+                       <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">First Name</label>
+                       <input name="first_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" placeholder="Ex: Alex" />
                     </div>
                     <div className="space-y-1">
-                       <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Last Name</label>
-                       <input name="last_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" placeholder="Ex: Mendes" />
+                       <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Last Name</label>
+                       <input name="last_name" required type="text" className="w-full bg-gray-50 border-none rounded-xl p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" placeholder="Ex: Mendes" />
                     </div>
                      <div className="md:col-span-2 space-y-1">
-                        <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1 flex justify-between">
+                        <label className="text-xs font-bold text-gray-900 tracking-wide ml-1 flex justify-between">
                            <span>Email Address</span>
                            {isCheckingEmail && <span className="text-[7px] text-[#b50a0a] animate-pulse">Checking status...</span>}
                         </label>
@@ -353,24 +353,24 @@ export function AgentsClient({
                           type="email" 
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className={`w-full bg-gray-50 border-none rounded-xl p-3 text-[11px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-900 ${emailStatus === 'REGISTERED' ? 'ring-1 ring-red-500 bg-red-50/10' : ''}`} 
+                          className={`w-full bg-gray-50 border-none rounded-xl p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-900 ${emailStatus === 'REGISTERED' ? 'ring-1 ring-red-500 bg-red-50/10' : ''}`} 
                           placeholder="agency@centerkick.com" 
                         />
                         {emailStatus === 'REGISTERED' && (
                           <div className="flex items-center gap-2 mt-1 px-2 py-1 bg-red-50 rounded-lg border border-red-100">
                              <AlertCircle className="w-3 h-3 text-red-500" />
-                             <p className="text-[8px] font-black text-red-600 tracking-wide">Email already registered as a member.</p>
+                             <p className="text-xs font-bold text-red-600 tracking-wide">Email already registered as a member.</p>
                           </div>
                         )}
                         {emailStatus === 'PROSPECT' && (
                           <div className="flex items-center justify-between mt-1 px-2 py-1 bg-blue-50 rounded-lg border border-blue-100">
                              <div className="flex items-center gap-2">
                                 <Info className="w-3 h-3 text-blue-500" />
-                                <p className="text-[8px] font-black text-blue-600 tracking-wide">Enrolled as prospect (Not yet joined).</p>
+                                <p className="text-xs font-bold text-blue-600 tracking-wide">Enrolled as prospect (Not yet joined).</p>
                              </div>
                              <button 
                                 onClick={handleResendInv}
-                                className="text-[8px] font-black underline text-[#b50a0a] hover:text-black tracking-wide"
+                                className="text-xs font-bold underline text-[#b50a0a] hover:text-black tracking-wide"
                              >
                                 Resend Invitation?
                              </button>
@@ -379,15 +379,15 @@ export function AgentsClient({
                      </div>
                     <div className="p-4 bg-gray-50/50 rounded-2xl md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-100">
                         <div className="space-y-1 md:col-span-2">
-                           <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Agency Name</label>
-                           <input name="agency_name" required type="text" className="w-full bg-white border border-gray-100 rounded-lg p-3 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" placeholder="Ex: Gestifute Sports" />
+                           <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Agency Name</label>
+                           <input name="agency_name" required type="text" className="w-full bg-white border border-gray-100 rounded-lg p-3 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" placeholder="Ex: Gestifute Sports" />
                         </div>
                         <div className="space-y-1">
-                           <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">License Code</label>
-                           <input name="license_code" type="text" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" placeholder="Ex: FIFA-2024-XXXX" />
+                           <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">License Code</label>
+                           <input name="license_code" type="text" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" placeholder="Ex: FIFA-2024-XXXX" />
                         </div>
                         <div className="space-y-1">
-                           <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Country</label>
+                           <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Country</label>
                            <div className="relative group">
                               <div className="absolute left-3 top-1/2 -translate-y-1/2">
                                 <FlagIcon 
@@ -402,7 +402,7 @@ export function AgentsClient({
                                 type="text" 
                                 value={selectedCountry}
                                 onChange={(e) => setSelectedCountry(e.target.value)}
-                                className="w-full bg-white border border-gray-100 rounded-lg pl-9 pr-3 py-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-900" 
+                                className="w-full bg-white border border-gray-100 rounded-lg pl-9 pr-3 py-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black placeholder:text-gray-900" 
                                 placeholder="Ex: Portugal" 
                               />
                            </div>
@@ -413,12 +413,12 @@ export function AgentsClient({
                            </datalist>
                         </div>
                         <div className="space-y-1">
-                           <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Date of Birth</label>
-                           <input name="date_of_birth" required type="date" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" />
+                           <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Date of Birth</label>
+                           <input name="date_of_birth" required type="date" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black" />
                         </div>
                         <div className="space-y-1">
-                           <label className="text-[8px] font-black text-gray-900 tracking-wide ml-1">Gender</label>
-                           <select name="gender" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-[10px] font-bold focus:ring-1 focus:ring-[#b50a0a] text-black">
+                           <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Gender</label>
+                           <select name="gender" className="w-full bg-white border border-gray-100 rounded-lg p-2 text-xs font-bold focus:ring-1 focus:ring-[#b50a0a] text-black">
                               <option value="Male" className="text-black">Male</option>
                               <option value="Female" className="text-black">Female</option>
                            </select>
@@ -426,7 +426,7 @@ export function AgentsClient({
                     </div>
                  </div>
                  <div className="pt-2">
-                    <button type="submit" className="w-full bg-[#b50a0a] text-white py-3.5 rounded-xl font-black tracking-wide shadow-xl shadow-red-900/10 hover:bg-black transition-all text-[10px] active:scale-[0.98]">
+                    <button type="submit" className="w-full bg-[#b50a0a] text-white py-3.5 rounded-xl font-bold tracking-wide shadow-xl shadow-red-900/10 hover:bg-black transition-all text-xs active:scale-[0.98]">
                         Confirm Partner Enrollment
                     </button>
                     <p className="text-[7px] text-gray-900 text-center font-bold tracking-wide mt-2 opacity-60">Partner will receive access links instantly.</p>

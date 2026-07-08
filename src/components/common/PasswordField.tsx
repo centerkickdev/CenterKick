@@ -19,7 +19,7 @@ interface PasswordFieldProps {
 export function PasswordField({ 
   name, 
   label, 
-  placeholder = "••••••••", 
+  placeholder = "â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢", 
   required = true, 
   rightElement,
   defaultValue,
@@ -54,7 +54,7 @@ export function PasswordField({
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center px-1">
-        <label className="text-xs font-black text-gray-900 tracking-wide ml-1">{label}</label>
+        <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">{label}</label>
         {rightElement}
       </div>
       <div className="relative">
@@ -81,7 +81,7 @@ export function PasswordField({
       {showRequirements && (
         <div className="grid grid-cols-2 gap-2 mt-2 px-2">
           {requirements.map((req, i) => (
-            <div key={i} className={`flex items-center gap-1.5 text-[10px] font-bold tracking-wide transition-colors ${req.met ? 'text-green-600' : 'text-gray-400'}`}>
+            <div key={i} className={`flex items-center gap-1.5 text-xs font-bold tracking-wide transition-colors ${req.met ? 'text-green-600' : 'text-gray-400'}`}>
               {req.met ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
               {req.label}
             </div>
@@ -90,7 +90,7 @@ export function PasswordField({
       )}
 
       {confirmFor !== undefined && currentValue.length > 0 && (
-        <div className={`mt-2 px-2 flex items-center gap-1.5 text-[10px] font-bold tracking-wide transition-colors ${passwordsMatch ? 'text-green-600' : 'text-red-500'}`}>
+        <div className={`mt-2 px-2 flex items-center gap-1.5 text-xs font-bold tracking-wide transition-colors ${passwordsMatch ? 'text-green-600' : 'text-red-500'}`}>
           {passwordsMatch ? <CheckCircle2 className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
           {passwordsMatch ? "Passwords match" : "Passwords do not match"}
         </div>

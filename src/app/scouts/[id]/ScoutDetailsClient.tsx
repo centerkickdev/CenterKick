@@ -66,7 +66,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                   </div>
 
                   <div className="flex-1 space-y-4 sm:space-y-6">
-                     <span className="text-[#a20000] font-black text-sm tracking-[0.4em] block">Verified Talent Scout</span>
+                     <span className="text-[#a20000] font-bold text-sm tracking-[0.4em] block">Verified Talent Scout</span>
                      <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-white tracking-tighter leading-none">
                         {profile.first_name} <br />
                         <span className="text-[#a20000]">{profile.last_name}</span>
@@ -92,7 +92,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                      <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`text-[10px] font-black tracking-[0.25em] h-full relative transition-all ${
+                        className={`text-xs font-bold tracking-[0.25em] h-full relative transition-all ${
  activeTab === tab ? "text-[#a20000]" : "text-gray-400 hover:text-gray-900"
  }`}
                      >
@@ -111,7 +111,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
                      <div className="lg:col-span-2 space-y-12">
                         <div>
-                           <h2 className="text-3xl font-black text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
+                           <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
                               Scouting Philosophy
                            </h2>
                         </div>
@@ -125,7 +125,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                      </div>
                      <div className="space-y-8">
                         <div className="bg-gray-50 rounded-[40px] p-10 border border-gray-100 shadow-sm">
-                           <h3 className="text-base font-black text-gray-900 tracking-wide mb-8 border-b border-gray-200 pb-4">Professional Data</h3>
+                           <h3 className="text-base font-bold text-gray-900 tracking-wide mb-8 border-b border-gray-200 pb-4">Professional Data</h3>
                            <div className="space-y-6">
                               {[
                                  { label: "License Status", value: profile.license || "Certified Scout" },
@@ -133,8 +133,8 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                                  { label: "Country Focus", value: profile.country || "Global" }
                               ].map((item, i) => (
                                  <div key={i}>
-                                    <span className="text-[10px] font-bold text-gray-400 tracking-wide block mb-1">{item.label}</span>
-                                    <span className="text-base font-black text-gray-900">{item.value}</span>
+                                    <span className="text-xs font-bold text-gray-400 tracking-wide block mb-1">{item.label}</span>
+                                    <span className="text-base font-bold text-gray-900">{item.value}</span>
                                  </div>
                               ))}
                            </div>
@@ -145,7 +145,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
 
                {activeTab === "Affiliations" && (
                   <div className="max-w-[700px] animate-in fade-in duration-500">
-                     <h2 className="text-sm font-black text-gray-900 tracking-wide mb-6 pb-2 border-b border-gray-100">
+                     <h2 className="text-sm font-bold text-gray-900 tracking-wide mb-6 pb-2 border-b border-gray-100">
                         Registered Achievements & Licenses
                      </h2>
                      {profile.achievements && profile.achievements.length > 0 ? (
@@ -176,7 +176,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                   </h2>
                   <div className="flex flex-wrap justify-center gap-6">
                      <Link href="/register">
-                        <button className="bg-white text-black px-12 py-5 rounded-2xl font-black tracking-wide text-sm hover:bg-black hover:text-white transition-all shadow-2xl">
+                        <button className="bg-white text-black px-12 py-5 rounded-2xl font-bold tracking-wide text-sm hover:bg-black hover:text-white transition-all shadow-2xl">
                            Partner With Us
                         </button>
                      </Link>

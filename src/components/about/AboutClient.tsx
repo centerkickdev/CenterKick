@@ -53,7 +53,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div>
                   </div>
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center z-0 overflow-hidden pointer-events-none">
-                     <h1 className="text-[15vw] font-black tracking-tighter text-transparent stroke-text opacity-10 leading-none">ABOUT US</h1>
+                     <h1 className="text-[15vw] font-bold tracking-tighter text-transparent stroke-text opacity-10 leading-none">ABOUT US</h1>
                   </div>
                   <div className="relative z-10 w-full max-w-[1000px] mx-auto px-6 text-center flex flex-col justify-center h-full">
                      <div className="flex justify-center mb-8">
@@ -83,7 +83,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                      
                      <div className="relative z-10 flex flex-col items-center text-center">
                         <div className="w-16 h-1.5 bg-[#b50a0a] mb-8 rounded-full"></div>
-                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 leading-tight md:leading-snug tracking-tight mb-8">
+                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight md:leading-snug tracking-tight mb-8">
                            {intro.description.split('. ')[0]}.
                         </h3>
                         <p className="text-lg md:text-xl leading-relaxed text-gray-600 font-medium max-w-[800px]">
@@ -115,9 +115,9 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                         <div className="relative z-10">
                            <div className="inline-flex items-center gap-3 mb-6 bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
                               <span className="w-2 h-2 rounded-full bg-[#b50a0a] animate-pulse"></span>
-                              <h3 className="text-sm font-black text-[#b50a0a] tracking-[0.2em]">Our Mission</h3>
+                              <h3 className="text-sm font-bold text-[#b50a0a] tracking-[0.2em]">Our Mission</h3>
                            </div>
-                           <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-6 tracking-tight group-hover:text-[#b50a0a] transition-colors duration-300">{missionTitle}</h2>
+                           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6 tracking-tight group-hover:text-[#b50a0a] transition-colors duration-300">{missionTitle}</h2>
                            <p className="text-gray-600 text-lg leading-relaxed font-medium">{missionDesc}</p>
                         </div>
                      </div>
@@ -127,9 +127,9 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                         <div className="relative z-10">
                            <div className="inline-flex items-center gap-3 mb-6 bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
                               <span className="w-2 h-2 rounded-full bg-green-600 animate-pulse"></span>
-                              <h3 className="text-sm font-black text-green-600 tracking-[0.2em]">Our Vision</h3>
+                              <h3 className="text-sm font-bold text-green-600 tracking-[0.2em]">Our Vision</h3>
                            </div>
-                           <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-6 tracking-tight group-hover:text-green-600 transition-colors duration-300">{visionTitle}</h2>
+                           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-6 tracking-tight group-hover:text-green-600 transition-colors duration-300">{visionTitle}</h2>
                            <p className="text-gray-600 text-lg leading-relaxed font-medium">{visionDesc}</p>
                         </div>
                      </div>
@@ -158,7 +158,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                                  {/* Fallback to default icons if DB doesn't have an icon, or just render a standard icon */}
                                  {item.icon ? (typeof item.icon === 'string' ? <Star className="w-6 h-6 text-[#ff3333]" /> : item.icon) : <Star className="w-6 h-6 text-[#ff3333]" />}
                               </div>
-                              <h3 className="text-2xl font-black text-gray-900 mb-4 tracking-tight">{item.title}</h3>
+                              <h3 className="text-2xl font-bold text-gray-900 mb-4 tracking-tight">{item.title}</h3>
                               <p className="text-gray-500 leading-relaxed font-medium">{item.desc || item.description}</p>
                            </div>
                         ))}
@@ -183,7 +183,7 @@ export function AboutClient({ layout, content, navContent, footerContent }: Abou
                            return (
                               <div key={idx} className={`flex flex-col ${isEven ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12 lg:gap-20 relative`}>
                                  <div className="w-full lg:w-1/2 relative z-10 mt-8 lg:mt-0">
-                                    <div className="inline-block text-[#b50a0a] font-black text-base tracking-wide mb-6 border-b-2 border-[#b50a0a] pb-1">Service {svc.num}</div>
+                                    <div className="inline-block text-[#b50a0a] font-bold text-base tracking-wide mb-6 border-b-2 border-[#b50a0a] pb-1">Service {svc.num}</div>
                                     <h3 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-8 leading-tight">{svc.title}</h3>
                                     <p className="text-gray-600 text-xl leading-relaxed font-medium mb-8">{svc.desc}</p>
                                     <Link href="/transfer-focus" className="inline-flex items-center gap-2 text-[#b50a0a] font-bold tracking-wide hover:text-gray-900 group transition-colors">

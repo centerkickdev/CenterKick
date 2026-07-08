@@ -38,16 +38,16 @@ export default function ErrorBoundary({
           </svg>
         </div>
         
-        <h1 className="text-2xl font-black text-gray-900 tracking-tighter mb-2">
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tighter mb-2">
           Something went wrong
         </h1>
         
         {isAdmin ? (
           <div className="text-left bg-gray-900 text-red-400 p-4 rounded-xl mt-4 mb-6 overflow-auto text-sm font-mono max-h-60 border border-gray-800 shadow-inner">
-            <p className="font-bold text-white mb-2 tracking-wide text-[10px]">Developer Details:</p>
+            <p className="font-bold text-white mb-2 tracking-wide text-xs">Developer Details:</p>
             <p className="mb-2">{error.message}</p>
             {error.stack && (
-              <pre className="text-[10px] text-gray-400 opacity-80 whitespace-pre-wrap">{error.stack}</pre>
+              <pre className="text-xs text-gray-400 opacity-80 whitespace-pre-wrap">{error.stack}</pre>
             )}
             {error.digest && (
               <p className="mt-2 text-gray-500">Digest: {error.digest}</p>
@@ -62,13 +62,13 @@ export default function ErrorBoundary({
         <div className="flex gap-4">
           <button
             onClick={() => reset()}
-            className="flex-1 py-4 bg-gray-900 hover:bg-black text-white rounded-xl font-black text-sm tracking-wide transition-all"
+            className="flex-1 py-4 bg-gray-900 hover:bg-black text-white rounded-xl font-bold text-sm tracking-wide transition-all"
           >
             Try Again
           </button>
           <Link
             href="/"
-            className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-black text-sm tracking-wide transition-all"
+            className="flex-1 py-4 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-bold text-sm tracking-wide transition-all"
           >
             Go Home
           </Link>
