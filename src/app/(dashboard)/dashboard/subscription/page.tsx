@@ -15,7 +15,8 @@ import {
   FileText, 
   Eye, 
   CreditCard,
-  Copy
+  Copy,
+  Hand
 } from 'lucide-react';
 
 interface UserProfile {
@@ -123,7 +124,7 @@ export default function SubscriptionPage() {
   const userRole = profile?.role || 'player';
   const basePrice = pricingPlan?.amount || 15000;
   const durationMonths = pricingPlan?.duration_months || 12;
-  const planName = pricingPlan?.plan_name || `${userRole.charAt(0).toUpperCase() + userRole.slice(1)} Pro`;
+  const planName = pricingPlan?.plan_name || `${userRole.charAt(0).toUpperCase() + userRole.slice(1)}`;
   const usdPrice = basePrice / 1500;
 
   const plan = {
@@ -142,6 +143,23 @@ export default function SubscriptionPage() {
       "Scouting ROI Analytics",
     ]
   };
+
+  const latestConfirmedTx = transactions.find(t => t.status === 'confirmed');
+  
+  let subscriptionEndDate: Date | null = null;
+  let daysUntilExpiry: number | null = null;
+
+  if (latestConfirmedTx && durationMonths) {
+    const startDate = new Date(latestConfirmedTx.created_at);
+    subscriptionEndDate = new Date(startDate);
+    subscriptionEndDate.setMonth(subscriptionEndDate.getMonth() + durationMonths);
+
+    const now = new Date();
+    const timeDiff = subscriptionEndDate.getTime() - now.getTime();
+    daysUntilExpiry = Math.ceil(timeDiff / (1000 * 3600 * 24));
+  }
+
+  const recurringTypeStr = durationMonths === 1 ? 'monthly' : durationMonths === 12 ? 'annual' : `${durationMonths}-month`;
 
   if (isLoading) return <div className="pt-20 text-center font-black tracking-wide animate-pulse text-gray-400">Loading Billing Data...</div>;
 
@@ -308,6 +326,27 @@ export default function SubscriptionPage() {
                                  </div>
                               </div>
                            )}
+                        </div>
+                     )}
+
+                     {/* Usage Metrics Section */}
+                     {plan.status !== 'Unverified' && (
+                        <div className={`p-6 rounded-3xl border ${
+                           plan.status === 'Pending Approval' ? 'bg-blue-50 border-blue-100' :
+                           (daysUntilExpiry !== null && daysUntilExpiry < 7 && daysUntilExpiry >= 0) ? 'bg-amber-50 border-amber-100' :
+                           'bg-green-50 border-green-100'
+                        }`}>
+                           <p className="text-sm font-bold text-gray-800 leading-relaxed">
+                              Cello <Hand className="inline-block w-4 h-4 text-amber-500 mb-1" />!, your <span className="font-black text-[#b50a0a]">{plan.name}</span> account is <span className="font-black">{plan.status === 'Active' ? 'Paid' : 'Pending Approval'}</span>
+                              
+                              {plan.status === 'Pending Approval' ? (
+                                 <span>. We are currently verifying your payment of {plan.price}. Once confirmed, your subscription will be activated for a {recurringTypeStr} period.</span>
+                              ) : (daysUntilExpiry !== null && daysUntilExpiry < 7 && daysUntilExpiry >= 0) ? (
+                                 <span>, but it will expire in <span className="text-amber-600 font-black">{daysUntilExpiry} days</span>, and this is a {recurringTypeStr} subscription. Your next payment of {plan.price} will be on {subscriptionEndDate ? new Date(subscriptionEndDate.getTime() + 86400000).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}.</span>
+                              ) : (
+                                 <span>, and this is a {recurringTypeStr} subscription. Your next payment of {plan.price} will be on {subscriptionEndDate ? new Date(subscriptionEndDate.getTime() + 86400000).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}.</span>
+                              )}
+                           </p>
                         </div>
                      )}
                   </div>
