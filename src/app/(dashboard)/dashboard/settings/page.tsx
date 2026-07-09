@@ -146,6 +146,20 @@ export default function SettingsPage() {
               <button type="submit" disabled={isSaving} className="w-full sm:w-auto px-4 md:px-8 py-3.5 bg-gray-900 hover:bg-black text-white text-xs font-bold tracking-wide rounded-xl transition-all shadow-md">
                 {isSaving ? 'Updating...' : 'Update Password'}
               </button>
+
+              <div className="pt-8 border-t border-gray-50 mt-8 space-y-4">
+                <h2 className="text-base font-bold tracking-wide text-gray-900">Authentication Methods</h2>
+                <div className="p-5 bg-gray-50 border-none rounded-2xl flex items-center justify-between">
+                   <div>
+                      <p className="text-sm font-bold text-gray-900">Google Fast Login</p>
+                      <p className="text-xs font-bold text-gray-500 mt-1">Sign in instantly without a password</p>
+                   </div>
+                   {/* Placeholder logic for google identity, needs real implementation from profile */}
+                   <button type="button" onClick={() => setStatus({type: 'error', msg: 'Google linking not yet initialized here.'})} className="px-4 py-2 bg-gray-900 text-white rounded-xl text-xs font-bold tracking-wide hover:bg-black transition-colors">
+                      Link Account
+                   </button>
+                </div>
+              </div>
             </form>
           )}
 
