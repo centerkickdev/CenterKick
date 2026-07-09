@@ -25,6 +25,14 @@ import { requestProfileEdit } from './actions';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 
+
+const calculateAge = (dob: string) => {
+  if (!dob) return '';
+  const diff_ms = Date.now() - new Date(dob).getTime();
+  const age_dt = new Date(diff_ms);
+  return Math.abs(age_dt.getUTCFullYear() - 1970);
+};
+
 export default function ProfileEditor() {
   const [activeTab, setActiveTab] = useState('Basic Info');
   const [role, setRole] = useState('player');
@@ -79,6 +87,8 @@ export default function ProfileEditor() {
         setCountriesList(countries || []);
 
         const { data: clubs } = await supabase.from('clubs').select('name, league_id').order('name');
+        const { data: leagues } = await supabase.from('leagues').select('id, name').order('name');
+        setLeaguesList(leagues || []);
         setClubsList(clubs || []);
 
         if (userRecord?.role === 'agent' || userRecord?.role === 'organization') {
@@ -392,7 +402,7 @@ export default function ProfileEditor() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 px-6 py-4 rounded-2xl text-xs font-bold tracking-wide transition-all whitespace-nowrap lg:w-full ${activeTab === tab.id ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-900 hover:bg-gray-100'}`}
+                className={`flex items-center gap-3 px-6 py-4 rounded-2xl text-sm font-bold tracking-wide transition-all whitespace-nowrap lg:w-full ${activeTab === tab.id ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-900 hover:bg-gray-100'}`}
               >
                 <tab.icon className="w-4 h-4" />
                 {tab.id}
@@ -427,25 +437,46 @@ export default function ProfileEditor() {
 
             {activeTab === 'Basic Info' && (
               <div className="space-y-6 animate-in fade-in duration-500">
-                <div className="flex flex-col items-center justify-center md:items-start md:justify-start">
-                  <input type="file" disabled={!isEditing} id="avatar_upload" className="hidden" accept="image/*" onChange={handleAvatarUpload} />
-                  <div
-                    onClick={() => isEditing && document.getElementById('avatar_upload')?.click()}
-                    className={`relative group ${isEditing ? 'cursor-pointer' : 'cursor-default'}`}
-                  >
-                    <div className={`w-24 h-24 rounded-3xl bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-900 overflow-hidden transition-all ${isEditing ? 'group-hover:border-[#b50a0a] group-hover:bg-red-50' : ''}`}>
-                      {profile?.avatar_url ? (
-                        <img src={profile.avatar_url} className="w-full h-full object-cover" />
-                      ) : (
-                        <>
-                          <Camera className={`w-6 h-6 mb-1 ${isEditing ? 'group-hover:text-[#b50a0a]' : ''}`} />
-                          <span className="text-xs font-bold tracking-wide">Photo</span>
-                        </>
+                <div className="flex flex-col md:flex-row justify-between items-start gap-6 md:p-2 border-b border-gray-50 pb-8 mb-4">
+                  <div className="flex flex-col items-center justify-center md:items-start md:justify-start">
+                    <input type="file" disabled={!isEditing} id="avatar_upload" className="hidden" accept="image/*" onChange={handleAvatarUpload} />
+                    <div
+                      onClick={() => isEditing && document.getElementById('avatar_upload')?.click()}
+                      className={`relative group ${isEditing ? 'cursor-pointer' : 'cursor-default'}`}
+                    >
+                      <div className={`w-24 h-24 rounded-3xl bg-gray-50 border-2 border-dashed border-gray-200 flex flex-col items-center justify-center text-gray-900 overflow-hidden transition-all ${isEditing ? 'group-hover:border-[#b50a0a] group-hover:bg-red-50' : ''}`}>
+                        {profile?.avatar_url ? (
+                          <img src={profile.avatar_url} className="w-full h-full object-cover" />
+                        ) : (
+                          <>
+                            <Camera className={`w-6 h-6 mb-1 ${isEditing ? 'group-hover:text-[#b50a0a]' : ''}`} />
+                            <span className="text-xs font-bold tracking-wide">Photo</span>
+                          </>
+                        )}
+                      </div>
+                      {isEditing && (
+                        <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-gray-900 border-4 border-white flex items-center justify-center text-white shadow-xl opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Plus className="w-3 h-3" />
+                        </div>
                       )}
                     </div>
-                    {isEditing && (
-                      <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-gray-900 border-4 border-white flex items-center justify-center text-white shadow-xl opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Plus className="w-3 h-3" />
+                  </div>
+                  
+                  <div className="flex flex-col gap-4 w-full md:w-1/3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Contract Status</label>
+                      <select disabled={!isEditing} name="is_signed" defaultValue={profile?.is_signed ? 'true' : 'false'} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black disabled:opacity-70 disabled:bg-gray-100">
+                        <option value="true">Signed Agent / Club</option>
+                        <option value="false">Free Agent</option>
+                      </select>
+                      {profile?.is_signed && !profile?.agent_id && !profile?.organization_id && (
+                        <p className="text-xs text-amber-600 font-bold ml-1 mt-1">No linked Agent or Organization.</p>
+                      )}
+                    </div>
+                    {(profile?.agent_id || profile?.organization_id) && (
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Linked Organization</label>
+                        <input disabled type="text" value="Linked Partner Verified" className="w-full bg-green-50 border-none rounded-2xl px-4 py-3 text-sm font-bold text-green-800 disabled:opacity-100 cursor-not-allowed" />
                       </div>
                     )}
                   </div>
@@ -472,7 +503,7 @@ export default function ProfileEditor() {
                     </select>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Date of Birth</label>
+                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Date of Birth {profile?.date_of_birth && <span className="text-gray-500 font-bold ml-1">({calculateAge(profile.date_of_birth)} yrs)</span>}</label>
                     <div className="relative">
                       <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                       <input disabled={!isEditing} name="date_of_birth" type="date" defaultValue={profile?.date_of_birth} onChange={(e) => setProfile({...profile, date_of_birth: e.target.value})} className="w-full bg-gray-50 border-none rounded-2xl pl-10 pr-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
@@ -515,9 +546,18 @@ export default function ProfileEditor() {
                       type="file"
                       id="id_proof_file"
                       className="hidden"
+                      accept="image/*,application/pdf"
                       onChange={async (e) => {
                         const file = e.target.files?.[0];
                         if (file) {
+                          if (file.size > 5 * 1024 * 1024) {
+                            setStatus({ type: 'error', msg: 'File exceeds 5MB limit.' });
+                            return;
+                          }
+                          if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+                            setStatus({ type: 'error', msg: 'Only images or PDF files are allowed.' });
+                            return;
+                          }
                           setProfile({ ...profile, id_proof_url: URL.createObjectURL(file) });
                           setStatus({ type: 'success', msg: 'Nationality verification document uploaded! Click Save Changes above to commit.' });
                         }
@@ -539,7 +579,7 @@ export default function ProfileEditor() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2 pt-8 border-t border-gray-50">
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 h-full flex flex-col justify-end">
                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Public Contact Email</label>
                     <p className="text-[10px] text-gray-500 font-medium ml-1">This can be your sign-up email or a dedicated public email.</p>
                     <div className="relative">
@@ -547,7 +587,7 @@ export default function ProfileEditor() {
                       <input disabled={!isEditing} name="contact_email" type="email" defaultValue={profile?.contact_email} placeholder="public@agency.com" className="w-full bg-gray-50 border-none rounded-2xl pl-10 pr-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-400 disabled:opacity-70 disabled:bg-gray-100" />
                     </div>
                   </div>
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 h-full flex flex-col justify-end">
                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Public Phone</label>
                     <div className="relative">
                       <PhoneInput
@@ -563,24 +603,6 @@ export default function ProfileEditor() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2 pt-8 border-t border-gray-50">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Contract Status</label>
-                    <select disabled={!isEditing} name="is_signed" defaultValue={profile?.is_signed ? 'true' : 'false'} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black disabled:opacity-70 disabled:bg-gray-100">
-                      <option value="true">Signed Agent / Club</option>
-                      <option value="false">Free Agent</option>
-                    </select>
-                    {profile?.is_signed && !profile?.agent_id && !profile?.organization_id && (
-                      <p className="text-xs text-amber-600 font-bold ml-1 mt-1">No linked Agent or Organization.</p>
-                    )}
-                  </div>
-                  {(profile?.agent_id || profile?.organization_id) && (
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Linked Organization</label>
-                      <input disabled type="text" value="Linked Partner Verified" className="w-full bg-green-50 border-none rounded-2xl px-4 py-3 text-sm font-bold text-green-800 disabled:opacity-100 cursor-not-allowed" />
-                    </div>
-                  )}
-                </div>
 
                 {(role === 'athlete' || role === 'player') && (
                   <div className="pt-8 border-t border-gray-50">
@@ -643,7 +665,7 @@ export default function ProfileEditor() {
                   <div className="w-2 h-10 bg-[#b50a0a] rounded-full"></div>
                   <div>
                     <h3 className="text-base font-bold tracking-wide text-gray-900">Current Club</h3>
-                    <p className="text-xs font-bold text-gray-900 tracking-[0.2em] mt-0.5">Where the player is currently playing</p>
+                    <p className="text-xs font-bold text-gray-500 tracking-wide mt-0.5">Where the player is currently playing</p>
                   </div>
                 </div>
 
@@ -653,32 +675,34 @@ export default function ProfileEditor() {
                     <select
                       disabled={!isEditing}
                       name="current_league_id"
-                      defaultValue={profile?.current_league_id || ''}
+                      value={profile?.current_league_id || ''}
+                      onChange={(e) => setProfile({...profile, current_league_id: e.target.value, current_club_id: ''})}
                       className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black disabled:opacity-70 disabled:bg-gray-100"
                     >
                       <option value="">Select League</option>
-                      {clubsList.map((c: any) => (
-                        <option key={c.league_id + c.name} value={c.league_id}>{c.league_id || 'Unknown League'}</option>
+                      {leaguesList.map((l: any) => (
+                        <option key={l.id} value={l.id}>{l.name}</option>
                       ))}
                     </select>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Current Club</label>
                     <select
-                      disabled={!isEditing}
+                      disabled={!isEditing || !profile?.current_league_id}
                       name="current_club_id"
-                      defaultValue={profile?.current_club_id || ''}
+                      value={profile?.current_club_id || ''}
+                      onChange={(e) => setProfile({...profile, current_club_id: e.target.value})}
                       className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black disabled:opacity-70 disabled:bg-gray-100"
                     >
                       <option value="">Select Club</option>
-                      {clubsList.map((c: any) => (
+                      {clubsList.filter(c => c.league_id === profile?.current_league_id).map((c: any) => (
                         <option key={c.name} value={c.name}>{c.name}</option>
                       ))}
                     </select>
                   </div>
                 </div>
 
-                <div className="space-y-1.5 md:p-2">
+                <div className="flex flex-col space-y-1.5 md:p-2">
                   <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Contract Expiry Date</label>
                   <input disabled={!isEditing} name="contract_expiry" type="date" min={new Date().toISOString().split('T')[0]} defaultValue={profile?.contract_expiry} className="w-full md:w-1/2 bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
                 </div>
@@ -709,20 +733,43 @@ export default function ProfileEditor() {
                             <X className="w-4 h-4" />
                           </button>
                         )}
-                        <input disabled={!isEditing} type="text" placeholder="Season (e.g. 23/24)" value={stat.season} onChange={(e) => { const newStats = [...careerStats]; newStats[i].season = e.target.value; setCareerStats(newStats); }} className="w-full sm:w-auto flex-1 min-w-[120px] bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100" />
-                        <select disabled={!isEditing} value={stat.league} onChange={(e) => { const newStats = [...careerStats]; newStats[i].league = e.target.value; setCareerStats(newStats); }} className="w-full sm:w-auto flex-1 min-w-[120px] bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100"><option value="">League</option>{leaguesList.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}</select>
-                        <select disabled={!isEditing} value={stat.club} onChange={(e) => { const newStats = [...careerStats]; newStats[i].club = e.target.value; setCareerStats(newStats); }} className="w-full sm:w-auto flex-1 min-w-[120px] bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100"><option value="">Club</option>{clubsList.filter(c => stat.league ? c.league_id === stat.league : true).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
-
+                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Season</label>
+                          <input disabled={!isEditing} type="text" placeholder="e.g. 23/24" value={stat.season} onChange={(e) => { const newStats = [...careerStats]; newStats[i].season = e.target.value; setCareerStats(newStats); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100" />
+                        </div>
+                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">League</label>
+                          <select disabled={!isEditing} value={stat.league} onChange={(e) => { const newStats = [...careerStats]; newStats[i].league = e.target.value; newStats[i].club = ''; setCareerStats(newStats); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100"><option value="">Select League</option>{leaguesList.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}</select>
+                        </div>
+                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Club</label>
+                          <select disabled={!isEditing || !stat.league} value={stat.club} onChange={(e) => { const newStats = [...careerStats]; newStats[i].club = e.target.value; setCareerStats(newStats); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100"><option value="">Select Club</option>{clubsList.filter(c => c.league_id === stat.league).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
+                        </div>
                         <div className="flex gap-2 w-full sm:w-auto">
-                          <input disabled={!isEditing} type="number" placeholder="Apps" title="Appearances" value={stat.apps} onChange={(e) => { const newStats = [...careerStats]; newStats[i].apps = Number(e.target.value); setCareerStats(newStats); }} className="w-16 bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-gray-100" />
-                          <input disabled={!isEditing} type="number" placeholder="Gls" title="Goals" value={stat.goals} onChange={(e) => { const newStats = [...careerStats]; newStats[i].goals = Number(e.target.value); setCareerStats(newStats); }} className="w-16 bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-gray-100" />
-                          <input disabled={!isEditing} type="number" placeholder="Ast" title="Assists" value={stat.assists} onChange={(e) => { const newStats = [...careerStats]; newStats[i].assists = Number(e.target.value); setCareerStats(newStats); }} className="w-16 bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-gray-100" />
-                          <input disabled={!isEditing} type="number" placeholder="Yel" title="Yellow Cards" value={stat.yellow_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].yellow_cards = Number(e.target.value); setCareerStats(newStats); }} className="w-16 bg-white border border-yellow-200 bg-yellow-50 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-yellow-100" />
-                          <input disabled={!isEditing} type="number" placeholder="Red" title="Red Cards" value={stat.red_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].red_cards = Number(e.target.value); setCareerStats(newStats); }} className="w-16 bg-white border border-red-200 bg-red-50 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-red-100" />
+                          <div className="flex flex-col space-y-1 w-16">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Apps</label>
+                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.apps} onChange={(e) => { const newStats = [...careerStats]; newStats[i].apps = Number(e.target.value); setCareerStats(newStats); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-gray-100" />
+                          </div>
+                          <div className="flex flex-col space-y-1 w-16">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Gls</label>
+                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.goals} onChange={(e) => { const newStats = [...careerStats]; newStats[i].goals = Number(e.target.value); setCareerStats(newStats); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-gray-100" />
+                          </div>
+                          <div className="flex flex-col space-y-1 w-16">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Ast</label>
+                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.assists} onChange={(e) => { const newStats = [...careerStats]; newStats[i].assists = Number(e.target.value); setCareerStats(newStats); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-gray-100" />
+                          </div>
+                          <div className="flex flex-col space-y-1 w-16">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Yel</label>
+                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.yellow_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].yellow_cards = Number(e.target.value); setCareerStats(newStats); }} className="w-full bg-white border border-yellow-200 bg-yellow-50 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-yellow-100" />
+                          </div>
+                          <div className="flex flex-col space-y-1 w-16">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Red</label>
+                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.red_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].red_cards = Number(e.target.value); setCareerStats(newStats); }} className="w-full bg-white border border-red-200 bg-red-50 rounded-xl px-2 py-2 text-xs font-bold text-center disabled:opacity-70 disabled:bg-red-100" />
+                          </div>
                         </div>
                       </div>
                     ))}
-                    {careerStats.length === 0 && <div className="p-8 text-center text-xs font-bold text-gray-400 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">No statistics recorded.</div>}
+                    {careerStats.length === 0 && <div className="p-8 text-center text-xs font-bold text-gray-400 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">{isEditing ? 'Click "+ Add Season" above to record a new season.' : 'No statistics recorded. Click "Edit Profile" to add your career history.'}</div>}
                   </div>
                 </div>
 
@@ -752,14 +799,29 @@ export default function ProfileEditor() {
                             <X className="w-4 h-4" />
                           </button>
                         )}
-                        <input disabled={!isEditing} type="date" placeholder="Date" value={transfer.date} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].date = e.target.value; setTransferHistory(newHistory); }} className="w-full sm:w-auto flex-1 min-w-[120px] bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100" />
-                        <select disabled={!isEditing} value={transfer.from_club} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].from_club = e.target.value; setTransferHistory(newHistory); }} className="w-full sm:w-auto flex-1 min-w-[120px] bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100"><option value="">From Club</option>{clubsList.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
-                        <select disabled={!isEditing} value={transfer.to_club} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].to_club = e.target.value; setTransferHistory(newHistory); }} className="w-full sm:w-auto flex-1 min-w-[120px] bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100"><option value="">To Club</option>{clubsList.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
-                        <input disabled={!isEditing} type="text" placeholder="Fee ($)" value={transfer.transfer_fee} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].transfer_fee = e.target.value; setTransferHistory(newHistory); }} className="w-full sm:w-auto flex-1 min-w-[120px] bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100" />
-                        <input disabled={!isEditing} type="text" placeholder="Market Value ($)" value={transfer.market_value} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].market_value = e.target.value; setTransferHistory(newHistory); }} className="w-full sm:w-auto flex-1 min-w-[120px] bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100" />
+                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Date</label>
+                          <input disabled={!isEditing} type="date" value={transfer.date} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].date = e.target.value; setTransferHistory(newHistory); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100" />
+                        </div>
+                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">From Club</label>
+                          <select disabled={!isEditing} value={transfer.from_club} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].from_club = e.target.value; setTransferHistory(newHistory); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100"><option value="">Select Club</option>{clubsList.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
+                        </div>
+                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">To Club</label>
+                          <select disabled={!isEditing} value={transfer.to_club} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].to_club = e.target.value; setTransferHistory(newHistory); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100"><option value="">Select Club</option>{clubsList.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
+                        </div>
+                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Fee ($)</label>
+                          <input disabled={!isEditing} type="text" placeholder="e.g. Free, 50k" value={transfer.transfer_fee} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].transfer_fee = e.target.value; setTransferHistory(newHistory); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100" />
+                        </div>
+                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Market Value ($)</label>
+                          <input disabled={!isEditing} type="text" placeholder="e.g. 100k" value={transfer.market_value} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].market_value = e.target.value; setTransferHistory(newHistory); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold disabled:opacity-70 disabled:bg-gray-100" />
+                        </div>
                       </div>
                     ))}
-                    {transferHistory.length === 0 && <div className="p-8 text-center text-xs font-bold text-gray-400 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">No transfer history recorded.</div>}
+                    {transferHistory.length === 0 && <div className="p-8 text-center text-xs font-bold text-gray-400 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">{isEditing ? 'Click "+ Add Transfer" above to log a new transfer.' : 'No transfer history recorded. Click "Edit Profile" to add your history.'}</div>}
                   </div>
                 </div>
 
@@ -775,8 +837,11 @@ export default function ProfileEditor() {
             {activeTab === 'Bio & Portfolio' && (
               <div className="space-y-6 animate-in fade-in duration-500">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Professional Bio</label>
-                  <textarea name="bio" rows={8} defaultValue={profile?.bio} placeholder="Describe your professional journey, skills, and ambitions..." className="w-full bg-gray-50 border-none rounded-3xl px-4 md:px-8 py-6 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none leading-relaxed text-black placeholder:text-gray-900" />
+                  <div className="flex justify-between items-center ml-1 mb-2">
+                    <label className="text-xs font-bold text-gray-900 tracking-wide">Professional Bio</label>
+                    <span className="text-[10px] font-bold text-gray-500">{(profile?.bio || '').trim().split(/\s+/).filter(Boolean).length} words</span>
+                  </div>
+                  <textarea name="bio" rows={8} value={profile?.bio || ''} onChange={(e) => setProfile({...profile, bio: e.target.value})} placeholder="Describe your professional journey, skills, and ambitions..." className="w-full bg-gray-50 border-none rounded-3xl px-4 md:px-8 py-6 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none leading-relaxed text-black placeholder:text-gray-900" />
                 </div>
 
                 {(role === 'agent' || role === 'organization') && (
@@ -973,7 +1038,7 @@ export default function ProfileEditor() {
                           type="text"
                           defaultValue={social.value}
                           placeholder={social.placeholder}
-                          className="w-full bg-gray-50 border-none rounded-2xl pl-11 pr-4 py-3 text-base font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900 disabled:opacity-70 disabled:bg-gray-100"
+                          className="w-full bg-gray-50 border-none rounded-2xl pl-11 pr-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-500 disabled:opacity-70 disabled:bg-gray-100"
                         />
                       </div>
                     </div>
