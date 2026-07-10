@@ -159,7 +159,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                            {managedClients.map((client) => {
                               const isCoach = client.users?.role === 'coach';
-                              const roleUrl = isCoach ? 'coaches' : 'athletes';
+                              const roleUrl = isCoach ? 'coaches' : 'players';
                               
                               return (
                                  <Link 

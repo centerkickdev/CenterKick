@@ -50,7 +50,7 @@ export default function TermsOfServicePage() {
                      <span className="text-[#a20000]">2.</span> Profile Eligibility and Integrity
                   </h2>
                   <p className="text-gray-600 text-base leading-[1.8] font-light">
-                     Athletes, Coaches, and Agents registering on CenterKick must supply authentic, accurate, and verified information regarding their sporting stats, professional certifications, and identity. Creating duplicate or misleading profiles is strictly prohibited and constitutes grounds for immediate account suspension.
+                     Players, Coaches, and Agents registering on CenterKick must supply authentic, accurate, and verified information regarding their sporting stats, professional certifications, and identity. Creating duplicate or misleading profiles is strictly prohibited and constitutes grounds for immediate account suspension.
                   </p>
                </section>
 
@@ -59,7 +59,7 @@ export default function TermsOfServicePage() {
                      <span className="text-[#a20000]">3.</span> Subscription Fees and Renewals
                   </h2>
                   <p className="text-gray-600 text-base leading-[1.8] font-light">
-                     Subscription plan fees (for Athletes, Coaches, or Agents) are billed in advance on a recurring frequency chosen during registration (Monthly, Quarterly, Yearly, or Lifetime). All financial transactions are final. Suspended accounts due to integrity breaches are not eligible for refunds.
+                     Subscription plan fees (for Players, Coaches, or Agents) are billed in advance on a recurring frequency chosen during registration (Monthly, Quarterly, Yearly, or Lifetime). All financial transactions are final. Suspended accounts due to integrity breaches are not eligible for refunds.
                   </p>
                </section>
 

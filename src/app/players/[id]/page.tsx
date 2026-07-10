@@ -34,8 +34,30 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
       return notFound();
    }
 
+   // Fetch career stats
+   const { data: careerStats } = await supabaseAdmin
+      .from('career_stats')
+      .select('*')
+      .eq('player_id', athlete.id)
+      .order('season', { ascending: false });
+
+   // Fetch related news (blog posts)
+   let news: any[] = [];
+   if (athlete.tags && athlete.tags.length > 0) {
+      const { data: relatedNews } = await supabaseAdmin
+         .from('blog_posts')
+         .select('id, title, excerpt, cover_image, slug, created_at')
+         .eq('status', 'published')
+         .overlaps('tags', athlete.tags)
+         .order('created_at', { ascending: false })
+         .limit(4);
+      if (relatedNews) {
+         news = relatedNews;
+      }
+   }
+
    // Track profile view asynchronously without blocking page load
    trackProfileView(athlete.id);
 
-   return <PlayerDetailsClient athlete={athlete} />;
+   return <PlayerDetailsClient athlete={athlete} careerStats={careerStats || []} news={news} />;
 }

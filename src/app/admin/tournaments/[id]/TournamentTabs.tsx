@@ -488,7 +488,7 @@ function TeamRosterModal({ team, onClose }: { team: any, onClose: () => void }) 
             <div className="py-12 text-center space-y-2">
               <Users className="w-8 h-8 text-gray-200 mx-auto" />
               <h4 className="text-xs font-bold text-gray-400 tracking-wide">No Registered Members</h4>
-              <p className="text-xs font-bold text-gray-300 tracking-wide">Athletes and coaches must select this team on signup</p>
+              <p className="text-xs font-bold text-gray-300 tracking-wide">Players and coaches must select this team on signup</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-50">

@@ -211,7 +211,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                       {members.length > 0 ? (
                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {members.map((member: any) => (
-                               <Link href={`/${member.role === 'player' ? 'athletes' : member.role === 'coach' ? 'coaches' : 'agents'}/${member.slug}`} key={member.id}>
+                               <Link href={`/${member.role === 'player' ? 'players' : member.role === 'coach' ? 'coaches' : 'agents'}/${member.slug}`} key={member.id}>
                                   <div className="bg-gray-50 rounded-3xl p-6 border border-gray-100 hover:border-[#a20000] hover:shadow-xl transition-all group cursor-pointer">
                                      <div className="flex items-center gap-4">
                                         <div className="w-16 h-16 rounded-2xl overflow-hidden border border-gray-200">

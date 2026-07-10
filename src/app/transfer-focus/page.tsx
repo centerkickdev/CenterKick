@@ -368,7 +368,7 @@ export default function TransferFocusPage() {
                            <tbody>
                               {paginatedProfiles.map((profile) => {
                                  const name = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Anonymous Profile';
-                                 const roleSlug = profile.role === 'player' ? 'athletes' : profile.role === 'coach' ? 'coaches' : 'agents';
+                                 const roleSlug = profile.role === 'player' ? 'players' : profile.role === 'coach' ? 'coaches' : 'agents';
                                  
                                  return (
                                     <tr key={profile.id} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors group">

@@ -10,9 +10,11 @@ import { useRouter } from "next/navigation";
 
 interface PlayerDetailsClientProps {
   athlete: any;
+  careerStats?: any[];
+  news?: any[];
 }
 
-export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
+export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: PlayerDetailsClientProps) {
    const [activeTab, setActiveTab] = useState("Profile");
    const router = useRouter();
    const displayName = athlete.full_name || `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Anonymous Player';
@@ -43,7 +45,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                {/* Background stadium image */}
                <div className="absolute inset-0 z-0">
                   <img
-                     src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=60&w=1200&auto=format&fit=crop"
+                     src={athlete.cover_image_url || "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=60&w=1200&auto=format&fit=crop"}
                      className="w-full h-full object-cover object-center opacity-20"
                      alt=""
                      loading="lazy"
@@ -83,7 +85,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                   <div className="flex items-center gap-3 text-base font-bold mb-8 text-white/80">
                      <MapPin className="w-3.5 h-3.5 text-[#b50a0a]" />
                      <span>{athlete.current_club || 'Free Agent'}</span>
-                     <span className="text-white/30">Â·</span>
+                     <span className="text-white/30">—</span>
                      <span>{athlete.country || 'Global'}</span>
                   </div>
                </div>
@@ -132,15 +134,15 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                               </a>
                            )}
                            {athlete.social_links?.twitter && (
-                              <a href={athlete.social_links.twitter} target="_blank" rel="noopener noreferrer">
-                                 <Twitter className="w-4 h-4 hover:text-[#b50a0a] transition-colors" />
+                              <a href={athlete.social_links.twitter} target="_blank" rel="noopener noreferrer" title="X (formerly Twitter)">
+                                 <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-current hover:text-[#b50a0a] transition-colors"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
                               </a>
                            )}
                            {!athlete.social_links && (
                               <>
                                  <Facebook className="w-4 h-4 text-white/20" />
                                  <Instagram className="w-4 h-4 text-white/20" />
-                                 <Twitter className="w-4 h-4 text-white/20" />
+                                 <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-current text-white/20"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
                               </>
                            )}
                         </div>
@@ -153,7 +155,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
             <div className="sticky top-20 sm:top-32 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm">
                <div className="max-w-[1000px] mx-auto px-4 lg:px-0">
                   <div className="flex items-center overflow-x-auto [&::-webkit-scrollbar]:hidden gap-1 sm:gap-0">
-                     {["Profile", "Career Stat.", "Gallery", "News", "Shop"].map((tab) => (
+                     {["Profile", "Career Stat.", "Gallery", "News"].map((tab) => (
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
@@ -227,7 +229,7 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                      {athlete.video_links && athlete.video_links.length > 0 && (
                         <div className="mb-12">
                            <h3 className="text-sm font-bold text-gray-500 tracking-[0.2em] mb-6 uppercase">Featured Videos</h3>
-                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <div className="grid grid-cols-1 gap-6">
                               {athlete.video_links.map((url: string, i: number) => {
                                  let embedUrl = url;
                                  if (url.includes('youtube.com') || url.includes('youtu.be')) {
@@ -280,9 +282,90 @@ export function PlayerDetailsClient({ athlete }: PlayerDetailsClientProps) {
                   </div>
                )}
 
-               {activeTab !== "Profile" && activeTab !== "Gallery" && (
+               {activeTab === "Career Stat." && (
+                  <div className="animate-in fade-in duration-500">
+                     <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 tracking-tighter">Career <span className="text-[#b50a0a]">Statistics</span></h2>
+                     
+                     {careerStats && careerStats.length > 0 ? (
+                        <div className="overflow-x-auto rounded-3xl border border-gray-100 shadow-sm">
+                           <table className="w-full text-left border-collapse whitespace-nowrap">
+                              <thead>
+                                 <tr className="bg-gray-50 border-b border-gray-100">
+                                    <th className="px-6 py-5 text-xs font-bold tracking-wide text-gray-400 uppercase">Season</th>
+                                    <th className="px-6 py-5 text-xs font-bold tracking-wide text-gray-400 uppercase">Club</th>
+                                    <th className="px-6 py-5 text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Apps</th>
+                                    <th className="px-6 py-5 text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Goals</th>
+                                    <th className="px-6 py-5 text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Assists</th>
+                                 </tr>
+                              </thead>
+                              <tbody className="text-sm font-bold text-gray-700 divide-y divide-gray-50 bg-white">
+                                 {careerStats.map((stat, i) => (
+                                    <tr key={i} className="hover:bg-gray-50/50 transition-colors">
+                                       <td className="px-6 py-5 align-middle">{stat.season}</td>
+                                       <td className="px-6 py-5 align-middle text-gray-900">
+                                          <div className="flex items-center gap-3">
+                                             {stat.club_flag && (
+                                                <div className="relative w-6 h-6 rounded-md overflow-hidden bg-white p-1 border border-gray-100 shadow-sm">
+                                                   <img src={stat.club_flag} alt="" className="object-contain w-full h-full" />
+                                                </div>
+                                             )}
+                                             <span>{stat.club_name}</span>
+                                          </div>
+                                       </td>
+                                       <td className="px-6 py-5 text-center align-middle">{stat.appearances || 0}</td>
+                                       <td className="px-6 py-5 text-center align-middle">{stat.goals || 0}</td>
+                                       <td className="px-6 py-5 text-center align-middle">{stat.assists || 0}</td>
+                                    </tr>
+                                 ))}
+                              </tbody>
+                           </table>
+                        </div>
+                     ) : (
+                        <div className="py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                           <p className="text-gray-400 text-sm font-bold tracking-wide">No career statistics available.</p>
+                        </div>
+                     )}
+                  </div>
+               )}
+
+               {activeTab === "News" && (
+                  <div className="animate-in fade-in duration-500">
+                     <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8 tracking-tighter">Latest <span className="text-[#b50a0a]">News</span></h2>
+                     
+                     {news && news.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                           {news.map((post, i) => (
+                              <Link href={`/news/${post.slug}`} key={i} className="group block">
+                                 <div className="aspect-video bg-gray-100 rounded-3xl overflow-hidden mb-5">
+                                    <img 
+                                       src={post.cover_image || post.cover_image_url || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'} 
+                                       alt={post.title}
+                                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                                    />
+                                 </div>
+                                 <p className="text-xs font-bold tracking-wide text-gray-400 mb-2">
+                                    {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                 </p>
+                                 <h3 className="text-xl font-bold text-gray-900 leading-tight mb-3 group-hover:text-[#b50a0a] transition-colors line-clamp-2">
+                                    {post.title}
+                                 </h3>
+                                 <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">
+                                    {post.excerpt}
+                                 </p>
+                              </Link>
+                           ))}
+                        </div>
+                     ) : (
+                        <div className="py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                           <p className="text-gray-400 text-sm font-bold tracking-wide">No news available.</p>
+                        </div>
+                     )}
+                  </div>
+               )}
+
+               {activeTab !== "Profile" && activeTab !== "Gallery" && activeTab !== "Career Stat." && activeTab !== "News" && (
                   <div className="py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                     <p className="text-gray-400 text-sm font-bold tracking-wide">{activeTab} â€” Coming Soon</p>
+                     <p className="text-gray-400 text-sm font-bold tracking-wide">{activeTab} — Coming Soon</p>
                   </div>
                )}
             </div>

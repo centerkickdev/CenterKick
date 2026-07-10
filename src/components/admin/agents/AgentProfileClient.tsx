@@ -561,7 +561,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                <div className="flex items-center justify-between mb-8">
                   <div>
                     <h3 className="text-xl font-bold tracking-tighter text-slate-900">Talent <span className="text-[#b50a0a]">Roster</span></h3>
-                    <p className="text-xs font-bold tracking-wide text-slate-400 mt-1">Manage linked athletes and representation status</p>
+                    <p className="text-xs font-bold tracking-wide text-slate-400 mt-1">Manage linked players and representation status</p>
                   </div>
                   <button 
                     onClick={() => setIsAddTalentModalOpen(true)}
@@ -656,7 +656,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                      <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
                         <Users className="w-8 h-8 text-slate-200" />
                      </div>
-                     <h4 className="text-base font-bold tracking-wide text-slate-400">No athletes linked</h4>
+                     <h4 className="text-base font-bold tracking-wide text-slate-400">No players linked</h4>
                      <p className="text-xs text-slate-400 mt-2 max-w-xs mx-auto font-medium">Link players and coaches to manage their representation from this dashboard.</p>
                      <button 
                         onClick={() => setIsAddTalentModalOpen(true)}
@@ -777,7 +777,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
               <div className="p-4 md:p-8 border-b border-slate-100 flex items-center justify-between shrink-0">
                  <div>
                     <h3 className="text-base md:text-xl font-bold tracking-tighter text-slate-900">Link New <span className="text-[#b50a0a]">Talent</span></h3>
-                    <p className="text-xs font-bold text-slate-400 tracking-wide mt-1">Search and represent athletes within your agency</p>
+                    <p className="text-xs font-bold text-slate-400 tracking-wide mt-1">Search and represent players within your agency</p>
                  </div>
                  <button onClick={() => setIsAddTalentModalOpen(false)} className="w-10 h-10 bg-slate-50 rounded-2xl flex items-center justify-center hover:bg-slate-100 transition-all border border-slate-100">
                     <X className="w-4 h-4 text-slate-400" />
@@ -839,14 +839,14 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                        </div>
                     ) : (
                        <div className="text-center py-8">
-                          <p className="text-xs font-bold text-slate-400 tracking-wide">Start typing to search available athletes</p>
+                          <p className="text-xs font-bold text-slate-400 tracking-wide">Start typing to search available players</p>
                        </div>
                     )}
                  </div>
               </div>
 
               <div className="p-4 md:p-8 pt-0 mt-auto shrink-0">
-                 <p className="text-xs font-bold text-slate-400 tracking-[0.2em] text-center">Athletes already linked to an agent will not appear in search.</p>
+                 <p className="text-xs font-bold text-slate-400 tracking-[0.2em] text-center">Players already linked to an agent will not appear in search.</p>
               </div>
            </div>
         </div>

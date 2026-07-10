@@ -35,7 +35,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
          {/* Filter Bar */}
          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-8 border-b border-gray-100">
             <div>
-               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter">Verified Athletes</h2>
+               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter">Verified Players</h2>
                <p className="text-sm font-bold text-gray-400 tracking-wide mt-1">Discover rising football talent</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -43,7 +43,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                      type="text"
-                     placeholder="Search athletes..."
+                     placeholder="Search players..."
                      value={searchQuery}
                      onChange={e => setSearchQuery(e.target.value)}
                      className="pl-11 pr-5 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-900 focus:outline-none focus:border-[#a20000] w-full sm:w-56 transition-all"
