@@ -18,7 +18,7 @@ export default function RegisterPage() {
    const [confirmPassword, setConfirmPassword] = useState('');
    const [role, setRole] = useState('player');
    const [otp, setOtp] = useState('');
-   const [timeLeft, setTimeLeft] = useState(600);
+   const [timeLeft, setTimeLeft] = useState(300);
    const [resendCooldown, setResendCooldown] = useState(60);
    const [isResending, setIsResending] = useState(false);
 
@@ -72,7 +72,7 @@ export default function RegisterPage() {
          if (result.error) {
             setStatus({ type: 'error', message: result.error });
          } else if (result.success) {
-            setTimeLeft(600);
+            setTimeLeft(300);
             setResendCooldown(60);
             setStatus({ type: 'success', message: result.message });
          }
@@ -298,7 +298,7 @@ export default function RegisterPage() {
                            </p>
                            {timeLeft > 0 ? (
                               <p className="text-xs font-bold text-slate-500 tracking-wide">
-                                 Code expires in <span className="text-[#a20000]">{Math.floor(timeLeft / 60)}:${('0' + (timeLeft % 60)).slice(-2)}</span>
+                                 Code expires in <span className="text-[#a20000]">{Math.floor(timeLeft / 60)}:{('0' + (timeLeft % 60)).slice(-2)}</span>
                               </p>
                            ) : (
                               <p className="text-xs font-bold text-red-600 tracking-wide">

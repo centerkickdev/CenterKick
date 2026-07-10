@@ -132,7 +132,7 @@ export default function SubscriptionPage() {
     price: `₦${basePrice.toLocaleString()}`,
     usdEquivalent: `$${usdPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
     period: `Per ${durationMonths === 1 ? 'Month' : durationMonths === 3 ? 'Quarter' : durationMonths === 6 ? 'Half-Year' : durationMonths === 12 ? 'Year' : durationMonths + ' Months'}`,
-    status: profile?.status === 'active' ? 'Active' : (profile?.verification_requested ? 'Pending Approval' : 'Unverified'),
+    status: transactions.some(t => t.status === 'confirmed') ? 'Active' : (profile?.verification_requested ? 'Pending Approval' : 'Unverified'),
     features: [
       "Verified Professional Badge",
       "Priority Search & Discovery Listing",

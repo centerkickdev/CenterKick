@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { DirectoryTable } from '../shared/DirectoryTable';
 
 interface RoleDirectoryClientProps {
   initialData: any[];
@@ -89,81 +90,81 @@ export function RoleDirectoryClient({
 
       {/* Table Section */}
       <div className="overflow-x-auto w-full pb-4 custom-scrollbar">
-        <table className="w-full text-left border-collapse whitespace-nowrap">
-          <thead>
-            <tr className="bg-gray-50/20">
-              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50">Profile / Identity</th>
-              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50">Location / Agency</th>
-              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50">Status</th>
-              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50">Join Date</th>
-              <th className="px-10 py-6 text-xs font-bold text-gray-400 tracking-[0.2em] border-b border-gray-50 text-right">Actions</th>
+        <DirectoryTable
+          data={initialData}
+          columns={[
+            { key: 'profile', label: 'Profile / Identity', width: 'w-[30%]' },
+            { key: 'location', label: 'Location / Agency', width: 'w-[25%]' },
+            { key: 'status', label: 'Status', width: 'w-[15%]' },
+            { key: 'joined', label: 'Join Date', width: 'w-[15%]' },
+            { key: 'actions', label: 'Actions', width: 'w-[15%]', className: 'text-right whitespace-nowrap' }
+          ]}
+          isPending={false}
+          emptyStateMessage={`No ${roleLabel.toLowerCase()}s found.`}
+          getItemId={(item) => item.id}
+          renderRow={(item) => (
+            <tr key={item.id} className="hover:bg-gray-50/50 transition-all group">
+              <td className="px-4 md:px-10 py-7 border-b border-gray-50">
+                <div className="flex items-center gap-5">
+                  <div className="relative group/avatar">
+                     <div className="w-14 h-14 rounded-2xl bg-gray-900 border-2 border-white shadow-xl flex items-center justify-center font-bold text-white text-lg overflow-hidden transition-transform group-hover/avatar:scale-105">
+                        {item.avatar_url ? (
+                           <img src={item.avatar_url} className="w-full h-full object-cover" alt="" />
+                        ) : (
+                           item.first_name?.[0]?.toUpperCase() || item.email?.[0]?.toUpperCase()
+                        )}
+                     </div>
+                     <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#b50a0a] rounded-lg border-2 border-white flex items-center justify-center shadow-lg">
+                        <IconComponent />
+                     </div>
+                  </div>
+                  <div>
+                    <p className="text-base font-bold text-gray-900 tracking-tight leading-none">
+                       {item.first_name} {item.last_name}
+                    </p>
+                    <p className="text-xs font-bold text-gray-400 mt-1.5 flex items-center gap-1.5 tracking-wide">
+                       <Mail className="w-3 h-3" /> {item.email || item.users?.email}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td className="px-4 md:px-10 py-7 border-b border-gray-50">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2 text-gray-900">
+                    <MapPin className="w-3.5 h-3.5 text-[#b50a0a]" />
+                    <span className="text-xs font-bold tracking-tight">{item.country || item.nationality || 'Unspecified'}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <Building2 className="w-3.5 h-3.5" />
+                    <span className="text-xs font-bold tracking-wide">{item.current_club || item.agency_name || 'Independent'}</span>
+                  </div>
+                </div>
+              </td>
+              <td className="px-4 md:px-10 py-7 border-b border-gray-50">
+                 {getStatusBadge(item.status)}
+              </td>
+              <td className="px-4 md:px-10 py-7 border-b border-gray-50">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span className="text-xs font-bold">{format(new Date(item.created_at), 'MMM dd, yyyy')}</span>
+                </div>
+              </td>
+              <td className="px-4 md:px-10 py-7 border-b border-gray-50 text-right">
+                <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Link 
+                    href={`/admin/${roleSlug}/${item.id}`}
+                    className="p-3 bg-white border border-gray-100 rounded-xl hover:bg-gray-900 hover:text-white transition-all shadow-sm hover:shadow-lg active:scale-95"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </Link>
+                  <button className="p-3 bg-white border border-gray-100 rounded-xl hover:bg-gray-50 transition-all shadow-sm">
+                    <MoreVertical className="w-4 h-4 text-gray-400" />
+                  </button>
+                </div>
+              </td>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-50">
-            {initialData.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50/50 transition-all group">
-                <td className="px-10 py-7">
-                  <div className="flex items-center gap-5">
-                    <div className="relative group/avatar">
-                       <div className="w-14 h-14 rounded-2xl bg-gray-900 border-2 border-white shadow-xl flex items-center justify-center font-bold text-white text-lg overflow-hidden transition-transform group-hover/avatar:scale-105">
-                          {item.avatar_url ? (
-                             <img src={item.avatar_url} className="w-full h-full object-cover" alt="" />
-                          ) : (
-                             item.first_name?.[0]?.toUpperCase() || item.email?.[0]?.toUpperCase()
-                          )}
-                       </div>
-                       <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#b50a0a] rounded-lg border-2 border-white flex items-center justify-center shadow-lg">
-                          <IconComponent />
-                       </div>
-                    </div>
-                    <div>
-                      <p className="text-base font-bold text-gray-900 tracking-tight leading-none">
-                         {item.first_name} {item.last_name}
-                      </p>
-                      <p className="text-xs font-bold text-gray-400 mt-1.5 flex items-center gap-1.5 tracking-wide">
-                         <Mail className="w-3 h-3" /> {item.email || item.users?.email}
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-10 py-7">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2 text-gray-900">
-                      <MapPin className="w-3.5 h-3.5 text-[#b50a0a]" />
-                      <span className="text-xs font-bold tracking-tight">{item.country || item.nationality || 'Unspecified'}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-gray-400">
-                      <Building2 className="w-3.5 h-3.5" />
-                      <span className="text-xs font-bold tracking-wide">{item.current_club || item.agency_name || 'Independent'}</span>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-10 py-7">
-                   {getStatusBadge(item.status)}
-                </td>
-                <td className="px-10 py-7">
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span className="text-xs font-bold">{format(new Date(item.created_at), 'MMM dd, yyyy')}</span>
-                  </div>
-                </td>
-                <td className="px-10 py-7 text-right">
-                  <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Link 
-                      href={`/admin/${roleSlug}/${item.id}`}
-                      className="p-3 bg-white border border-gray-100 rounded-xl hover:bg-gray-900 hover:text-white transition-all shadow-sm hover:shadow-lg active:scale-95"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </Link>
-                    <button className="p-3 bg-white border border-gray-100 rounded-xl hover:bg-gray-50 transition-all shadow-sm">
-                      <MoreVertical className="w-4 h-4 text-gray-400" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          )}
+        />
       </div>
 
       {/* Pagination & Summary */}

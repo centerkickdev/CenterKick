@@ -103,7 +103,7 @@ export default async function DashboardPage() {
         {[
           { label: 'Public Profile Views', value: publicViews.toString(), icon: Eye, trend: 'All Time', color: 'text-blue-600', bg: 'bg-blue-50' },
           { label: 'Scouting Views', value: scoutingViews.toString(), icon: Target, trend: 'Verified Orgs', color: 'text-green-600', bg: 'bg-green-50' },
-          { label: 'Market Value', value: profile?.market_value ? `$${profile.market_value}` : 'PRO', icon: TrendingUp, trend: 'Activate Plan', color: 'text-[#b50a0a]', bg: 'bg-red-50' },
+          { label: 'Market Value', value: profile?.market_value ? `$${profile.market_value}` : 'Pending', icon: TrendingUp, trend: 'Activate Plan', color: 'text-[#b50a0a]', bg: 'bg-red-50' },
         ].map((stat, i) => (
           <div key={i} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">

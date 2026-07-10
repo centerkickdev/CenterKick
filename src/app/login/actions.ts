@@ -200,7 +200,6 @@ export async function verifyOtp(email: string, token: string) {
     }
 
     await adminClient.from('profiles').update({ 
-      role, 
       slug: finalSlug,
       first_name: firstName,
       last_name: lastName,

@@ -8,6 +8,7 @@ import {
   Globe, Calendar, MapPin, Target, CheckCircle, Clock, CreditCard, Lock, Eye, Mail, Trophy, Activity, MessageSquare,
   Facebook, Instagram, Twitter, RefreshCcw
 } from 'lucide-react';
+import { DirectoryTable } from '../shared/DirectoryTable';
 import { RestrictedAccessInline, RestrictedAccess } from '@/components/admin/RestrictedAccess';
 import { DateDisplay } from '@/components/common/DateDisplay';
 import { deletePlayer, updatePlayer, addPlayer, getPlayerTransactions, getPendingEdits, processProfileEdit, updateProfileAvatar, uploadPlayerImage, migrateAllProfileSlugs } from '@/app/admin/players/actions';
@@ -368,134 +369,123 @@ export function PlayersClient({
         </form>
 
         {/* Players Table */}
-        <div className="overflow-x-auto -mx-6">
-          <table className="w-full text-left text-base text-gray-600 whitespace-nowrap">
-            <thead className="bg-[#f8f9fa] border-b border-gray-100">
-              <tr>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Athlete Information</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Gender</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Country</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Role / Position</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Subscription</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a] text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {initialPlayers.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-20 text-center">
-                     <Users className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                     <p className="text-xs font-bold tracking-wide text-gray-400">No players matches your search criteria.</p>
-                  </td>
-                </tr>
-              ) : (
-                initialPlayers.map((player) => (
-                  <tr 
-                    key={player.id} 
-                    onClick={() => handleOpenProfile(player)}
-                    className="hover:bg-gray-50/50 transition-colors group cursor-pointer"
-                  >
-                    <td className="px-6 py-4">
-                       <div className="flex items-center gap-3">
-                           <div className="relative group/avatar">
-                             <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center font-bold text-white text-sm shrink-0 overflow-hidden shadow-sm relative">
-                               {player.avatar_url ? (
-                                 <Image 
-                                   src={player.avatar_url} 
-                                   className="w-full h-full object-cover" 
-                                   alt={`${player.first_name} ${player.last_name}`}
-                                   fill
-                                 />
-                               ) : (
-                                 (player.users?.email || player.email || 'P')[0].toUpperCase()
-                               )}
-                               
-                               {avatarUploading && targetAvatarId === player.id && (
-                                 <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
-                                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-                                 </div>
-                               )}
-                             </div>
-                             
-                             <button 
-                               onClick={(e) => {
-                                 e.stopPropagation();
-                                 setTargetAvatarId(player.id);
-                                 avatarInputRef.current?.click();
-                               }}
-                               className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-xl shadow-xl border border-slate-100 flex items-center justify-center text-slate-400 hover:text-[#b50a0a] transition-all opacity-0 group-hover/avatar:opacity-100 z-10"
-                             >
-                               <Edit className="w-3 h-3" />
-                             </button>
+        <DirectoryTable
+          data={initialPlayers}
+          columns={[
+            { key: 'athlete', label: 'Athlete Information', width: 'w-[30%]' },
+            { key: 'gender', label: 'Gender', width: 'w-[10%]' },
+            { key: 'country', label: 'Country', width: 'w-[15%]' },
+            { key: 'role', label: 'Role / Position', width: 'w-[15%]' },
+            { key: 'subscription', label: 'Subscription', width: 'w-[15%]' },
+            { key: 'actions', label: 'Actions', width: 'w-[15%]', className: 'text-right whitespace-nowrap' }
+          ]}
+          isPending={false}
+          emptyStateMessage="No players matches your search criteria."
+          getItemId={(p) => p.id}
+          renderRow={(player) => (
+            <tr 
+              key={player.id} 
+              onClick={() => handleOpenProfile(player)}
+              className="hover:bg-gray-50/50 transition-colors group cursor-pointer"
+            >
+              <td className="px-2 md:px-4 py-6 border-b border-gray-50">
+                 <div className="flex items-center gap-3">
+                     <div className="relative group/avatar">
+                       <div className="w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center font-bold text-white text-sm shrink-0 overflow-hidden shadow-sm relative">
+                         {player.avatar_url ? (
+                           <Image 
+                             src={player.avatar_url} 
+                             className="w-full h-full object-cover" 
+                             alt={`${player.first_name} ${player.last_name}`}
+                             fill
+                           />
+                         ) : (
+                           (player.users?.email || player.email || 'P')[0].toUpperCase()
+                         )}
+                         
+                         {avatarUploading && targetAvatarId === player.id && (
+                           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                             <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
                            </div>
-
-                          <div className="min-w-0">
-                             <p className="font-bold text-gray-900 leading-none truncate text-xs mb-1.5 flex items-center gap-2">
-                               {player.first_name} {player.last_name} 
-                               <span className="text-xs font-bold text-gray-400">â€¢</span>
-                               <span className="text-xs font-bold text-gray-400 tracking-wide">{calculateSimpleAge(player.date_of_birth)} YRS</span>
-                             </p>
-                             <p className="text-xs font-bold text-gray-400 tracking-wide truncate">{player.users?.email || player.email || 'No email'}</p>
-                          </div>
+                         )}
                        </div>
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                       <span className="text-xs font-bold text-gray-900 tracking-wide">{player.gender || 'Unset'}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                       <div className="flex items-center gap-1.5">
-                          <FlagIcon country={player.country} className="w-5 h-3.5" />
-                          <span className="text-xs font-bold text-gray-900 tracking-wide">{player.country || 'N/A'}</span>
-                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                       <div className="flex flex-col">
-                          <span className="text-xs font-bold text-gray-900 tracking-tighter">{player.position || 'Unset'}</span>
-                          <span className="text-xs font-bold text-gray-400 tracking-wide mt-0.5">{player.foot || 'N/A'} Foot</span>
-                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                       {role === 'operations' ? (
-                         <RestrictedAccessInline />
-                       ) : (
-                         <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-2">
-                               <div className={`w-1.5 h-1.5 rounded-full ${player.is_subscribed ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'bg-gray-300'}`}></div>
-                               <span className={`text-xs font-bold tracking-wide ${player.is_subscribed ? 'text-green-600' : 'text-gray-400'}`}>
-                                  {player.is_subscribed ? 'Pro' : 'Free'}
-                               </span>
-                            </div>
-                            {player.is_subscribed && player.users?.subscriptions?.[0]?.current_period_end && (() => {
-                               const expiryDate = new Date(player.users.subscriptions[0].current_period_end);
-                               const diffTime = expiryDate.getTime() - new Date().getTime();
-                               const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                               const isExpiringSoon = diffDays <= 7;
-                               return (
-                                 <span className={`text-xs font-bold tracking-wide ${isExpiringSoon ? 'text-red-600' : 'text-gray-400'}`}>
-                                     Expires: <DateDisplay date={expiryDate} />
-                                 </span>
-                               );
-                            })()}
-                         </div>
-                       )}
-                    </td>
-                    <td className="px-6 py-4 text-right">
+                       
                        <button 
                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleOpenProfile(player);
+                           e.stopPropagation();
+                           setTargetAvatarId(player.id);
+                           avatarInputRef.current?.click();
                          }}
-                         className="p-1.5 text-gray-300 hover:text-[#b50a0a] transition-colors bg-gray-50 rounded-lg"
+                         className="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-xl shadow-xl border border-slate-100 flex items-center justify-center text-slate-400 hover:text-[#b50a0a] transition-all opacity-0 group-hover/avatar:opacity-100 z-10"
                        >
-                          <Eye className="w-4 h-4" />
+                         <Edit className="w-3 h-3" />
                        </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                     </div>
+
+                    <div className="min-w-0 flex-1">
+                       <p className="font-bold text-gray-900 leading-none truncate text-xs mb-1.5 flex items-center gap-2">
+                         {player.first_name} {player.last_name} 
+                         <span className="text-xs font-bold text-gray-400">•</span>
+                         <span className="text-xs font-bold text-gray-400 tracking-wide">{calculateSimpleAge(player.date_of_birth)} YRS</span>
+                       </p>
+                       <p className="text-xs font-bold text-gray-400 tracking-wide truncate">{player.users?.email || player.email || 'No email'}</p>
+                    </div>
+                 </div>
+              </td>
+              <td className="px-2 md:px-4 py-6 border-b border-gray-50 text-center">
+                 <span className="text-xs font-bold text-gray-900 tracking-wide">{player.gender || 'Unset'}</span>
+              </td>
+              <td className="px-2 md:px-4 py-6 border-b border-gray-50">
+                 <div className="flex items-center gap-1.5">
+                    <FlagIcon country={player.country} className="w-5 h-3.5" />
+                    <span className="text-xs font-bold text-gray-900 tracking-wide">{player.country || 'N/A'}</span>
+                 </div>
+              </td>
+              <td className="px-2 md:px-4 py-6 border-b border-gray-50">
+                 <div className="flex flex-col">
+                    <span className="text-xs font-bold text-gray-900 tracking-tighter">{player.position || 'Unset'}</span>
+                    <span className="text-xs font-bold text-gray-400 tracking-wide mt-0.5">{player.foot || 'N/A'} Foot</span>
+                 </div>
+              </td>
+              <td className="px-2 md:px-4 py-6 border-b border-gray-50">
+                 {role === 'operations' ? (
+                   <RestrictedAccessInline />
+                 ) : (
+                   <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                         <div className={`w-1.5 h-1.5 rounded-full ${player.is_subscribed ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'bg-gray-300'}`}></div>
+                         <span className={`text-xs font-bold tracking-wide ${player.is_subscribed ? 'text-green-600' : 'text-gray-400'}`}>
+                            {player.is_subscribed ? 'Pro' : 'Free'}
+                         </span>
+                      </div>
+                      {player.is_subscribed && player.users?.subscriptions?.[0]?.current_period_end && (() => {
+                         const expiryDate = new Date(player.users.subscriptions[0].current_period_end);
+                         const diffTime = expiryDate.getTime() - new Date().getTime();
+                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                         const isExpiringSoon = diffDays <= 7;
+                         return (
+                           <span className={`text-xs font-bold tracking-wide ${isExpiringSoon ? 'text-red-600' : 'text-gray-400'}`}>
+                               Expires: <DateDisplay date={expiryDate} />
+                           </span>
+                         );
+                      })()}
+                   </div>
+                 )}
+              </td>
+              <td className="px-2 md:px-4 py-6 border-b border-gray-50 text-right">
+                 <button 
+                   onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenProfile(player);
+                   }}
+                   className="p-1.5 text-gray-300 hover:text-[#b50a0a] transition-colors bg-gray-50 rounded-lg"
+                 >
+                    <Eye className="w-4 h-4" />
+                 </button>
+              </td>
+            </tr>
+          )}
+        />
 
         {/* Pagination */}
         <div className="flex items-center justify-between pt-6 border-t border-gray-50">

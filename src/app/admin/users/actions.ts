@@ -99,3 +99,21 @@ export async function rejectUser(userId: string) {
   revalidatePath(`/admin/users/${userId}`);
   return { success: true };
 }
+
+/**
+ * Permanently deletes user accounts using Supabase Auth admin API.
+ * This will cascade to delete their profiles and other associated data.
+ */
+export async function deleteUsers(userIds: string[]) {
+  await verifyStaffAccess();
+  const admin = createAdminClient();
+  const errors = [];
+
+  for (const id of userIds) {
+    const { error } = await admin.auth.admin.deleteUser(id);
+    if (error) errors.push(`${id}: ${error.message}`);
+  }
+
+  revalidatePath('/admin/users');
+  return errors.length > 0 ? { error: `Failed to delete some users: ${errors.join(', ')}` } : { success: true };
+}

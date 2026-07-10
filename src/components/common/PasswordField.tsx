@@ -16,11 +16,11 @@ interface PasswordFieldProps {
   confirmFor?: string;
 }
 
-export function PasswordField({ 
-  name, 
-  label, 
-  placeholder = "â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢", 
-  required = true, 
+export function PasswordField({
+  name,
+  label,
+  placeholder = "••••••••",
+  required = true,
   rightElement,
   defaultValue,
   value,
@@ -43,7 +43,7 @@ export function PasswordField({
   };
 
   const requirements = [
-    { label: "Minimum 8 characters", met: currentValue.length >= 8 },
+    { label: "Min 8 characters", met: currentValue.length >= 8 },
     { label: "Uppercase letter", met: /[A-Z]/.test(currentValue) },
     { label: "Number", met: /[0-9]/.test(currentValue) },
     { label: "Special character", met: /[!@#$%^&*(),.?":{}|<>]/.test(currentValue) },
@@ -59,15 +59,15 @@ export function PasswordField({
       </div>
       <div className="relative">
         <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
-        <input 
+        <input
           name={name}
-          type={showPassword ? "text" : "password"} 
+          type={showPassword ? "text" : "password"}
           required={required}
-          placeholder={placeholder} 
+          placeholder={placeholder}
           value={value}
           defaultValue={value === undefined ? defaultValue : undefined}
           onChange={handleChange}
-          className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-14 py-3 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900" 
+          className="w-full bg-gray-50 border-none rounded-2xl pl-14 pr-14 py-3 text-sm font-bold focus:ring-2 focus:ring-[#a20000] focus:bg-white transition-all outline-none text-black placeholder:text-gray-900"
         />
         <button
           type="button"
@@ -77,7 +77,7 @@ export function PasswordField({
           {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
         </button>
       </div>
-      
+
       {showRequirements && (
         <div className="grid grid-cols-2 gap-2 mt-2 px-2">
           {requirements.map((req, i) => (

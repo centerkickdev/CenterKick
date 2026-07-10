@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useTransition, useRef, useEffect } from 'react';
+import { useState, useTransition, useRef, useEffect, useMemo } from 'react';
 import { 
   Search, User, Shield, CheckCircle, Clock, XCircle,
   MoreVertical, Calendar, UserCheck, Briefcase, 
   Trophy, Eye, Users, ChevronRight, AlertTriangle,
-  UserX, RefreshCw, ShieldCheck
+  UserX, RefreshCw, ShieldCheck, Trash2
 } from 'lucide-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { activateUser, deactivateUser, changeUserRole, rejectUser } from '@/app/admin/users/actions';
+import { activateUser, deactivateUser, changeUserRole, rejectUser, deleteUsers } from '@/app/admin/users/actions';
+import { DirectoryTable } from '@/components/admin/shared/DirectoryTable';
 
 interface UsersClientProps {
   initialUsers: any[];
@@ -28,22 +29,18 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  
+  // Selection State
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isDeleting, setIsDeleting] = useState(false);
+  
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const currentRole = searchParams.get('role') || 'all';
   const currentSearch = searchParams.get('q') || '';
   const [searchTerm, setSearchTerm] = useState(currentSearch);
-
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setOpenDropdown(null);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
+  
+  const filteredUsers = useMemo(() => initialUsers, [initialUsers]);
 
   // Auto-dismiss toast
   useEffect(() => {
@@ -74,6 +71,36 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
     startTransition(() => router.push(`/admin/users?${params.toString()}`, { scroll: false }));
   };
 
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) setSelectedIds(filteredUsers.map(u => u.id));
+    else setSelectedIds([]);
+  };
+
+  const handleSelectOne = (id: string) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  };
+
+  const handleBatchDelete = async (ids: string[]) => {
+    setIsDeleting(true);
+    setToast(null);
+    try {
+      const res = await deleteUsers(ids);
+      if (res.error) {
+        setToast({ type: 'error', message: res.error });
+      } else {
+        setToast({ type: 'success', message: `Successfully deleted ${ids.length} account(s).` });
+        setSelectedIds([]);
+        setOpenDropdown(null);
+        startTransition(() => router.refresh());
+      }
+    } catch (err: any) {
+      setToast({ type: 'error', message: err.message || 'An error occurred' });
+    } finally {
+      setIsDeleting(false);
+      setTimeout(() => setToast(null), 5000);
+    }
+  };
+
   const runAction = async (userId: string, action: () => Promise<{ success?: boolean; error?: string }>) => {
     setActionLoading(userId);
     setOpenDropdown(null);
@@ -89,10 +116,11 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
       showToast('error', 'An unexpected error occurred.');
     } finally {
       setActionLoading(null);
+      setTimeout(() => setToast(null), 5000);
     }
   };
 
-  const getRoleIcon = (role: string) => {
+  const getRoleIcon = (role?: string) => {
     switch (role?.toLowerCase()) {
       case 'player': return <Trophy className="w-3.5 h-3.5" />;
       case 'coach': return <UserCheck className="w-3.5 h-3.5" />;
@@ -106,19 +134,19 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
 
   const getStatusBadge = (status: string, isActive: boolean) => {
     if (!isActive) return (
-      <span className="px-2 py-1 bg-red-50 text-red-700 text-xs font-bold rounded-lg border border-red-100 flex items-center gap-1">
+      <span className="w-fit px-2 py-1 bg-red-50 text-red-700 text-xs font-bold rounded-lg border border-red-100 flex items-center gap-1 whitespace-nowrap">
         <XCircle className="w-2.5 h-2.5" /> Deactivated
       </span>
     );
     switch (status?.toLowerCase()) {
       case 'active':
-        return <span className="px-2 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-lg border border-green-100 flex items-center gap-1"><CheckCircle className="w-2.5 h-2.5" /> Active</span>;
+        return <span className="w-fit px-2 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-lg border border-green-100 flex items-center gap-1 whitespace-nowrap"><CheckCircle className="w-2.5 h-2.5" /> Active</span>;
       case 'pending':
-        return <span className="px-2 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-100 flex items-center gap-1"><Clock className="w-2.5 h-2.5" /> Pending</span>;
+        return <span className="w-fit px-2 py-1 bg-amber-50 text-amber-700 text-xs font-bold rounded-lg border border-amber-100 flex items-center gap-1 whitespace-nowrap"><Clock className="w-2.5 h-2.5" /> Pending</span>;
       case 'rejected':
-        return <span className="px-2 py-1 bg-red-50 text-red-600 text-xs font-bold rounded-lg border border-red-100 flex items-center gap-1"><XCircle className="w-2.5 h-2.5" /> Rejected</span>;
+        return <span className="w-fit px-2 py-1 bg-red-50 text-red-600 text-xs font-bold rounded-lg border border-red-100 flex items-center gap-1 whitespace-nowrap"><XCircle className="w-2.5 h-2.5" /> Rejected</span>;
       default:
-        return <span className="px-2 py-1 bg-gray-50 text-gray-400 text-xs font-bold rounded-lg border border-gray-100 flex items-center gap-1"><Clock className="w-2.5 h-2.5" /> Incomplete</span>;
+        return <span className="w-fit px-2 py-1 bg-gray-50 text-gray-400 text-xs font-bold rounded-lg border border-gray-100 flex items-center gap-1 whitespace-nowrap"><Clock className="w-2.5 h-2.5" /> Incomplete</span>;
     }
   };
 
@@ -167,53 +195,54 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
         </div>
       </div>
 
-      {/* Table */}
-      <div className="relative overflow-x-auto" ref={dropdownRef}>
-        {isPending && (
-          <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-[1px] flex items-center justify-center animate-in fade-in duration-300">
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-8 h-8 border-4 border-gray-100 border-t-[#b50a0a] rounded-full animate-spin"></div>
-              <p className="text-xs font-bold text-gray-400 tracking-wide">Updating View...</p>
-            </div>
-          </div>
-        )}
-        <table className="w-full text-left border-collapse whitespace-nowrap">
-          <thead>
-            <tr className="bg-gray-50/30">
-              <th className="px-4 md:px-8 py-5 text-xs font-bold text-gray-400 tracking-wide border-b border-gray-50">Account User</th>
-              <th className="px-4 md:px-8 py-5 text-xs font-bold text-gray-400 tracking-wide border-b border-gray-50">Identity / Role</th>
-              <th className="px-4 md:px-8 py-5 text-xs font-bold text-gray-400 tracking-wide border-b border-gray-50">Status</th>
-              <th className="px-4 md:px-8 py-5 text-xs font-bold text-gray-400 tracking-wide border-b border-gray-50">Registered On</th>
-              <th className="px-4 md:px-8 py-5 text-xs font-bold text-gray-400 tracking-wide border-b border-gray-50 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-50">
-            {initialUsers.map((user) => {
-              const isLoading = actionLoading === user.id;
-              const profileStatus = user.profile?.status;
-              const isActive = user.is_active !== false;
-              const isPendingActivation = profileStatus === 'pending' && isActive;
-              const isParticipant = PARTICIPANT_ROLES.includes(user.role);
+      {/* Table via DirectoryTable */}
+      <div ref={dropdownRef}>
+        <DirectoryTable
+        data={filteredUsers}
+        columns={[
+          { key: 'account', label: 'Account User', width: 'w-[35%]' },
+          { key: 'identity', label: 'Identity / Role', width: 'w-[20%]', className: 'whitespace-nowrap' },
+          { key: 'status', label: 'Status', width: 'w-[15%]', className: 'whitespace-nowrap' },
+          { key: 'registered', label: 'Registered On', width: 'w-[15%]', className: 'whitespace-nowrap' },
+          { key: 'actions', label: 'Actions', width: 'w-[15%]', className: 'text-right whitespace-nowrap' }
+        ]}
+        isPending={isPending}
+        isDeleting={isDeleting}
+        onBatchDelete={handleBatchDelete}
+        emptyStateMessage="No users found."
+        renderRow={(user, isSelected, toggleSelect, triggerDelete) => {
+          const isLoading = actionLoading === user.id;
+          const profileStatus = user.profile?.status;
+          const isActive = user.is_active !== false;
+          const isPendingActivation = profileStatus === 'pending' && isActive;
+          const isParticipant = PARTICIPANT_ROLES.includes(user.role);
 
-              return (
-                <tr key={user.id} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-4 md:px-8 py-6">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-gray-900 flex items-center justify-center font-bold text-white text-sm border-2 border-white shadow-md shrink-0">
-                        {user.email?.[0]?.toUpperCase()}
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-gray-900 truncate max-w-full max-w-[200px]">{user.email}</p>
-                        <p className="text-xs font-bold text-gray-400 tracking-wide">
-                          {user.profile?.first_name
-                            ? `${user.profile.first_name} ${user.profile.last_name || ''}`.trim()
-                            : `UID: ${user.id.substring(0, 8)}`}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="px-4 md:px-8 py-6">
+          return (
+            <tr key={user.id} className={`hover:bg-gray-50/50 transition-colors group ${isSelected ? 'bg-red-50/30' : ''}`}>
+              <td className="px-4 md:px-6 py-6 border-b border-gray-50">
+                <input 
+                  type="checkbox" 
+                  className="w-4 h-4 rounded border-gray-300 text-[#b50a0a] focus:ring-[#b50a0a]"
+                  checked={isSelected}
+                  onChange={toggleSelect}
+                />
+              </td>
+              <td className="px-2 md:px-4 py-6 border-b border-gray-50">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gray-900 flex items-center justify-center font-bold text-white text-sm border-2 border-white shadow-md shrink-0">
+                    {user.email?.[0]?.toUpperCase()}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-bold text-gray-900 truncate">{user.email}</p>
+                    <p className="text-xs font-bold text-gray-400 tracking-wide truncate">
+                      {user.profile?.first_name
+                        ? `${user.profile.first_name} ${user.profile.last_name || ''}`.trim()
+                        : `UID: ${user.id.substring(0, 8)}`}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td className="px-4 md:px-8 py-6 border-b border-gray-50 whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       <div className={`p-1.5 rounded-lg ${user.role ? 'bg-red-50 text-[#b50a0a]' : 'bg-gray-100 text-gray-400'}`}>
                         {getRoleIcon(user.role)}
@@ -224,7 +253,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                     </div>
                   </td>
 
-                  <td className="px-4 md:px-8 py-6">
+                  <td className="px-4 md:px-8 py-6 whitespace-nowrap">
                     <div className="flex flex-col gap-2">
                       {getStatusBadge(profileStatus, isActive)}
                       {/* Inline Approve button for pending accounts */}
@@ -241,16 +270,15 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                     </div>
                   </td>
 
-                  <td className="px-4 md:px-8 py-6">
+                  <td className="px-4 md:px-8 py-6 whitespace-nowrap">
                     <div className="flex items-center gap-2 text-gray-500">
                       <Calendar className="w-3.5 h-3.5" />
                       <span className="text-xs font-bold">{format(new Date(user.created_at), 'MMM dd, yyyy')}</span>
                     </div>
                   </td>
 
-                  <td className="px-4 md:px-8 py-6 text-right">
+                  <td className="px-4 md:px-8 py-6 text-right whitespace-nowrap">
                     <div className="flex items-center justify-end gap-2">
-                      {/* View Profile */}
                       <Link
                         href={`/admin/users/${user.id}`}
                         className="p-2.5 bg-white border border-gray-100 rounded-xl hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all shadow-sm"
@@ -259,7 +287,6 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                         <Eye className="w-4 h-4" />
                       </Link>
 
-                      {/* More Actions Dropdown */}
                       <div className="relative">
                         <button
                           onClick={() => setOpenDropdown(openDropdown === user.id ? null : user.id)}
@@ -273,9 +300,13 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                         </button>
 
                         {openDropdown === user.id && (
-                          <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                          <>
+                            <div 
+                              className="fixed inset-0 z-40" 
+                              onClick={() => setOpenDropdown(null)}
+                            />
+                            <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                             <div className="p-2">
-                              {/* Activate / Deactivate */}
                               {isActive ? (
                                 <button
                                   onClick={() => runAction(user.id, () => deactivateUser(user.id))}
@@ -292,7 +323,6 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                                 </button>
                               )}
 
-                              {/* Approve Pending */}
                               {isPendingActivation && isParticipant && (
                                 <button
                                   onClick={() => runAction(user.id, () => activateUser(user.id))}
@@ -302,7 +332,6 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                                 </button>
                               )}
 
-                              {/* Reject */}
                               {profileStatus === 'pending' && isParticipant && (
                                 <button
                                   onClick={() => runAction(user.id, () => rejectUser(user.id))}
@@ -312,9 +341,8 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                                 </button>
                               )}
 
-                              <div className="border-t border-gray-50 my-1" />
+                              <div className="h-px bg-gray-100 my-1"></div>
 
-                              {/* View Full Profile */}
                               <Link
                                 href={`/admin/users/${user.id}`}
                                 className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold tracking-wide text-gray-600 hover:bg-gray-50 rounded-xl transition-all"
@@ -322,19 +350,27 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
                                 <Eye className="w-3.5 h-3.5" /> View Full Profile
                                 <ChevronRight className="w-3 h-3 ml-auto" />
                               </Link>
+                              
+                              <div className="h-px bg-gray-100 my-1"></div>
+
+                              <button
+                                onClick={triggerDelete}
+                                className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold tracking-wide text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" /> Delete Account
+                              </button>
                             </div>
                           </div>
+                        </>
                         )}
                       </div>
                     </div>
                   </td>
                 </tr>
               );
-            })}
-          </tbody>
-        </table>
+            }}
+          />
       </div>
-
       {/* Empty State */}
       {initialUsers.length === 0 && (
         <div className="p-24 flex flex-col items-center justify-center text-center">

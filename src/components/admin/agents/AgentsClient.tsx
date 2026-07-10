@@ -1,13 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  Users, Search, Filter, Shield, UserPlus, 
-  MoreHorizontal, Edit, Trash2, ExternalLink, 
-  ChevronLeft, ChevronRight, X, User, ChevronDown,
-  Globe, Calendar, MapPin, Target, CheckCircle, Clock, CreditCard, Briefcase, Link2, Lock,
-  Info, AlertCircle, Mail, RefreshCcw
-} from 'lucide-react';
+import { ShieldCheck, Eye, MapPin, Target, CheckCircle, Clock, CreditCard, Lock, Mail, ChevronRight, ChevronLeft, ChevronDown, AlertCircle, Info, Flag, Award, Search, RefreshCcw, Filter, Briefcase, MoreHorizontal, X, Edit } from 'lucide-react';
+import { DirectoryTable } from '../shared/DirectoryTable';
 import { FlagIcon } from '@/components/common/FlagIcon';
 import { RestrictedAccessInline, RestrictedAccess } from '@/components/admin/RestrictedAccess';
 import { deleteAgent, updateAgent, addAgent, migrateAllAgentSlugs } from '@/app/admin/agents/actions';
@@ -182,78 +177,67 @@ export function AgentsClient({
         </form>
 
         {/* Agents Table */}
-        <div className="overflow-x-auto -mx-6">
-          <table className="w-full text-left text-base text-gray-600 whitespace-nowrap">
-            <thead className="bg-[#f8f9fa] border-b border-gray-100">
-              <tr>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Agent Details</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Agency / Brand</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Manageable Assets</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a] text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {initialAgents.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-20 text-center">
-                     <Briefcase className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                     <p className="text-xs font-bold tracking-wide text-gray-400">No agents matches your search criteria.</p>
-                  </td>
-                </tr>
-              ) : (
-                initialAgents.map((agent) => (
-                  <tr 
-                    key={agent.id} 
-                    onClick={() => handleOpenProfile(agent)}
-                    className="hover:bg-gray-50/50 transition-colors group cursor-pointer"
-                  >
-                    <td className="px-6 py-4">
-                       <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white text-sm shrink-0">
-                             {agent.email?.[0]?.toUpperCase() || 'A'}
-                          </div>
-                          <div className="min-w-0">
-                             <p className="font-bold text-gray-900 leading-none truncate text-xs mb-1">{agent.first_name} {agent.last_name}</p>
-                             <div className="flex items-center gap-1.5">
-                                <span className="text-xs font-bold text-gray-400 tracking-wide flex items-center gap-1">
-                                   <FlagIcon country={agent.country || ''} className="w-3 h-2" /> {agent.country || 'N/A'}
-                                </span>
-                                <span className="text-xs font-bold text-gray-400">â€¢</span>
-                                <span className="text-xs font-bold text-gray-400 tracking-wide">Licensed Agent</span>
-                             </div>
-                          </div>
+        <DirectoryTable
+          data={initialAgents}
+          columns={[
+            { key: 'agent', label: 'Agent Details', width: 'w-[35%]' },
+            { key: 'agency', label: 'Agency / Brand', width: 'w-[25%]' },
+            { key: 'assets', label: 'Manageable Assets', width: 'w-[25%]' },
+            { key: 'actions', label: 'Actions', width: 'w-[15%]', className: 'text-right whitespace-nowrap' }
+          ]}
+          isPending={false}
+          emptyStateMessage="No agents matches your search criteria."
+          getItemId={(a) => a.id}
+          renderRow={(agent) => (
+            <tr 
+              key={agent.id} 
+              onClick={() => handleOpenProfile(agent)}
+              className="hover:bg-gray-50/50 transition-colors group cursor-pointer"
+            >
+              <td className="px-4 md:px-6 py-6 border-b border-gray-50">
+                 <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white text-sm shrink-0">
+                       {agent.email?.[0]?.toUpperCase() || 'A'}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                       <p className="font-bold text-gray-900 leading-none truncate text-xs mb-1">{agent.first_name} {agent.last_name}</p>
+                       <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-gray-400 tracking-wide flex items-center gap-1">
+                             <FlagIcon country={agent.country || ''} className="w-3 h-2" /> {agent.country || 'N/A'}
+                          </span>
+                          <span className="text-xs font-bold text-gray-400">•</span>
+                          <span className="text-xs font-bold text-gray-400 tracking-wide">Licensed Agent</span>
                        </div>
-                    </td>
-                    <td className="px-6 py-4">
-                       <div className="flex flex-col">
-                          <span className="text-xs font-bold text-gray-900 tracking-tighter truncate max-w-full max-w-[150px]">{agent.agency_name || 'Independent'}</span>
-                          <span className="text-xs font-bold text-gray-400 tracking-wide mt-0.5">Sports Management</span>
+                    </div>
+                 </div>
+              </td>
+              <td className="px-4 md:px-6 py-6 border-b border-gray-50">
+                 <div className="flex flex-col">
+                    <span className="text-xs font-bold text-gray-900 tracking-tighter truncate max-w-full max-w-[150px]">{agent.agency_name || 'Independent'}</span>
+                    <span className="text-xs font-bold text-gray-400 tracking-wide mt-0.5">Sports Management</span>
+                 </div>
+              </td>
+              <td className="px-4 md:px-6 py-6 border-b border-gray-50">
+                 <div className="flex items-center gap-3">
+                    <div className="flex flex-col">
+                       <span className="text-xs font-bold text-gray-900 tracking-tighter">{agent.clientCount || 0} Clients Linked</span>
+                       <div className="flex items-center gap-2 mt-1">
+                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]"></div>
+                          <span className="text-xs font-bold tracking-wide text-green-600">
+                             PRO
+                          </span>
                        </div>
-                    </td>
-                    <td className="px-6 py-4">
-                       <div className="flex items-center gap-3">
-                          <div className="flex flex-col">
-                             <span className="text-xs font-bold text-gray-900 tracking-tighter">{agent.clientCount || 0} Clients Linked</span>
-                             <div className="flex items-center gap-2 mt-1">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]"></div>
-                                <span className="text-xs font-bold tracking-wide text-green-600">
-                                   PRO
-                                </span>
-                             </div>
-                          </div>
-                       </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                       <button className="p-1.5 text-gray-300 hover:text-black transition-colors">
-                          <MoreHorizontal className="w-4 h-4" />
-                       </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                 </div>
+              </td>
+              <td className="px-4 md:px-6 py-6 border-b border-gray-50 text-right">
+                 <button className="p-1.5 text-gray-300 hover:text-black transition-colors">
+                    <MoreHorizontal className="w-4 h-4" />
+                 </button>
+              </td>
+            </tr>
+          )}
+        />
 
         {/* Pagination & Tools */}
         <div className="flex items-center justify-between pt-6 border-t border-gray-50">

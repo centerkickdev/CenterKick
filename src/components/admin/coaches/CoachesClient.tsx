@@ -7,6 +7,7 @@ import {
   ChevronLeft, ChevronRight, X, User, ChevronDown,
   Globe, Calendar, MapPin, Target, CheckCircle, Clock, CreditCard, UserCheck, Briefcase, Lock, Mail
 } from 'lucide-react';
+import { DirectoryTable } from '../shared/DirectoryTable';
 import { RestrictedAccessInline, RestrictedAccess } from '@/components/admin/RestrictedAccess';
 import { DateDisplay } from '@/components/common/DateDisplay';
 import { deleteCoach, updateCoach, addCoach, migrateAllCoachSlugs } from '@/app/admin/coaches/actions';
@@ -225,82 +226,71 @@ export function CoachesClient({
                        </form>
 
         {/* Coaches Table */}
-        <div className="overflow-x-auto -mx-6">
-          <table className="w-full text-left text-base text-gray-600 whitespace-nowrap">
-            <thead className="bg-[#f8f9fa] border-b border-gray-100">
-              <tr>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Coach Information</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">Specialization</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a]">League / Credentials</th>
-                <th className="px-6 py-4 text-xs font-bold tracking-wide text-[#b50a0a] text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {initialCoaches.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-20 text-center">
-                     <UserCheck className="w-12 h-12 text-gray-100 mx-auto mb-4" />
-                     <p className="text-xs font-bold tracking-wide text-gray-400">No coaches matches your search criteria.</p>
-                  </td>
-                </tr>
-              ) : (
-                initialCoaches.map((coach) => (
-                  <tr 
-                    key={coach.id} 
-                    onClick={() => handleOpenProfile(coach)}
-                    className="hover:bg-gray-50/50 transition-colors group cursor-pointer"
-                  >
-                    <td className="px-6 py-4">
-                       <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white text-sm shrink-0">
-                             {coach.email?.[0]?.toUpperCase() || 'C'}
-                          </div>
-                          <div className="min-w-0">
-                             <p className="font-bold text-gray-900 leading-none truncate text-xs mb-1">{coach.first_name} {coach.last_name}</p>
-                             <div className="flex items-center gap-1.5">
-                                <span className="text-xs font-bold text-gray-400 tracking-wide flex items-center gap-1">
-                                   <FlagIcon country={coach.country || ''} className="w-3 h-2" /> {coach.country || 'N/A'}
-                                </span>
-                                <span className="text-xs font-bold text-gray-400">â€¢</span>
-                                <span className="text-xs font-bold text-gray-400 tracking-wide">{coach.age || '--'} YRS</span>
-                             </div>
-                          </div>
+        <DirectoryTable
+          data={initialCoaches}
+          columns={[
+            { key: 'coach', label: 'Coach Information', width: 'w-[35%]' },
+            { key: 'specialization', label: 'Specialization', width: 'w-[25%]' },
+            { key: 'league', label: 'League / Credentials', width: 'w-[25%]' },
+            { key: 'actions', label: 'Actions', width: 'w-[15%]', className: 'text-right whitespace-nowrap' }
+          ]}
+          isPending={false}
+          emptyStateMessage="No coaches matches your search criteria."
+          getItemId={(c) => c.id}
+          renderRow={(coach) => (
+            <tr 
+              key={coach.id} 
+              onClick={() => handleOpenProfile(coach)}
+              className="hover:bg-gray-50/50 transition-colors group cursor-pointer"
+            >
+              <td className="px-4 md:px-6 py-6 border-b border-gray-50">
+                 <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-gray-900 flex items-center justify-center font-bold text-white text-sm shrink-0">
+                       {coach.email?.[0]?.toUpperCase() || 'C'}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                       <p className="font-bold text-gray-900 leading-none truncate text-xs mb-1">{coach.first_name} {coach.last_name}</p>
+                       <div className="flex items-center gap-1.5">
+                          <span className="text-xs font-bold text-gray-400 tracking-wide flex items-center gap-1">
+                             <FlagIcon country={coach.country || ''} className="w-3 h-2" /> {coach.country || 'N/A'}
+                          </span>
+                          <span className="text-xs font-bold text-gray-400">•</span>
+                          <span className="text-xs font-bold text-gray-400 tracking-wide">{coach.age || '--'} YRS</span>
                        </div>
-                    </td>
-                    <td className="px-6 py-4">
-                       <div className="flex flex-col">
-                          <span className="text-xs font-bold text-gray-900 tracking-tighter">{coach.position || 'Head Coach'}</span>
-                          <span className="text-xs font-bold text-gray-400 tracking-wide mt-0.5">Expert Member</span>
-                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                       <div className="flex flex-col">
-                          <span className="text-xs font-bold text-gray-900 tracking-tighter truncate max-w-full max-w-[150px]">{coach.league || 'Independent'}</span>
-                          <div className="flex items-center gap-2 mt-1">
-                             {role === 'operations' ? (
-                               <RestrictedAccessInline />
-                             ) : (
-                               <>
-                                 <div className={`w-1.5 h-1.5 rounded-full ${coach.is_subscribed ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'bg-gray-300'}`}></div>
-                                 <span className={`text-xs font-bold tracking-wide ${coach.is_subscribed ? 'text-green-600' : 'text-gray-400'}`}>
-                                    {coach.is_subscribed ? 'PRO' : 'Standard'}
-                                 </span>
-                               </>
-                             )}
-                          </div>
-                       </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                       <button className="p-1.5 text-gray-300 hover:text-black transition-colors">
-                          <MoreHorizontal className="w-4 h-4" />
-                       </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                 </div>
+              </td>
+              <td className="px-4 md:px-6 py-6 border-b border-gray-50">
+                 <div className="flex flex-col">
+                    <span className="text-xs font-bold text-gray-900 tracking-tighter">{coach.position || 'Head Coach'}</span>
+                    <span className="text-xs font-bold text-gray-400 tracking-wide mt-0.5">Expert Member</span>
+                 </div>
+              </td>
+              <td className="px-4 md:px-6 py-6 border-b border-gray-50">
+                 <div className="flex flex-col">
+                    <span className="text-xs font-bold text-gray-900 tracking-tighter truncate max-w-full max-w-[150px]">{coach.league || 'Independent'}</span>
+                    <div className="flex items-center gap-2 mt-1">
+                       {role === 'operations' ? (
+                         <RestrictedAccessInline />
+                       ) : (
+                         <>
+                           <div className={`w-1.5 h-1.5 rounded-full ${coach.is_subscribed ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'bg-gray-300'}`}></div>
+                           <span className={`text-xs font-bold tracking-wide ${coach.is_subscribed ? 'text-green-600' : 'text-gray-400'}`}>
+                              {coach.is_subscribed ? 'PRO' : 'Standard'}
+                           </span>
+                         </>
+                       )}
+                    </div>
+                 </div>
+              </td>
+              <td className="px-4 md:px-6 py-6 border-b border-gray-50 text-right">
+                 <button className="p-1.5 text-gray-300 hover:text-black transition-colors">
+                    <MoreHorizontal className="w-4 h-4" />
+                 </button>
+              </td>
+            </tr>
+          )}
+        />
 
         {/* Pagination */}
         <div className="flex items-center justify-between pt-6 border-t border-gray-50">
