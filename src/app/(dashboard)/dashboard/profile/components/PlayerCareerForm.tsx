@@ -2,7 +2,7 @@
 
 import { Plus, Trash2, Activity } from 'lucide-react';
 
-export function PlayerCareerForm({ data, onChange }: { data: any, onChange: (val: any) => void }) {
+export function PlayerCareerForm({ data, onChange }: { data: any, onChange: (val: any) => void, disabled?: boolean }) {
   
   const addTransfer = () => {
     const transfers = data.transfer_history || [];

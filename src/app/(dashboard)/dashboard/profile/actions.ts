@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 
-export async function requestProfileEdit(profileId: string, changes: Record<string, { old: any; new: any }>) {
+export async function requestProfileEdit(profileId: string, changes: Record<string, { old: any; new: any; document_url?: string }>) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -32,6 +32,7 @@ export async function requestProfileEdit(profileId: string, changes: Record<stri
     field_name,
     old_value: values.old ? String(values.old) : null,
     new_value: values.new ? String(values.new) : null,
+    document_url: values.document_url || null,
     status: 'pending'
   }));
 

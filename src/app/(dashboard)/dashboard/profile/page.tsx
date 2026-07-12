@@ -59,6 +59,9 @@ export default function ProfileEditor() {
   const [videoLinks, setVideoLinks] = useState<string[]>([]);
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
   const [editingMember, setEditingMember] = useState<any>(null);
+  
+  const [idProofFile, setIdProofFile] = useState<File | null>(null);
+  const [roleProofFile, setRoleProofFile] = useState<File | null>(null);
 
   // Data tables
   const [countriesList, setCountriesList] = useState<any[]>([]);
@@ -155,6 +158,20 @@ export default function ProfileEditor() {
     return { supabase, user };
   };
 
+  const uploadVerificationProof = async (file: File, type: string) => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${user.id}/${type}_${Date.now()}.${fileExt}`;
+    const { data, error } = await supabase.storage.from('verification_proofs').upload(fileName, file, { upsert: true });
+    if (error) {
+      showToast(`Proof upload failed: ${error.message}`, 'error');
+      return null;
+    }
+    return data.path;
+  };
+
   const saveBasicInfo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSaving(true);
@@ -162,15 +179,54 @@ export default function ProfileEditor() {
     if (!user) { showToast('You must be logged in', 'error'); setIsSaving(false); return; }
     
     const formData = new FormData(e.target as HTMLFormElement);
+    
+    // Upload files if they exist
+    let idProofUrl = null;
+    if (idProofFile) {
+       idProofUrl = await uploadVerificationProof(idProofFile, 'id_proof');
+    }
+    let roleProofUrl = null;
+    if (roleProofFile) {
+       roleProofUrl = await uploadVerificationProof(roleProofFile, 'role_proof');
+    }
+
+    // Prepare sensitive changes for Admin
+    const sensitiveChanges: any = {};
+    const trackChange = (field: string, formField: string, label: string) => {
+       const newVal = formData.get(formField) as string;
+       if (newVal !== undefined && newVal !== null && newVal !== (profile?.[field] || '')) {
+          sensitiveChanges[label] = { old: profile?.[field], new: newVal };
+       }
+    };
+    
+    trackChange('first_name', 'first_name', 'First Name');
+    trackChange('last_name', 'last_name', 'Last Name');
+    trackChange('date_of_birth', 'date_of_birth', 'Date of Birth');
+    trackChange('id_number', 'id_number', 'ID Number');
+
+    if (idProofUrl) {
+       sensitiveChanges['Identity Verification'] = { old: null, new: 'Uploaded Document', document_url: idProofUrl };
+    }
+    if (roleProofUrl) {
+       let certLabel = 'Certificate Verification';
+       if (role === 'player') certLabel = 'Birth Certificate Verification';
+       if (role === 'coach' || role === 'scout') certLabel = 'License Verification';
+       if (role === 'organization') certLabel = 'FA Affiliation Verification';
+       sensitiveChanges[certLabel] = { old: null, new: 'Uploaded Document', document_url: roleProofUrl };
+    }
+
+    if (Object.keys(sensitiveChanges).length > 0) {
+       const res = await requestProfileEdit(profile?.id, sensitiveChanges);
+       if (res.error) {
+          showToast(res.error, 'error');
+       } else {
+          showToast('Sensitive changes and documents submitted to Admin for verification!', 'success');
+       }
+    }
+
     const profileData: any = {
-      id: profile?.id,
-      user_id: user.id,
-      first_name: formData.get('first_name'),
-      last_name: formData.get('last_name'),
       gender: formData.get('gender') || null,
-      date_of_birth: formData.get('date_of_birth') || null,
       country: formData.get('country'),
-      // bio handled in saveBioAndPortfolio
       contact_email: formData.get('contact_email'),
       phone_number: formData.get('phone_number'),
       position: formData.get('position'),
@@ -180,7 +236,6 @@ export default function ProfileEditor() {
       weight_kg: formData.get('weight_kg') || null,
       ...(['superadmin', 'admin', 'operations'].includes(role) ? { market_value: formData.get('market_value') } : {}),
       is_signed: formData.get('is_signed') === 'true',
-      id_number: formData.get('id_number') || null,
       contract_expiry: formData.get('contract_expiry') || null,
       formation: formData.get('formation'),
       license: formData.get('license'),
@@ -194,8 +249,17 @@ export default function ProfileEditor() {
       console.error('Save error:', error);
       showToast(`Error: ${error.message}`, 'error');
     } else {
-      showToast('Basic Info updated successfully', 'success');
-      setProfile({ ...profile, ...profileData });
+      if (Object.keys(sensitiveChanges).length === 0) showToast('Basic Info updated successfully', 'success');
+      
+      const updatedProfile = { 
+        ...profile, 
+        ...profileData,
+        ...(idProofFile ? { id_proof_url: URL.createObjectURL(idProofFile) } : {})
+      };
+      setProfile(updatedProfile);
+      
+      setIdProofFile(null);
+      setRoleProofFile(null);
       setIsDirty(false);
       await invalidateProfileCache();
       router.refresh();
@@ -745,8 +809,9 @@ export default function ProfileEditor() {
                             showToast('Only images or PDF files are allowed.', 'error');
                             return;
                           }
+                          setIdProofFile(file);
                           setProfile({ ...profile, id_proof_url: URL.createObjectURL(file) });
-                          showToast('Nationality verification document uploaded! Click Save Changes above to commit.', 'success');
+                          showToast('Nationality verification document selected! Click Save Changes above to commit.', 'success');
                         }
                       }}
                     />
@@ -764,6 +829,60 @@ export default function ProfileEditor() {
                     )}
                   </div>
                 </div>
+
+                {role !== 'agent' && (
+                  <div className="p-4 md:p-8 bg-blue-50/20 border border-blue-100/50 rounded-3xl space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div>
+                        <h4 className="text-sm font-bold text-gray-900 tracking-wide">
+                          {role === 'player' && 'Birth Certificate Verification'}
+                          {(role === 'coach' || role === 'scout') && 'License Certificate Verification'}
+                          {role === 'organization' && 'FA Affiliation Verification'}
+                        </h4>
+                        <p className="text-xs text-gray-500 font-bold mt-0.5">Required by Admin to verify your role credentials</p>
+                      </div>
+                      <span className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide self-start sm:self-center ${roleProofFile ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                        {roleProofFile ? 'Pending Verification' : 'Proof Required'}
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
+                      <input
+                        disabled={!isEditing}
+                        type="file"
+                        id="role_proof_file"
+                        className="hidden"
+                        accept="image/*,application/pdf"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            if (file.size > 5 * 1024 * 1024) {
+                              showToast('File exceeds 5MB limit.', 'error');
+                              return;
+                            }
+                            if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+                              showToast('Only images or PDF files are allowed.', 'error');
+                              return;
+                            }
+                            setRoleProofFile(file);
+                            showToast('Role verification document selected! Click Save Changes above to commit.', 'success');
+                          }
+                        }}
+                      />
+                      {isEditing && (
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('role_proof_file')?.click()}
+                          className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm"
+                        >
+                          Upload Certificate
+                        </button>
+                      )}
+                      {roleProofFile && (
+                        <span className="text-xs text-green-600 font-bold">✓ Certificate File Loaded & Ready</span>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2 pt-8 border-t border-gray-50">
                   <div className="space-y-1.5 h-full flex flex-col justify-end">

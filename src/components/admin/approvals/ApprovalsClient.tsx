@@ -88,6 +88,7 @@ interface ProfileEdit {
   old_value: string | null;
   new_value: string;
   status: string;
+  document_url?: string | null;
   created_at: string;
   profiles: {
     user_id?: string | null;
@@ -161,6 +162,13 @@ export function ApprovalsClient({
       }
       case 'edits':
         return pendingEdits.filter(e => 
+          !e.document_url &&
+          (roleFilter === 'all' || e.profiles?.role === roleFilter) &&
+          (`${e.profiles?.first_name} ${e.profiles?.last_name}`.toLowerCase().includes(query) || e.profiles?.email?.toLowerCase().includes(query) || e.field_name.toLowerCase().includes(query))
+        );
+      case 'verifications':
+        return pendingEdits.filter(e => 
+          !!e.document_url &&
           (roleFilter === 'all' || e.profiles?.role === roleFilter) &&
           (`${e.profiles?.first_name} ${e.profiles?.last_name}`.toLowerCase().includes(query) || e.profiles?.email?.toLowerCase().includes(query) || e.field_name.toLowerCase().includes(query))
         );
@@ -173,7 +181,8 @@ export function ApprovalsClient({
   
   // Total pending counts for badges
   const totalStaff = pendingStaff.length;
-  const totalEdits = pendingEdits.length;
+  const totalEdits = pendingEdits.filter(e => !e.document_url).length;
+  const totalVerifications = pendingEdits.filter(e => !!e.document_url).length;
 
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
@@ -237,10 +246,11 @@ export function ApprovalsClient({
     <div className="space-y-6">
       
       {/* Cards Stats System */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
           { id: 'staff', label: 'Staff Requests', count: totalStaff, color: 'text-blue-600', bg: 'bg-blue-50/50', border: 'border-blue-100', icon: Shield },
-          { id: 'edits', label: 'Profile Edits', count: totalEdits, color: 'text-orange-600', bg: 'bg-orange-50/50', border: 'border-orange-100', icon: FileText }
+          { id: 'edits', label: 'Profile Edits', count: totalEdits, color: 'text-orange-600', bg: 'bg-orange-50/50', border: 'border-orange-100', icon: FileText },
+          { id: 'verifications', label: 'Document Verifications', count: totalVerifications, color: 'text-emerald-600', bg: 'bg-emerald-50/50', border: 'border-emerald-100', icon: CheckCircle }
         ].map((c) => {
           const isActive = tab === c.id;
           return (
@@ -468,6 +478,107 @@ export function ApprovalsClient({
                       <div className="space-y-1 bg-green-50/50 border border-green-100/50 p-2.5 rounded-xl">
                         <p className="text-xs font-bold text-green-400 tracking-wide">Proposed Value</p>
                         <p className="text-sm font-bold text-green-700 truncate">{edit.new_value || '-- empty --'}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+
+          {tab === 'verifications' && (
+            <div className="divide-y divide-gray-50">
+              {(filtered as ProfileEdit[]).length === 0 ? (
+                <div className="px-6 py-20 text-center">
+                  <CheckCircle className="w-12 h-12 text-gray-100 mx-auto mb-4" />
+                  <p className="text-xs font-bold tracking-wide text-gray-400">No document verifications currently requiring review.</p>
+                </div>
+              ) : (
+                (filtered as ProfileEdit[]).map((edit: ProfileEdit) => (
+                  <div key={edit.id} className="p-6 space-y-4 hover:bg-gray-50/50 transition-colors">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center font-bold text-gray-600 text-sm shrink-0 border border-gray-200">
+                          {((edit.profiles?.first_name && edit.profiles.first_name[0]) || 'E').toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            {edit.profiles?.user_id ? (
+                              <Link 
+                                href={`/admin/users/${edit.profiles.user_id}`} 
+                                className="font-bold text-gray-900 text-base hover:text-[#b50a0a] transition-colors flex items-center gap-1.5 group"
+                              >
+                                {edit.profiles?.first_name} {edit.profiles?.last_name}
+                                <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              </Link>
+                            ) : (
+                              <p className="font-bold text-gray-900 text-base">{edit.profiles?.first_name} {edit.profiles?.last_name}</p>
+                            )}
+                            <FlagIcon country={edit.profiles?.country || ''} className="w-3 h-2" />
+                          </div>
+                          <p className="text-xs font-bold text-[#b50a0a] tracking-wide mt-0.5">{edit.profiles?.role}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <button
+                          disabled={actionLoadingId !== null}
+                          onClick={() => setDecisionAction({
+                            id: edit.id,
+                            type: 'approve_edit',
+                            title: 'Approve Verification',
+                            subtitle: 'Verify document and update profile status',
+                            targetName: `${edit.profiles?.first_name} ${edit.profiles?.last_name}`,
+                            targetEmail: edit.profiles?.email || 'N/A'
+                          })}
+                          className="flex items-center gap-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold tracking-wide shadow-md transition-all disabled:opacity-50"
+                        >
+                          <Check className="w-3 h-3" />
+                          Verify
+                        </button>
+                        <button
+                          disabled={actionLoadingId !== null}
+                          onClick={() => setDecisionAction({
+                            id: edit.id,
+                            type: 'reject_edit',
+                            title: 'Reject Verification',
+                            subtitle: 'Decline document and require re-upload',
+                            targetName: `${edit.profiles?.first_name} ${edit.profiles?.last_name}`,
+                            targetEmail: edit.profiles?.email || 'N/A'
+                          })}
+                          className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-100 rounded-lg text-xs font-bold tracking-wide transition-all disabled:opacity-50"
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 border border-gray-100 p-4 rounded-2xl">
+                      <div className="space-y-4">
+                        <div className="space-y-1">
+                          <p className="text-xs font-bold text-gray-400 tracking-wide">Verification Type</p>
+                          <p className="text-sm font-bold text-gray-800 tracking-wide">{formatFieldName(edit.field_name)}</p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-xs font-bold text-gray-400 tracking-wide">Proposed Value</p>
+                          <p className="text-sm font-bold text-green-700">{edit.new_value || 'Document Upload Only'}</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-xs font-bold text-gray-400 tracking-wide">Uploaded Document Proof</p>
+                        <a href={resolveDocUrl(edit.document_url)} target="_blank" rel="noreferrer" className="block relative h-40 bg-gray-200 rounded-xl overflow-hidden group">
+                          {edit.document_url?.endsWith('.pdf') ? (
+                            <div className="flex flex-col items-center justify-center h-full bg-gray-800 text-white hover:bg-gray-700 transition-colors">
+                              <FileText className="w-8 h-8 mb-2" />
+                              <span className="text-xs font-bold">View PDF Document</span>
+                            </div>
+                          ) : (
+                            <img src={resolveDocUrl(edit.document_url)} alt="Proof Document" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                          )}
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <ExternalLink className="w-6 h-6 text-white" />
+                          </div>
+                        </a>
                       </div>
                     </div>
                   </div>

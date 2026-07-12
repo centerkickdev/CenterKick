@@ -3,7 +3,7 @@
 import { Plus, Trash2, Search } from 'lucide-react';
 import { HybridLinkInput } from './HybridLinkInput';
 
-export function ScoutDiscoveriesForm({ data, onChange }: { data: any, onChange: (val: any) => void }) {
+export function ScoutDiscoveriesForm({ data, onChange }: { data: any, onChange: (val: any) => void, disabled?: boolean }) {
   const qualifications = ['PFSA Level 1', 'PFSA Level 2', 'PFSA Level 3', 'FA Talent ID Level 1', 'FA Talent ID Level 2', 'Other'];
   const methodologies = ['Live Match Scouting', 'Video Scouting', 'Data Analytics', 'Character Assessment'];
   const regions = ['Europe', 'South America', 'North America', 'Africa', 'Asia', 'Global'];

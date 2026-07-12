@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Plus, Trash2, Trophy } from 'lucide-react';
 
-export function CoachCareerForm({ data, onChange }: { data: any, onChange: (val: any) => void }) {
+export function CoachCareerForm({ data, onChange }: { data: any, onChange: (val: any) => void, disabled?: boolean }) {
   const licenses = ['UEFA Pro', 'UEFA A', 'UEFA B', 'UEFA C', 'AFC Pro', 'AFC A', 'CONCACAF Pro', 'National Badge', 'Other'];
   const specializations = ['Youth Development', 'Tactical Analysis', 'Physical Conditioning', 'Goalkeeping', 'Set Pieces', 'Data Analytics'];
   const languages = ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Arabic', 'Chinese'];

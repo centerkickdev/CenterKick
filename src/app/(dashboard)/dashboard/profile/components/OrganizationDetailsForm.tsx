@@ -3,7 +3,7 @@
 import { Plus, Trash2, Building, Trophy, Users } from 'lucide-react';
 import { HybridLinkInput } from './HybridLinkInput';
 
-export function OrganizationDetailsForm({ data, onChange }: { data: any, onChange: (val: any) => void }) {
+export function OrganizationDetailsForm({ data, onChange }: { data: any, onChange: (val: any) => void, disabled?: boolean }) {
   const orgTypes = ['Pro Club', 'Semi-Pro Club', 'Academy', 'Agency', 'Scouting Network', 'Football Association'];
 
   const addPersonnel = () => {

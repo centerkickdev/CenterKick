@@ -3,7 +3,7 @@
 import { Plus, Trash2, Users } from 'lucide-react';
 import { HybridLinkInput } from './HybridLinkInput';
 
-export function AgentPortfolioForm({ data, onChange }: { data: any, onChange: (val: any) => void }) {
+export function AgentPortfolioForm({ data, onChange }: { data: any, onChange: (val: any) => void, disabled?: boolean }) {
   const roles = ['Director', 'Intermediary', 'Scout', 'Legal Advisor'];
   const regions = ['Europe (UEFA)', 'South America (CONMEBOL)', 'North America (CONCACAF)', 'Africa (CAF)', 'Asia (AFC)', 'Global'];
   const languages = ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Arabic'];
