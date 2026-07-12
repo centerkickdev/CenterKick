@@ -22,8 +22,8 @@ export default function PlayersClient({ players }: PlayersClientProps) {
       return players.filter(a => {
          if (searchQuery) {
             const q = searchQuery.toLowerCase();
-            const name = `${a.first_name||''} ${a.last_name||''} ${a.full_name||''}`.toLowerCase();
-            if (!name.includes(q) && !(a.position||'').toLowerCase().includes(q)) return false;
+            const name = `${a.first_name || ''} ${a.last_name || ''} ${a.full_name || ''}`.toLowerCase();
+            if (!name.includes(q) && !(a.position || '').toLowerCase().includes(q)) return false;
          }
          if (selectedCountry && a.country !== selectedCountry) return false;
          return true;
@@ -34,10 +34,6 @@ export default function PlayersClient({ players }: PlayersClientProps) {
       <div className="max-w-[1200px] mx-auto px-4 lg:px-0 py-10 sm:py-16">
          {/* Filter Bar */}
          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-8 border-b border-gray-100">
-            <div>
-               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter">Verified Players</h2>
-               <p className="text-sm font-bold text-gray-400 tracking-wide mt-1">Discover rising football talent</p>
-            </div>
             <div className="flex flex-col sm:flex-row gap-3">
                <div className="relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -66,12 +62,12 @@ export default function PlayersClient({ players }: PlayersClientProps) {
          {/* Grid */}
          {filtered.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-               <p className="text-gray-500 font-bold tracking-wide text-base">No matching athlete profiles found.</p>
+               <p className="text-gray-500 font-bold tracking-wide text-base">No Players found.</p>
             </div>
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
                {filtered.map(athlete => {
-                  const name = athlete.full_name || `${athlete.first_name||''} ${athlete.last_name||''}`.trim() || 'Athlete';
+                  const name = athlete.full_name || `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Athlete';
                   return (
                      <Link
                         href={`/players/${athlete.slug}`}

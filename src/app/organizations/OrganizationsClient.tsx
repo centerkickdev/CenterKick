@@ -16,8 +16,8 @@ export default function OrganizationsClient({ organizations }: { organizations: 
    const filtered = useMemo(() => organizations.filter(o => {
       if (searchQuery) {
          const q = searchQuery.toLowerCase();
-         const name = `${o.first_name||''} ${o.last_name||''} ${o.full_name||''}`.toLowerCase();
-         if (!name.includes(q) && !(o.agency_name||'').toLowerCase().includes(q)) return false;
+         const name = `${o.first_name || ''} ${o.last_name || ''} ${o.full_name || ''}`.toLowerCase();
+         if (!name.includes(q) && !(o.agency_name || '').toLowerCase().includes(q)) return false;
       }
       if (selectedCountry && o.country !== selectedCountry) return false;
       return true;
@@ -26,10 +26,6 @@ export default function OrganizationsClient({ organizations }: { organizations: 
    return (
       <div className="max-w-[1200px] mx-auto px-4 lg:px-0 py-10 sm:py-16">
          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-8 border-b border-gray-100">
-            <div>
-               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter">Registered Organizations</h2>
-               <p className="text-sm font-bold text-gray-400 tracking-wide mt-1">Connect with verified institutions</p>
-            </div>
             <div className="flex flex-col sm:flex-row gap-3">
                <div className="relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -48,12 +44,12 @@ export default function OrganizationsClient({ organizations }: { organizations: 
          </div>
          {filtered.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-               <p className="text-gray-500 font-bold tracking-wide text-base">No matching organizations found.</p>
+               <p className="text-gray-500 font-bold tracking-wide text-base">No Organization profile.</p>
             </div>
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                {filtered.map(org => {
-                  const name = org.full_name || `${org.first_name||''} ${org.last_name||''}`.trim() || 'Organization';
+                  const name = org.full_name || `${org.first_name || ''} ${org.last_name || ''}`.trim() || 'Organization';
                   return (
                      <Link href={`/organizations/${org.slug}`} key={org.id}
                         className="group relative h-[260px] sm:h-[340px] rounded-2xl overflow-hidden bg-gray-900 block shadow-md hover:shadow-xl transition-all duration-300">

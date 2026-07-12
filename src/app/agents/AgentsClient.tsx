@@ -17,8 +17,8 @@ export default function AgentsClient({ agents }: { agents: any[] }) {
    const filtered = useMemo(() => agents.filter(a => {
       if (searchQuery) {
          const q = searchQuery.toLowerCase();
-         const name = `${a.first_name||''} ${a.last_name||''} ${a.full_name||''}`.toLowerCase();
-         if (!name.includes(q) && !(a.agency_name||'').toLowerCase().includes(q)) return false;
+         const name = `${a.first_name || ''} ${a.last_name || ''} ${a.full_name || ''}`.toLowerCase();
+         if (!name.includes(q) && !(a.agency_name || '').toLowerCase().includes(q)) return false;
       }
       if (selectedCountry && a.country !== selectedCountry) return false;
       return true;
@@ -27,10 +27,6 @@ export default function AgentsClient({ agents }: { agents: any[] }) {
    return (
       <div className="max-w-[1200px] mx-auto px-4 lg:px-0 py-10 sm:py-16">
          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-8 border-b border-gray-100">
-            <div>
-               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter">Certified Agents</h2>
-               <p className="text-sm font-bold text-gray-400 tracking-wide mt-1">Connect with verified representatives</p>
-            </div>
             <div className="flex flex-col sm:flex-row gap-3">
                <div className="relative">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -54,7 +50,7 @@ export default function AgentsClient({ agents }: { agents: any[] }) {
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                {filtered.map(agent => {
-                  const name = agent.full_name || `${agent.first_name||''} ${agent.last_name||''}`.trim() || 'Agent';
+                  const name = agent.full_name || `${agent.first_name || ''} ${agent.last_name || ''}`.trim() || 'Agent';
                   return (
                      <Link href={`/agents/${agent.slug}`} key={agent.id}
                         className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 block">

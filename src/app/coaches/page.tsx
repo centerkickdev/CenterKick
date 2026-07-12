@@ -37,7 +37,7 @@ export default async function CoachesPage() {
          <main className="pt-[72px] lg:pt-[76px]">
             <div className="bg-gradient-to-br from-gray-900 to-black py-12 sm:py-20 px-4">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0 text-center sm:text-left">
-                  <span className="text-[#a20000] font-bold text-sm tracking-[0.3em] mb-3 block">Tactical Experts</span>
+                  <span className="text-white font-bold text-sm tracking-[0.3em] mb-3 block">Tactical Experts</span>
                   <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.1] mb-4 tracking-tight">
                      Elite <span className="text-[#a20000]">Coaches</span>
                   </h1>
