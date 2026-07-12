@@ -81,6 +81,17 @@ export default function SubscriptionPage() {
           .eq('user_id', user.id)
           .single();
 
+        // Fetch user role from public.users
+        const { data: userData } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+          
+        if (profData) {
+          profData.role = userData?.role || 'player';
+        }
+
         // Fetch payment settings from CMS
         const { data: settings } = await supabase
           .from('site_content')
@@ -351,10 +362,10 @@ export default function SubscriptionPage() {
                            'bg-green-50 border-green-100'
                         }`}>
                            <p className="text-sm font-bold text-gray-800 leading-relaxed">
-                              Cello <Hand className="inline-block w-4 h-4 text-amber-500 mb-1" />!, your <span className="font-bold text-[#b50a0a]">{plan.name}</span> account is <span className="font-bold">{plan.status === 'Active' ? 'Paid' : 'Pending Approval'}</span>
+                              Cello <Hand className="inline-block w-4 h-4 text-amber-500 mb-1" />!, your <span className="font-bold text-[#b50a0a]">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</span> account is <span className="font-bold">{plan.status === 'Active' ? 'Paid' : 'Pending Approval'}</span>
                               
                               {plan.status === 'Pending Approval' ? (
-                                 <span>. We are currently verifying your payment of {plan.price}. Once confirmed, your subscription will be activated for a {recurringTypeStr} period.</span>
+                                 <span>. We are currently verifying your payment of {plan.price}. Once confirmed, you will receive an email notification. Please refresh this page after you receive the payment confirmation email to activate your subscription for a {recurringTypeStr} period.</span>
                               ) : (daysUntilExpiry !== null && daysUntilExpiry < 7 && daysUntilExpiry >= 0) ? (
                                  <span>, but it will expire in <span className="text-amber-600 font-bold">{daysUntilExpiry} days</span>, and this is a {recurringTypeStr} subscription. Your next payment of {plan.price} will be on {subscriptionEndDate ? new Date(subscriptionEndDate.getTime() + 86400000).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}.</span>
                               ) : (
@@ -365,19 +376,7 @@ export default function SubscriptionPage() {
                      )}
                   </div>
 
-                  <div className="mt-12 pt-12 border-t border-gray-50">
-                     <h4 className="text-xs font-bold text-gray-400 tracking-wide mb-8">Professional Features Included:</h4>
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {plan.features.map((feature, i) => (
-                          <div key={i} className="flex items-center gap-3">
-                             <div className="w-5 h-5 rounded-full bg-green-50 flex items-center justify-center shrink-0 border border-green-100">
-                                <Check className="w-3 h-3 text-green-600" />
-                             </div>
-                             <span className="text-sm font-bold text-gray-700">{feature}</span>
-                          </div>
-                        ))}
-                     </div>
-                  </div>
+
                </div>
 
 

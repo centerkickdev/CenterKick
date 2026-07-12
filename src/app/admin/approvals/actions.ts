@@ -89,6 +89,8 @@ ${safeReason || 'Your payment has been successfully verified. Your account is no
 
 Your premium subscription is now active! You can now log in and explore full platform access.
 
+Important: Please refresh your browser page to see the updated status.
+
 Best regards,
 The CenterKick Team`;
 
