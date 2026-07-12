@@ -160,8 +160,6 @@ export function HomeClient({
 
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
 
-  console.log('HIGHLIGHTS COUNT IN UI:', highlights?.length);
-
   const getEmbedUrl = (url: string) => {
     if (!url) return '';
     const videoIdMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);

@@ -2,8 +2,9 @@ import { HomeClient } from '@/components/home/HomeClientNew';
 import { createClient } from '@/lib/supabase/server';
 import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
 import { getCachedData } from '@/lib/redis';
+import { isProfileComplete } from '@/lib/utils/profile';
 
-// Recompilation trigger - v2
+// Recompilation trigger - v3
 
 export default async function Home() {
    const supabase = await createClient();
@@ -51,7 +52,8 @@ export default async function Home() {
             .eq('status', 'active');
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
-            return !['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole);
+            if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
+            return isProfileComplete(p);
          });
          console.log('Fetched players from DB count:', filtered.length);
          return filtered;
@@ -64,7 +66,8 @@ export default async function Home() {
             .eq('status', 'active');
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
-            return !['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole);
+            if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
+            return isProfileComplete(p);
          });
          return filtered;
       }, 600),
@@ -76,7 +79,8 @@ export default async function Home() {
             .eq('status', 'active');
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
-            return !['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole);
+            if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
+            return isProfileComplete(p);
          });
          return filtered;
       }, 600),
@@ -88,7 +92,8 @@ export default async function Home() {
             .eq('status', 'active');
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
-            return !['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole);
+            if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
+            return isProfileComplete(p);
          });
          return filtered;
       }, 600),

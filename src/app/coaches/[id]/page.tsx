@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import CoachDetailsClient from './CoachDetailsClient';
+import { isProfileComplete } from '@/lib/utils/profile';
 
 export default async function CoachPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = await params;
@@ -41,6 +42,10 @@ export default async function CoachPage({ params }: { params: Promise<{ id: stri
       if (currentUser?.role !== 'superadmin') {
          notFound();
       }
+   }
+
+   if (!isProfileComplete(profile) && !isOwner && !(profile.users as any)?.role?.includes('admin')) {
+      notFound();
    }
 
    return <CoachDetailsClient profile={profile} />;

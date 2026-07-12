@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import AgentDetailsClient from './AgentDetailsClient';
+import { isProfileComplete } from '@/lib/utils/profile';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,6 +45,17 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
          .eq('id', user?.id || '')
          .single();
       
+      if (currentUser?.role !== 'superadmin') {
+         notFound();
+      }
+   }
+
+   if (!isProfileComplete(profile) && !isOwner) {
+      const { data: currentUser } = await supabaseAdmin
+         .from('users')
+         .select('role')
+         .eq('id', user?.id || '')
+         .single();
       if (currentUser?.role !== 'superadmin') {
          notFound();
       }

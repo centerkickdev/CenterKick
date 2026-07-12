@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FlagIcon } from '@/components/common/FlagIcon';
 import { CopyableProfileLink } from '@/components/dashboard/CopyableProfileLink';
+import { isProfileComplete } from '@/lib/utils/profile';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -48,15 +49,7 @@ export default async function DashboardPage() {
 
   const role = userRecord?.role || 'player';
 
-  const checks = [
-    Boolean(profile?.avatar_url),
-    Boolean(profile?.cover_url),
-    Boolean(profile?.gallery_urls?.length >= 2),
-    Boolean(profile?.video_links?.length >= 1),
-    Boolean(profile?.first_name),
-    Boolean(profile?.last_name)
-  ];
-  const isProfileComplete = checks.filter(Boolean).length === checks.length;
+  const isComplete = isProfileComplete(profile);
 
   const roleLabels: Record<string, string> = {
     player: 'Athlete / Player',

@@ -2,6 +2,8 @@ import { PlayerDetailsClient } from '@/components/players/PlayerDetailsClient';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import { trackProfileView } from '@/app/actions/tracking';
+import { createClient } from '@/lib/supabase/server';
+import { isProfileComplete } from '@/lib/utils/profile';
 
 interface AthletePageProps {
   params: Promise<{ id: string }>;
@@ -33,6 +35,14 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
 
    // If suspended, don't show to public
    if (athlete.status === 'suspended' || athlete.status === 'rejected') {
+      return notFound();
+   }
+
+   const supabaseUser = await createClient();
+   const { data: { user } } = await supabaseUser.auth.getUser();
+   const isOwner = user?.id === athlete.user_id;
+
+   if (!isProfileComplete(athlete) && !isOwner) {
       return notFound();
    }
 
