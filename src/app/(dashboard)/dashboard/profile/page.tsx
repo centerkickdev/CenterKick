@@ -29,6 +29,11 @@ import 'react-phone-number-input/style.css';
 import { useRouter } from 'next/navigation';
 import { invalidateProfileCache } from './actions';
 import { CopyableProfileLink } from '@/components/dashboard/CopyableProfileLink';
+import { CoachCareerForm } from './components/CoachCareerForm';
+import { PlayerCareerForm } from './components/PlayerCareerForm';
+import { AgentPortfolioForm } from './components/AgentPortfolioForm';
+import { ScoutDiscoveriesForm } from './components/ScoutDiscoveriesForm';
+import { OrganizationDetailsForm } from './components/OrganizationDetailsForm';
 
 
 const calculateAge = (dob: string) => {
@@ -64,6 +69,7 @@ export default function ProfileEditor() {
   // New complex states
   const [careerStats, setCareerStats] = useState<any[]>([]);
   const [transferHistory, setTransferHistory] = useState<any[]>([]);
+  const [roleData, setRoleData] = useState<any>({});
 
   useEffect(() => {
     async function loadData() {
@@ -90,6 +96,34 @@ export default function ProfileEditor() {
         setGalleryUrls(profileRecord?.gallery_urls || []);
         setCareerStats(profileRecord?.career_stats || []); setIsDirty(true);
         setTransferHistory(profileRecord?.transfer_history || []); setIsDirty(true);
+        
+        // Initialize role data
+        setRoleData({
+          coaching_licenses: profileRecord?.coaching_licenses || [],
+          specializations: profileRecord?.specializations || [],
+          languages_spoken: profileRecord?.languages_spoken || [],
+          managerial_history: profileRecord?.managerial_history || [],
+          current_position: profileRecord?.current_position || [],
+          years_of_experience: profileRecord?.years_of_experience || '',
+          physical_technical_attributes: profileRecord?.physical_technical_attributes || {},
+          fa_license_number: profileRecord?.fa_license_number || '',
+          agency_role: profileRecord?.agency_role || '',
+          regions_of_operation: profileRecord?.regions_of_operation || [],
+          client_portfolio: profileRecord?.client_portfolio || [],
+          notable_transfers: profileRecord?.notable_transfers || [],
+          scouting_qualifications: profileRecord?.scouting_qualifications || [],
+          specialized_regions: profileRecord?.specialized_regions || [],
+          scouting_methodologies: profileRecord?.scouting_methodologies || [],
+          current_affiliation: profileRecord?.current_affiliation || {},
+          past_discoveries: profileRecord?.past_discoveries || [],
+          organization_type: profileRecord?.organization_type || '',
+          year_established: profileRecord?.year_established || '',
+          facilities_infrastructure: profileRecord?.facilities_infrastructure || {},
+          key_personnel: profileRecord?.key_personnel || [],
+          organization_honors: profileRecord?.organization_honors || [],
+          official_links: profileRecord?.official_links || {},
+          transfer_history: profileRecord?.transfer_history || [],
+        });
 
         const { data: countries } = await supabase.from('countries').select('name, code').order('name');
         setCountriesList(countries || []);
@@ -179,14 +213,43 @@ export default function ProfileEditor() {
     const profileData: any = {
       id: profile?.id,
       user_id: user.id,
-      career_stats: careerStats,
-      transfer_history: transferHistory,
       achievements: achievements,
       league: formData.get('league') || profile?.league || null,
       current_club: formData.get('current_club') || profile?.current_club || null,
       contract_expiry: formData.get('contract_expiry') || profile?.contract_expiry || null,
       updated_at: new Date().toISOString()
     };
+    
+    if (role === 'coach') {
+      profileData.coaching_licenses = roleData.coaching_licenses;
+      profileData.specializations = roleData.specializations;
+      profileData.languages_spoken = roleData.languages_spoken;
+      profileData.managerial_history = roleData.managerial_history;
+      profileData.current_position = roleData.current_position;
+      profileData.years_of_experience = roleData.years_of_experience;
+    } else if (role === 'player') {
+      profileData.career_stats = careerStats;
+      profileData.transfer_history = roleData.transfer_history;
+      profileData.physical_technical_attributes = roleData.physical_technical_attributes;
+    } else if (role === 'agent') {
+      profileData.fa_license_number = roleData.fa_license_number;
+      profileData.agency_role = roleData.agency_role;
+      profileData.regions_of_operation = roleData.regions_of_operation;
+      profileData.client_portfolio = roleData.client_portfolio;
+      profileData.notable_transfers = roleData.notable_transfers;
+    } else if (role === 'scout') {
+      profileData.scouting_qualifications = roleData.scouting_qualifications;
+      profileData.specialized_regions = roleData.specialized_regions;
+      profileData.scouting_methodologies = roleData.scouting_methodologies;
+      profileData.current_affiliation = roleData.current_affiliation;
+      profileData.past_discoveries = roleData.past_discoveries;
+    } else if (role === 'organization') {
+      profileData.organization_type = roleData.organization_type;
+      profileData.year_established = roleData.year_established;
+      profileData.facilities_infrastructure = roleData.facilities_infrastructure;
+      profileData.key_personnel = roleData.key_personnel;
+      profileData.organization_honors = roleData.organization_honors;
+    }
 
     const { error } = await supabase.from('profiles').update(profileData).eq('id', profile?.id);
     if (error) {
@@ -259,15 +322,18 @@ export default function ProfileEditor() {
     if (!user) { showToast('You must be logged in', 'error'); setIsSaving(false); return; }
 
     const formData = new FormData(e.target as HTMLFormElement);
+    const updatedOfficialLinks = {
+      ...(roleData.official_links || {}),
+      instagram: formData.get('social_instagram'),
+      facebook: formData.get('social_facebook'),
+      twitter: formData.get('social_twitter'),
+      linkedin: formData.get('social_linkedin'),
+    };
+
     const profileData: any = {
       id: profile?.id,
       user_id: user.id,
-      social_links: {
-        instagram: formData.get('social_instagram'),
-        facebook: formData.get('social_facebook'),
-        twitter: formData.get('social_twitter'),
-        linkedin: formData.get('social_linkedin'),
-      },
+      official_links: updatedOfficialLinks,
       updated_at: new Date().toISOString()
     };
 
@@ -276,7 +342,7 @@ export default function ProfileEditor() {
       console.error('Save error:', error);
       showToast(`Error: ${error.message}`, 'error');
     } else {
-      showToast('Social Links updated successfully', 'success');
+      showToast('Official Links updated successfully', 'success');
       setProfile({ ...profile, ...profileData });
       setIsDirty(false);
       await invalidateProfileCache();
@@ -524,7 +590,7 @@ export default function ProfileEditor() {
               { id: 'Career Data', icon: BarChart3 },
               { id: 'Bio & Portfolio', icon: Info },
               { id: 'Media Center', icon: Camera },
-              { id: 'Social Links', icon: Globe },
+              { id: 'Official Links', icon: Globe },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -829,121 +895,79 @@ export default function ProfileEditor() {
                 </div>
 
                 {/* Per-Season Statistics */}
-                <div className="pt-8 border-t border-gray-50">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h4 className="text-sm font-bold text-gray-900 tracking-wide">Per-Season Statistics</h4>
-                      <p className="text-xs text-gray-500 font-bold mt-0.5">Player's historical apperances</p>
-                    </div>
-                    {isEditing && (
-                      <button
-                        type="button"
-                        onClick={() => setCareerStats([...careerStats, { season: '', league: '', club: '', apps: 0, goals: 0, assists: 0, yellow_cards: 0, red_cards: 0 }])}
-                        className="px-4 py-2 bg-gray-900 text-white rounded-xl text-xs font-bold hover:bg-black transition-colors flex items-center gap-2"
-                      >
-                        <Plus className="w-4 h-4" /> Add Season
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="space-y-4">
-                    {careerStats.map((stat, i) => (
-                      <div key={i} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex flex-wrap gap-4 relative">
-                        {isEditing && (
-                          <button type="button" onClick={() => setCareerStats(careerStats.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 bg-red-100 text-red-600 p-1 rounded-full shadow hover:bg-red-200">
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
-                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Season</label>
-                          <select disabled={!isEditing} value={stat.season} onChange={(e) => { const newStats = [...careerStats]; newStats[i].season = e.target.value; setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100 outline-none"><option value="">Select Season</option>{seasonsList.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}</select>
-                        </div>
-                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">League</label>
-                          <select disabled={!isEditing} value={stat.league} onChange={(e) => { const newStats = [...careerStats]; newStats[i].league = e.target.value; newStats[i].club = ''; setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100"><option value="">Select League</option>{leaguesList.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}</select>
-                        </div>
-                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Club</label>
-                          <select disabled={!isEditing || !stat.league} value={stat.club} onChange={(e) => { const newStats = [...careerStats]; newStats[i].club = e.target.value; setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100"><option value="">Select Club</option>{clubsList.filter(c => c.league_id === stat.league).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
-                        </div>
-                        <div className="flex gap-2 w-full sm:w-auto">
-                          <div className="flex flex-col space-y-1 w-16">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Apps</label>
-                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.apps} onChange={(e) => { const newStats = [...careerStats]; newStats[i].apps = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
-                          </div>
-                          <div className="flex flex-col space-y-1 w-16">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Gls</label>
-                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.goals} onChange={(e) => { const newStats = [...careerStats]; newStats[i].goals = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
-                          </div>
-                          <div className="flex flex-col space-y-1 w-16">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Ast</label>
-                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.assists} onChange={(e) => { const newStats = [...careerStats]; newStats[i].assists = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
-                          </div>
-                          <div className="flex flex-col space-y-1 w-16">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Yel</label>
-                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.yellow_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].yellow_cards = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-yellow-200 bg-yellow-50 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-yellow-100" />
-                          </div>
-                          <div className="flex flex-col space-y-1 w-16">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Red</label>
-                            <input disabled={!isEditing} type="number" placeholder="0" value={stat.red_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].red_cards = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-red-200 bg-red-50 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-red-100" />
-                          </div>
-                        </div>
+                {(role === 'player' || role === 'athlete') && (
+                  <div className="pt-8 border-t border-gray-50">
+                    <div className="flex items-center justify-between mb-6">
+                      <div>
+                        <h4 className="text-sm font-bold text-gray-900 tracking-wide">Per-Season Statistics</h4>
+                        <p className="text-xs text-gray-500 font-bold mt-0.5">Player's historical apperances</p>
                       </div>
-                    ))}
-                    {careerStats.length === 0 && <div className="p-8 text-center text-xs font-bold text-gray-400 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">{isEditing ? 'Click "+ Add Season" above to record a new season.' : 'No statistics recorded. Click "Edit Profile" to add your career history.'}</div>}
-                  </div>
-                </div>
-
-                {/* Transfer History */}
-                <div className="pt-8 border-t border-gray-50">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h4 className="text-sm font-bold text-gray-900 tracking-wide">Transfer History</h4>
-                      <p className="text-xs text-gray-500 font-bold mt-0.5">Record of club changes and market values</p>
+                      {isEditing && (
+                        <button
+                          type="button"
+                          onClick={() => setCareerStats([...careerStats, { season: '', league: '', club: '', apps: 0, goals: 0, assists: 0, yellow_cards: 0, red_cards: 0 }])}
+                          className="px-4 py-2 bg-gray-900 text-white rounded-xl text-xs font-bold hover:bg-black transition-colors flex items-center gap-2"
+                        >
+                          <Plus className="w-4 h-4" /> Add Season
+                        </button>
+                      )}
                     </div>
-                    {isEditing && (
-                      <button
-                        type="button"
-                        onClick={() => setTransferHistory([...transferHistory, { date: '', from_club: '', to_club: '', transfer_fee: '', market_value: '' }])}
-                        className="px-4 py-2 bg-gray-900 text-white rounded-xl text-xs font-bold hover:bg-black transition-colors flex items-center gap-2"
-                      >
-                        <Plus className="w-4 h-4" /> Add Transfer
-                      </button>
-                    )}
-                  </div>
 
-                  <div className="space-y-4">
-                    {transferHistory.map((transfer, i) => (
-                      <div key={i} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex flex-wrap gap-4 relative">
-                        {isEditing && (
-                          <button type="button" onClick={() => setTransferHistory(transferHistory.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 bg-red-100 text-red-600 p-1 rounded-full shadow hover:bg-red-200">
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
-                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Date</label>
-                          <input disabled={!isEditing} type="date" value={transfer.date} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].date = e.target.value; setTransferHistory(newHistory); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100" />
+                    <div className="space-y-4">
+                      {careerStats.map((stat, i) => (
+                        <div key={i} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 flex flex-wrap gap-4 relative">
+                          {isEditing && (
+                            <button type="button" onClick={() => setCareerStats(careerStats.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 bg-red-100 text-red-600 p-1 rounded-full shadow hover:bg-red-200">
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
+                          <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Season</label>
+                            <select disabled={!isEditing} value={stat.season} onChange={(e) => { const newStats = [...careerStats]; newStats[i].season = e.target.value; setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100 outline-none"><option value="">Select Season</option>{seasonsList.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}</select>
+                          </div>
+                          <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">League</label>
+                            <select disabled={!isEditing} value={stat.league} onChange={(e) => { const newStats = [...careerStats]; newStats[i].league = e.target.value; newStats[i].club = ''; setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100"><option value="">Select League</option>{leaguesList.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}</select>
+                          </div>
+                          <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Club</label>
+                            <select disabled={!isEditing || !stat.league} value={stat.club} onChange={(e) => { const newStats = [...careerStats]; newStats[i].club = e.target.value; setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100"><option value="">Select Club</option>{clubsList.filter(c => c.league_id === stat.league).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
+                          </div>
+                          <div className="flex gap-2 w-full sm:w-auto">
+                            <div className="flex flex-col space-y-1 w-16">
+                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Apps</label>
+                              <input disabled={!isEditing} type="number" placeholder="0" value={stat.apps} onChange={(e) => { const newStats = [...careerStats]; newStats[i].apps = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
+                            </div>
+                            <div className="flex flex-col space-y-1 w-16">
+                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Gls</label>
+                              <input disabled={!isEditing} type="number" placeholder="0" value={stat.goals} onChange={(e) => { const newStats = [...careerStats]; newStats[i].goals = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
+                            </div>
+                            <div className="flex flex-col space-y-1 w-16">
+                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Ast</label>
+                              <input disabled={!isEditing} type="number" placeholder="0" value={stat.assists} onChange={(e) => { const newStats = [...careerStats]; newStats[i].assists = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
+                            </div>
+                            <div className="flex flex-col space-y-1 w-16">
+                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Yel</label>
+                              <input disabled={!isEditing} type="number" placeholder="0" value={stat.yellow_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].yellow_cards = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-yellow-200 bg-yellow-50 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-yellow-100" />
+                            </div>
+                            <div className="flex flex-col space-y-1 w-16">
+                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Red</label>
+                              <input disabled={!isEditing} type="number" placeholder="0" value={stat.red_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].red_cards = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-red-200 bg-red-50 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-red-100" />
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">From Club</label>
-                          <select disabled={!isEditing} value={transfer.from_club} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].from_club = e.target.value; setTransferHistory(newHistory); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100"><option value="">Select Club</option>{clubsList.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
-                        </div>
-                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">To Club</label>
-                          <select disabled={!isEditing} value={transfer.to_club} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].to_club = e.target.value; setTransferHistory(newHistory); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100"><option value="">Select Club</option>{clubsList.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}</select>
-                        </div>
-                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Fee ($)</label>
-                          <input disabled={!isEditing} type="text" placeholder="e.g. Free, 50k" value={transfer.transfer_fee} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].transfer_fee = e.target.value; setTransferHistory(newHistory); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100" />
-                        </div>
-                        <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Market Value ($)</label>
-                          <input disabled={!isEditing} type="text" placeholder="e.g. 100k" value={transfer.market_value} onChange={(e) => { const newHistory = [...transferHistory]; newHistory[i].market_value = e.target.value; setTransferHistory(newHistory); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100" />
-                        </div>
-                      </div>
-                    ))}
-                    {transferHistory.length === 0 && <div className="p-8 text-center text-xs font-bold text-gray-400 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">{isEditing ? 'Click "+ Add Transfer" above to log a new transfer.' : 'No transfer history recorded. Click "Edit Profile" to add your history.'}</div>}
+                      ))}
+                      {careerStats.length === 0 && <div className="p-8 text-center text-xs font-bold text-gray-400 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">{isEditing ? 'Click "+ Add Season" above to record a new season.' : 'No statistics recorded. Click "Edit Profile" to add your career history.'}</div>}
+                    </div>
                   </div>
+                )}
+
+                <div className="pt-8 border-t border-gray-50">
+                   {role === 'coach' && <CoachCareerForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} disabled={!isEditing} />}
+                   {(role === 'player' || role === 'athlete') && <PlayerCareerForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} disabled={!isEditing} />}
+                   {role === 'agent' && <AgentPortfolioForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} disabled={!isEditing} />}
+                   {role === 'scout' && <ScoutDiscoveriesForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} disabled={!isEditing} />}
+                   {role === 'organization' && <OrganizationDetailsForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} disabled={!isEditing} />}
                 </div>
 
                 {isEditing && (
@@ -1145,14 +1169,28 @@ export default function ProfileEditor() {
                 )}
               </form>
             )}
-            {activeTab === 'Social Links' && (
+            {activeTab === 'Official Links' && (
               <form onSubmit={saveSocialLinks} onChange={() => setIsDirty(true)} className="space-y-6 animate-in fade-in duration-500">
                 <div className="space-y-8">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Website</label>
+                    <div className="relative">
+                      <Globe className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
+                      <input
+                        disabled={!isEditing}
+                        type="url"
+                        value={roleData?.official_links?.website || ''}
+                        onChange={(e) => { setRoleData({ ...roleData, official_links: { ...roleData.official_links, website: e.target.value } }); setIsDirty(true); }}
+                        placeholder="https://www.example.com"
+                        className="w-full bg-gray-50 border-none rounded-2xl pl-11 pr-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-500 disabled:opacity-70 disabled:bg-gray-100"
+                      />
+                    </div>
+                  </div>
                   {[
-                    { name: 'Instagram', id: 'social_instagram', icon: Globe, placeholder: 'instagram.com/handle', value: profile?.social_links?.instagram },
-                    { name: 'Facebook', id: 'social_facebook', icon: Globe, placeholder: 'facebook.com/page', value: profile?.social_links?.facebook },
-                    { name: 'Twitter / X', id: 'social_twitter', icon: Globe, placeholder: 'twitter.com/profile', value: profile?.social_links?.twitter },
-                    { name: 'LinkedIn', id: 'social_linkedin', icon: Globe, placeholder: 'linkedin.com/in/name', value: profile?.social_links?.linkedin },
+                    { name: 'Instagram', id: 'social_instagram', icon: Globe, placeholder: 'instagram.com/handle', value: roleData?.official_links?.instagram || profile?.social_links?.instagram },
+                    { name: 'Facebook', id: 'social_facebook', icon: Globe, placeholder: 'facebook.com/page', value: roleData?.official_links?.facebook || profile?.social_links?.facebook },
+                    { name: 'Twitter / X', id: 'social_twitter', icon: Globe, placeholder: 'twitter.com/profile', value: roleData?.official_links?.twitter || profile?.social_links?.twitter },
+                    { name: 'LinkedIn', id: 'social_linkedin', icon: Globe, placeholder: 'linkedin.com/in/name', value: roleData?.official_links?.linkedin || profile?.social_links?.linkedin },
                   ].map((social, i) => (
                     <div key={i} className="space-y-1.5">
                       <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">{social.name}</label>
@@ -1173,7 +1211,7 @@ export default function ProfileEditor() {
                 {isEditing && (
                   <div className="pt-6 border-t border-gray-50 flex justify-end">
                     <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="px-8 py-3 bg-[#b50a0a] text-white rounded-xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
-                      {isSaving ? 'Saving...' : 'Save Social Links'}
+                      {isSaving ? 'Saving...' : 'Save Official Links'}
                     </button>
                   </div>
                 )}
