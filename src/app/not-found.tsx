@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Home, Search, MessageCircle } from 'lucide-react';
+import { Home, MessageCircle, FlagTriangleRight } from 'lucide-react';
 
 export default function NotFound() {
   return (
@@ -13,8 +13,9 @@ export default function NotFound() {
           <h1 className="text-8xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-br from-red-600 to-rose-400 animate-pulse">
             404
           </h1>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight flex items-center justify-center gap-3">
             Offside!
+            <FlagTriangleRight className="w-10 h-10 md:w-12 md:h-12 text-[#b50a0a] fill-[#b50a0a] -rotate-12 animate-pulse" />
           </h2>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 text-slate-600 text-sm font-semibold tracking-wide border border-slate-200 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
@@ -29,19 +30,13 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
           <Link 
             href="/"
-            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#b50a0a] to-[#d61a1a] hover:from-[#8a0808] hover:to-[#b50a0a] text-white rounded-2xl font-bold transition-all shadow-lg shadow-red-600/20 hover:shadow-red-600/40 hover:-translate-y-0.5 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-4 bg-[#b50a0a] hover:bg-[#8a0808] text-white rounded-2xl font-bold transition-all shadow-lg shadow-red-600/20 hover:shadow-red-600/40 hover:-translate-y-0.5 flex items-center justify-center gap-2"
           >
             <Home className="w-5 h-5" />
             Back to Home
           </Link>
           
-          <Link 
-            href="/players"
-            className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-2xl font-bold transition-all hover:border-slate-300 hover:shadow-sm hover:-translate-y-0.5 flex items-center justify-center gap-2"
-          >
-            <Search className="w-5 h-5 text-slate-400" />
-            Browse Players
-          </Link>
+
 
           <Link 
             href="/contact"

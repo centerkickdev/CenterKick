@@ -16,7 +16,7 @@ export default async function CoachPage({ params }: { params: Promise<{ id: stri
 
    const { data: profile, error } = await supabaseAdmin
       .from('profiles')
-      .select('*, users!profiles_user_id_fkey!inner(role), agent:users!profiles_agent_id_fkey(id, profiles!profiles_user_id_fkey(*))')
+      .select('*, users!profiles_user_id_fkey!inner(role), agent:users!profiles_agent_id_fkey(id, role, email)')
       .eq('slug', id)
       .single();
 

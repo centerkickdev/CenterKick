@@ -17,11 +17,13 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
       return notFound();
    }
 
-   const { data: athlete, error } = await supabaseAdmin
+   const { data, error } = await supabaseAdmin
       .from('profiles')
-      .select('*, agent:users!profiles_agent_id_fkey(id, profiles!profiles_user_id_fkey(*))')
+      .select('*, agent:users!profiles_agent_id_fkey(id, role, email)')
       .eq('slug', id)
-      .single();
+      .limit(1);
+
+   const athlete = data?.[0];
 
    // If not found or restricted
    if (error || !athlete) {

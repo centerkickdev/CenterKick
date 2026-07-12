@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, LayoutDashboard, ArrowLeft } from 'lucide-react';
+import { AlertCircle, LayoutDashboard, ArrowLeft, FlagTriangleRight } from 'lucide-react';
 
 export default function DashboardNotFound() {
   const router = useRouter();
@@ -16,8 +16,9 @@ export default function DashboardNotFound() {
           <AlertCircle className="w-10 h-10 text-red-500 relative z-10" />
         </div>
 
-        <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-2">
+        <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-2 flex items-center justify-center gap-2">
           Offside!
+          <FlagTriangleRight className="w-8 h-8 text-red-500 fill-red-500 -rotate-12 animate-pulse" />
         </h2>
         
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold tracking-wide mb-6">
