@@ -110,3 +110,9 @@ check_users.js
 tmp_tournaments.sql
 lint_output.txt
 quiet_errors.txt
+check_schema.js
+seed_leagues.js
+seed_logos.js
+setup_bucket.js
+update_leagues_ui.js
+update_ui.js

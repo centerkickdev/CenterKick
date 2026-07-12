@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { 
@@ -194,7 +194,7 @@ export default function MediaGallery({ isOpen, onClose, onSelect, title = "Media
 
         <div className="px-4 md:px-8 py-6 border-t border-gray-50 bg-gray-50/50 flex items-center justify-between">
           <p className="text-xs font-bold text-gray-500 tracking-wide">
-            JPG / PNG / WebP â€¢ Optimized for Web
+            JPG / PNG / WebP • Optimized for Web
           </p>
           <button 
             disabled={!selectedAssetId}
@@ -213,3 +213,4 @@ export default function MediaGallery({ isOpen, onClose, onSelect, title = "Media
     </div>
   );
 }
+

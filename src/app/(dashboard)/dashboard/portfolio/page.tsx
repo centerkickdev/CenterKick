@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Briefcase, Users, Plus, Trash2, Shield, Search, Star, ExternalLink } from 'lucide-react';
@@ -60,7 +60,7 @@ export default function PortfolioPage() {
 
             <div>
               <h3 className="text-lg font-bold text-gray-900 tracking-tight group-hover:text-[#b50a0a] transition-colors">{player.name}</h3>
-              <p className="text-xs text-gray-400 font-bold mt-1">{player.age} Years Old â€¢ Professional</p>
+              <p className="text-xs text-gray-400 font-bold mt-1">{player.age} Years Old • Professional</p>
             </div>
 
             <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
@@ -81,3 +81,4 @@ export default function PortfolioPage() {
     </div>
   );
 }
+

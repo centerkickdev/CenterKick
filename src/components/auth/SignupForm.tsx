@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -105,7 +105,7 @@ export function SignupForm({ email, role }: { email: string, role: string }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-100 focus:border-[#b50a0a] focus:ring-4 focus:ring-red-900/5 outline-none transition-all font-bold text-base text-black"
-            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+            placeholder="••••••••"
             minLength={8}
           />
           <button
@@ -141,3 +141,4 @@ export function SignupForm({ email, role }: { email: string, role: string }) {
     </form>
   );
 }
+

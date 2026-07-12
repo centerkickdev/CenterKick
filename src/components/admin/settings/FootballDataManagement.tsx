@@ -13,7 +13,7 @@ import {
   getClubs, addClub, updateClub, deleteClub,
   getSeasons, addSeason, updateSeason, deleteSeason,
   getCountries, addCountry, updateCountry, deleteCountry,
-  seedFootballData
+  seedFootballData, uploadFootballAsset, bulkReassignClubs
 } from '@/app/admin/settings/actions';
 import { useToast } from '@/context/ToastContext';
 import { FlagIcon } from '@/components/common/FlagIcon';
@@ -39,6 +39,9 @@ export default function FootballDataManagement() {
   const [editingItem, setEditingItem] = useState<Record<string, any> | null>(null);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [isActionLoading, setIsActionLoading] = useState(false);
+  const [selectedClubs, setSelectedClubs] = useState<string[]>([]);
+  const [bulkLeagueId, setBulkLeagueId] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
   
   const toast = useToast();
 
@@ -134,6 +137,49 @@ export default function FootballDataManagement() {
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'logo_url' | 'flag_url') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    const formDataObj = new FormData();
+    formDataObj.append('file', file);
+    
+    try {
+      const res = await uploadFootballAsset(formDataObj, activeTab);
+      if (res.publicUrl) {
+        setFormData(prev => ({ ...prev, [field]: res.publicUrl }));
+        toast.showToast('Image uploaded successfully', 'success');
+      }
+    } catch (error) {
+      toast.showToast('Failed to upload image', 'error');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const handleBulkReassign = async () => {
+    if (selectedClubs.length === 0 || !bulkLeagueId) return;
+    if (!confirm(`Move ${selectedClubs.length} clubs to the selected league?`)) return;
+
+    setIsActionLoading(true);
+    try {
+      const res = await bulkReassignClubs(selectedClubs, bulkLeagueId);
+      if (res.success) {
+        toast.showToast(`Successfully moved ${selectedClubs.length} clubs`, 'success');
+        setSelectedClubs([]);
+        setBulkLeagueId('');
+        fetchAllData();
+      } else {
+        toast.showToast(res.error || 'Bulk transfer failed', 'error');
+      }
+    } catch (error) {
+      toast.showToast('An unexpected error occurred', 'error');
+    } finally {
+      setIsActionLoading(false);
+    }
+  };
+
   const handleSeed = async () => {
     if (!confirm('This will seed initial data from constants. Proceed?')) return;
     setIsLoading(true);
@@ -190,7 +236,11 @@ export default function FootballDataManagement() {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => { setActiveTab(tab.id as TabType); setSearchQuery(''); }}
+            onClick={() => { 
+              setActiveTab(tab.id as TabType); 
+              setSearchQuery(''); 
+              setSelectedClubs([]); 
+            }}
             className={`flex items-center gap-3 px-6 py-4 rounded-[1.8rem] text-xs font-bold tracking-wide transition-all ${
  activeTab === tab.id 
  ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/10 scale-[1.02]' 
@@ -248,6 +298,7 @@ export default function FootballDataManagement() {
                   {activeTab === 'leagues' && (
                     <>
                       <th className="px-6 py-3 text-xs font-bold text-slate-400 tracking-wide">Country</th>
+                      <th className="px-6 py-3 text-xs font-bold text-slate-400 tracking-wide text-center">Logo</th>
                       <th className="px-6 py-3 text-xs font-bold text-slate-400 tracking-wide text-center">Status</th>
                     </>
                   )}
@@ -302,6 +353,19 @@ export default function FootballDataManagement() {
                           <div className="flex items-center gap-2">
                              <FlagIcon country={item.countries?.name} className="w-5 h-4 rounded-sm" />
                              <span className="text-xs font-bold text-slate-500 tracking-wide">{item.countries?.name || 'International'}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-3.5 text-center">
+                          <div className="flex justify-center">
+                            {item.logo_url ? (
+                               <div className="relative w-8 h-8">
+                                 <img src={item.logo_url} alt={item.name} className="w-full h-full object-contain" />
+                               </div>
+                            ) : (
+                               <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 text-slate-300">
+                                  <Trophy className="w-4 h-4" />
+                               </div>
+                            )}
                           </div>
                         </td>
                         <td className="px-6 py-3.5 text-center">
@@ -430,20 +494,40 @@ export default function FootballDataManagement() {
                 )}
 
                 {activeTab === 'leagues' && (
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold text-slate-400 tracking-wide pl-1">Assigned Sovereignty</label>
-                    <select 
-                      required
-                      value={formData.country_id || ''}
-                      onChange={(e) => setFormData({ ...formData, country_id: e.target.value })}
-                      className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
-                    >
-                       <option value="">Select Country</option>
-                      {data.countries.map((c: Record<string, any>) => (
-                        <option key={c.id} value={c.id}>{c.name}</option>
-                      ))}
-                    </select>
-                  </div>
+                  <>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-400 tracking-wide pl-1">Assigned Sovereignty</label>
+                      <select 
+                        required
+                        value={formData.country_id || ''}
+                        onChange={(e) => setFormData({ ...formData, country_id: e.target.value })}
+                        className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
+                      >
+                         <option value="">Select Country</option>
+                        {data.countries.map((c: Record<string, any>) => (
+                          <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-bold text-slate-400 tracking-wide pl-1">League Logo Upload</label>
+                      <div className="relative">
+                         <input 
+                           type="file" 
+                           accept="image/*"
+                           onChange={(e) => handleFileUpload(e, 'logo_url')}
+                           className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner pl-14"
+                         />
+                         <ImageIcon className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
+                      </div>
+                      {uploadingImage && <p className="text-xs text-blue-500">Uploading...</p>}
+                      {formData.logo_url && (
+                        <div className="mt-2 w-16 h-16 relative rounded-xl overflow-hidden bg-white border border-slate-200">
+                           <img src={formData.logo_url} alt="Logo Preview" className="w-full h-full object-contain p-2" />
+                        </div>
+                      )}
+                    </div>
+                  </>
                 )}
 
                 {activeTab === 'clubs' && (

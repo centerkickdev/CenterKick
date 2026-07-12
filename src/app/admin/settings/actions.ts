@@ -478,3 +478,106 @@ export async function seedFootballData() {
   revalidatePath('/admin/data-management');
   return { success: true };
 }
+
+export async function uploadFootballAsset(formData: FormData, folder: string) {
+  const supabase = await createClient();
+  const file = formData.get('file') as File;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Unauthorized');
+
+  // Verify role
+  const { data: userRecord } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (userRecord?.role !== 'superadmin') {
+    throw new Error('Unauthorized');
+  }
+
+  const fileName = `${folder}/${Date.now()}.${file.name.split('.').pop()}`;
+  
+  const { data, error } = await supabase.storage
+    .from('football-data')
+    .upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: true
+    });
+
+  if (error) throw error;
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('football-data')
+    .getPublicUrl(fileName);
+
+  // Shorten URL to just after /public
+  const shortenedUrl = publicUrl.split('/public/')[1] ? `/${publicUrl.split('/public/')[1]}` : publicUrl;
+
+  return { publicUrl: shortenedUrl };
+}
+
+export async function bulkReassignClubs(clubIds: string[], targetLeagueId: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Unauthorized');
+
+  // Verify role
+  const { data: userRecord } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (userRecord?.role !== 'superadmin') {
+    throw new Error('Unauthorized');
+  }
+
+  const { error } = await supabase
+    .from('clubs')
+    .update({ league_id: targetLeagueId })
+    .in('id', clubIds);
+
+  if (error) {
+    console.error("Bulk reassign error:", error);
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath('/admin/data-management');
+  return { success: true };
+}
+
+export async function autoMapCountryFlags() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Unauthorized');
+
+  const { data: userRecord } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  if (userRecord?.role !== 'superadmin') {
+    throw new Error('Unauthorized');
+  }
+
+  // Fetch all countries
+  const { data: countries, error: fetchError } = await supabase.from('countries').select('id, code');
+  if (fetchError) return { success: false, error: fetchError.message };
+
+  if (countries) {
+    for (const country of countries) {
+      if (country.code) {
+        const flagUrl = `https://flagcdn.com/w160/${country.code.toLowerCase()}.png`;
+        await supabase.from('countries').update({ flag_url: flagUrl }).eq('id', country.id);
+      }
+    }
+  }
+
+  revalidatePath('/admin/data-management');
+  return { success: true };
+}

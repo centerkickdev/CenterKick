@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { 
@@ -293,7 +293,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                 </h1>
                 <p className="text-xs font-bold text-slate-400 tracking-[0.2em] mt-1 flex items-center gap-2">
                   <FlagIcon country={agent.country || ''} className="w-3.5 h-2.5" />
-                  {agent.email || 'NO EMAIL'} â€¢ {agent.agency_name}
+                  {agent.email || 'NO EMAIL'} • {agent.agency_name}
                 </p>
               </div>
             </div>
@@ -818,7 +818,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                                    <p className="text-xs font-bold text-slate-900 leading-none mb-1 truncate">{talent.first_name} {talent.last_name}</p>
                                    <div className="flex items-center gap-2">
                                       <span className="text-[7px] font-bold text-slate-400 tracking-[0.2em]">{talent.role}</span>
-                                      <span className="text-[7px] font-bold text-slate-200 tracking-wide">â€¢</span>
+                                      <span className="text-[7px] font-bold text-slate-200 tracking-wide">•</span>
                                       <span className="text-[7px] font-bold text-slate-400 tracking-[0.2em] flex items-center gap-1">
                                          <FlagIcon country={talent.country || ''} className="w-2 h-1.5" /> {talent.country || 'N/A'}
                                       </span>
@@ -854,3 +854,4 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
     </>
   );
 }
+

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { 
@@ -1380,7 +1380,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                 </h1>
                 <p className="text-xs font-bold text-slate-400 tracking-[0.2em] mt-1 flex items-center gap-2">
                   <FlagIcon country={player.country || ''} className="w-3.5 h-2.5" />
-                  {player.email || 'NO EMAIL'} â€¢ {player.position}
+                  {player.email || 'NO EMAIL'} • {player.position}
                 </p>
               </div>
             </div>
@@ -2569,3 +2569,4 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
     </div>
   );
 }
+

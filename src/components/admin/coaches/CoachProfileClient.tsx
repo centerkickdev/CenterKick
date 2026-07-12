@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { 
@@ -440,7 +440,7 @@ export default function CoachProfileClient({
                 </h1>
                 <p className="text-xs font-bold text-slate-400 tracking-[0.2em] mt-1 flex items-center gap-2">
                   <FlagIcon country={coach.country || ''} className="w-3.5 h-2.5" />
-                  {coach.email || 'NO EMAIL'} â€¢ {coach.position}
+                  {coach.email || 'NO EMAIL'} • {coach.position}
                 </p>
               </div>
             </div>
@@ -800,12 +800,12 @@ export default function CoachProfileClient({
                                 <div className="flex flex-col items-center gap-0.5">
                                   {stat.role === 'Goalkeeping Coach' && (
                                     <span className="text-xs font-bold text-slate-700 tracking-tight">
-                                      {stat.clean_sheets} CS â€¢ {stat.save_percentage}%
+                                      {stat.clean_sheets} CS • {stat.save_percentage}%
                                     </span>
                                   )}
                                   {stat.role === 'Fitness Coach' && (
                                     <span className="text-xs font-bold text-slate-700 tracking-tight">
-                                      {stat.player_fitness_pct}% Fit â€¢ {stat.injury_count} Inj
+                                      {stat.player_fitness_pct}% Fit • {stat.injury_count} Inj
                                     </span>
                                   )}
                                   {stat.role === 'Set Piece Coach' && (
@@ -815,7 +815,7 @@ export default function CoachProfileClient({
                                   )}
                                   {stat.role === 'Medical Coach' && (
                                     <span className="text-xs font-bold text-slate-700 tracking-tight">
-                                      {stat.player_availability_pct}% Avail â€¢ {stat.average_recovery_days}d
+                                      {stat.player_availability_pct}% Avail • {stat.average_recovery_days}d
                                     </span>
                                   )}
                                   {(stat.role === 'Primary Coach' || stat.role === 'Assistant Coach') && (
@@ -842,7 +842,7 @@ export default function CoachProfileClient({
                                         {[...Array(stat.leagues_won + stat.cups_won)].map((_, i) => (
                                           <Trophy key={i} className={`w-3.5 h-3.5 ${i < stat.leagues_won ? 'text-amber-500' : 'text-amber-400'} fill-current`} />
                                         ))}
-                                        {stat.leagues_won + stat.cups_won === 0 && <span className="text-slate-300 text-xs">â€”</span>}
+                                        {stat.leagues_won + stat.cups_won === 0 && <span className="text-slate-300 text-xs">—</span>}
                                       </>
                                     )}
                                   </div>
@@ -931,7 +931,7 @@ export default function CoachProfileClient({
                       <div className="space-y-1 mb-6">
                         <p className="text-xs font-bold text-[#b50a0a] tracking-[0.2em]">{award.category}</p>
                         <h4 className="text-lg font-bold tracking-tight text-slate-900 leading-none group-hover:text-[#b50a0a] transition-colors">{award.title}</h4>
-                        <p className="text-xs font-bold text-slate-400 tracking-wide">{award.organization} â€¢ {award.year}</p>
+                        <p className="text-xs font-bold text-slate-400 tracking-wide">{award.organization} • {award.year}</p>
                       </div>
                       <p className="text-xs font-medium text-slate-500 leading-relaxed line-clamp-2">
                         {award.description}
@@ -1618,7 +1618,7 @@ function StatModal({
                     <div key={i} className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100 space-y-4 group/item hover:border-amber-200 transition-all">
                       <div className="flex items-center justify-between">
                         <span className={`text-xs font-bold tracking-wide ${isLeague ? 'text-amber-600' : 'text-slate-400'}`}>
-                          # {i + 1} â€¢ {isLeague ? 'League Title' : 'Cup Title'}
+                          # {i + 1} • {isLeague ? 'League Title' : 'Cup Title'}
                         </span>
                       </div>
 
@@ -2096,3 +2096,4 @@ function TacticsMediaModal({
     </div>
   );
 }
+

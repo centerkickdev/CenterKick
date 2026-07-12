@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -40,7 +40,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                </div>
             </div>
 
-            {/* Hero â€” mobile stacked, desktop split */}
+            {/* Hero — mobile stacked, desktop split */}
             <div className="relative w-full bg-[#0a0a0b] overflow-hidden">
                {/* Background stadium image */}
                <div className="absolute inset-0 z-0">
@@ -470,3 +470,4 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
       </div>
    );
 }
+

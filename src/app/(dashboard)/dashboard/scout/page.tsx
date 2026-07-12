@@ -1,4 +1,4 @@
-import { Search, Filter, Star } from 'lucide-react';
+﻿import { Search, Filter, Star } from 'lucide-react';
 
 export default function ScoutDashboard() {
   const players = [
@@ -47,7 +47,7 @@ export default function ScoutDashboard() {
                   <span className="text-primary font-bold">{player.rating}</span>
                 </div>
                 <div className="text-base text-gray-500 mb-4">
-                  {player.age} yrs â€¢ Free Agent
+                  {player.age} yrs • Free Agent
                 </div>
                 <button className="w-full py-2 bg-gray-50 hover:bg-red-50 text-gray-800 hover:text-primary rounded-lg font-medium text-base transition-colors border border-gray-100">
                   View Full Profile
@@ -60,3 +60,4 @@ export default function ScoutDashboard() {
     </div>
   );
 }
+

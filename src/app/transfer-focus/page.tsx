@@ -49,30 +49,30 @@ const renderFlags = (countryString?: string) => {
    
    // Map common countries to flag emojis or images
    const flagMap: Record<string, string> = {
-      'nigeria': 'ðŸ‡³ðŸ‡¬',
-      'ng': 'ðŸ‡³ðŸ‡¬',
-      'tanzania': 'ðŸ‡¹ðŸ‡¿',
-      'tz': 'ðŸ‡¹ðŸ‡¿',
-      'spain': 'ðŸ‡ªðŸ‡¸',
-      'es': 'ðŸ‡ªðŸ‡¸',
-      'italy': 'ðŸ‡®ðŸ‡¹',
-      'it': 'ðŸ‡®ðŸ‡¹',
-      'ghana': 'ðŸ‡¬ðŸ‡­',
-      'gh': 'ðŸ‡¬ðŸ‡­',
-      'united kingdom': 'ðŸ‡¬ðŸ‡§',
-      'uk': 'ðŸ‡¬ðŸ‡§',
-      'england': 'ðŸ‡¬ðŸ‡§',
-      'senegal': 'ðŸ‡¸ðŸ‡³',
-      'sn': 'ðŸ‡¸ðŸ‡³',
-      'cameroon': 'ðŸ‡¨ðŸ‡²',
-      'cm': 'ðŸ‡¨ðŸ‡²'
+      'nigeria': '🇳🇬',
+      'ng': '🇳🇬',
+      'tanzania': '🇹🇿',
+      'tz': '🇹🇿',
+      'spain': '🇪🇸',
+      'es': '🇪🇸',
+      'italy': '🇮🇹',
+      'it': '🇮🇹',
+      'ghana': '🇬🇭',
+      'gh': '🇬🇭',
+      'united kingdom': '🇬🇧',
+      'uk': '🇬🇧',
+      'england': '🇬🇧',
+      'senegal': '🇸🇳',
+      'sn': '🇸🇳',
+      'cameroon': '🇨🇲',
+      'cm': '🇨🇲'
    };
 
    return (
       <div className="flex gap-1 items-center justify-center">
          {codes.map((code, index) => (
             <span key={index} className="text-lg" title={code}>
-               {flagMap[code] || 'ðŸŒ'}
+               {flagMap[code] || '🌍'}
             </span>
          ))}
       </div>

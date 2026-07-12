@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
@@ -94,13 +94,13 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
           <ShieldCheck className="w-4 h-4 text-[#b50a0a]" /> Account Controls
         </h3>
 
-        {/* Approve Pending â€” highest priority CTA */}
+        {/* Approve Pending — highest priority CTA */}
         {isPendingActivation && isParticipant && (
           <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 space-y-3">
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
               <p className="text-xs font-bold text-amber-700 tracking-wide leading-relaxed">
-                Pending approval â€” review the profile and subscription before activating.
+                Pending approval — review the profile and subscription before activating.
               </p>
             </div>
             <div className="flex gap-2">
@@ -245,12 +245,13 @@ export function UserDetailActions({ userId, currentRole, isActive, profileStatus
       <div className="bg-gray-50 rounded-[2rem] border border-gray-100 p-6 space-y-3">
         <h3 className="text-xs font-bold text-gray-400 tracking-wide">Quick Reference</h3>
         <ul className="space-y-2 text-xs font-bold text-gray-500">
-          <li className="flex items-start gap-2"><CheckCircle className="w-3 h-3 text-green-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Approve</strong> â€” sets profile to active, grants full platform access.</span></li>
-          <li className="flex items-start gap-2"><XCircle className="w-3 h-3 text-red-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Reject</strong> â€” marks application rejected, deactivates account.</span></li>
-          <li className="flex items-start gap-2"><UserX className="w-3 h-3 text-red-400 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Deactivate</strong> â€” temporarily blocks access without deleting data.</span></li>
-          <li className="flex items-start gap-2"><Shield className="w-3 h-3 text-blue-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Role Change</strong> â€” updates JWT metadata and platform routing immediately.</span></li>
+          <li className="flex items-start gap-2"><CheckCircle className="w-3 h-3 text-green-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Approve</strong> — sets profile to active, grants full platform access.</span></li>
+          <li className="flex items-start gap-2"><XCircle className="w-3 h-3 text-red-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Reject</strong> — marks application rejected, deactivates account.</span></li>
+          <li className="flex items-start gap-2"><UserX className="w-3 h-3 text-red-400 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Deactivate</strong> — temporarily blocks access without deleting data.</span></li>
+          <li className="flex items-start gap-2"><Shield className="w-3 h-3 text-blue-500 mt-0.5 shrink-0" /><span><strong className="text-gray-900">Role Change</strong> — updates JWT metadata and platform routing immediately.</span></li>
         </ul>
       </div>
     </div>
   );
 }
+

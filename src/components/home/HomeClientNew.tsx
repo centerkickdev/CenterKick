@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -198,7 +198,7 @@ export function HomeClient({
                   <div className="absolute bottom-0 left-0 w-full p-8 lg:p-10 z-20 flex flex-col justify-end">
                     <div className="flex items-center gap-3 mb-3">
                       <DateDisplay date={mainNews.published_at} className="text-[#ff4d4d] text-xs font-bold tracking-wide" />
-                      <span className="text-white/60 text-xs font-bold tracking-wide">â€¢</span>
+                      <span className="text-white/60 text-xs font-bold tracking-wide">•</span>
                       <span className="text-white/80 text-xs font-bold tracking-wide">
                         {(mainNews.author as any)?.email ? (mainNews.author as any).email.split('@')[0] : 'CenterKick Editor'}
                       </span>
@@ -743,3 +743,4 @@ export function HomeClient({
     </div>
   );
 }
+

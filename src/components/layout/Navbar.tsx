@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -264,7 +264,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
         </div>
       </nav>
 
-      {/* MOBILE & TABLET NAV â€” FULL SCREEN OVERLAY */}
+      {/* MOBILE & TABLET NAV — FULL SCREEN OVERLAY */}
       <div className={`lg:hidden fixed inset-0 z-[200] transition-all duration-300 ${
  isOpen ? 'visible' : 'invisible pointer-events-none'
  }`}>
@@ -378,3 +378,4 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
     </>
   );
 }
+

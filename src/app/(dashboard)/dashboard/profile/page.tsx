@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import {
@@ -1119,7 +1119,7 @@ export default function ProfileEditor() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs font-bold text-gray-900 truncate">{member.first_name} {member.last_name}</p>
-                            <p className="text-xs font-bold text-gray-900 truncate">{member.position || member.role} {member.market_value ? `â€¢ $${member.market_value}` : ''}</p>
+                            <p className="text-xs font-bold text-gray-900 truncate">{member.position || member.role} {member.market_value ? `• $${member.market_value}` : ''}</p>
                           </div>
                           <button
                             type="button"
@@ -1405,3 +1405,4 @@ export default function ProfileEditor() {
     </div >
   );
 }
+

@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   },
   compress: true,
   images: {
+    dangerouslyAllowSVG: true,
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400,
     deviceSizes: [390, 640, 768, 1024, 1280, 1536],
@@ -23,6 +24,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
         port: '',
         pathname: '/**',
       },
