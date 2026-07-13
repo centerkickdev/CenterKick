@@ -18,6 +18,18 @@ export async function requestVerification(formData: FormData) {
   if (!paymentReference) {
     return { error: 'Payment reference is required' };
   }
+  
+  if (paymentReference.length > 15) {
+    return { error: 'Payment reference must not exceed 15 characters' };
+  }
+  
+  if (!/^[A-Za-z0-9]+$/.test(paymentReference)) {
+    return { error: 'Payment reference must contain only letters and numbers' };
+  }
+
+  if (!paymentReceipt || paymentReceipt.size === 0) {
+    return { error: 'Payment receipt upload is mandatory' };
+  }
 
   // Fetch the profile id and role to create the transaction
   const { data: profile, error: profileFetchError } = await supabase

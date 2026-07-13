@@ -8,8 +8,8 @@ export default async function PlayersPage() {
    const supabase = await createClient();
    const { data: players, error } = await supabase
       .from('profiles')
-      .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, position, country, status, role, users:users!profiles_user_id_fkey(role, subscriptions(status))')
-      .eq('role', 'player')
+      .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, position, country, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
+      .eq('users.role', 'player')
       .order('created_at', { ascending: false });
 
    const filteredPlayers = (players || []).filter(athlete => {

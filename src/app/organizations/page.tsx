@@ -8,8 +8,8 @@ export default async function OrganizationsPage() {
    const supabase = await createClient();
    const { data: organizations, error } = await supabase
       .from('profiles')
-      .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, country, bio, status, role, users:users!profiles_user_id_fkey(role, subscriptions(status))')
-      .eq('role', 'organization')
+      .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, country, bio, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
+      .eq('users.role', 'organization')
       .order('created_at', { ascending: false });
 
    const filteredOrganizations = (organizations || []).filter(org => {

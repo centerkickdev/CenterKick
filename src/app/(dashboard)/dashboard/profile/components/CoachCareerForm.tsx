@@ -44,7 +44,7 @@ export function CoachCareerForm({ data, onChange }: { data: any, onChange: (val:
         <div className="space-y-3">
           <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Current Position</label>
           <select 
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a]"
+            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a]"
             value={(data.current_position && data.current_position[0]) || ''}
             onChange={(e) => onChange({ ...data, current_position: [e.target.value] })}
           >
@@ -58,7 +58,7 @@ export function CoachCareerForm({ data, onChange }: { data: any, onChange: (val:
            <input 
              type="number"
              min="0"
-             className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:border-[#b50a0a]"
+             className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:border-[#b50a0a]"
              placeholder="e.g. 5"
              value={data.years_of_experience || ''}
              onChange={(e) => onChange({ ...data, years_of_experience: e.target.value })}
@@ -160,34 +160,34 @@ export function CoachCareerForm({ data, onChange }: { data: any, onChange: (val:
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Club/Organization</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.club} onChange={(e) => updateManagerialRecord(index, 'club', e.target.value)} placeholder="e.g. Manchester United" />
+                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.club} onChange={(e) => updateManagerialRecord(index, 'club', e.target.value)} placeholder="e.g. Manchester United" />
                 </div>
                 <div>
                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Role Held</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.role} onChange={(e) => updateManagerialRecord(index, 'role', e.target.value)} placeholder="e.g. Assistant Coach" />
+                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.role} onChange={(e) => updateManagerialRecord(index, 'role', e.target.value)} placeholder="e.g. Assistant Coach" />
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                    <div>
                      <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">From (Year)</label>
-                     <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.startDate} onChange={(e) => updateManagerialRecord(index, 'startDate', e.target.value)} placeholder="2020" />
+                     <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.startDate} onChange={(e) => updateManagerialRecord(index, 'startDate', e.target.value)} placeholder="2020" />
                    </div>
                    <div>
                      <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">To (Year/Present)</label>
-                     <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.endDate} onChange={(e) => updateManagerialRecord(index, 'endDate', e.target.value)} placeholder="Present" />
+                     <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.endDate} onChange={(e) => updateManagerialRecord(index, 'endDate', e.target.value)} placeholder="Present" />
                    </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                    <div>
                      <label className="text-[10px] font-bold text-green-600 uppercase block mb-1">Wins</label>
-                     <input type="number" min="0" className="w-full px-2 py-2 border rounded-lg text-sm bg-green-50/30" value={record.wins} onChange={(e) => updateManagerialRecord(index, 'wins', parseInt(e.target.value) || 0)} />
+                     <input type="number" min="0" className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 bg-green-50/30 focus:border-[#b50a0a] outline-none" value={record.wins} onChange={(e) => updateManagerialRecord(index, 'wins', parseInt(e.target.value) || 0)} />
                    </div>
                    <div>
                      <label className="text-[10px] font-bold text-amber-600 uppercase block mb-1">Draws</label>
-                     <input type="number" min="0" className="w-full px-2 py-2 border rounded-lg text-sm bg-amber-50/30" value={record.draws} onChange={(e) => updateManagerialRecord(index, 'draws', parseInt(e.target.value) || 0)} />
+                     <input type="number" min="0" className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 bg-amber-50/30 focus:border-[#b50a0a] outline-none" value={record.draws} onChange={(e) => updateManagerialRecord(index, 'draws', parseInt(e.target.value) || 0)} />
                    </div>
                    <div>
                      <label className="text-[10px] font-bold text-red-600 uppercase block mb-1">Losses</label>
-                     <input type="number" min="0" className="w-full px-2 py-2 border rounded-lg text-sm bg-red-50/30" value={record.losses} onChange={(e) => updateManagerialRecord(index, 'losses', parseInt(e.target.value) || 0)} />
+                     <input type="number" min="0" className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 bg-red-50/30 focus:border-[#b50a0a] outline-none" value={record.losses} onChange={(e) => updateManagerialRecord(index, 'losses', parseInt(e.target.value) || 0)} />
                    </div>
                 </div>
               </div>

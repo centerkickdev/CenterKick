@@ -8,8 +8,8 @@ export default async function ScoutsPage() {
    const supabase = await createClient();
    const { data: scouts, error } = await supabase
       .from('profiles')
-      .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, country, status, role, users:users!profiles_user_id_fkey(role, subscriptions(status))')
-      .eq('role', 'scout')
+      .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, country, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
+      .eq('users.role', 'scout')
       .order('created_at', { ascending: false });
 
    const filteredScouts = (scouts || []).filter(scout => {

@@ -207,7 +207,7 @@ export default function SubscriptionPage() {
                  <button 
                    onClick={() => {
                      setIsRefreshing(true);
-                     router.refresh();
+                     window.location.reload();
                      setTimeout(() => setIsRefreshing(false), 800);
                    }} 
                    className="p-1.5 rounded-lg border border-black/5 bg-white/50 hover:bg-white text-gray-400 hover:text-gray-900 shadow-sm transition-all group"
@@ -334,6 +334,9 @@ export default function SubscriptionPage() {
                                              placeholder="Transaction Ref/ID" 
                                              pattern="[A-Za-z0-9]+"
                                              maxLength={15}
+                                             onInput={(e) => {
+                                                e.currentTarget.value = e.currentTarget.value.replace(/[^A-Za-z0-9]/g, '');
+                                             }}
                                              required
                                              className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all"
                                           />

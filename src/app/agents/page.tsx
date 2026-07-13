@@ -8,8 +8,8 @@ export default async function AgentsPage() {
    const supabase = await createClient();
    const { data: agents, error } = await supabase
       .from('profiles')
-      .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, bio, country, status, role, users:users!profiles_user_id_fkey(role, subscriptions(status))')
-      .eq('role', 'agent')
+      .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, bio, country, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
+      .eq('users.role', 'agent')
       .order('created_at', { ascending: false });
 
    const filteredAgents = (agents || []).filter(agent => {

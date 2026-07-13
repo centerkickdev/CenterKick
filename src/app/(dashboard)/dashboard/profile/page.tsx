@@ -977,7 +977,7 @@ export default function ProfileEditor() {
             )}
             {activeTab === 'Career Data' && (
               <form onSubmit={saveCareerData} onChange={() => setIsDirty(true)} className="space-y-8 animate-in fade-in duration-500">
-                {role !== 'organization' && (
+                {role !== 'organization' && role !== 'agent' && role !== 'scout' && (
                   <>
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-2 h-10 bg-[#b50a0a] rounded-full"></div>

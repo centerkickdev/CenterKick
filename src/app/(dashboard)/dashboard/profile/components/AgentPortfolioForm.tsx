@@ -63,7 +63,7 @@ export function AgentPortfolioForm({ data, onChange }: { data: any, onChange: (v
           <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">FIFA/FA License Number</label>
           <input 
              type="text"
-             className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:border-[#b50a0a]"
+             className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:border-[#b50a0a]"
              placeholder="e.g. FA-12345"
              value={data.fa_license_number || ''}
              onChange={(e) => onChange({ ...data, fa_license_number: e.target.value })}
@@ -72,7 +72,7 @@ export function AgentPortfolioForm({ data, onChange }: { data: any, onChange: (v
         <div className="space-y-3">
           <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Agency Role</label>
           <select 
-            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:border-[#b50a0a]"
+            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:border-[#b50a0a]"
             value={data.agency_role || ''}
             onChange={(e) => onChange({ ...data, agency_role: e.target.value })}
           >
@@ -165,27 +165,27 @@ export function AgentPortfolioForm({ data, onChange }: { data: any, onChange: (v
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Player Name</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.playerName} onChange={(e) => updateTransfer(index, 'playerName', e.target.value)} />
+                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.playerName} onChange={(e) => updateTransfer(index, 'playerName', e.target.value)} />
                 </div>
                 <div>
                    <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Transfer Date (Year/Month)</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.date} onChange={(e) => updateTransfer(index, 'date', e.target.value)} placeholder="e.g. Aug 2023" />
+                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.date} onChange={(e) => updateTransfer(index, 'date', e.target.value)} placeholder="e.g. Aug 2023" />
                 </div>
                 <div>
                    <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">From Club</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.fromClub} onChange={(e) => updateTransfer(index, 'fromClub', e.target.value)} />
+                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.fromClub} onChange={(e) => updateTransfer(index, 'fromClub', e.target.value)} />
                 </div>
                 <div>
                    <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">To Club</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.toClub} onChange={(e) => updateTransfer(index, 'toClub', e.target.value)} />
+                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.toClub} onChange={(e) => updateTransfer(index, 'toClub', e.target.value)} />
                 </div>
                 <div>
                    <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Estimated Fee (Optional)</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.fee} onChange={(e) => updateTransfer(index, 'fee', e.target.value)} placeholder="e.g. Undisclosed, €2M" />
+                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.fee} onChange={(e) => updateTransfer(index, 'fee', e.target.value)} placeholder="e.g. Undisclosed, €2M" />
                 </div>
                 <div>
                    <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">Your Role</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm" value={record.agentRole} onChange={(e) => updateTransfer(index, 'agentRole', e.target.value)} placeholder="e.g. Represented Player" />
+                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.agentRole} onChange={(e) => updateTransfer(index, 'agentRole', e.target.value)} placeholder="e.g. Represented Player" />
                 </div>
               </div>
             </div>

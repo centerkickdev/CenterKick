@@ -44,12 +44,13 @@ export default async function Home() {
          
          return filtered.slice(0, 16);
       }, 300),
-      getCachedData('home_players_list', async () => {
-         const { data } = await supabase
+      getCachedData('home_players_list_v2', async () => {
+         const { data, error } = await supabase
             .from('profiles')
-            .select('*, users:users!profiles_user_id_fkey(role)')
-            .eq('role', 'player')
+            .select('*, users:users!profiles_user_id_fkey!inner(role)')
+            .eq('users.role', 'player')
             .eq('status', 'active');
+         if (error) console.error('home_players_list error:', error);
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
@@ -58,12 +59,13 @@ export default async function Home() {
          console.log('Fetched players from DB count:', filtered.length);
          return filtered;
       }, 600),
-      getCachedData('home_coaches_list', async () => {
-         const { data } = await supabase
+      getCachedData('home_coaches_list_v2', async () => {
+         const { data, error } = await supabase
             .from('profiles')
-            .select('*, users:users!profiles_user_id_fkey(role)')
-            .eq('role', 'coach')
+            .select('*, users:users!profiles_user_id_fkey!inner(role)')
+            .eq('users.role', 'coach')
             .eq('status', 'active');
+         if (error) console.error('home_coaches_list error:', error);
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
@@ -71,12 +73,13 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_agents_scouts_list', async () => {
-         const { data } = await supabase
+      getCachedData('home_agents_scouts_list_v2', async () => {
+         const { data, error } = await supabase
             .from('profiles')
-            .select('*, users:users!profiles_user_id_fkey(role)')
-            .in('role', ['agent', 'scout'])
+            .select('*, users:users!profiles_user_id_fkey!inner(role)')
+            .in('users.role', ['agent', 'scout'])
             .eq('status', 'active');
+         if (error) console.error('home_agents_scouts_list error:', error);
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
@@ -84,12 +87,13 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_organizations_list', async () => {
-         const { data } = await supabase
+      getCachedData('home_organizations_list_v2', async () => {
+         const { data, error } = await supabase
             .from('profiles')
-            .select('*, users:users!profiles_user_id_fkey(role)')
-            .eq('role', 'organization')
+            .select('*, users:users!profiles_user_id_fkey!inner(role)')
+            .eq('users.role', 'organization')
             .eq('status', 'active');
+         if (error) console.error('home_organizations_list error:', error);
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
