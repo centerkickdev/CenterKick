@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import AgentsClient from './AgentsClient';
@@ -6,7 +7,8 @@ import { isProfileComplete } from '@/lib/utils/profile';
 
 export default async function AgentsPage() {
    const supabase = await createClient();
-   const { data: agents, error } = await supabase
+   const adminSupabase = createAdminClient();
+   const { data: agents, error } = await adminSupabase
       .from('profiles')
       .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, bio, country, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
       .eq('users.role', 'agent')

@@ -1,5 +1,6 @@
 import { HomeClient } from '@/components/home/HomeClientNew';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
 import { getCachedData } from '@/lib/redis';
 import { isProfileComplete } from '@/lib/utils/profile';
@@ -8,6 +9,7 @@ import { isProfileComplete } from '@/lib/utils/profile';
 
 export default async function Home() {
    const supabase = await createClient();
+   const adminSupabase = createAdminClient();
    // Fetch everything in parallel
    const [
       { navContent, footerContent, siteSettings },
@@ -44,8 +46,8 @@ export default async function Home() {
          
          return filtered.slice(0, 16);
       }, 300),
-      getCachedData('home_players_list_v2', async () => {
-         const { data, error } = await supabase
+      getCachedData('home_players_list_v3', async () => {
+         const { data, error } = await adminSupabase
             .from('profiles')
             .select('*, users:users!profiles_user_id_fkey!inner(role)')
             .eq('users.role', 'player')
@@ -59,8 +61,8 @@ export default async function Home() {
          console.log('Fetched players from DB count:', filtered.length);
          return filtered;
       }, 600),
-      getCachedData('home_coaches_list_v2', async () => {
-         const { data, error } = await supabase
+      getCachedData('home_coaches_list_v3', async () => {
+         const { data, error } = await adminSupabase
             .from('profiles')
             .select('*, users:users!profiles_user_id_fkey!inner(role)')
             .eq('users.role', 'coach')
@@ -73,8 +75,8 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_agents_scouts_list_v2', async () => {
-         const { data, error } = await supabase
+      getCachedData('home_agents_scouts_list_v3', async () => {
+         const { data, error } = await adminSupabase
             .from('profiles')
             .select('*, users:users!profiles_user_id_fkey!inner(role)')
             .in('users.role', ['agent', 'scout'])
@@ -87,8 +89,8 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_organizations_list_v2', async () => {
-         const { data, error } = await supabase
+      getCachedData('home_organizations_list_v3', async () => {
+         const { data, error } = await adminSupabase
             .from('profiles')
             .select('*, users:users!profiles_user_id_fkey!inner(role)')
             .eq('users.role', 'organization')
