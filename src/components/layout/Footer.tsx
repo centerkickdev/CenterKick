@@ -6,9 +6,9 @@ import { createClient } from '@/lib/supabase/client';
 import { Facebook, Instagram, Youtube } from 'lucide-react';
 
 const XIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-  </svg>
+   <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+   </svg>
 );
 
 export function Footer({ content, settings }: { content?: any; settings?: any }) {
@@ -31,11 +31,11 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
                .from('site_content')
                .select('page, section, content')
                .in('page', ['settings', 'footer']);
-            
+
             if (data) {
                const sysSettings = data.find((d: any) => d.page === 'settings' && d.section === 'system')?.content;
                if (sysSettings) setSiteSettings(sysSettings);
-               
+
                // Combine footer sections
                const fContent: any = {};
                data.filter((d: any) => d.page === 'footer').forEach((d: any) => {
@@ -62,7 +62,7 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
    const brandName = siteSettings?.siteTitle || "CenterKick";
 
    const desc = footerContent?.about?.description || "CenterKick is a football media, sports marketing, and player visibility platform dedicated to helping football talent gain recognition, exposure, and opportunities.";
-   
+
    const contactEmail = footerContent?.contact?.email || "info.centerkick@gmail.com";
    const contactPhone = footerContent?.contact?.phone || "+234 911 260 0300";
 
@@ -202,8 +202,8 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
                   <a href="https://devunomieta.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-white/80 mx-1">@DEVUNOMIETA</a>
                   <span className="opacity-40 px-1">|</span>
                   <a href="https://cortdevs.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-white/80 mx-1">CORTDEVS</a>
-                  <span className="opacity-40 px-1">|</span>
-                  <a href="https://cortdevs.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors text-white/80 mx-1">HACHSTACKS</a>
+                  <span className="hidden opacity-40 px-1">|</span>
+                  <a href="https://cortdevs.com" target="_blank" rel="noopener noreferrer" className="hidden hover:text-white transition-colors text-white/80 mx-1">HACHSTACKS</a>
                </span>
             </div>
          </div>

@@ -192,12 +192,36 @@ export default function ProfileEditor() {
        roleProofUrl = await uploadVerificationProof(roleProofFile, 'role_proof');
     }
 
+    const profileData: any = {
+      gender: formData.get('gender') || null,
+      country: formData.get('country'),
+      contact_email: formData.get('contact_email'),
+      phone_number: formData.get('phone_number'),
+      position: formData.get('position'),
+      foot: formData.get('foot'),
+      jersey_number: formData.get('jersey_number') || null,
+      height_cm: formData.get('height_cm') || null,
+      weight_kg: formData.get('weight_kg') || null,
+      ...(['superadmin', 'admin', 'operations'].includes(role) ? { market_value: formData.get('market_value') } : {}),
+      is_signed: formData.get('is_signed') === 'true',
+      contract_expiry: formData.get('contract_expiry') || null,
+      formation: formData.get('formation'),
+      license: formData.get('license'),
+      agency_name: formData.get('agency_name'),
+      license_code: formData.get('license_code'),
+      updated_at: new Date().toISOString()
+    };
+
     // Prepare sensitive changes for Admin
     const sensitiveChanges: any = {};
     const trackChange = (field: string, formField: string, label: string) => {
        const newVal = formData.get(formField) as string;
        if (newVal !== undefined && newVal !== null && newVal !== (profile?.[field] || '')) {
-          sensitiveChanges[label] = { old: profile?.[field], new: newVal };
+          if (!profile?.[field]) {
+             profileData[field] = newVal;
+          } else {
+             sensitiveChanges[label] = { old: profile?.[field], new: newVal };
+          }
        }
     };
     
@@ -225,26 +249,6 @@ export default function ProfileEditor() {
           showToast('Sensitive changes and documents submitted to Admin for verification!', 'success');
        }
     }
-
-    const profileData: any = {
-      gender: formData.get('gender') || null,
-      country: formData.get('country'),
-      contact_email: formData.get('contact_email'),
-      phone_number: formData.get('phone_number'),
-      position: formData.get('position'),
-      foot: formData.get('foot'),
-      jersey_number: formData.get('jersey_number') || null,
-      height_cm: formData.get('height_cm') || null,
-      weight_kg: formData.get('weight_kg') || null,
-      ...(['superadmin', 'admin', 'operations'].includes(role) ? { market_value: formData.get('market_value') } : {}),
-      is_signed: formData.get('is_signed') === 'true',
-      contract_expiry: formData.get('contract_expiry') || null,
-      formation: formData.get('formation'),
-      license: formData.get('license'),
-      agency_name: formData.get('agency_name'),
-      license_code: formData.get('license_code'),
-      updated_at: new Date().toISOString()
-    };
 
     const { error } = await supabase.from('profiles').update(profileData).eq('id', profile?.id);
     if (error) {

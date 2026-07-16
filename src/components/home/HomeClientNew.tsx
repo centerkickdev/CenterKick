@@ -342,7 +342,7 @@ export function HomeClient({
                   alt={getDisplayName(player)}
                   fill
                   sizes="(max-width:640px) 90vw, (max-width:1024px) 50vw, 256px"
-                  className="object-cover transition-all duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105 opacity-85"
+                  className="object-cover transition-all duration-700 group-hover:scale-105 opacity-85"
                 />
 
                 <div className="absolute bottom-0 left-0 p-6 z-20 w-full">
