@@ -58,7 +58,7 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
       return `${baseUrl}/storage/v1/object/public${url.startsWith('/') ? '' : '/'}${url}`;
    };
 
-   const footerLogoUrl = resolveUrl(siteSettings?.footerLogoUrl || siteSettings?.logoUrl);
+   const footerLogoUrl = resolveUrl(siteSettings?.footerLogoUrl || siteSettings?.logoUrl || '/site-assets/site-logo-1774050090878.png');
    const brandName = siteSettings?.siteTitle || "CenterKick";
 
    const desc = footerContent?.about?.description || "CenterKick is a football media, sports marketing, and player visibility platform dedicated to helping football talent gain recognition, exposure, and opportunities.";

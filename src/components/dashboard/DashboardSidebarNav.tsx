@@ -44,10 +44,12 @@ export function DashboardSidebarNav({ role, isSubscribed = false, isCollapsed = 
         {!isCollapsed && <span className="text-base tracking-wide">My Profile</span>}
       </Link>
 
-      <Link href="/dashboard/news" className={`${getLinkClasses('/dashboard/news')} group`} title={isCollapsed ? "My News" : undefined}>
-        <Newspaper className={getIconClasses('/dashboard/news')} />
-        {!isCollapsed && <span className="text-base tracking-wide">My News</span>}
-      </Link>
+      {false && (
+        <Link href="/dashboard/news" className={`${getLinkClasses('/dashboard/news')} group`} title={isCollapsed ? "My News" : undefined}>
+          <Newspaper className={getIconClasses('/dashboard/news')} />
+          {!isCollapsed && <span className="text-base tracking-wide">My News</span>}
+        </Link>
+      )}
 
       {showManagedAccounts && (
         <Link href="/dashboard/managed" className={`${getLinkClasses('/dashboard/managed')} group`} title={isCollapsed ? "Managed Accounts" : undefined}>

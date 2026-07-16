@@ -88,9 +88,9 @@ export default async function PostPage({ params }: Props) {
          />
 
          <main className="pt-32 lg:pt-40 pb-32">
-            <article className="max-w-4xl mx-auto px-4 lg:px-0">
+            <article className="max-w-3xl mx-auto px-4 lg:px-0">
                {/* Article Header */}
-               <header className="mb-12 space-y-8 text-center lg:text-left">
+               <header className="mb-12 space-y-8 text-left">
                   <Link
                      href="/news"
                      className="inline-flex items-center gap-2 text-xs font-bold tracking-wide text-gray-400 hover:text-[#b50a0a] transition-all group mb-4"
@@ -100,7 +100,7 @@ export default async function PostPage({ params }: Props) {
                   </Link>
 
                   <div className="space-y-4">
-                     <h1 className="text-4xl lg:text-6xl font-black text-gray-900 tracking-tighter leading-[0.9] lg:leading-[0.85]">
+                     <h1 className="text-4xl lg:text-6xl font-black text-gray-900 tracking-tighter leading-tight lg:leading-[1.1]">
                         {post.title}
                      </h1>
                      <p className="text-lg lg:text-xl text-gray-500 font-bold leading-relaxed lg:max-w-3xl">
@@ -113,26 +113,27 @@ export default async function PostPage({ params }: Props) {
                      )}
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-4 border-t border-gray-50">
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
-                           <User className="w-5 h-5 text-gray-400" />
+                  <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-gray-100">
+                     <div className="flex flex-wrap items-center gap-8">
+                        <div className="flex items-center gap-3">
+                           <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
+                              <User className="w-5 h-5 text-gray-400" />
+                           </div>
+                           <div className="text-left">
+                              <p className="text-xs font-bold text-gray-400 tracking-wide">Authored By</p>
+                              <p className="text-xs font-bold text-gray-900">CenterKick Editor</p>
+                           </div>
                         </div>
-                        <div className="text-left">
-                           <p className="text-xs font-bold text-gray-400 tracking-wide">Authored By</p>
-                           <p className="text-xs font-bold text-gray-900">CenterKick Editor</p>
+                        <div className="flex items-center gap-3">
+                           <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                              <Clock className="w-5 h-5 text-gray-400" />
+                           </div>
+                           <div className="text-left">
+                              <p className="text-xs font-bold text-gray-400 tracking-wide">Published On</p>
+                              <p className="text-xs font-bold text-gray-900">{new Date(post.published_at || post.created_at).toLocaleDateString()}</p>
+                           </div>
                         </div>
                      </div>
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                           <Clock className="w-5 h-5 text-gray-400" />
-                        </div>
-                        <div className="text-left">
-                           <p className="text-xs font-bold text-gray-400 tracking-wide">Published On</p>
-                           <p className="text-xs font-bold text-gray-900">{new Date(post.published_at || post.created_at).toLocaleDateString()}</p>
-                        </div>
-                     </div>
-                     <div className="flex-1" />
                      <div className="flex items-center gap-2">
                         <button className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center hover:bg-black hover:text-white transition-all">
                            <Share2 className="w-4 h-4" />

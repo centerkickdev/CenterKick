@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -141,7 +141,7 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
   };
 
   const brandName = (siteSettings?.siteTitle || navContent.brand || 'CenterKick') as string;
-  const logoUrl = resolveUrl(siteSettings?.logoUrl as string | undefined);
+  const logoUrl = resolveUrl(siteSettings?.logoUrl as string | undefined || '/site-assets/site-logo-1774050090878.png');
 
   const adminRoles = ['superadmin', 'admin', 'blogger', 'operations', 'finance'];
   const userMetadataRole = user?.app_metadata?.role;

@@ -23,7 +23,7 @@ function renderContentWithCaptions(content: string): string {
 
 export function NewsContentClient({ content }: { content: string }) {
   return (
-    <div className="prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none prose-headings:font-bold prose-headings: prose-headings: prose-headings:tracking-tighter prose-a:text-[#b50a0a] prose-strong:text-gray-900 prose-img:rounded-3xl prose-blockquote:border-[#b50a0a] prose-blockquote:bg-red-50/50 prose-blockquote:p-8 prose-blockquote:rounded-3xl prose-blockquote:">
+    <div className="prose max-w-none md:prose-lg prose-p:font-sans prose-headings:font-sans prose-li:font-sans prose-headings:font-bold prose-headings:tracking-tighter prose-a:text-[#b50a0a] prose-strong:text-gray-900 prose-img:rounded-3xl prose-img:w-full prose-img:mx-auto prose-blockquote:border-[#b50a0a] prose-blockquote:bg-red-50/50 prose-blockquote:p-8 prose-blockquote:rounded-3xl prose-p:text-gray-800 prose-p:leading-relaxed prose-li:text-gray-800 prose-ul:text-gray-800">
       {parse(renderContentWithCaptions(content), {
          replace: (domNode) => {
             if (domNode instanceof Element && domNode.name === 'a' && domNode.attribs && domNode.attribs.href) {
