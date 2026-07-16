@@ -47,6 +47,7 @@ export default function ProfileEditor() {
   const [activeTab, setActiveTab] = useState('Basic Info');
   const [role, setRole] = useState('player');
   const [profile, setProfile] = useState<any>(null);
+  const [originalProfile, setOriginalProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -96,6 +97,7 @@ export default function ProfileEditor() {
 
         setRole(userRecord?.role || 'player');
         setProfile(profileRecord || {});
+        setOriginalProfile(profileRecord || {});
         setAchievements(profileRecord?.achievements || []);
         setVideoLinks(profileRecord?.video_links || []);
         setGalleryUrls(profileRecord?.gallery_urls || []);
@@ -216,11 +218,11 @@ export default function ProfileEditor() {
     const sensitiveChanges: any = {};
     const trackChange = (field: string, formField: string, label: string) => {
        const newVal = formData.get(formField) as string;
-       if (newVal !== undefined && newVal !== null && newVal !== (profile?.[field] || '')) {
-          if (!profile?.[field]) {
+       if (newVal !== undefined && newVal !== null && newVal !== (originalProfile?.[field] || '')) {
+          if (!originalProfile?.[field]) {
              profileData[field] = newVal;
           } else {
-             sensitiveChanges[label] = { old: profile?.[field], new: newVal };
+             sensitiveChanges[label] = { old: originalProfile?.[field], new: newVal };
           }
        }
     };
@@ -263,6 +265,7 @@ export default function ProfileEditor() {
         ...(idProofFile ? { id_proof_url: URL.createObjectURL(idProofFile) } : {})
       };
       setProfile(updatedProfile);
+      setOriginalProfile(updatedProfile);
       
       setIdProofFile(null);
       setRoleProofFile(null);
@@ -790,7 +793,7 @@ export default function ProfileEditor() {
                   {role !== 'organization' && (
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">National ID / Passport Number</label>
-                      <input disabled={!isEditing} name="id_number" type="text" defaultValue={profile?.id_number} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                      <input disabled={!isEditing} name="id_number" type="text" pattern="[a-zA-Z0-9&quot;\-()\s]+" title="Only letters, numbers, spaces, and the symbols &quot; - ( ) are allowed" defaultValue={profile?.id_number} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
                     </div>
                   )}
                 </div>
