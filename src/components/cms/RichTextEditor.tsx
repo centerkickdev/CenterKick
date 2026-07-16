@@ -8,6 +8,7 @@ import { useCallback } from 'react';
 
 export function RichTextEditor({ content, onChange }: { content: string, onChange?: (content: string) => void }) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       LinkExtension.configure({

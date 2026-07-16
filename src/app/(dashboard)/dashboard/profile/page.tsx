@@ -1127,7 +1127,9 @@ export default function ProfileEditor() {
                     <label className="text-xs font-bold text-gray-900 tracking-wide">Professional Bio</label>
                   </div>
                   <div className="bg-gray-50 rounded-3xl p-4 md:p-8">
-                    <RichTextEditor content={profile?.bio || ''} onChange={(val) => setProfile({...profile, bio: val})} />
+                    <div className={!isEditing ? 'pointer-events-none opacity-80' : ''}>
+                      <RichTextEditor content={profile?.bio || ''} onChange={(val) => { setProfile({...profile, bio: val}); setIsDirty(true); }} />
+                    </div>
                   </div>
                 </div>
 
