@@ -53,6 +53,7 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
   return (
     <div className="space-y-8">
       {/* Physical & Technical Attributes */}
+      {false && (
       <div className="space-y-4">
         <div>
            <h3 className="text-lg font-black text-gray-900">Physical & Technical Attributes</h3>
@@ -106,6 +107,7 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
            </div>
         </div>
       </div>
+      )}
 
       {/* Transfer History */}
       <div className="space-y-4 border-t border-gray-100 pt-8">

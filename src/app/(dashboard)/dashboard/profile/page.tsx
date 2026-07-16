@@ -51,6 +51,7 @@ export default function ProfileEditor() {
   const [originalProfile, setOriginalProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const [status, setStatus] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
@@ -64,8 +65,8 @@ export default function ProfileEditor() {
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
   const [editingMember, setEditingMember] = useState<any>(null);
   
-  const [idProofFile, setIdProofFile] = useState<File | null>(null);
-  const [roleProofFile, setRoleProofFile] = useState<File | null>(null);
+  const [isUploadingIdProof, setIsUploadingIdProof] = useState(false);
+  const [isUploadingRoleProof, setIsUploadingRoleProof] = useState(false);
 
   // Data tables
   const [countriesList, setCountriesList] = useState<any[]>([]);
@@ -177,6 +178,71 @@ export default function ProfileEditor() {
     return data.path;
   };
 
+  const handleSecurePreview = async (path: string | null) => {
+    if (!path) return;
+    if (path.startsWith('blob:')) {
+      window.open(path, '_blank');
+      return;
+    }
+    const supabase = createClient();
+    const { data, error } = await supabase.storage.from('verification_proofs').download(path);
+    if (error || !data) {
+      showToast('Failed to load document preview.', 'error');
+      return;
+    }
+    const url = URL.createObjectURL(data);
+    window.open(url, '_blank');
+  };
+
+  const handleFileUpload = async (file: File, type: 'id_proof' | 'role_proof') => {
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('File exceeds 5MB limit.', 'error');
+      return;
+    }
+    if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+      showToast('Only images or PDF files are allowed.', 'error');
+      return;
+    }
+
+    if (type === 'id_proof') setIsUploadingIdProof(true);
+    else setIsUploadingRoleProof(true);
+
+    try {
+      const url = await uploadVerificationProof(file, type);
+      if (!url) throw new Error('Upload failed');
+      
+      const { supabase } = await getSupabaseAndUser();
+      
+      // Save directly to profiles table to persist across refresh
+      const updateData = type === 'id_proof' ? { id_proof_url: url } : { license_proof_url: url };
+      await supabase.from('profiles').update(updateData).eq('id', profile.id);
+      
+      // Register the edit for admin review
+      let certLabel = 'Certificate Verification';
+      if (type === 'id_proof') {
+        certLabel = 'Identity Verification';
+      } else {
+        if (role === 'player') certLabel = 'Birth Certificate Verification';
+        if (role === 'coach' || role === 'scout') certLabel = 'License Verification';
+        if (role === 'organization') certLabel = 'FA Affiliation Verification';
+      }
+      
+      await requestProfileEdit(profile.id, {
+        [certLabel]: { old: null, new: 'Uploaded Document', document_url: url }
+      });
+      
+      setProfile({ ...profile, ...updateData });
+      showToast('Document uploaded successfully!', 'success');
+      await invalidateProfileCache();
+      router.refresh();
+    } catch (err) {
+      showToast('Document upload failed.', 'error');
+    } finally {
+      if (type === 'id_proof') setIsUploadingIdProof(false);
+      else setIsUploadingRoleProof(false);
+    }
+  };
+
   const saveBasicInfo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSaving(true);
@@ -185,16 +251,6 @@ export default function ProfileEditor() {
     
     const formData = new FormData(e.target as HTMLFormElement);
     
-    // Upload files if they exist
-    let idProofUrl = null;
-    if (idProofFile) {
-       idProofUrl = await uploadVerificationProof(idProofFile, 'id_proof');
-    }
-    let roleProofUrl = null;
-    if (roleProofFile) {
-       roleProofUrl = await uploadVerificationProof(roleProofFile, 'role_proof');
-    }
-
     const profileData: any = {
       gender: formData.get('gender') || null,
       country: formData.get('country'),
@@ -233,17 +289,6 @@ export default function ProfileEditor() {
     trackChange('date_of_birth', 'date_of_birth', 'Date of Birth');
     trackChange('id_number', 'id_number', 'ID Number');
 
-    if (idProofUrl) {
-       sensitiveChanges['Identity Verification'] = { old: null, new: 'Uploaded Document', document_url: idProofUrl };
-    }
-    if (roleProofUrl) {
-       let certLabel = 'Certificate Verification';
-       if (role === 'player') certLabel = 'Birth Certificate Verification';
-       if (role === 'coach' || role === 'scout') certLabel = 'License Verification';
-       if (role === 'organization') certLabel = 'FA Affiliation Verification';
-       sensitiveChanges[certLabel] = { old: null, new: 'Uploaded Document', document_url: roleProofUrl };
-    }
-
     if (Object.keys(sensitiveChanges).length > 0) {
        const res = await requestProfileEdit(profile?.id, sensitiveChanges);
        if (res.error) {
@@ -262,14 +307,11 @@ export default function ProfileEditor() {
       
       const updatedProfile = { 
         ...profile, 
-        ...profileData,
-        ...(idProofFile ? { id_proof_url: URL.createObjectURL(idProofFile) } : {})
+        ...profileData
       };
       setProfile(updatedProfile);
       setOriginalProfile(updatedProfile);
       
-      setIdProofFile(null);
-      setRoleProofFile(null);
       setIsDirty(false);
       await invalidateProfileCache();
       router.refresh();
@@ -819,17 +861,7 @@ export default function ProfileEditor() {
                       onChange={async (e) => {
                         const file = e.target.files?.[0];
                         if (file) {
-                          if (file.size > 5 * 1024 * 1024) {
-                            showToast('File exceeds 5MB limit.', 'error');
-                            return;
-                          }
-                          if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
-                            showToast('Only images or PDF files are allowed.', 'error');
-                            return;
-                          }
-                          setIdProofFile(file);
-                          setProfile({ ...profile, id_proof_url: URL.createObjectURL(file) });
-                          showToast('Nationality verification document selected! Click Save Changes above to commit.', 'success');
+                          await handleFileUpload(file, 'id_proof');
                         }
                       }}
                     />
@@ -837,13 +869,20 @@ export default function ProfileEditor() {
                       <button
                         type="button"
                         onClick={() => document.getElementById('id_proof_file')?.click()}
-                        className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm"
+                        disabled={isUploadingIdProof}
+                        className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm disabled:opacity-50"
                       >
-                        {role === 'organization' ? 'Upload Document' : 'Upload Passport / ID Card'}
+                        {isUploadingIdProof ? 'Uploading...' : role === 'organization' ? 'Upload Document' : 'Upload Passport / ID Card'}
                       </button>
                     )}
                     {profile?.id_proof_url && (
-                      <span className="text-xs text-green-600 font-bold">✓ ID File Loaded & Ready</span>
+                      <button
+                        type="button"
+                        onClick={() => handleSecurePreview(profile.id_proof_url)}
+                        className="text-xs text-green-600 hover:text-green-800 font-bold flex items-center gap-1 underline"
+                      >
+                        ✓ View Uploaded Document
+                      </button>
                     )}
                   </div>
                 </div>
@@ -859,8 +898,8 @@ export default function ProfileEditor() {
                         </h4>
                         <p className="text-xs text-gray-500 font-bold mt-0.5">Required by Admin to verify your role credentials</p>
                       </div>
-                      <span className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide self-start sm:self-center ${roleProofFile ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
-                        {roleProofFile ? 'Pending Verification' : 'Proof Required'}
+                      <span className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide self-start sm:self-center ${profile?.license_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                        {profile?.license_proof_url ? 'Pending Verification' : 'Proof Required'}
                       </span>
                     </div>
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
@@ -873,16 +912,7 @@ export default function ProfileEditor() {
                         onChange={async (e) => {
                           const file = e.target.files?.[0];
                           if (file) {
-                            if (file.size > 5 * 1024 * 1024) {
-                              showToast('File exceeds 5MB limit.', 'error');
-                              return;
-                            }
-                            if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
-                              showToast('Only images or PDF files are allowed.', 'error');
-                              return;
-                            }
-                            setRoleProofFile(file);
-                            showToast('Role verification document selected! Click Save Changes above to commit.', 'success');
+                            await handleFileUpload(file, 'role_proof');
                           }
                         }}
                       />
@@ -890,13 +920,20 @@ export default function ProfileEditor() {
                         <button
                           type="button"
                           onClick={() => document.getElementById('role_proof_file')?.click()}
-                          className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm"
+                          disabled={isUploadingRoleProof}
+                          className="px-6 py-3.5 bg-white border border-gray-200 text-gray-700 hover:border-[#b50a0a] hover:text-[#b50a0a] rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm disabled:opacity-50"
                         >
-                          Upload Certificate
+                          {isUploadingRoleProof ? 'Uploading...' : 'Upload Certificate'}
                         </button>
                       )}
-                      {roleProofFile && (
-                        <span className="text-xs text-green-600 font-bold">✓ Certificate File Loaded & Ready</span>
+                      {profile?.license_proof_url && (
+                        <button
+                          type="button"
+                          onClick={() => handleSecurePreview(profile.license_proof_url)}
+                          className="text-xs text-green-600 hover:text-green-800 font-bold flex items-center gap-1 underline"
+                        >
+                          ✓ View Uploaded Document
+                        </button>
                       )}
                     </div>
                   </div>
@@ -976,8 +1013,8 @@ export default function ProfileEditor() {
 
                 {isEditing && (
                   <div className="pt-6 border-t border-gray-50 flex justify-end">
-                    <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="px-8 py-3 bg-[#b50a0a] text-white rounded-xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
-                      {isSaving ? 'Saving...' : 'Save Basic Info'}
+                    <button type="submit" disabled={isSaving || isUploading || !isEditing || !isDirty} className="px-8 py-3 bg-[#b50a0a] text-white rounded-xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
+                      {isUploading ? 'Uploading documents...' : isSaving ? 'Saving...' : 'Save Basic Info'}
                     </button>
                   </div>
                 )}
