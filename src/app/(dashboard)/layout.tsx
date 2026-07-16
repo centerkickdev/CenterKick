@@ -133,8 +133,10 @@ export default async function DashboardLayout({
           />
 
           {/* Page Content */}
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-4 md:p-8">
-            {children}
+          <main className="flex-1 overflow-auto bg-[#F9FAFB] relative z-0">
+            <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-in fade-in zoom-in-95 duration-500">
+              {children}
+            </div>
           </main>
         </div>
       </div>

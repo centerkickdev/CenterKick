@@ -1,53 +1,58 @@
 "use client";
 
-import { useState, Suspense } from 'react';
+import { Suspense, useState, useEffect, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Mail, AlertCircle, CheckCircle2, ArrowRight, ArrowLeft } from "lucide-react";
 import Link from 'next/link';
 import { login } from './actions';
 import { PasswordField } from '@/components/common/PasswordField';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useToast } from '@/context/ToastContext';
+import { NetworkStatusBadge } from '@/components/common/NetworkStatusBadge';
+
+function SubmitButton() {
+   const { pending } = useFormStatus();
+   return (
+      <button
+         type="submit"
+         disabled={pending}
+         className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
+      >
+         {pending ? (
+            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+         ) : (
+            <>Login <ArrowRight className="w-4 h-4" /></>
+         )}
+      </button>
+   );
+}
 
 function LoginContent() {
-   const [isLoading, setIsLoading] = useState(false);
    const { showToast } = useToast();
    const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
    const searchParams = useSearchParams();
    const router = useRouter();
 
+   const [state, formAction, isPending] = useActionState(login, null);
+
    useEffect(() => {
       const error = searchParams.get('error');
+      const message = searchParams.get('message');
+      
       if (error) {
          showToast(error, 'error');
-      }
-      const message = searchParams.get('message');
-      if (message) {
+         setStatus({ type: 'error', message: error });
+      } else if (message) {
          showToast(message, 'success');
+         setStatus({ type: 'success', message });
       }
    }, [searchParams, showToast]);
 
-   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setIsLoading(true);
-      setStatus(null);
-
-      const formData = new FormData(e.currentTarget);
-
-      try {
-         const result = await login(formData);
-
-         if (result && 'error' in result) {
-            showToast(result.error as string, 'error');
-         } else if (result && result.success && result.redirectPath) {
-            router.push(result.redirectPath as string);
-         }
-      } catch (err: any) {
-         showToast('An unexpected error occurred.', 'error');
-      } finally {
-         setIsLoading(false);
+   useEffect(() => {
+      if (state?.error) {
+         showToast(state?.error as string, 'error');
       }
-   };
+   }, [state, showToast]);
 
    return (
       <div className="relative z-10 max-w-md w-full px-5 py-8 sm:px-6 sm:py-12 bg-white/95 backdrop-blur-md rounded-[32px] sm:rounded-[40px] shadow-2xl border border-white/20 animate-in fade-in zoom-in duration-700 my-auto">
@@ -88,7 +93,13 @@ function LoginContent() {
                </svg> Continue with Google
             </button>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form action={formAction} className="space-y-4">
+               {state?.error && (
+                  <div className="p-3 mb-4 rounded-xl bg-red-50 text-red-600 text-sm font-bold border border-red-100 flex items-center gap-2">
+                     <AlertCircle className="w-4 h-4 shrink-0" />
+                     {state.error as string}
+                  </div>
+               )}
                <div className="space-y-2">
                   <label className="text-xs font-bold text-gray-500 tracking-wide ml-1">Professional Email</label>
                   <div className="relative">
@@ -111,17 +122,7 @@ function LoginContent() {
                   }
                />
 
-               <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold tracking-[0.2em] text-sm hover:bg-[#a20000] transition-all flex items-center justify-center gap-3 shadow-xl transform active:scale-95 disabled:opacity-50"
-               >
-                  {isLoading ? (
-                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  ) : (
-                     <>Login <ArrowRight className="w-4 h-4" /></>
-                  )}
-               </button>
+               <SubmitButton />
             </form>
          </div>
 
@@ -147,6 +148,8 @@ export default function LoginPage() {
                className="w-full h-full object-cover"
             />
          </div>
+
+         <NetworkStatusBadge />
 
          {/* Navigation */}
          <div className="absolute top-4 left-4 sm:top-8 sm:left-8 z-20">

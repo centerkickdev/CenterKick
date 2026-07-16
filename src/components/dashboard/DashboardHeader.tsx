@@ -6,6 +6,7 @@ import { Menu, X } from 'lucide-react';
 import { DashboardSidebarNav } from './DashboardSidebarNav';
 import { SignOutButton } from './SignOutButton';
 import { DashboardNotificationBell } from './DashboardNotificationBell';
+import { NetworkStatusBadge } from '@/components/common/NetworkStatusBadge';
 
 interface DashboardHeaderProps {
   role: string;
@@ -30,6 +31,7 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName, notifi
         </button>
         
         <div className="flex items-center gap-6 ml-auto">
+          <NetworkStatusBadge inline />
           <DashboardNotificationBell initialNotifications={notifications} />
           <div className="flex items-center gap-3 pl-6 border-l border-gray-100">
             <div className="text-right hidden sm:block">

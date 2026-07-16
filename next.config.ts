@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '4mb',
     },
   },
+  allowedDevOrigins: ['*.loca.lt', '*.ngrok-free.app', '192.168.8.184'],
   compress: true,
   images: {
     dangerouslyAllowSVG: true,

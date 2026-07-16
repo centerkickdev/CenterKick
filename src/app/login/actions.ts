@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { sendOtpEmail } from '@/lib/resend';
 import { createAdminClient } from '@/lib/supabase/admin';
 
-export async function login(formData: FormData) {
+export async function login(prevState: any, formData: FormData) {
   const supabase = await createClient();
 
   const email = formData.get('email') as string;
@@ -53,7 +53,7 @@ export async function login(formData: FormData) {
   }
 
   revalidatePath('/', 'layout');
-  return { success: true, redirectPath };
+  redirect(redirectPath);
 }
 
 export async function getSignupSettings() {
