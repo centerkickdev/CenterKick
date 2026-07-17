@@ -120,3 +120,9 @@ query.js
 
 certificates
 temp_fix.js
+temp_remove_link_text.js
+temp_inject_merged.js
+temp_merge_links.js
+temp_link_fix.js
+temp_fix_lightbox.js
+temp_update_player_gallery.js

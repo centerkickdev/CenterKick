@@ -3,22 +3,7 @@
 import { useState } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { 
-   Building2, 
-   MapPin, 
-   Award, 
-   Globe, 
-   Mail, 
-   Phone, 
-   ShieldCheck, 
-   Users2, 
-   ArrowRight,
-   ChevronLeft,
-   Facebook,
-   Instagram,
-   Send,
-   X
-} from "lucide-react";
+import { Building2, MapPin, Award, Globe, Mail, Phone, ShieldCheck, Users2, ArrowRight, ChevronLeft, Facebook, Instagram, Send, X, Linkedin } from "lucide-react";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import parse from 'html-react-parser';
@@ -35,6 +20,7 @@ interface OrgDetailsClientProps {
 }
 
 export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsClientProps) {
+   const mergedLinks = { ...(profile.social_links || {}), ...(profile.official_links || {}) };
    const [activeTab, setActiveTab] = useState("Profile");
    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
    const [contactFormData, setContactFormData] = useState({ name: '', email: '', message: '' });
@@ -138,28 +124,31 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                      </div>
                      
                      <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-4">
-                           {profile.social_links?.facebook && (
-                              <a href={formatAbsoluteUrl(profile.social_links.facebook)} target="_blank" rel="noopener noreferrer">
-                                 <Facebook className="w-4 h-4 hover:text-[#b50a0a] transition-colors" />
+                        <div className="flex flex-wrap items-center gap-4">
+                           {mergedLinks.website && (
+                              <a href={formatAbsoluteUrl(mergedLinks.website)} target="_blank" rel="noopener noreferrer" title="Website" className="hover:text-[#b50a0a] transition-colors">
+                                 <Globe className="w-4 h-4" />
                               </a>
                            )}
-                           {profile.social_links?.instagram && (
-                              <a href={formatAbsoluteUrl(profile.social_links.instagram)} target="_blank" rel="noopener noreferrer">
-                                 <Instagram className="w-4 h-4 hover:text-[#b50a0a] transition-colors" />
+                           {mergedLinks.linkedin && (
+                              <a href={formatAbsoluteUrl(mergedLinks.linkedin)} target="_blank" rel="noopener noreferrer" title="LinkedIn" className="hover:text-[#b50a0a] transition-colors">
+                                 <Linkedin className="w-4 h-4" />
                               </a>
                            )}
-                           {profile.social_links?.twitter && (
-                              <a href={formatAbsoluteUrl(profile.social_links.twitter)} target="_blank" rel="noopener noreferrer" title="X (formerly Twitter)">
-                                 <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-current hover:text-[#b50a0a] transition-colors"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                           {mergedLinks.facebook && (
+                              <a href={formatAbsoluteUrl(mergedLinks.facebook)} target="_blank" rel="noopener noreferrer" title="Facebook" className="hover:text-[#b50a0a] transition-colors">
+                                 <Facebook className="w-4 h-4" />
                               </a>
                            )}
-                           {!profile.social_links && (
-                              <>
-                                 <Facebook className="w-4 h-4 text-white/20" />
-                                 <Instagram className="w-4 h-4 text-white/20" />
-                                 <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-current text-white/20"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-                              </>
+                           {mergedLinks.instagram && (
+                              <a href={formatAbsoluteUrl(mergedLinks.instagram)} target="_blank" rel="noopener noreferrer" title="Instagram" className="hover:text-[#b50a0a] transition-colors">
+                                 <Instagram className="w-4 h-4" />
+                              </a>
+                           )}
+                           {mergedLinks.twitter && (
+                              <a href={formatAbsoluteUrl(mergedLinks.twitter)} target="_blank" rel="noopener noreferrer" title="X (formerly Twitter)" className="hover:text-[#b50a0a] transition-colors">
+                                 <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                              </a>
                            )}
                         </div>
                      </div>

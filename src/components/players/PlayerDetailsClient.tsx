@@ -3,7 +3,8 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import parse from 'html-react-parser';
-import { Facebook, Instagram, Twitter, ChevronLeft, MapPin, Trophy, X } from "lucide-react";
+import { ImageLightbox } from '@/components/common/ImageLightbox';
+import { Facebook, Instagram, Twitter, ChevronLeft, MapPin, Trophy, X, Globe, Linkedin } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -21,8 +22,9 @@ interface PlayerDetailsClientProps {
 }
 
 export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: PlayerDetailsClientProps) {
+   const mergedLinks = { ...(athlete.social_links || {}), ...(athlete.official_links || {}) };
    const [activeTab, setActiveTab] = useState("Profile");
-   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
    const router = useRouter();
    const displayName = athlete.full_name || `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Anonymous Player';
    const nameParts = displayName.split(' ');
@@ -147,20 +149,30 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                      <div className="flex items-center gap-6">
                         <span className="font-bold tracking-wide text-base">{profileClub}</span>
                         <div className="h-6 w-[1px] bg-white/20" />
-                        <div className="flex items-center gap-4">
-                           {athlete.social_links?.facebook && (
-                              <a href={formatAbsoluteUrl(athlete.social_links.facebook)} target="_blank" rel="noopener noreferrer">
-                                 <Facebook className="w-4 h-4 hover:text-[#b50a0a] transition-colors" />
+                        <div className="flex flex-wrap items-center gap-4">
+                           {mergedLinks.website && (
+                              <a href={formatAbsoluteUrl(mergedLinks.website)} target="_blank" rel="noopener noreferrer" title="Website" className="hover:text-[#b50a0a] transition-colors">
+                                 <Globe className="w-4 h-4" />
                               </a>
                            )}
-                           {athlete.social_links?.instagram && (
-                              <a href={formatAbsoluteUrl(athlete.social_links.instagram)} target="_blank" rel="noopener noreferrer">
-                                 <Instagram className="w-4 h-4 hover:text-[#b50a0a] transition-colors" />
+                           {mergedLinks.linkedin && (
+                              <a href={formatAbsoluteUrl(mergedLinks.linkedin)} target="_blank" rel="noopener noreferrer" title="LinkedIn" className="hover:text-[#b50a0a] transition-colors">
+                                 <Linkedin className="w-4 h-4" />
                               </a>
                            )}
-                           {athlete.social_links?.twitter && (
-                              <a href={formatAbsoluteUrl(athlete.social_links.twitter)} target="_blank" rel="noopener noreferrer" title="X (formerly Twitter)">
-                                 <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-current hover:text-[#b50a0a] transition-colors"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+                           {mergedLinks.facebook && (
+                              <a href={formatAbsoluteUrl(mergedLinks.facebook)} target="_blank" rel="noopener noreferrer" title="Facebook" className="hover:text-[#b50a0a] transition-colors">
+                                 <Facebook className="w-4 h-4" />
+                              </a>
+                           )}
+                           {mergedLinks.instagram && (
+                              <a href={formatAbsoluteUrl(mergedLinks.instagram)} target="_blank" rel="noopener noreferrer" title="Instagram" className="hover:text-[#b50a0a] transition-colors">
+                                 <Instagram className="w-4 h-4" />
+                              </a>
+                           )}
+                           {mergedLinks.twitter && (
+                              <a href={formatAbsoluteUrl(mergedLinks.twitter)} target="_blank" rel="noopener noreferrer" title="X (formerly Twitter)" className="hover:text-[#b50a0a] transition-colors">
+                                 <svg viewBox="0 0 24 24" aria-hidden="true" className="w-4 h-4 fill-current"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
                               </a>
                            )}
                         </div>
@@ -305,7 +317,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                            <h3 className="text-sm font-bold text-gray-500 tracking-[0.2em] mb-6 uppercase">Action Shots</h3>
                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                               {athlete.gallery_urls.map((url: string, i: number) => (
-                                 <div key={i} onClick={() => setSelectedImage(url)} className="aspect-square bg-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 group cursor-pointer">
+                                 <div key={i} onClick={() => setSelectedImageIndex(i)} className="aspect-square bg-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 group cursor-pointer">
                                     <img src={url} alt="Action shot" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                                  </div>
                               ))}
@@ -314,16 +326,12 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                      )}
 
                      {/* Lightbox */}
-                     {selectedImage && (
-                        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
-                           <button 
-                              onClick={() => setSelectedImage(null)} 
-                              className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
-                           >
-                              <X className="w-8 h-8" />
-                           </button>
-                           <img src={selectedImage} alt="Fullscreen action shot" className="max-w-full max-h-[90vh] object-contain rounded-lg" />
-                        </div>
+                     {selectedImageIndex !== null && athlete.gallery_urls && (
+                        <ImageLightbox 
+                           images={athlete.gallery_urls} 
+                           initialIndex={selectedImageIndex} 
+                           onClose={() => setSelectedImageIndex(null)} 
+                        />
                      )}
 
                      {(!athlete.video_links || athlete.video_links.length === 0) && (!athlete.gallery_urls || athlete.gallery_urls.length === 0) && (
