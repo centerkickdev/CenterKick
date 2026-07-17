@@ -383,9 +383,9 @@ export function HomeClient({
                   </button>
                 ) : (
                   <Link href="/register?role=player">
-                    <button className="bg-[#b50a0a] hover:bg-white text-white hover:text-black font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
+                    <div className="bg-[#b50a0a] hover:bg-white text-white hover:text-black font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
                       Create Profile <ArrowRight className="w-4 h-4" />
-                    </button>
+                    </div>
                   </Link>
                 )}
               </div>
@@ -465,9 +465,9 @@ export function HomeClient({
                   </button>
                 ) : (
                   <Link href="/register?role=coach">
-                    <button className="bg-white hover:bg-black text-black hover:text-white font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
+                    <div className="bg-white hover:bg-black text-black hover:text-white font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
                       Create Profile <ArrowRight className="w-4 h-4" />
-                    </button>
+                    </div>
                   </Link>
                 )}
               </div>
@@ -532,10 +532,10 @@ export function HomeClient({
                 </div>
 
                 <Link href={`/agents/${agent.slug}`} className="w-full">
-                  <button className="w-full bg-gray-50 hover:bg-[#b50a0a] text-gray-700 hover:text-white border border-gray-100 hover:border-[#b50a0a] text-xs font-bold tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <div className="w-full bg-gray-50 hover:bg-[#b50a0a] text-gray-700 hover:text-white border border-gray-100 hover:border-[#b50a0a] text-xs font-bold tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                     View Portfolio <ExternalLink className="w-3 h-3" />
-                  </button>
-                </Link>
+                  </div>
+                  </Link>
               </div>
             )}
           />
@@ -562,9 +562,9 @@ export function HomeClient({
                   </button>
                 ) : (
                   <Link href="/register?role=agent">
-                    <button className="bg-white hover:bg-[#b50a0a] text-black hover:text-white font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
+                    <div className="bg-white hover:bg-[#b50a0a] text-black hover:text-white font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
                       Create Profile <ArrowRight className="w-4 h-4" />
-                    </button>
+                    </div>
                   </Link>
                 )}
               </div>
@@ -620,10 +620,10 @@ export function HomeClient({
                 </div>
 
                 <Link href={`/organizations/${org.slug}`} className="w-full">
-                  <button className="w-full bg-gray-50 hover:bg-amber-600 text-gray-700 hover:text-white border border-gray-100 hover:border-amber-600 text-xs font-bold tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <div className="w-full bg-gray-50 hover:bg-amber-600 text-gray-700 hover:text-white border border-gray-100 hover:border-amber-600 text-xs font-bold tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
                     View Portfolio <ArrowRight className="w-3 h-3" />
-                  </button>
-                </Link>
+                  </div>
+                  </Link>
               </div>
             )}
           />
@@ -650,9 +650,9 @@ export function HomeClient({
                   </button>
                 ) : (
                   <Link href="/register?role=organization">
-                    <button className="bg-gray-900 hover:bg-amber-600 text-white font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
+                    <div className="bg-gray-900 hover:bg-amber-600 text-white font-bold text-xs tracking-[0.2em] px-8 py-4 rounded-2xl shadow-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
                       Create Profile <ArrowRight className="w-4 h-4" />
-                    </button>
+                    </div>
                   </Link>
                 )}
               </div>
@@ -742,15 +742,15 @@ export function HomeClient({
 
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                 <Link href="/contact">
-                  <button className="w-full sm:w-auto bg-white hover:bg-black text-[#b50a0a] hover:text-white px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] shadow-2xl transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
+                    <div className="w-full sm:w-auto bg-white hover:bg-black text-[#b50a0a] hover:text-white px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] shadow-2xl transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
                     Contact Us <ArrowRight className="w-4 h-4" />
-                  </button>
-                </Link>
+                  </div>
+                  </Link>
                 <Link href="/about">
-                  <button className="w-full sm:w-auto bg-transparent text-white border-2 border-white/20 hover:bg-white/10 px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] transition-all hover:-translate-y-0.5 active:scale-95">
+                    <div className="w-full sm:w-auto bg-transparent text-white border-2 border-white/20 hover:bg-white/10 px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] transition-all hover:-translate-y-0.5 active:scale-95">
                     About Us
-                  </button>
-                </Link>
+                  </div>
+                  </Link>
               </div>
             </div>
 
