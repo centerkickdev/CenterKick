@@ -157,7 +157,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
             </div>
 
             {/* Tab Navigation */}
-            <div className="bg-white border-b border-gray-100 shadow-sm sticky top-32 z-40">
+            <div className="bg-white border-b border-gray-100 shadow-sm z-40">
                <div className="max-w-[1000px] mx-auto flex items-center justify-between px-4 lg:px-0">
                   <div className="flex overflow-x-auto no-scrollbar py-1">
                      {["Profile", "Members", "Bio", "Achievements"].map((tab) => (
