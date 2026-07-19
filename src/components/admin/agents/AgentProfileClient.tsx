@@ -422,7 +422,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                               />
                             )
                           ) : (
-                            <div className="text-[13px] font-bold text-slate-800">
+                            <div className="text-sm font-bold text-slate-800">
                               {item.field === 'date_of_birth' ? (item.value ? <DateDisplay date={item.value as string} /> : 'N/A') : item.value || 'N/A'}
                             </div>
                           )}
@@ -487,7 +487,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                               />
                             )
                           ) : (
-                            <div className="text-[13px] font-bold text-slate-800">
+                            <div className="text-sm font-bold text-slate-800">
                               {item.value || 'N/A'}
                             </div>
                           )}

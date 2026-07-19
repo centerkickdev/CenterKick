@@ -137,19 +137,19 @@ export function ScoutDiscoveriesForm({ data, onChange, disabled }: { data: any, 
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Player Name</label>
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Player Name</label>
                    <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.playerName} onChange={(e) => updateDiscovery(index, 'playerName', e.target.value)} />
                 </div>
                 <div>
-                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Year Scouted</label>
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Year Scouted</label>
                    <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.year} onChange={(e) => updateDiscovery(index, 'year', e.target.value)} placeholder="e.g. 2021" />
                 </div>
                 <div>
-                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Recommended To (Club/Academy)</label>
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Recommended To (Club/Academy)</label>
                    <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.recommendedTo} onChange={(e) => updateDiscovery(index, 'recommendedTo', e.target.value)} />
                 </div>
                 <div>
-                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Current Club</label>
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Current Club</label>
                    <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.currentStatus} onChange={(e) => updateDiscovery(index, 'currentStatus', e.target.value)} placeholder="e.g. Manchester United" />
                 </div>
               </div>

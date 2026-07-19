@@ -214,15 +214,15 @@ export function OrganizationDetailsForm({ data, onChange, onUploadImage }: { dat
           {(data.organization_honors || []).map((record: any, index: number) => (
             <div key={index} className="p-4 bg-white border border-gray-200 rounded-2xl relative group shadow-sm flex items-end gap-4">
               <div className="flex-1">
-                 <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Title</label>
+                 <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Title</label>
                  <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.title} onChange={(e) => updateHonor(index, 'title', e.target.value)} placeholder="e.g. U18 Premier League" />
               </div>
               <div className="w-32">
-                 <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Year</label>
+                 <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Year</label>
                  <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.year} onChange={(e) => updateHonor(index, 'year', e.target.value)} placeholder="e.g. 2023" />
               </div>
               <div className="w-48">
-                 <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Category</label>
+                 <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Category</label>
                  <select className="w-full px-3 py-2 border rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.category} onChange={(e) => updateHonor(index, 'category', e.target.value)}>
                    <option value="Trophy">Trophy / Cup</option>
                    <option value="League">League Title</option>

@@ -4,7 +4,7 @@ import { Plus, Trash2, Activity, Trophy } from 'lucide-react';
 
 import { SearchableCombobox } from '@/components/common/SearchableCombobox';
 
-export function PlayerCareerForm({ data, onChange, achievements, onAchievementsChange, disabled, clubsList = [] }: { data: any, onChange: (val: any) => void, achievements?: any[], onAchievementsChange?: (val: any[]) => void, disabled?: boolean, clubsList?: any[], leaguesList?: any[] }) {
+export function PlayerCareerForm({ data, onChange, achievements, onAchievementsChange, disabled, clubsList = [], leaguesList = [], seasonsList = [] }: { data: any, onChange: (val: any) => void, achievements?: any[], onAchievementsChange?: (val: any[]) => void, disabled?: boolean, clubsList?: any[], leaguesList?: any[], seasonsList?: any[] }) {
   
   const addTransfer = () => {
     const transfers = data.transfer_history || [];
@@ -64,7 +64,7 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-gray-50 border border-gray-100 rounded-2xl">
            <div>
-             <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Pace / Speed</label>
+             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Pace / Speed</label>
              <input 
                type="text" 
                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a]" 
@@ -75,7 +75,7 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
              />
            </div>
            <div>
-             <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Stamina</label>
+             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Stamina</label>
              <input 
                type="text" 
                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a]" 
@@ -86,7 +86,7 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
              />
            </div>
            <div>
-             <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Passing Accuracy</label>
+             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Passing Accuracy</label>
              <input 
                type="text" 
                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a]" 
@@ -97,7 +97,7 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
              />
            </div>
            <div>
-             <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Injury History</label>
+             <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Injury History</label>
              <input 
                type="text" 
                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a]" 
@@ -149,9 +149,17 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
                 </div>
                 <div>
                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
-                     Transfer Date (Year) {!!record.club && <span className="text-red-500">*</span>}
+                     Transfer Date (Season) <span className="text-red-500">*</span>
                    </label>
-                   <input required={!!record.club} type="text" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={record.date} onChange={(e) => updateTransfer(index, 'date', e.target.value)} placeholder="e.g. 2023" disabled={disabled} />
+                   <SearchableCombobox
+                     disabled={disabled}
+                     options={seasonsList}
+                     value={record.date || ''}
+                     valueField="name"
+                     displayField="name"
+                     onChange={(val, isNew, newName) => updateTransfer(index, 'date', isNew ? newName : val)}
+                     placeholder="Select Season"
+                   />
                 </div>
                 <div>
                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">

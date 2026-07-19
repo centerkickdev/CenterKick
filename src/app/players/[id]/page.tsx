@@ -74,12 +74,18 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
 
    // Enrich transfer history
    if (athlete.transfer_history && Array.isArray(athlete.transfer_history)) {
-      athlete.transfer_history = athlete.transfer_history.map((t: any) => ({
-         ...t,
-         fee: t.transfer_fee || t.fee,
-         from_club_logo: getClubLogo(t.from_club),
-         to_club_logo: getClubLogo(t.to_club),
-      }));
+      athlete.transfer_history = athlete.transfer_history.map((t: any, index: number, arr: any[]) => {
+         const from_club = t.from_club || t.club;
+         const to_club = t.to_club || (index === 0 ? athlete.current_club : arr[index - 1].club);
+         return {
+            ...t,
+            fee: t.transfer_fee || t.fee,
+            from_club,
+            to_club,
+            from_club_logo: getClubLogo(from_club),
+            to_club_logo: getClubLogo(to_club),
+         };
+      });
    }
 
    // Fetch related news (blog posts)

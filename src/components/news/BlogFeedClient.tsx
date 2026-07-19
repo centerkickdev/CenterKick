@@ -203,7 +203,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                               <img src={post.cover_image_url || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                            </div>
                            <div className="p-6 flex flex-col flex-1 justify-between">
-                              <h3 className="font-bold text-gray-900 text-[13px] leading-snug mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 tracking-tighter">{post.title}</h3>
+                              <h3 className="font-bold text-gray-900 text-sm leading-snug mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 tracking-tighter">{post.title}</h3>
                               <div className="flex items-center justify-between">
                                  <DateDisplay date={post.published_at} className="text-xs font-bold text-gray-400 tracking-wide" />
                                  <span className="text-xs font-bold text-[#b50a0a] tracking-wide group-hover:translate-x-1 transition-transform flex items-center gap-1">Read Article <ArrowRight className="w-3 h-3" /></span>

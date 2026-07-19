@@ -215,7 +215,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                            ].map((item, idx) => (
                               <div key={idx} className="flex flex-col md:flex-row md:items-start justify-between border-b border-gray-200/50 pb-4 gap-2">
                                  <span className="text-xs font-bold text-gray-400 tracking-wide md:w-1/3 shrink-0">{item.label}</span>
-                                 <span className="text-[13px] font-bold text-gray-900 md:text-right md:w-2/3 leading-snug">{item.value}</span>
+                                 <span className="text-sm font-bold text-gray-900 md:text-right md:w-2/3 leading-snug">{item.value}</span>
                               </div>
                            ))}
                         </div>

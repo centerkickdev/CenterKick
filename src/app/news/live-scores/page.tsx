@@ -257,13 +257,13 @@ export default function LiveScoresPage() {
                                  <div className="flex items-center justify-between max-w-[600px] mx-auto px-4">
                                     {/* Team 1 */}
                                     <div className="flex items-center justify-end w-[35%] gap-4">
-                                       <span className="font-bold text-[13px] text-gray-900">{match.team1}</span>
+                                       <span className="font-bold text-sm text-gray-900">{match.team1}</span>
                                        <img src={match.logo1} className="w-10 h-10 object-contain" alt={match.team1} />
                                     </div>
                                     
                                     {/* Score Central Block */}
                                     <div className="w-[30%] flex flex-col items-center justify-center">
-                                       <div className="font-bold text-[28px] text-gray-900 tracking-[0.2em] leading-none mb-2">
+                                       <div className="font-bold text-3xl text-gray-900 tracking-[0.2em] leading-none mb-2">
                                           {match.score}
                                        </div>
                                        <span className="text-xs font-bold text-[#b50a0a] tracking-wide">
@@ -277,7 +277,7 @@ export default function LiveScoresPage() {
                                     {/* Team 2 */}
                                     <div className="flex items-center justify-start w-[35%] gap-4">
                                        <img src={match.logo2} className="w-10 h-10 object-contain" alt={match.team2} />
-                                       <span className="font-bold text-[13px] text-gray-900">{match.team2}</span>
+                                       <span className="font-bold text-sm text-gray-900">{match.team2}</span>
                                     </div>
                                  </div>
                                  

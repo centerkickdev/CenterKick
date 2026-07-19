@@ -580,7 +580,7 @@ export default function CoachProfileClient({
                               />
                             )
                           ) : (
-                            <div className="text-[13px] font-bold text-slate-800">
+                            <div className="text-sm font-bold text-slate-800">
                               {item.field === 'date_of_birth' ? (item.value ? <DateDisplay date={item.value as string} /> : 'N/A') : item.value}
                             </div>
                           )}
@@ -658,7 +658,7 @@ export default function CoachProfileClient({
                               />
                             )
                           ) : (
-                            <div className="text-[13px] font-bold text-slate-800">
+                            <div className="text-sm font-bold text-slate-800">
                               {item.field === 'agent_id' 
                                 ? (agents.find((a: Record<string, any>) => a.id === item.value)?.first_name 
                                    ? `${agents.find((a: Record<string, any>) => a.id === item.value)?.first_name} ${agents.find((a: Record<string, any>) => a.id === item.value)?.last_name}` 
@@ -782,19 +782,19 @@ export default function CoachProfileClient({
                               <td className="px-4 md:px-8 py-5 text-xs font-bold text-slate-900 tracking-tighter">{stat.season}</td>
                               <td className="px-6 py-5">
                                 <div className="flex flex-col">
-                                  <span className="text-[13px] font-bold text-slate-900 tracking-tight">
+                                  <span className="text-sm font-bold text-slate-900 tracking-tight">
                                     {type === 'club' ? stat.club_name : stat.country}
                                   </span>
                                   {type === 'club' && <span className="text-xs font-bold text-slate-400 tracking-wide">{stat.league_name}</span>}
                                   <span className="text-xs font-medium text-[#b50a0a] tracking-wide mt-0.5">{stat.role}</span>
                                 </div>
                               </td>
-                              <td className="px-6 py-5 text-[13px] font-bold text-slate-900 text-center">{stat.games_managed}</td>
-                              <td className="px-6 py-5 text-[13px] font-bold text-slate-900 text-center">{stat.wins}</td>
-                              <td className="px-6 py-5 text-[13px] font-bold text-slate-900 text-center">{stat.draws}</td>
-                              <td className="px-6 py-5 text-[13px] font-bold text-slate-900 text-center">{stat.losses}</td>
+                              <td className="px-6 py-5 text-sm font-bold text-slate-900 text-center">{stat.games_managed}</td>
+                              <td className="px-6 py-5 text-sm font-bold text-slate-900 text-center">{stat.wins}</td>
+                              <td className="px-6 py-5 text-sm font-bold text-slate-900 text-center">{stat.draws}</td>
+                              <td className="px-6 py-5 text-sm font-bold text-slate-900 text-center">{stat.losses}</td>
                               <td className="px-6 py-5 text-center">
-                                <span className="text-[13px] font-bold text-emerald-600 tracking-tighter">
+                                <span className="text-sm font-bold text-emerald-600 tracking-tighter">
                                   {stat.games_managed > 0 ? Math.round((stat.wins / stat.games_managed) * 100) : 0}%
                                 </span>
                               </td>
@@ -1017,7 +1017,7 @@ export default function CoachProfileClient({
                                 </div>
                                 <div>
                                    <p className="text-xs font-bold text-slate-400 tracking-wide">{item.label}</p>
-                                   <p className="text-[13px] font-bold text-slate-900 tracking-tight mt-0.5">{item.value || 'Not Defined'}</p>
+                                   <p className="text-sm font-bold text-slate-900 tracking-tight mt-0.5">{item.value || 'Not Defined'}</p>
                                 </div>
                              </div>
                              <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center opacity-0 group-hover/item:opacity-100 transition-opacity border border-slate-100 shadow-sm">

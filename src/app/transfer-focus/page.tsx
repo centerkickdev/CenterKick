@@ -231,7 +231,7 @@ export default function TransferFocusPage() {
                   <h1 className="text-3xl sm:text-[44px] font-bold tracking-wide leading-none drop-shadow-md">
                      TRANSFER <span className="text-[#b50a0a]">FOCUS</span>
                   </h1>
-                  <p className="text-xs md:text-[13px] text-gray-400 mt-2 font-semibold tracking-wide">
+                  <p className="text-xs md:text-sm text-gray-400 mt-2 font-semibold tracking-wide">
                      Monitor verified athlete contract status, staff availability, scouts, and academies
                   </p>
                </div>
@@ -542,7 +542,7 @@ export default function TransferFocusPage() {
                   <div className="flex items-center justify-between mb-8">
                      <div className="flex items-center gap-2">
                         <div className="w-2 h-6 bg-[#b50a0a]"></div>
-                        <h2 className="text-2xl md:text-[28px] font-bold tracking-tight text-gray-800">Latest transfer rumors news</h2>
+                        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-800">Latest transfer rumors news</h2>
                      </div>
                      <Link href="/news" className="text-xs font-bold text-gray-400 hover:text-[#b50a0a] tracking-wide flex items-center gap-1 transition-colors">
                         SEE ALL <ChevronRight className="w-4 h-4" />
@@ -577,7 +577,7 @@ export default function TransferFocusPage() {
                   <div className="flex items-center justify-between mb-8">
                      <div className="flex items-center gap-2">
                         <div className="w-2 h-6 bg-[#b50a0a]"></div>
-                        <h2 className="text-2xl md:text-[28px] font-bold tracking-tight text-gray-800">Top football transfer news</h2>
+                        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-800">Top football transfer news</h2>
                      </div>
                      <Link href="/news" className="text-xs font-bold text-gray-400 hover:text-[#b50a0a] tracking-wide flex items-center gap-1 transition-colors">
                         SEE ALL <ChevronRight className="w-4 h-4" />

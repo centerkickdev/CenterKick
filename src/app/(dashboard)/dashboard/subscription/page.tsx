@@ -340,7 +340,7 @@ export default function SubscriptionPage() {
                                              required
                                              className="w-full bg-gray-50/50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all"
                                           />
-                                          <p className="text-[10px] font-bold text-gray-400 ml-1">Max 15 characters, alphanumeric only</p>
+                                          <p className="text-xs font-bold text-gray-400 ml-1">Max 15 characters, alphanumeric only</p>
                                        </div>
                                        <input 
                                           name="payment_receipt"

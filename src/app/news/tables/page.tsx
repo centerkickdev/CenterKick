@@ -107,28 +107,28 @@ export default function TablesPage() {
                <div className="flex flex-wrap items-center border border-gray-200 py-3 px-6 mb-12 shadow-sm rounded-sm">
                   <div className="flex flex-col border-r border-gray-200 pr-8">
                      <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By Competition:</span>
-                     <button className="flex items-center gap-1 text-[13px] font-bold text-gray-900 mt-1">
+                     <button className="flex items-center gap-1 text-sm font-bold text-gray-900 mt-1">
                         Nigeria League <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
                   
                   <div className="flex flex-col border-r border-gray-200 px-8">
                      <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By Season:</span>
-                     <button className="flex items-center gap-1 text-[13px] font-bold text-gray-900 mt-1">
+                     <button className="flex items-center gap-1 text-sm font-bold text-gray-900 mt-1">
                         2022/23 <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
 
                   <div className="flex flex-col border-r border-gray-200 px-8">
                      <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By Matchweek:</span>
-                     <button className="flex items-center gap-1 text-[13px] font-bold text-gray-900 mt-1">
+                     <button className="flex items-center gap-1 text-sm font-bold text-gray-900 mt-1">
                         All Matchweeks <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>
 
                   <div className="flex flex-col border-r border-gray-200 px-8">
                      <span className="text-xs font-bold text-[#b50a0a] tracking-wide">Filter By Home / Away:</span>
-                     <button className="flex items-center gap-1 text-[13px] font-bold text-gray-900 mt-1">
+                     <button className="flex items-center gap-1 text-sm font-bold text-gray-900 mt-1">
                         All Matches <ChevronDown className="w-3 h-3" />
                      </button>
                   </div>

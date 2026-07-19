@@ -4,7 +4,7 @@ import { Plus, Trash2, Trophy } from 'lucide-react';
 
 import { SearchableCombobox } from '@/components/common/SearchableCombobox';
 
-export function CoachCareerForm({ data, onChange, achievements, onAchievementsChange, disabled, clubsList = [] }: { data: any, onChange: (val: any) => void, achievements?: any[], onAchievementsChange?: (val: any[]) => void, disabled?: boolean, clubsList?: any[], leaguesList?: any[] }) {
+export function CoachCareerForm({ data, onChange, achievements, onAchievementsChange, disabled, clubsList = [], leaguesList = [], seasonsList = [] }: { data: any, onChange: (val: any) => void, achievements?: any[], onAchievementsChange?: (val: any[]) => void, disabled?: boolean, clubsList?: any[], leaguesList?: any[], seasonsList?: any[] }) {
   const licenses = ['UEFA Pro', 'UEFA A', 'UEFA B', 'UEFA C', 'AFC Pro', 'AFC A', 'CONCACAF Pro', 'National Badge', 'Other'];
   const specializations = ['Youth Development', 'Tactical Analysis', 'Physical Conditioning', 'Goalkeeping', 'Set Pieces', 'Data Analytics'];
   const languages = ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Arabic', 'Chinese'];
@@ -222,25 +222,25 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                    <div>
-                     <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">From (Year)</label>
+                     <label className="text-xs font-bold text-gray-400 uppercase block mb-1">From (Year)</label>
                      <input type="text" disabled={disabled} className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.startDate} onChange={(e) => updateManagerialRecord(index, 'startDate', e.target.value)} placeholder="2020" />
                    </div>
                    <div>
-                     <label className="text-[10px] font-bold text-gray-400 uppercase block mb-1">To (Year/Present)</label>
+                     <label className="text-xs font-bold text-gray-400 uppercase block mb-1">To (Year/Present)</label>
                      <input type="text" disabled={disabled} className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.endDate} onChange={(e) => updateManagerialRecord(index, 'endDate', e.target.value)} placeholder="Present" />
                    </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                    <div>
-                     <label className="text-[10px] font-bold text-green-600 uppercase block mb-1">Wins</label>
+                     <label className="text-xs font-bold text-green-600 uppercase block mb-1">Wins</label>
                      <input type="number" min="0" disabled={disabled} className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 bg-green-50/30 focus:border-[#b50a0a] outline-none" value={record.wins} onChange={(e) => updateManagerialRecord(index, 'wins', parseInt(e.target.value) || 0)} />
                    </div>
                    <div>
-                     <label className="text-[10px] font-bold text-amber-600 uppercase block mb-1">Draws</label>
+                     <label className="text-xs font-bold text-amber-600 uppercase block mb-1">Draws</label>
                      <input type="number" min="0" disabled={disabled} className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 bg-amber-50/30 focus:border-[#b50a0a] outline-none" value={record.draws} onChange={(e) => updateManagerialRecord(index, 'draws', parseInt(e.target.value) || 0)} />
                    </div>
                    <div>
-                     <label className="text-[10px] font-bold text-red-600 uppercase block mb-1">Losses</label>
+                     <label className="text-xs font-bold text-red-600 uppercase block mb-1">Losses</label>
                      <input type="number" min="0" disabled={disabled} className="w-full px-2 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 bg-red-50/30 focus:border-[#b50a0a] outline-none" value={record.losses} onChange={(e) => updateManagerialRecord(index, 'losses', parseInt(e.target.value) || 0)} />
                    </div>
                 </div>

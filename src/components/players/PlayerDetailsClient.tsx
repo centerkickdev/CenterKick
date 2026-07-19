@@ -189,7 +189,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
-                           className={`relative text-xs font-bold tracking-wide whitespace-nowrap py-4 px-3 sm:px-4 hover:text-[#b50a0a] transition-colors ${activeTab === tab ? 'text-[#b50a0a] font-bold' : 'text-gray-500'}`}
+                           className={`relative text-sm font-bold tracking-wide whitespace-nowrap py-4 px-3 sm:px-4 hover:text-[#b50a0a] transition-colors ${activeTab === tab ? 'text-[#b50a0a] font-bold' : 'text-gray-500'}`}
                         >
                            {tab}
                            {activeTab === tab && (
@@ -384,15 +384,15 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                               <table className="w-full text-left border-collapse whitespace-nowrap min-w-max">
                                  <thead>
                                     <tr className="bg-gray-50 border-b border-gray-100">
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase text-center">S/N</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase">Season</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase">League</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase">Club</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Apps</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Gls</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Ast</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Yel</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Red</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase text-center">S/N</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase">Season</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase">League</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase">Club</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Apps</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Gls</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Ast</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Yel</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Red</th>
                                     </tr>
                                  </thead>
                                  <tbody className="text-xs sm:text-sm font-bold text-gray-700 divide-y divide-gray-50">
@@ -438,12 +438,12 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                               <table className="w-full text-left border-collapse whitespace-nowrap min-w-max">
                                  <thead>
                                     <tr className="bg-gray-50 border-b border-gray-100">
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase text-center">S/N</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase">Date</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase">From</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase">To</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase text-right">Fee</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-[10px] sm:text-xs font-bold tracking-wide text-gray-400 uppercase text-right">Market Value</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase text-center">S/N</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase">Date</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase">From</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase">To</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase text-right">Fee</th>
+                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 uppercase text-right">Market Value</th>
                                     </tr>
                                  </thead>
                                  <tbody className="text-xs sm:text-sm font-bold text-gray-700 divide-y divide-gray-50">
@@ -451,7 +451,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                                        <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle text-gray-400">{i + 1}</td>
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle font-medium text-gray-500">
-                                             {transfer.date ? new Date(transfer.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) : 'Unknown'}
+                                             {transfer.date ? (isNaN(Date.parse(transfer.date)) ? transfer.date : new Date(transfer.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short' })) : 'Unknown'}
                                           </td>
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle text-gray-900">
                                              <div className="flex items-center gap-2">

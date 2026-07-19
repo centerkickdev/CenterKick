@@ -400,7 +400,7 @@ export default function ResultsPage() {
                                        <div className="flex items-center justify-between max-w-[650px] mx-auto w-full px-12 md:px-0">
                                           {/* Team 1 */}
                                           <div className="flex items-center justify-end w-[35%] gap-4 relative">
-                                             <span className="font-bold text-[13px] text-gray-900">{match.team1}</span>
+                                             <span className="font-bold text-sm text-gray-900">{match.team1}</span>
                                              <img src={match.logo1} className="w-8 h-8 object-contain" alt={match.team1} />
                                              {match.hasRedCard1 && (
                                                 <div className="absolute -right-2 top-0 w-2 h-3 bg-red-600 rounded-sm"></div>
@@ -409,7 +409,7 @@ export default function ResultsPage() {
                                           
                                           {/* Score Box */}
                                           <div className="w-[30%] flex justify-center">
-                                             <div className={`font-bold text-[15px] px-4 py-1.5 rounded-sm ${match.isLive ? 'text-[#b50a0a] bg-red-50 border border-red-100 animate-pulse' : 'text-gray-900 bg-gray-100'}`}>
+                                             <div className={`font-bold text-base px-4 py-1.5 rounded-sm ${match.isLive ? 'text-[#b50a0a] bg-red-50 border border-red-100 animate-pulse' : 'text-gray-900 bg-gray-100'}`}>
                                                 {match.score}
                                              </div>
                                           </div>
@@ -417,7 +417,7 @@ export default function ResultsPage() {
                                           {/* Team 2 */}
                                           <div className="flex items-center justify-start w-[35%] gap-4 relative">
                                              <img src={match.logo2} className="w-8 h-8 object-contain" alt={match.team2} />
-                                             <span className="font-bold text-[13px] text-gray-900">{match.team2}</span>
+                                             <span className="font-bold text-sm text-gray-900">{match.team2}</span>
                                              {match.hasRedCard2 && (
                                                 <div className="absolute -left-2 top-0 w-2 h-3 bg-red-600 rounded-sm"></div>
                                              )}

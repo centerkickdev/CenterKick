@@ -74,7 +74,7 @@ export function SearchableCombobox({
         className={`w-full bg-white border border-gray-300 rounded-md px-3 py-2 flex items-center justify-between cursor-pointer focus-within:ring-2 focus-within:ring-red-500 focus-within:border-red-500 ${disabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : 'text-gray-900'}`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
       >
-        <span className={`block truncate ${!displayValue ? 'text-gray-400' : 'text-gray-900'}`}>
+        <span className={`block truncate text-sm ${!displayValue ? 'text-gray-400' : 'text-gray-900'}`}>
           {displayValue || placeholder}
         </span>
         <ChevronDown className="w-4 h-4 text-gray-400" />

@@ -1520,7 +1520,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                               />
                             )
                           ) : (
-                            <div className="text-[13px] font-bold text-slate-800">
+                            <div className="text-sm font-bold text-slate-800">
                               {item.field === 'date_of_birth' ? <DateDisplay date={item.value as string} /> : item.value}
                             </div>
                           )}
@@ -1599,7 +1599,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                               />
                             )
                           ) : (
-                            <div className="text-[13px] font-bold text-slate-800">
+                            <div className="text-sm font-bold text-slate-800">
                               {item.field === 'contract_expiry' ? (item.value ? <DateDisplay date={item.value as string} /> : 'N/A') : item.value}
                             </div>
                           )}
@@ -2091,7 +2091,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                                      </div>
                                   )}
                                </div>
-                               <h4 className="text-[13px] font-bold text-slate-900 tracking-tight mb-0.5">{h.title}</h4>
+                               <h4 className="text-sm font-bold text-slate-900 tracking-tight mb-0.5">{h.title}</h4>
                                {h.organization && (
                                   <div className="flex items-center gap-1.5 text-xs font-medium text-slate-400">
                                      <Building2 className="w-3 h-3" />

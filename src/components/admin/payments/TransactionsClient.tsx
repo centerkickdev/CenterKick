@@ -294,7 +294,7 @@ export function TransactionsClient({
                <div className="bg-white/[0.02] border border-white/[0.06] rounded-[2rem] p-6 flex flex-col justify-center space-y-6 backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] overflow-hidden">
                   <div className="min-w-0">
                     <p className="text-xs font-bold text-gray-400 tracking-[0.15em] mb-1">Current Projection</p>
-                    <div className="flex items-baseline gap-0.5 text-[#ff3a3a] text-lg sm:text-xl xl:text-[22px] font-bold tracking-tighter whitespace-nowrap overflow-visible">
+                    <div className="flex items-baseline gap-0.5 text-[#ff3a3a] text-lg sm:text-xl xl:text-2xl font-bold tracking-tighter whitespace-nowrap overflow-visible">
                        <span>+</span>
                        <span>{formatVal(currentProjection, 0)}</span>
                     </div>

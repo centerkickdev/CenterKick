@@ -107,7 +107,7 @@ export default async function MyNewsPage({
           news.map((item) => (
             <div key={item.id} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-[#b50a0a] rounded-full text-[10px] font-bold tracking-widest uppercase">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-[#b50a0a] rounded-full text-xs font-bold tracking-widest uppercase">
                   <Tag className="w-3 h-3" /> Mention
                 </span>
                 <span className="text-xs font-bold text-gray-400 flex items-center gap-1.5">

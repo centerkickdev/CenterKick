@@ -622,7 +622,14 @@ export default function ProfileEditor() {
 
   const isAdminOrOps = ['superadmin', 'admin', 'operations'].includes(role);
 
-  if (isLoading) return <div className="pt-20 text-center font-bold tracking-wide animate-pulse">Loading Editor...</div>;
+  if (isLoading) {
+     return (
+        <div className="pt-20 pb-20 flex flex-col items-center justify-center space-y-4">
+           <div className="w-8 h-8 border-4 border-gray-100 border-t-[#b50a0a] rounded-full animate-spin"></div>
+           <p className="text-sm font-bold text-gray-500 uppercase tracking-widest animate-pulse">Loading Editor...</p>
+        </div>
+     );
+  }
 
   const checks = [
     Boolean(profile?.avatar_url),
@@ -899,7 +906,7 @@ export default function ProfileEditor() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2 pt-8 border-t border-gray-50">
                   <div className="space-y-1.5 h-full flex flex-col justify-end">
                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Public Contact Email</label>
-                    <p className="text-[10px] text-gray-500 font-medium ml-1">This can be your sign-up email or a dedicated public email.</p>
+                    <p className="text-xs text-gray-500 font-medium ml-1">This can be your sign-up email or a dedicated public email.</p>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                       <input disabled={!isEditing} name="contact_email" type="email" defaultValue={profile?.contact_email} placeholder="public@agency.com" className="w-full bg-gray-50 border-none rounded-2xl pl-10 pr-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black placeholder:text-gray-400 disabled:opacity-70 disabled:bg-gray-100" />
@@ -961,7 +968,7 @@ export default function ProfileEditor() {
                         <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Market Value ($)</label>
                         <input disabled={!(['superadmin', 'admin', 'operations'].includes(role))} name="market_value" type="text" defaultValue={profile?.market_value} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
                         {!['superadmin', 'admin', 'operations'].includes(role) && (
-                          <p className="text-[10px] font-bold text-gray-400 ml-1">Only admins can update market value.</p>
+                          <p className="text-xs font-bold text-gray-400 ml-1">Only admins can update market value.</p>
                         )}
                       </div>
                     </div>
@@ -1007,7 +1014,7 @@ export default function ProfileEditor() {
                         />
                         {profile?.league?.startsWith('NEW:') && (
                            <div className="mt-2 animate-in fade-in zoom-in duration-300">
-                             <label className="text-[10px] font-bold text-red-600 uppercase tracking-wide">Required: Select Country for New League</label>
+                             <label className="text-xs font-bold text-red-600 uppercase tracking-wide">Required: Select Country for New League</label>
                              <select 
                                className="w-full bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-red-500 transition-all outline-none text-red-900"
                                onChange={(e) => setProfile({...profile, new_league_country: e.target.value})}
@@ -1073,11 +1080,11 @@ export default function ProfileEditor() {
                             </button>
                           )}
                           <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Season</label>
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Season</label>
                             <select disabled={!isEditing} value={stat.season} onChange={(e) => { const newStats = [...careerStats]; newStats[i].season = e.target.value; setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] disabled:opacity-70 disabled:bg-gray-100 outline-none"><option value="">Select Season</option>{seasonsList.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}</select>
                           </div>
                           <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">League</label>
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">League</label>
                             <SearchableCombobox
                               disabled={!isEditing}
                               options={leaguesList}
@@ -1095,7 +1102,7 @@ export default function ProfileEditor() {
                             />
                           </div>
                           <div className="flex flex-col space-y-1 flex-1 min-w-[120px]">
-                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider ml-1">Club</label>
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">Club</label>
                             <SearchableCombobox
                               disabled={!isEditing || !stat.league}
                               options={clubsList.filter(c => c.league_id === stat.league || stat.league?.startsWith('NEW:'))}
@@ -1113,23 +1120,23 @@ export default function ProfileEditor() {
                           </div>
                           <div className="flex gap-2 w-full sm:w-auto">
                             <div className="flex flex-col space-y-1 w-16">
-                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Apps</label>
+                              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Apps</label>
                               <input disabled={!isEditing} type="number" placeholder="0" value={stat.apps} onChange={(e) => { const newStats = [...careerStats]; newStats[i].apps = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
                             </div>
                             <div className="flex flex-col space-y-1 w-16">
-                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Gls</label>
+                              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Gls</label>
                               <input disabled={!isEditing} type="number" placeholder="0" value={stat.goals} onChange={(e) => { const newStats = [...careerStats]; newStats[i].goals = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
                             </div>
                             <div className="flex flex-col space-y-1 w-16">
-                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Ast</label>
+                              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Ast</label>
                               <input disabled={!isEditing} type="number" placeholder="0" value={stat.assists} onChange={(e) => { const newStats = [...careerStats]; newStats[i].assists = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
                             </div>
                             <div className="flex flex-col space-y-1 w-16">
-                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Yel</label>
+                              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Yel</label>
                               <input disabled={!isEditing} type="number" placeholder="0" value={stat.yellow_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].yellow_cards = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-yellow-200 bg-yellow-50 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-yellow-100" />
                             </div>
                             <div className="flex flex-col space-y-1 w-16">
-                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider text-center">Red</label>
+                              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Red</label>
                               <input disabled={!isEditing} type="number" placeholder="0" value={stat.red_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].red_cards = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-red-200 bg-red-50 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-red-100" />
                             </div>
                           </div>
@@ -1141,8 +1148,8 @@ export default function ProfileEditor() {
                 )}
 
                 <div className="pt-8 border-t border-gray-50">
-                   {role === 'coach' && <CoachCareerForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} achievements={achievements} onAchievementsChange={(val) => {setAchievements(val); setIsDirty(true);}} disabled={!isEditing} clubsList={clubsList} leaguesList={leaguesList} />}
-                   {(role === 'player' || role === 'athlete') && <PlayerCareerForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} achievements={achievements} onAchievementsChange={(val) => {setAchievements(val); setIsDirty(true);}} disabled={!isEditing} clubsList={clubsList} leaguesList={leaguesList} />}
+                   {role === 'coach' && <CoachCareerForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} achievements={achievements} onAchievementsChange={(val) => {setAchievements(val); setIsDirty(true);}} disabled={!isEditing} clubsList={clubsList} leaguesList={leaguesList} seasonsList={seasonsList} />}
+                   {(role === 'player' || role === 'athlete') && <PlayerCareerForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} achievements={achievements} onAchievementsChange={(val) => {setAchievements(val); setIsDirty(true);}} disabled={!isEditing} clubsList={clubsList} leaguesList={leaguesList} seasonsList={seasonsList} />}
                    {role === 'agent' && <AgentPortfolioForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} disabled={!isEditing} isSigned={profile?.is_signed} />}
                    {role === 'scout' && <ScoutDiscoveriesForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} disabled={!isEditing} />}
                    {role === 'organization' && <OrganizationDetailsForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} disabled={!isEditing} onUploadImage={uploadPersonnelImage} />}

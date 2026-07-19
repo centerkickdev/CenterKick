@@ -145,7 +145,7 @@ export default function EditManagedAccountClient({ targetProfile, role }: { targ
                    onChange={handleInputChange}
                    className="w-full px-4 py-3 bg-gray-50 border-none rounded-xl text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] outline-none disabled:opacity-70 disabled:bg-gray-100 transition-all" 
                  />
-                 {!isAdminOrOps && <p className="text-[10px] text-gray-400 font-bold mt-1">Market value edits require admin privileges.</p>}
+                 {!isAdminOrOps && <p className="text-xs text-gray-400 font-bold mt-1">Market value edits require admin privileges.</p>}
                </div>
                
                <div className="space-y-2">
