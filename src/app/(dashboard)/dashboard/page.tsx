@@ -22,7 +22,7 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('*, agent:users!profiles_agent_id_fkey(id, profiles(*))')
+    .select('*, agent:users!profiles_agent_id_fkey(id, profiles!profiles_user_id_fkey(*))')
     .eq('user_id', user?.id)
     .single();
 
@@ -36,14 +36,16 @@ export default async function DashboardPage() {
   let scoutingViews = 0;
 
   if (profile?.id) {
-    const { data: viewsData } = await supabase
+    const { createAdminClient } = await import('@/lib/supabase/admin');
+    const adminSupabase = createAdminClient();
+    const { data: viewsData } = await adminSupabase
       .from('profile_views')
       .select('viewer_role')
       .eq('profile_id', profile.id);
       
     if (viewsData) {
       publicViews = viewsData.length;
-      scoutingViews = viewsData.filter(v => ['agent', 'scout', 'organization'].includes(v.viewer_role)).length;
+      scoutingViews = viewsData.filter(v => ['agent', 'scout', 'organization'].includes(v?.viewer_role)).length;
     }
   }
 
@@ -79,8 +81,29 @@ export default async function DashboardPage() {
   let totalReds = 0;
   let totalApps = 0;
 
-  if ((role === 'player' || role === 'athlete') && profile?.career_stats && Array.isArray(profile.career_stats)) {
-    profile.career_stats.forEach((stat: any) => {
+  const safeParseArray = (data: any) => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    if (typeof data === 'string') {
+      try {
+        const parsed = JSON.parse(data);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  };
+
+  const careerStatsArray = safeParseArray(profile?.career_stats);
+  const transferHistoryArray = safeParseArray(profile?.transfer_history);
+  const achievementsArray = safeParseArray(profile?.achievements);
+
+  console.log('[DEBUG] profile keys:', profile ? Object.keys(profile) : 'profile is null');
+  console.log('[DEBUG] profile.career_stats:', profile?.career_stats ? 'exists' : 'undefined');
+  console.log('[DEBUG] careerStatsArray length:', careerStatsArray.length);
+  if ((role === 'player' || role === 'athlete') && careerStatsArray.length > 0) {
+    careerStatsArray.forEach((stat: any) => {
       totalGoals += Number(stat.goals) || 0;
       totalAssists += Number(stat.assists) || 0;
       totalYellows += Number(stat.yellow_cards) || 0;
@@ -92,13 +115,8 @@ export default async function DashboardPage() {
   const careerGoalContributions = totalGoals + totalAssists;
   const disciplineIndex = `${totalYellows} YEL / ${totalReds} RED`;
   
-  const transferCount = profile?.transfer_history && Array.isArray(profile.transfer_history) 
-    ? profile.transfer_history.length 
-    : 0;
-    
-  const trophyCount = profile?.achievements && Array.isArray(profile.achievements)
-    ? profile.achievements.length
-    : 0;
+  const transferCount = transferHistoryArray.length;
+  const trophyCount = achievementsArray.length;
 
   const baseStats = [
     { label: 'Public Profile Views', value: publicViews.toString(), icon: Eye, trend: 'All Time', color: 'text-blue-600', bg: 'bg-blue-50' },
