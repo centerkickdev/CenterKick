@@ -72,6 +72,49 @@ export default async function DashboardPage() {
     }
   };
 
+  // Player Analytics Calculations
+  let totalGoals = 0;
+  let totalAssists = 0;
+  let totalYellows = 0;
+  let totalReds = 0;
+  let totalApps = 0;
+
+  if ((role === 'player' || role === 'athlete') && profile?.career_stats && Array.isArray(profile.career_stats)) {
+    profile.career_stats.forEach((stat: any) => {
+      totalGoals += Number(stat.goals) || 0;
+      totalAssists += Number(stat.assists) || 0;
+      totalYellows += Number(stat.yellow_cards) || 0;
+      totalReds += Number(stat.red_cards) || 0;
+      totalApps += Number(stat.apps) || 0;
+    });
+  }
+  
+  const careerGoalContributions = totalGoals + totalAssists;
+  const disciplineIndex = `${totalYellows} YEL / ${totalReds} RED`;
+  
+  const transferCount = profile?.transfer_history && Array.isArray(profile.transfer_history) 
+    ? profile.transfer_history.length 
+    : 0;
+    
+  const trophyCount = profile?.achievements && Array.isArray(profile.achievements)
+    ? profile.achievements.length
+    : 0;
+
+  const baseStats = [
+    { label: 'Public Profile Views', value: publicViews.toString(), icon: Eye, trend: 'All Time', color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Scouting Views', value: scoutingViews.toString(), icon: Target, trend: 'Verified Orgs', color: 'text-green-600', bg: 'bg-green-50' },
+    { label: 'Market Value', value: profile?.market_value ? `$${profile.market_value}` : 'Pending', icon: TrendingUp, trend: 'Current', color: 'text-[#b50a0a]', bg: 'bg-red-50' },
+  ];
+
+  const playerStats = (role === 'player' || role === 'athlete') ? [
+    { label: 'Goal Contributions', value: careerGoalContributions.toString(), icon: Target, trend: `${totalGoals}G, ${totalAssists}A`, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Discipline Index', value: disciplineIndex, icon: AlertTriangle, trend: `${totalApps} Apps`, color: 'text-orange-600', bg: 'bg-orange-50' },
+    { label: 'Transfers', value: transferCount.toString(), icon: Globe, trend: 'Career Total', color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: 'Trophies', value: trophyCount.toString(), icon: Award, trend: 'Achievements', color: 'text-amber-600', bg: 'bg-amber-50' },
+  ] : [];
+
+  const displayStats = [...baseStats, ...playerStats];
+
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
 
@@ -114,18 +157,14 @@ export default async function DashboardPage() {
       </div>
 
       {/* Analytics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[
-          { label: 'Public Profile Views', value: publicViews.toString(), icon: Eye, trend: 'All Time', color: 'text-blue-600', bg: 'bg-blue-50' },
-          { label: 'Scouting Views', value: scoutingViews.toString(), icon: Target, trend: 'Verified Orgs', color: 'text-green-600', bg: 'bg-green-50' },
-          { label: 'Market Value', value: profile?.market_value ? `$${profile.market_value}` : 'Pending', icon: TrendingUp, trend: 'Activate Plan', color: 'text-[#b50a0a]', bg: 'bg-red-50' },
-        ].map((stat, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {displayStats.map((stat, i) => (
           <div key={i} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
               <div className={`w-10 h-10 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center`}>
                 <stat.icon className="w-5 h-5" />
               </div>
-              <span className={`text-xs font-bold ${stat.trend.includes('+') ? 'text-green-600' : 'text-gray-400'} tracking-wide`}>{stat.trend}</span>
+              <span className={`text-xs font-bold ${stat.trend.includes('+') || stat.trend.includes('G,') ? 'text-green-600' : 'text-gray-400'} tracking-wide`}>{stat.trend}</span>
             </div>
             <p className="text-xs font-bold text-gray-400 tracking-wide mb-1">{stat.label}</p>
             <p className="text-2xl font-bold text-gray-900 tracking-tight">{stat.value}</p>

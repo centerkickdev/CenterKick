@@ -41,9 +41,9 @@ export async function trackProfileView(profileId: string) {
       }
     }
 
-    // Since tracking views shouldn't fail if the user's RLS blocks it, we use the admin client
-    // Or, since we added a policy "Allow public inserts", the regular client works.
-    const { error } = await supabase
+    // Use the admin client to bypass RLS policies which might block anonymous inserts
+    const adminSupabase = createAdminClient();
+    const { error } = await adminSupabase
       .from('profile_views')
       .insert({
         profile_id: profileId,
