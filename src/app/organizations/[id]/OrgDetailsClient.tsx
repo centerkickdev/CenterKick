@@ -31,7 +31,11 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
 
    const displayName = profile.full_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Anonymous Organization';
    let profileEst = 'NIL';
-   if (profile.established_year) {
+   if (profile.year_established) {
+      profileEst = typeof profile.year_established === 'string' && profile.year_established.includes('-') 
+         ? new Date(profile.year_established).getFullYear().toString()
+         : profile.year_established.toString();
+   } else if (profile.established_year) {
       profileEst = typeof profile.established_year === 'string' && profile.established_year.includes('-') 
          ? new Date(profile.established_year).getFullYear().toString()
          : profile.established_year.toString();
