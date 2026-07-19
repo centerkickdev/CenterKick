@@ -1,9 +1,8 @@
 'use client';
 
 import { Plus, Trash2, Search } from 'lucide-react';
-import { HybridLinkInput } from './HybridLinkInput';
 
-export function ScoutDiscoveriesForm({ data, onChange }: { data: any, onChange: (val: any) => void, disabled?: boolean }) {
+export function ScoutDiscoveriesForm({ data, onChange, disabled }: { data: any, onChange: (val: any) => void, disabled?: boolean }) {
   const qualifications = ['PFSA Level 1', 'PFSA Level 2', 'PFSA Level 3', 'FA Talent ID Level 1', 'FA Talent ID Level 2', 'Other'];
   const methodologies = ['Live Match Scouting', 'Video Scouting', 'Data Analytics', 'Character Assessment'];
   const regions = ['Europe', 'South America', 'North America', 'Africa', 'Asia', 'Global'];
@@ -38,14 +37,16 @@ export function ScoutDiscoveriesForm({ data, onChange }: { data: any, onChange: 
 
   return (
     <div className="space-y-8">
-      {/* Current Affiliation */}
+      {/* License Number */}
       <div className="space-y-3">
-        <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">Current Affiliation (Club / Agency)</label>
-        <HybridLinkInput 
-           value={data.current_affiliation || { name: '' }} 
-           onChange={(val) => onChange({ ...data, current_affiliation: val })}
-           placeholderName="Club or Agency Name"
-           placeholderEmail="Organization Email (Optional for linking)"
+        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">FIFA/FA/Scouting License Number</label>
+        <input 
+           disabled={disabled}
+           type="text" 
+           className="w-full bg-white border border-gray-200 rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] transition-all outline-none text-gray-900 disabled:opacity-70 disabled:bg-gray-100" 
+           placeholder="e.g. FA-SCT-2024-891" 
+           value={data.fa_license_number || ''}
+           onChange={(e) => onChange({ ...data, fa_license_number: e.target.value })}
         />
       </div>
 
@@ -148,8 +149,8 @@ export function ScoutDiscoveriesForm({ data, onChange }: { data: any, onChange: 
                    <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.recommendedTo} onChange={(e) => updateDiscovery(index, 'recommendedTo', e.target.value)} />
                 </div>
                 <div>
-                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Current Status / Achievements</label>
-                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.currentStatus} onChange={(e) => updateDiscovery(index, 'currentStatus', e.target.value)} placeholder="e.g. Now plays in Premier League" />
+                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Current Club</label>
+                   <input type="text" className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:border-[#b50a0a] outline-none" value={record.currentStatus} onChange={(e) => updateDiscovery(index, 'currentStatus', e.target.value)} placeholder="e.g. Manchester United" />
                 </div>
               </div>
             </div>

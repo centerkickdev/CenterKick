@@ -373,6 +373,7 @@ export default function ProfileEditor() {
       profileData.client_portfolio = roleData.client_portfolio;
       profileData.notable_transfers = roleData.notable_transfers;
     } else if (role === 'scout') {
+      profileData.fa_license_number = roleData.fa_license_number;
       profileData.scouting_qualifications = roleData.scouting_qualifications;
       profileData.specialized_regions = roleData.specialized_regions;
       profileData.scouting_methodologies = roleData.scouting_methodologies;
