@@ -110,8 +110,6 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                   <div className="flex items-center gap-3 text-base font-bold mb-8 text-white/80">
                      <MapPin className="w-3.5 h-3.5 text-[#b50a0a]" />
                      <span>{profileClub}</span>
-                     <span className="text-white/30">—</span>
-                     <span>{athlete.country || 'NIL'}</span>
                   </div>
                </div>
 
