@@ -74,6 +74,7 @@ export default function ProfileEditor() {
   const [careerStats, setCareerStats] = useState<any[]>([]);
   const [transferHistory, setTransferHistory] = useState<any[]>([]);
   const [roleData, setRoleData] = useState<any>({});
+  const [linkedPartnerName, setLinkedPartnerName] = useState<string>('');
 
   useEffect(() => {
     async function loadData() {
@@ -139,6 +140,23 @@ export default function ProfileEditor() {
         setSeasonsList(seasons || []);
         setLeaguesList(leagues || []);
         setClubsList(clubs || []);
+
+        let partnerNames = '';
+        if (profileRecord?.agent_id || profileRecord?.organization_id) {
+          const partnerIds = [];
+          if (profileRecord.agent_id) partnerIds.push(profileRecord.agent_id);
+          if (profileRecord.organization_id) partnerIds.push(profileRecord.organization_id);
+
+          const { data: partners } = await supabase
+            .from('profiles')
+            .select('first_name, last_name')
+            .in('user_id', partnerIds);
+          
+          if (partners && partners.length > 0) {
+            partnerNames = partners.map((p: { first_name: string | null, last_name: string | null }) => `${p.first_name || ''} ${p.last_name || ''}`.trim()).join(' & ');
+          }
+        }
+        setLinkedPartnerName(partnerNames);
       }
       setIsLoading(false);
     }
@@ -650,7 +668,7 @@ export default function ProfileEditor() {
 
             {activeTab === 'Basic Info' && (
               <form onSubmit={saveBasicInfo} onChange={() => setIsDirty(true)} className="space-y-6 animate-in fade-in duration-500">
-                <div className="flex flex-col md:flex-row justify-between items-start gap-6 md:p-2 border-b border-gray-50 pb-8 mb-4">
+                <div className="flex flex-col gap-6 md:p-2 border-b border-gray-50 pb-8 mb-4">
                   <div className="flex flex-col items-center justify-center md:items-start md:justify-start">
                     <input type="file" disabled={!isEditing} id="avatar_upload" className="hidden" accept="image/*" onChange={handleAvatarUpload} />
                     <div
@@ -675,10 +693,9 @@ export default function ProfileEditor() {
                     </div>
                   </div>
                   
-                  <div className="flex flex-col gap-4 w-full md:w-1/3">
-                    {role !== 'organization' && (
-                      <>
-                        <div className="space-y-1.5">
+                  {role !== 'organization' && (
+                    <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full">
+                      <div className="space-y-1.5 flex-1">
                           <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Contract Status</label>
                           <select disabled={!isEditing} name="is_signed" defaultValue={profile?.is_signed ? 'true' : 'false'} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black disabled:opacity-70 disabled:bg-gray-100">
                             <option value="true">Signed Agent / Club</option>
@@ -689,14 +706,13 @@ export default function ProfileEditor() {
                           )}
                         </div>
                         {(profile?.agent_id || profile?.organization_id) && (
-                          <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Linked Organization</label>
-                            <input disabled type="text" value="Linked Partner Verified" className="w-full bg-green-50 border-none rounded-2xl px-4 py-3 text-sm font-bold text-green-800 disabled:opacity-100 cursor-not-allowed" />
+                          <div className="space-y-1.5 flex-1">
+                            <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Linked Organization / Agent</label>
+                            <input disabled type="text" value={linkedPartnerName || "Linked Partner Verified"} className="w-full bg-green-50 border-none rounded-2xl px-4 py-3 text-sm font-bold text-green-800 disabled:opacity-100 cursor-not-allowed" />
                           </div>
                         )}
-                      </>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2">
@@ -976,8 +992,10 @@ export default function ProfileEditor() {
                     </div>
 
                     <div className="flex flex-col space-y-1.5 md:p-2">
-                      <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Contract Expiry Date</label>
-                      <input disabled={!isEditing} name="contract_expiry" type="date" min={new Date().toISOString().split('T')[0]} defaultValue={profile?.contract_expiry} className="w-full md:w-1/2 bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                      <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">
+                        Contract Expiry Date {!!profile?.current_club && <span className="text-red-500">*</span>}
+                      </label>
+                      <input required={!!profile?.current_club} disabled={!isEditing} name="contract_expiry" type="date" min={new Date().toISOString().split('T')[0]} defaultValue={profile?.contract_expiry} className="w-full md:w-1/2 bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
                     </div>
                   </>
                 )}

@@ -132,26 +132,30 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
                 </button>
               )}
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="lg:col-span-2">
-                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Previous Club</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={record.club} onChange={(e) => updateTransfer(index, 'club', e.target.value)} placeholder="e.g. Real Madrid" disabled={disabled} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Previous Club</label>
+                   <input type="text" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={record.club} onChange={(e) => updateTransfer(index, 'club', e.target.value)} placeholder="e.g. Real Madrid" disabled={disabled} />
                 </div>
                 <div>
-                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Transfer Date (Year)</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={record.date} onChange={(e) => updateTransfer(index, 'date', e.target.value)} placeholder="e.g. 2023" disabled={disabled} />
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                     Transfer Date (Year) {!!record.club && <span className="text-red-500">*</span>}
+                   </label>
+                   <input required={!!record.club} type="text" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={record.date} onChange={(e) => updateTransfer(index, 'date', e.target.value)} placeholder="e.g. 2023" disabled={disabled} />
                 </div>
                 <div>
-                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Transfer Type</label>
-                   <select className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={record.type} onChange={(e) => updateTransfer(index, 'type', e.target.value)} disabled={disabled}>
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                     Transfer Type {!!record.club && <span className="text-red-500">*</span>}
+                   </label>
+                   <select required={!!record.club} className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={record.type} onChange={(e) => updateTransfer(index, 'type', e.target.value)} disabled={disabled}>
                      <option value="Permanent">Permanent</option>
                      <option value="Loan">Loan</option>
                      <option value="Free Transfer">Free Transfer</option>
                    </select>
                 </div>
-                <div className="md:col-span-2 lg:col-span-4">
-                   <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Transfer Fee (Optional)</label>
-                   <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={record.fee} onChange={(e) => updateTransfer(index, 'fee', e.target.value)} placeholder="e.g. €50M, Undisclosed" disabled={disabled} />
+                <div>
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Transfer Fee (Optional)</label>
+                   <input type="text" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={record.fee} onChange={(e) => updateTransfer(index, 'fee', e.target.value)} placeholder="e.g. €50M, Undisclosed" disabled={disabled} />
                 </div>
               </div>
             </div>
@@ -198,16 +202,20 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="lg:col-span-2">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Honour Title</label>
-                      <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={title} onChange={(e) => updateAchievement(index, 'title', e.target.value)} placeholder="e.g. Player of the Year" disabled={disabled} />
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Honour Title</label>
+                      <input type="text" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={title} onChange={(e) => updateAchievement(index, 'title', e.target.value)} placeholder="e.g. Player of the Year" disabled={disabled} />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Year</label>
-                      <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={year} onChange={(e) => updateAchievement(index, 'year', e.target.value)} placeholder="e.g. 2023" disabled={disabled} />
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                        Year {!!title && <span className="text-red-500">*</span>}
+                      </label>
+                      <input required={!!title} type="text" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={year} onChange={(e) => updateAchievement(index, 'year', e.target.value)} placeholder="e.g. 2023" disabled={disabled} />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Category</label>
-                      <select className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={category} onChange={(e) => updateAchievement(index, 'category', e.target.value)} disabled={disabled}>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                        Category {!!title && <span className="text-red-500">*</span>}
+                      </label>
+                      <select required={!!title} className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={category} onChange={(e) => updateAchievement(index, 'category', e.target.value)} disabled={disabled}>
                         <option value="Individual">Individual</option>
                         <option value="Club">Club</option>
                         <option value="Country">Country</option>

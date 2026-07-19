@@ -279,16 +279,20 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="lg:col-span-2">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Honour Title</label>
-                      <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={title} onChange={(e) => updateAchievement(index, 'title', e.target.value)} placeholder="e.g. Manager of the Year" disabled={disabled} />
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Honour Title</label>
+                      <input type="text" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={title} onChange={(e) => updateAchievement(index, 'title', e.target.value)} placeholder="e.g. Manager of the Year" disabled={disabled} />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Year</label>
-                      <input type="text" className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={year} onChange={(e) => updateAchievement(index, 'year', e.target.value)} placeholder="e.g. 2023" disabled={disabled} />
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                        Year {!!title && <span className="text-red-500">*</span>}
+                      </label>
+                      <input required={!!title} type="text" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={year} onChange={(e) => updateAchievement(index, 'year', e.target.value)} placeholder="e.g. 2023" disabled={disabled} />
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Category</label>
-                      <select className="w-full px-3 py-2 border rounded-lg text-sm bg-white" value={category} onChange={(e) => updateAchievement(index, 'category', e.target.value)} disabled={disabled}>
+                      <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
+                        Category {!!title && <span className="text-red-500">*</span>}
+                      </label>
+                      <select required={!!title} className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={category} onChange={(e) => updateAchievement(index, 'category', e.target.value)} disabled={disabled}>
                         <option value="Individual">Individual</option>
                         <option value="Club">Club</option>
                         <option value="Country">Country</option>
