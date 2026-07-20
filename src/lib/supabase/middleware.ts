@@ -75,8 +75,7 @@ export async function updateSession(request: NextRequest) {
 
     const [
       { data: userRecord },
-      { data: profile },
-      { data: subscriptions }
+      { data: profile }
     ] = await Promise.all([
       supabase
         .from('users')
@@ -87,18 +86,15 @@ export async function updateSession(request: NextRequest) {
         .from('profiles')
         .select('status, verification_requested')
         .eq('user_id', user.id)
-        .single(),
-      supabase
-        .from('subscriptions')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('status', 'active')
+        .single()
     ]);
 
     isActive = userRecord?.is_active ?? true;
     profileStatus = profile?.status ?? null;
     const verificationRequested = profile?.verification_requested ?? false;
-    const isSubscribed = subscriptions && subscriptions.length > 0;
+    
+    // In CenterKick, having an active subscription sets the profile status to 'active'.
+    const isSubscribed = profileStatus === 'active';
 
     // 5. Mandatory subscription check for participants in the dashboard
     if (!isPublicAdminPath && isDashboardPath) {

@@ -27,7 +27,33 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
     return notFound();
   }
 
-  const role = (profile.role || 'player').toLowerCase();
+  const role = (profile.users?.role || profile.role || 'player').toLowerCase();
+
+  // Fetch pricing plan to determine if it's a Free tier account
+  const { data: settings } = await admin.from('site_content').select('content').eq('page', 'settings').eq('section', 'payment').single();
+  const basePrice = settings?.content?.plans?.[role]?.amount ? Number(settings.content.plans[role].amount) : 0;
+
+  // The user dashboard evaluates subscription status purely by checking for confirmed transactions.
+  // We must query the transactions table for this target user to match that exact logic.
+  const { data: transactions } = await admin
+    .from('transactions')
+    .select('status, amount')
+    .eq('user_id', profile.id);
+
+  let subStatus = 'UNPAID';
+  const hasPaid = transactions?.some(t => t.status === 'confirmed');
+
+  if (hasPaid) {
+    // If they have a confirmed transaction but the plan is free (amount 0), we can display FREE or PAID.
+    // The dashboard shows "Paid" under Account Status if active, even for Free tiers. 
+    // To match your expectation for a Free badge on free tiers, we check the transaction amount.
+    const confirmedTx = transactions?.find(t => t.status === 'confirmed');
+    subStatus = confirmedTx?.amount === 0 ? 'FREE' : 'PAID';
+  } else if (profile.verification_requested) {
+    subStatus = 'PENDING APPROVAL';
+  } else if (profile.status === 'expired') {
+    subStatus = 'EXPIRED';
+  }
 
   // Fetch common reference data needed for Player and Coach clients
   const [
@@ -64,6 +90,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
     <AdminUserProfileClient 
       profile={profile} 
       role={role} 
+      subStatus={subStatus}
       initialClients={linkedAccounts} 
       clubsList={clubs || []}
       leaguesList={leagues || []}
