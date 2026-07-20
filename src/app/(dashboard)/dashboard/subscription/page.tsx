@@ -173,11 +173,10 @@ export default function SubscriptionPage() {
       return;
     }
 
-    const handler = paystack.setup({
+    const config: any = {
       key: paymentSettings.paystackPublicKey,
       email: profile.email,
       amount: basePrice * 100, // Paystack amount is in kobo
-      plan: paystackPlanCode || undefined, // pass plan if exists
       currency: 'NGN',
       ref: 'ck_' + Math.floor((Math.random() * 1000000000) + 1),
       callback: function(response: any){
@@ -199,7 +198,13 @@ export default function SubscriptionPage() {
       onClose: function(){
           showToast('Payment window closed.', 'error');
       }
-    });
+    };
+    
+    if (paystackPlanCode) {
+      config.plan = paystackPlanCode;
+    }
+
+    const handler = paystack.setup(config);
     handler.openIframe();
   };
 
