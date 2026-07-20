@@ -27,6 +27,7 @@ interface UserProfile {
   role?: string;
   status?: string;
   verification_requested?: boolean;
+  email?: string;
 }
 
 interface CMSPaymentSettings {
@@ -37,6 +38,7 @@ interface CMSPaymentSettings {
   paystackActive?: boolean;
   paystackPublicKey?: string;
   plans?: any;
+  legacyLinkActive?: boolean;
 }
 
 interface UserTransaction {
@@ -692,5 +694,6 @@ export default function SubscriptionPage() {
          </div>
        )}
     </div>
+    </>
   );
 }

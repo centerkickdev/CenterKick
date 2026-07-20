@@ -16,6 +16,7 @@ const eslintConfig = defineConfig([
     "scratch/**",
     "scripts/**",
     "check_users.js",
+    "update_inputs.js",
   ]),
   {
     rules: {

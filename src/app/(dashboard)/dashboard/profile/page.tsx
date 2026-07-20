@@ -358,7 +358,7 @@ export default function ProfileEditor() {
       }
     }
 
-    let finalClubName = profile?.current_club;
+    const finalClubName = profile?.current_club;
     if (finalClubName && finalLeagueId && !clubsList.some(c => c.name === finalClubName && c.league_id === finalLeagueId)) {
        await submitUserClub(finalClubName, finalLeagueId);
     }

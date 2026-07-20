@@ -84,7 +84,7 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
           <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Primary Formation</label>
           <SearchableCombobox
              disabled={disabled}
-             options={formations.map(f => ({ name: f }))}
+             options={formations.map(f => ({ id: f, name: f }))}
              value={data.formation || ''}
              valueField="name"
              displayField="name"
