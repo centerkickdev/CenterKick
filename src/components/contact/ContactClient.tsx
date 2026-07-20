@@ -11,9 +11,11 @@ import {
    Globe,
    Instagram,
    Twitter,
-   Facebook
+   Facebook,
+   Loader2
 } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/context/ToastContext";
 
 interface ContactContent {
   header?: { title: string; description: string };
@@ -30,6 +32,51 @@ interface ContactClientProps {
 
 export function ContactClient({ layout, content, navContent, footerContent, siteSettings }: ContactClientProps) {
    const [openFaq, setOpenFaq] = useState<number | null>(0);
+   const { showToast } = useToast();
+   const [isSubmitting, setIsSubmitting] = useState(false);
+   const [formData, setFormData] = useState({
+      name: '',
+      email: '',
+      subject: '',
+      message: ''
+   });
+
+   const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      
+      if (!formData.name || !formData.email || !formData.message) {
+         showToast('Please fill in all required fields.', 'error');
+         return;
+      }
+
+      setIsSubmitting(true);
+      try {
+         const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+               name: formData.name,
+               email: formData.email,
+               message: formData.message,
+               targetType: 'General',
+               targetId: 'support',
+               targetName: formData.subject || 'General Inquiry'
+            })
+         });
+
+         if (!response.ok) {
+            throw new Error('Failed to send message');
+         }
+
+         showToast('Message sent successfully! We will get back to you shortly.', 'success');
+         setFormData({ name: '', email: '', subject: '', message: '' });
+      } catch (error) {
+         console.error('Contact submit error:', error);
+         showToast('Failed to send message. Please try again later.', 'error');
+      } finally {
+         setIsSubmitting(false);
+      }
+   };
 
    const renderSection = (key: string) => {
       switch (key) {
@@ -51,25 +98,25 @@ export function ContactClient({ layout, content, navContent, footerContent, site
             );
          case 'info':
             return (
-               <div key={key} className="w-full lg:w-1/3 flex flex-col gap-12">
+               <div key={key} className="w-full lg:w-1/3 flex flex-col gap-12 lg:pr-8">
                   <div>
-                     <h2 className="text-2xl font-bold text-gray-900 mb-8 tracking-tight">Direct Contacts</h2>
-                     <div className="space-y-8">
-                        <div className="group flex items-start gap-4 p-4 -ml-4 rounded-2xl hover:bg-gray-50 transition-colors">
-                           <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shrink-0 group-hover:bg-[#b50a0a]/10 group-hover:text-[#b50a0a] transition-colors border border-gray-200 group-hover:border-[#b50a0a]/20">
-                              <Mail className="w-5 h-5 text-gray-600 group-hover:text-[#b50a0a]" />
+                     <h2 className="text-3xl font-black text-gray-900 mb-8 tracking-tight">Direct Contacts</h2>
+                     <div className="space-y-6">
+                        <div className="group flex items-center gap-5 p-5 -ml-5 rounded-2xl hover:bg-white hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent hover:border-gray-100 transition-all cursor-pointer">
+                           <div className="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center shrink-0 group-hover:bg-[#b50a0a] group-hover:text-white transition-colors duration-300">
+                              <Mail className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors duration-300" />
                            </div>
                            <div>
-                              <h3 className="font-bold text-gray-900 mb-1">General Support</h3>
+                              <h3 className="font-bold text-gray-900 mb-1 text-lg">General Support</h3>
                               <a href="mailto:support@centerkick.com" className="block text-gray-500 hover:text-[#b50a0a] font-medium transition-colors">support@centerkick.com</a>
                            </div>
                         </div>
-                        <div className="group flex items-start gap-4 p-4 -ml-4 rounded-2xl hover:bg-gray-50 transition-colors">
-                           <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center shrink-0 group-hover:bg-[#b50a0a]/10 group-hover:text-[#b50a0a] transition-colors border border-gray-200 group-hover:border-[#b50a0a]/20">
-                              <Briefcase className="w-5 h-5 text-gray-600 group-hover:text-[#b50a0a]" />
+                        <div className="group flex items-center gap-5 p-5 -ml-5 rounded-2xl hover:bg-white hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent hover:border-gray-100 transition-all cursor-pointer">
+                           <div className="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center shrink-0 group-hover:bg-[#b50a0a] group-hover:text-white transition-colors duration-300">
+                              <Briefcase className="w-6 h-6 text-gray-500 group-hover:text-white transition-colors duration-300" />
                            </div>
                            <div>
-                              <h3 className="font-bold text-gray-900 mb-1">Partnerships</h3>
+                              <h3 className="font-bold text-gray-900 mb-1 text-lg">Partnerships</h3>
                               <a href="mailto:partnerships@centerkick.com" className="block text-gray-500 hover:text-[#b50a0a] font-medium transition-colors">partnerships@centerkick.com</a>
                            </div>
                         </div>
@@ -77,7 +124,7 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                   </div>
                   <div className="flex gap-4">
                      {[Instagram, function XIcon(props: any) { return <svg viewBox="0 0 24 24" aria-hidden="true" className={props.className || "w-5 h-5 fill-current"}><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>; }, Facebook, Globe].map((Icon: any, i) => (
-                        <a key={i} href="#" className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-gray-400 hover:text-black hover:shadow-lg hover:-translate-y-1 transition-all border border-gray-100 group">
+                        <a key={i} href="#" className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-900 hover:text-white hover:shadow-lg transition-all group">
                            <Icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
                         </a>
                      ))}
@@ -87,21 +134,82 @@ export function ContactClient({ layout, content, navContent, footerContent, site
          case 'form':
             return (
                <div key={key} className="w-full lg:w-2/3">
-                  <div className="bg-white rounded-3xl p-8 md:p-12 border border-gray-100 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.05)] relative overflow-hidden">
-                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#b50a0a] to-[#ff4d4d]"></div>
-                     <h2 className="text-3xl font-bold text-gray-900 mb-8 tracking-tight flex items-center gap-3">
-                        <MessageSquare className="w-8 h-8 text-[#b50a0a]" /> Send a Message
-                     </h2>
-                     <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                           <input type="text" placeholder="Full Name" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] text-black placeholder:text-gray-900" />
-                           <input type="email" placeholder="Email Address" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] text-black placeholder:text-gray-900" />
+                  <div className="bg-white rounded-[2rem] p-8 md:p-14 border border-gray-100 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] relative overflow-hidden">
+                     <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#b50a0a] via-[#ff4d4d] to-[#b50a0a]"></div>
+                     
+                     <div className="flex items-center gap-4 mb-10">
+                        <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
+                           <MessageSquare className="w-6 h-6 text-[#b50a0a]" />
                         </div>
-                        <input type="text" placeholder="Subject" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] text-black placeholder:text-gray-900" />
-                        <textarea rows={6} placeholder="Message" className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] resize-none text-black placeholder:text-gray-900"></textarea>
-                        <button type="submit" className="bg-[#b50a0a] text-white font-bold tracking-wide px-10 py-5 rounded-xl shadow-lg transition-all hover:-translate-y-1 group flex items-center gap-3">
-                            Send Message <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
+                        <h2 className="text-3xl font-black text-gray-900 tracking-tight">
+                           Send a Message
+                        </h2>
+                     </div>
+
+                     <form className="space-y-6" onSubmit={handleSubmit}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <div>
+                              <label className="block text-sm font-bold text-gray-700 mb-2">Full Name *</label>
+                              <input 
+                                 type="text" 
+                                 required
+                                 value={formData.name}
+                                 onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                 placeholder="John Doe" 
+                                 className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] focus:ring-4 focus:ring-[#b50a0a]/10 text-gray-900 transition-all font-medium placeholder:text-gray-400 placeholder:font-normal" 
+                              />
+                           </div>
+                           <div>
+                              <label className="block text-sm font-bold text-gray-700 mb-2">Email Address *</label>
+                              <input 
+                                 type="email" 
+                                 required
+                                 value={formData.email}
+                                 onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                 placeholder="john@example.com" 
+                                 className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] focus:ring-4 focus:ring-[#b50a0a]/10 text-gray-900 transition-all font-medium placeholder:text-gray-400 placeholder:font-normal" 
+                              />
+                           </div>
+                        </div>
+                        <div>
+                           <label className="block text-sm font-bold text-gray-700 mb-2">Subject</label>
+                           <input 
+                              type="text" 
+                              value={formData.subject}
+                              onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                              placeholder="How can we help you?" 
+                              className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] focus:ring-4 focus:ring-[#b50a0a]/10 text-gray-900 transition-all font-medium placeholder:text-gray-400 placeholder:font-normal" 
+                           />
+                        </div>
+                        <div>
+                           <label className="block text-sm font-bold text-gray-700 mb-2">Message *</label>
+                           <textarea 
+                              rows={6} 
+                              required
+                              value={formData.message}
+                              onChange={(e) => setFormData({...formData, message: e.target.value})}
+                              placeholder="Write your message here..." 
+                              className="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#b50a0a] focus:ring-4 focus:ring-[#b50a0a]/10 resize-none text-gray-900 transition-all font-medium placeholder:text-gray-400 placeholder:font-normal"
+                           ></textarea>
+                        </div>
+                        <div className="pt-4">
+                           <button 
+                              type="submit" 
+                              disabled={isSubmitting}
+                              className="bg-[#b50a0a] disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold tracking-wide px-10 py-5 rounded-xl shadow-lg shadow-[#b50a0a]/20 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-[#b50a0a]/30 active:translate-y-0 group flex items-center justify-center gap-3 w-full sm:w-auto min-w-[200px]"
+                           >
+                               {isSubmitting ? (
+                                  <>
+                                     <Loader2 className="w-5 h-5 animate-spin" />
+                                     Sending...
+                                  </>
+                               ) : (
+                                  <>
+                                     Send Message <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                  </>
+                               )}
+                           </button>
+                        </div>
                      </form>
                   </div>
                </div>
