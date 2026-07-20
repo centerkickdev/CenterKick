@@ -98,6 +98,7 @@ interface ProfileEdit {
     email: string;
     role: string;
     country: string;
+    avatar_url?: string;
   } | null;
 }
 

@@ -68,7 +68,7 @@ export default async function AdminUsersPage({
     const userIds = rawUsers.map((u: any) => u.id);
     const { data: profiles } = await adminClient
       .from('profiles')
-      .select('user_id, status, first_name, last_name')
+      .select('user_id, status, first_name, last_name, slug')
       .in('user_id', userIds);
 
     const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));

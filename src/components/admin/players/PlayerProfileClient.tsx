@@ -939,7 +939,6 @@ function MediaGalleryModal({
 export default function PlayerProfileClient({ player, agents, leagues, clubs, seasons, countries }: PlayerProfileClientProps) {
   const router = useRouter();
   const toast = useToast();
-  const [activeTab, setActiveTab] = useState<'profile' | 'stats' | 'bio' | 'gallery' | 'news' | 'shop' | 'billing'>('profile');
   const [playerTransactions, setPlayerTransactions] = useState<Record<string, any>[]>([]);
   const [pendingEdits, setPendingEdits] = useState<ProfileEdit[]>([]);
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
@@ -987,69 +986,43 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
   const achievementsPerPage = 5;
 
   useEffect(() => {
-    // Fetch transactions when on billing tab
-    if (activeTab === 'billing') {
-      const fetchTransactions = async () => {
-        setIsLoadingTransactions(true);
-        const res = await getPlayerTransactions(player.id);
-        if (res.success) setPlayerTransactions(res.data || []);
-        setIsLoadingTransactions(false);
-      };
-      fetchTransactions();
-    }
-  }, [player.id, activeTab]);
-
-  useEffect(() => {
-    // Fetch pending edits on load
-    const fetchEdits = async () => {
+    // Fetch data
+    const fetchData = async () => {
+      setIsLoadingTransactions(true);
       setIsLoadingEdits(true);
-      const res = await getPendingEdits(player.id);
-      if (res.success) setPendingEdits(res.data || []);
-      setIsLoadingEdits(false);
-    };
-    fetchEdits();
-  }, [player.id]);
+      setIsLoadingStats(true);
+      setIsLoadingTransfers(true);
+      setIsLoadingAchievements(true);
+      setIsLoadingNews(true);
 
-  useEffect(() => {
-    // Fetch stats and transfers when on stats tab
-    if (activeTab === 'stats') {
-      const fetchData = async () => {
-        setIsLoadingStats(true);
-        setIsLoadingTransfers(true);
-        const [statsRes, transfersRes] = await Promise.all([
-          getPlayerStats(player.id),
-          getPlayerTransfers(player.id)
-        ]);
-        if (statsRes.success) setPlayerStats(statsRes.data || []);
-        if (transfersRes.success) setPlayerTransfers(transfersRes.data || []);
-        setIsLoadingStats(false);
-        setIsLoadingTransfers(false);
-      };
-      fetchData();
-    }
-    
-    if (activeTab === 'bio') {
-      const fetchAchievements = async () => {
-        setIsLoadingAchievements(true);
-        const res = await getPlayerAchievements(player.id);
-        if (res.success) setPlayerAchievements(res.data || []);
-        setIsLoadingAchievements(false);
-      };
-      fetchAchievements();
-    }
-    
-    if (activeTab === 'news') {
-      const fetchNews = async () => {
-        setIsLoadingNews(true);
-        // Fetch news based on all profile tags
-        const newsTags = profileTags.length > 0 ? profileTags : [`${player.first_name} ${player.last_name}`];
-        const res = await getPlayerNews(newsTags);
-        if (res.success) setPlayerNews(res.data || []);
-        setIsLoadingNews(false);
-      };
-      fetchNews();
-    }
-  }, [player.id, activeTab, player.first_name, player.last_name, profileTags]);
+      const [txRes, editRes, statsRes, transRes, achRes] = await Promise.all([
+        getPlayerTransactions(player.id),
+        getPendingEdits(player.id),
+        getPlayerStats(player.id),
+        getPlayerTransfers(player.id),
+        getPlayerAchievements(player.id)
+      ]);
+      
+      if (txRes.success) setPlayerTransactions(txRes.data || []);
+      if (editRes.success) setPendingEdits(editRes.data || []);
+      if (statsRes.success) setPlayerStats(statsRes.data || []);
+      if (transRes.success) setPlayerTransfers(transRes.data || []);
+      if (achRes.success) setPlayerAchievements(achRes.data || []);
+
+      // News
+      const newsTags = profileTags.length > 0 ? profileTags : [`${player.first_name} ${player.last_name}`];
+      const newsRes = await getPlayerNews(newsTags);
+      if (newsRes.success) setPlayerNews(newsRes.data || []);
+
+      setIsLoadingTransactions(false);
+      setIsLoadingEdits(false);
+      setIsLoadingStats(false);
+      setIsLoadingTransfers(false);
+      setIsLoadingAchievements(false);
+      setIsLoadingNews(false);
+    };
+    fetchData();
+  }, [player.id, player.first_name, player.last_name, profileTags]);
 
   const handleUpdateTags = async (newTags: string[]) => {
     setIsUpdatingTags(true);
@@ -1095,15 +1068,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
 
   const sortedSeasons = Object.keys(groupedStats).sort((a, b) => b.localeCompare(a));
 
-  const handleSyncTag = async () => {
-    const tagName = `${player.first_name} ${player.last_name}`;
-    if (!profileTags.includes(tagName)) {
-      await handleUpdateTags([...profileTags, tagName]);
-    } else {
-      toast.showToast('Standard tag already exists', 'info');
-    }
-  };
-
   const handleAvatarUpload = async (file: File) => {
     if (!file) return;
     setAvatarUploading(true);
@@ -1129,7 +1093,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
     }
   };
 
-  // Filtered/Paginated Transactions
   const filteredTransactions = playerTransactions.filter(tx => {
     const matchesSearch = tx.reference?.toLowerCase().includes(txSearch.toLowerCase());
     const matchesStatus = txStatusFilter === 'all' || tx.status === txStatusFilter;
@@ -1156,7 +1119,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
       setShowStatModal(false);
       setEditingStat(null);
       setSelectedSeasonForAdd(null);
-      // Re-fetch stats
       const updated = await getPlayerStats(player.id);
       if (updated.success) setPlayerStats(updated.data || []);
     } else {
@@ -1186,7 +1148,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
       toast.showToast(editingTransfer ? 'Transfer updated' : 'Transfer added', 'success');
       setShowTransferModal(false);
       setEditingTransfer(null);
-      // Re-fetch transfers
       const updated = await getPlayerTransfers(player.id);
       if (updated.success) setPlayerTransfers(updated.data || []);
     } else {
@@ -1216,7 +1177,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
       toast.showToast(editingAchievement ? 'Achievement updated' : 'Achievement added', 'success');
       setShowAchievementModal(false);
       setEditingAchievement(null);
-      // Refresh achievements
       const refreshRes = await getPlayerAchievements(player.id);
       if (refreshRes.success) setPlayerAchievements(refreshRes.data || []);
     } else {
@@ -1236,7 +1196,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
     }
   };
 
-  // Achievement Filtered Results
   const filteredAchievements = playerAchievements.filter(a => {
     const matchesSearch = achievementSearch === '' || 
       a.title.toLowerCase().includes(achievementSearch.toLowerCase()) ||
@@ -1426,30 +1385,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
             )}
           </div>
 
-          <div className="flex flex-col gap-2">
-            {[
-              { id: 'profile', label: 'Overview & Details', icon: LayoutDashboard },
-              { id: 'stats', label: 'Career & Stats', icon: Activity },
-              { id: 'bio', label: 'Biography & Awards', icon: FileText },
-              { id: 'gallery', label: 'Media Gallery', icon: ImageIcon },
-              { id: 'news', label: 'Latest News', icon: Newspaper },
-              { id: 'billing', label: 'Billing & History', icon: DollarSign },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => { setActiveTab(tab.id as 'profile' | 'stats' | 'bio' | 'gallery' | 'news' | 'shop' | 'billing'); setEditingSection(null); }}
-                className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-xs font-bold tracking-wide transition-all group ${
- activeTab === tab.id 
- ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/20 translate-x-1' 
- : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
- }`}
-              >
-                <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-white' : 'text-slate-300 group-hover:text-slate-900'} transition-colors`} />
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
           <div className="mt-auto pt-6 border-t border-slate-50">
             <div className="bg-slate-50 rounded-2xl p-4">
               <p className="text-xs font-bold text-slate-400 tracking-wide mb-1">Assigned Agent</p>
@@ -1463,9 +1398,12 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
             </div>
           </div>
         </div>
+        
         {/* Right Content Area */}
-        <div className="flex-1 min-w-0">
-          {activeTab === 'profile' && (
+        <div className="flex-1 min-w-0 space-y-12">
+          
+          {/* PROFILE OVERVIEW SECTION */}
+          <div id="profile" className="space-y-8">
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
               <div className="grid grid-cols-1 gap-4 md:p-8">
                 {/* Identity Card */}
@@ -1578,7 +1516,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                                 value={displayValue(item.field as any, item.value)}
                                 onChange={(e) => {
                                   updateField(item.field as keyof Player, e.target.value);
-                                  // If league changes, reset current_club
                                   if (item.field === 'league') {
                                     updateField('current_club', '');
                                   }
@@ -1718,11 +1655,10 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Tab 2: Stats */}
-          {activeTab === 'stats' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-12 pb-20">
+          {/* CAREER & STATS SECTION */}
+          <div id="stats" className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-12 pb-20">
               {sortedSeasons.length === 0 ? (
                 <div className="bg-white rounded-[2rem] p-20 border border-slate-100 shadow-sm text-center">
                   <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-300">
@@ -1958,12 +1894,10 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                 clubs={clubs}
                 seasons={seasons}
               />
-            </div>
-          )}
+          </div>
 
-          {/* Tab 3: Bio & Honours */}
-          {activeTab === 'bio' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8 max-w-5xl mx-auto">
+          {/* BIOGRAPHY & AWARDS SECTION */}
+          <div id="bio" className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8 max-w-5xl mx-auto">
               {/* Biography Section - Full Width */}
               <div className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-bl-full -mr-12 -mt-12 transition-all group-hover:bg-indigo-50/50"></div>
@@ -2166,7 +2100,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                 </div>
               </div>
 
-              {/* Modal Rendering */}
               <AchievementFormModal 
                 isOpen={showAchievementModal}
                 onClose={() => { setShowAchievementModal(false); setEditingAchievement(null); }}
@@ -2174,12 +2107,10 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                 initialData={editingAchievement}
                 seasons={seasons}
               />
-            </div>
-          )}
+          </div>
 
-          {/* Tab 4: Gallery */}
-          {activeTab === 'gallery' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-10">
+          {/* MEDIA GALLERY SECTION */}
+          <div id="gallery" className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-10">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white p-4 md:p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-900 shadow-sm border border-slate-100">
@@ -2232,7 +2163,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
               </div>
 
               {/* Action Grid & External Link */}
-              {/* Action Grid */}
               <div className="space-y-6">
                  <div className="flex items-center justify-between px-2">
                     <h4 className="text-xs font-bold text-slate-400 tracking-[0.2em]">Latest Action Images</h4>
@@ -2262,7 +2192,6 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                     )}
                  </div>
 
-                 {/* Manage Gallery Button at the bottom */}
                  <div className="flex justify-center pt-10 pb-4">
                     <button 
                        onClick={() => setShowMediaModal(true)}
@@ -2279,12 +2208,10 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                  onSave={(media) => handlePlayerUpdate({ media_gallery: media as { highlight_video_url: string; action_images: string[]; external_gallery_url: string } })}
                  initialData={player.media_gallery || DEFAULT_MEDIA}
               />
-            </div>
-          )}
+          </div>
 
-          {/* Tab 5: News */}
-          {activeTab === 'news' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+          {/* LATEST NEWS SECTION */}
+          <div id="news" className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
               <div className="bg-white rounded-[2.5rem] p-4 md:p-8 border border-slate-100 shadow-sm mb-8">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                   <div className="flex items-center gap-3">
@@ -2406,12 +2333,10 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                   </div>
                 )}
               </div>
-            </div>
-          )}
+          </div>
 
-          {/* Tab: Billing */}
-          {activeTab === 'billing' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+          {/* BILLING & HISTORY SECTION */}
+          <div id="billing" className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
               <div className="space-y-8">
                 {/* Subscription Card - Full Width */}
                 <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white shadow-xl relative overflow-hidden group">
@@ -2558,8 +2483,7 @@ export default function PlayerProfileClient({ player, agents, leagues, clubs, se
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

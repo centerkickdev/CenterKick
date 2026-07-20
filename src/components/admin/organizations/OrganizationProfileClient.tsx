@@ -11,7 +11,7 @@ import {
 import { RestrictedAccessInline, RestrictedAccess } from '@/components/admin/RestrictedAccess';
 import { DateDisplay } from '@/components/common/DateDisplay';
 import { getPendingEdits, processProfileEdit, getPlayerTransactions, uploadPlayerImage } from '@/app/admin/players/actions';
-import { updateAgent, getAvailableTalent, linkTalentToAgent, unlinkTalentFromAgent } from '@/app/admin/agents/actions';
+import { updateOrganization, getAvailableTalent, linkTalentToOrganization, unlinkTalentFromOrganization } from '@/app/admin/Organizations/actions';
 import Link from 'next/link';
 import Image from 'next/image';
 import { COUNTRIES } from '@/lib/constants/countries';
@@ -21,7 +21,7 @@ import { RichTextEditor } from '@/components/cms/RichTextEditor';
 import parse from 'html-react-parser';
 import { FlagIcon } from '@/components/common/FlagIcon';
 
-interface Agent {
+interface Organization {
   id: string;
   user_id: string | null;
   email: string | null;
@@ -68,16 +68,16 @@ interface ClientProfile {
   avatar_url?: string;
   country?: string;
   status: string;
-  agent_id?: string;
-  agent_status?: string;
+  Organization_id?: string;
+  Organization_status?: string;
 }
 
-interface AgentProfileClientProps {
-  agent: Agent;
+interface OrganizationProfileClientProps {
+  Organization: Organization;
   initialClients: ClientProfile[];
 }
 
-export default function AgentProfileClient({ agent, initialClients }: AgentProfileClientProps) {
+export default function OrganizationProfileClient({ Organization, initialClients }: OrganizationProfileClientProps) {
   const router = useRouter();
   const toast = useToast();
   const [playerTransactions, setPlayerTransactions] = useState<Record<string, any>[]>([]);
@@ -85,7 +85,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
   const [isLoadingEdits, setIsLoadingEdits] = useState(false);
   const [editingSection, setEditingSection] = useState<'identity' | 'agency' | 'bio' | null>(null);
-  const [editedFields, setEditedFields] = useState<Partial<Agent>>({});
+  const [editedFields, setEditedFields] = useState<Partial<Organization>>({});
   const [isSaving, setIsSaving] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [clients, setClients] = useState<ClientProfile[]>(initialClients);
@@ -98,28 +98,28 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
   useEffect(() => {
     const fetchTransactions = async () => {
       setIsLoadingTransactions(true);
-      const res = await getPlayerTransactions(agent.id);
+      const res = await getPlayerTransactions(Organization.id);
       if (res.success) setPlayerTransactions(res.data || []);
       setIsLoadingTransactions(false);
     };
     fetchTransactions();
-  }, [agent.id]);
+  }, [Organization.id]);
 
   useEffect(() => {
     const fetchEdits = async () => {
       setIsLoadingEdits(true);
-      const res = await getPendingEdits(agent.id);
+      const res = await getPendingEdits(Organization.id);
       if (res.success) setPendingEdits(res.data || []);
       setIsLoadingEdits(false);
     };
     fetchEdits();
-  }, [agent.id]);
+  }, [Organization.id]);
 
   const handleEditAction = async (editId: string, action: 'approve' | 'reject') => {
     const res = await processProfileEdit(editId, action);
     if (res.success) {
       toast.showToast(`Change ${action}d successfully`, 'success');
-      const updatedEdits = await getPendingEdits(agent.id);
+      const updatedEdits = await getPendingEdits(Organization.id);
       if (updatedEdits.success) setPendingEdits(updatedEdits.data || []);
       router.refresh();
     } else {
@@ -129,23 +129,23 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
   const handleSaveChanges = async () => {
     setIsSaving(true);
-    const res = await updateAgent(agent.id, editedFields);
+    const res = await updateOrganization(Organization.id, editedFields);
     if (res.success) {
-      toast.showToast('Agent profile updated successfully', 'success');
+      toast.showToast('Organization profile updated successfully', 'success');
       setEditingSection(null);
       setEditedFields({});
       router.refresh();
     } else {
-      toast.showToast(res.error || 'Failed to update agent profile', 'error');
+      toast.showToast(res.error || 'Failed to update Organization profile', 'error');
     }
     setIsSaving(false);
   };
 
-   const updateField = (field: keyof Agent, value: unknown) => {
-    setEditedFields((prev: Partial<Agent>) => ({ ...prev, [field]: value }));
+   const updateField = (field: keyof Organization, value: unknown) => {
+    setEditedFields((prev: Partial<Organization>) => ({ ...prev, [field]: value }));
   };
 
-   const displayValue = (field: keyof Agent, defaultValue: unknown) => {
+   const displayValue = (field: keyof Organization, defaultValue: unknown) => {
     return editedFields.hasOwnProperty(field) ? (editedFields as Record<string, any>)[field] : defaultValue;
   };
 
@@ -157,7 +157,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
       formData.append('file', file);
       const res = await uploadPlayerImage(formData);
       if (res.url) {
-        const updateRes = await updateAgent(agent.id, { avatar_url: res.url });
+        const updateRes = await updateOrganization(Organization.id, { avatar_url: res.url });
         if (updateRes.success) {
           toast.showToast('Profile picture updated', 'success');
           router.refresh();
@@ -187,7 +187,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
   };
 
   const handleLinkTalent = async (profileId: string) => {
-    const res = await linkTalentToAgent(agent.user_id!, profileId);
+    const res = await linkTalentToOrganization(Organization.user_id!, profileId);
     if (res.success) {
       toast.showToast('Talent linked successfully', 'success');
       // Refresh clients list
@@ -202,7 +202,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
   const handleUnlinkTalent = async (profileId: string) => {
     if (!confirm('Are you sure you want to remove this athlete from your roster?')) return;
-    const res = await unlinkTalentFromAgent(profileId);
+    const res = await unlinkTalentFromOrganization(profileId);
     if (res.success) {
       toast.showToast('Talent unlinked successfully', 'success');
       router.refresh();
@@ -255,11 +255,11 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
         <div className="max-w-full max-w-[1400px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link 
-              href="/admin/agents"
+              href="/admin/Organizations"
               className="group flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-all font-bold text-sm tracking-wide"
             >
               <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-              Back to Agents
+              Back to Organizations
             </Link>
             <div className="h-4 w-full max-w-[1px] bg-slate-200"></div>
             <div className="flex items-center gap-4">
@@ -267,10 +267,10 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                 className={`w-10 h-10 rounded-xl bg-slate-900 flex items-center justify-center text-white overflow-hidden shadow-lg cursor-pointer group/avatar relative ${avatarUploading ? 'animate-pulse' : ''}`}
                 onClick={() => !avatarUploading && avatarInputRef.current?.click()}
               >
-                {agent.avatar_url ? (
+                {Organization.avatar_url ? (
                   <Image 
-                    src={agent.avatar_url} 
-                    alt={`${agent.first_name} ${agent.last_name}`} 
+                    src={Organization.avatar_url} 
+                    alt={`${Organization.first_name} ${Organization.last_name}`} 
                     fill 
                     className="w-full h-full object-cover group-hover/avatar:opacity-50 transition-all" 
                   />
@@ -283,16 +283,16 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
               </div>
               <div>
                 <h1 className="text-lg font-bold text-slate-900 tracking-tighter leading-none flex items-center gap-3">
-                  {agent.first_name} <span className="text-[#b50a0a]">{agent.last_name}</span>
+                  {Organization.first_name} <span className="text-[#b50a0a]">{Organization.last_name}</span>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-bold tracking-wide ${
- agent.is_subscribed ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500'
+ Organization.is_subscribed ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500'
  }`}>
-                    {agent.is_subscribed ? 'PRO' : 'NEW'}
+                    {Organization.is_subscribed ? 'PRO' : 'NEW'}
                   </span>
                 </h1>
                 <p className="text-xs font-bold text-slate-400 tracking-[0.2em] mt-1 flex items-center gap-2">
-                  <FlagIcon country={agent.country || ''} className="w-3.5 h-2.5" />
-                  {agent.email || 'NO EMAIL'} • {agent.agency_name}
+                  <FlagIcon country={Organization.country || ''} className="w-3.5 h-2.5" />
+                  {Organization.email || 'NO EMAIL'} • {Organization.agency_name}
                 </p>
               </div>
             </div>
@@ -300,7 +300,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
           <div className="flex items-center gap-3">
             <Link 
-              href={`/agents/${agent.slug}`} 
+              href={`/Organizations/${Organization.slug}`} 
               target="_blank"
               className="flex items-center gap-2 px-4 py-2 bg-slate-50 text-slate-600 rounded-lg text-xs font-bold tracking-wide hover:bg-slate-100 transition-all border border-slate-100"
             >
@@ -322,11 +322,11 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                 <ImageIcon className="w-8 h-8 text-white" />
               </div>
             </div>
-            {agent.avatar_url ? (
-              <Image src={agent.avatar_url} alt={`${agent.first_name} ${agent.last_name}`} fill className="w-full aspect-square object-cover border-2 border-slate-50 shadow-inner transition-transform duration-700 group-hover:scale-110" />
+            {Organization.avatar_url ? (
+              <Image src={Organization.avatar_url} alt={`${Organization.first_name} ${Organization.last_name}`} fill className="w-full aspect-square object-cover border-2 border-slate-50 shadow-inner transition-transform duration-700 group-hover:scale-110" />
             ) : (
               <div className="w-full aspect-square bg-slate-100 flex items-center justify-center text-slate-300 text-4xl font-bold">
-                {agent.first_name[0]}{agent.last_name[0]}
+                {Organization.first_name[0]}{Organization.last_name[0]}
               </div>
             )}
           </div>
@@ -371,12 +371,12 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                       {[
-                        { label: 'First Name', value: agent.first_name, field: 'first_name', type: 'text' },
-                        { label: 'Last Name', value: agent.last_name, field: 'last_name', type: 'text' },
-                        { label: 'Email Address', value: agent.email || 'N/A', field: 'email', type: 'text' },
-                        { label: 'Citizenship', value: agent.country, field: 'country', type: 'select', options: COUNTRIES },
-                        { label: 'Birthdate', value: agent.date_of_birth || 'N/A', field: 'date_of_birth', type: 'date' },
-                        { label: 'Gender', value: agent.gender, field: 'gender', type: 'select', options: ['Male', 'Female', 'Other'] },
+                        { label: 'First Name', value: Organization.first_name, field: 'first_name', type: 'text' },
+                        { label: 'Last Name', value: Organization.last_name, field: 'last_name', type: 'text' },
+                        { label: 'Email Address', value: Organization.email || 'N/A', field: 'email', type: 'text' },
+                        { label: 'Citizenship', value: Organization.country, field: 'country', type: 'select', options: COUNTRIES },
+                        { label: 'Birthdate', value: Organization.date_of_birth || 'N/A', field: 'date_of_birth', type: 'date' },
+                        { label: 'Gender', value: Organization.gender, field: 'gender', type: 'select', options: ['Male', 'Female', 'Other'] },
                       ].map((item, i) => (
                         <div key={i} className="flex flex-col gap-1">
                           <span className="text-xs font-bold text-slate-400 tracking-wide">{item.label}</span>
@@ -439,9 +439,9 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                       {[
-                        { label: 'Agency Name', value: agent.agency_name, field: 'agency_name', type: 'text' },
-                        { label: 'License Code', value: agent.license_code || 'UNLICENSED', field: 'license_code', type: 'text' },
-                        { label: 'Status', value: agent.status, field: 'status', type: 'select', options: ['active', 'pending', 'suspended'] },
+                        { label: 'Agency Name', value: Organization.agency_name, field: 'agency_name', type: 'text' },
+                        { label: 'License Code', value: Organization.license_code || 'UNLICENSED', field: 'license_code', type: 'text' },
+                        { label: 'Status', value: Organization.status, field: 'status', type: 'select', options: ['active', 'pending', 'suspended'] },
                       ].map((item, i) => (
                         <div key={i} className="flex flex-col gap-1">
                           <span className="text-xs font-bold text-slate-400 tracking-wide">{item.label}</span>
@@ -512,7 +512,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                   <div className="space-y-4">
                     <div className="bg-slate-50 border border-slate-200 rounded-3xl p-4">
                       <RichTextEditor
-                        content={displayValue('bio', agent.bio || '') as string}
+                        content={displayValue('bio', Organization.bio || '') as string}
                         onChange={(val) => updateField('bio', val)}
                       />
                     </div>
@@ -525,7 +525,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                   <div>
                     <div className="p-4 md:p-8 bg-slate-50/50 rounded-[1.5rem] border border-slate-100 relative group/bio shadow-inner">
                       <div className="text-sm text-slate-600 leading-relaxed font-medium prose prose-sm max-w-none prose-a:text-indigo-600 hover:prose-a:text-indigo-800">
-                        {agent.bio ? parse(agent.bio) : "No company profile has been provided yet."}
+                        {Organization.bio ? parse(Organization.bio) : "No company profile has been provided yet."}
                       </div>
                       <div className="absolute -left-2 top-10 w-1 h-32 bg-[#b50a0a]/20 rounded-full opacity-0 group-hover/bio:opacity-100 transition-opacity"></div>
                     </div>
@@ -598,12 +598,12 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                             <td className="px-6 py-4">
                                <div className="flex flex-col">
                                   <span className="text-xs font-bold text-slate-900">Professional</span>
-                                  <span className="text-xs font-bold text-slate-400 tracking-wide mt-0.5">Active Agent</span>
+                                  <span className="text-xs font-bold text-slate-400 tracking-wide mt-0.5">Active Organization</span>
                                </div>
                             </td>
                             <td className="px-6 py-4">
-                              <span className={`text-xs font-bold tracking-wide px-3 py-1 rounded-full ${client.agent_status === 'accepted' ? 'bg-green-100 text-green-600 shadow-sm shadow-green-100/50' : 'bg-amber-100 text-amber-600 shadow-sm shadow-amber-100/50'}`}>
-                                {client.agent_status || 'Pending'}
+                              <span className={`text-xs font-bold tracking-wide px-3 py-1 rounded-full ${client.Organization_status === 'accepted' ? 'bg-green-100 text-green-600 shadow-sm shadow-green-100/50' : 'bg-amber-100 text-amber-600 shadow-sm shadow-amber-100/50'}`}>
+                                {client.Organization_status || 'Pending'}
                               </span>
                             </td>
                             <td className="px-4 md:px-8 py-4 text-right">
@@ -654,23 +654,23 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-12">
                        <h3 className="text-xs font-bold tracking-[0.3em] text-slate-500">Subscription Hub</h3>
-                       <span className={`${agent.is_subscribed ? 'bg-emerald-500 shadow-lg shadow-emerald-500/20' : 'bg-slate-700'} px-4 md:px-8 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all`}>
-                          {agent.is_subscribed ? 'Agency Premium' : 'Network Access'}
+                       <span className={`${Organization.is_subscribed ? 'bg-emerald-500 shadow-lg shadow-emerald-500/20' : 'bg-slate-700'} px-4 md:px-8 py-2.5 rounded-full text-xs font-bold tracking-wide transition-all`}>
+                          {Organization.is_subscribed ? 'Agency Premium' : 'Network Access'}
                        </span>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                        <div>
                           <p className="text-xs font-bold text-slate-500 tracking-wide mb-3">Expiration Date</p>
                           <p className="text-4xl font-bold tracking-tighter">
-                             {agent.users?.subscriptions?.[0]?.current_period_end ? (
-                                <DateDisplay date={agent.users.subscriptions[0].current_period_end} />
+                             {Organization.users?.subscriptions?.[0]?.current_period_end ? (
+                                <DateDisplay date={Organization.users.subscriptions[0].current_period_end} />
                              ) : 'UNSET'}
                           </p>
                        </div>
                        <div className="flex flex-col justify-end items-end">
                           <p className="text-xs font-bold text-slate-500 tracking-wide mb-3">Service Level</p>
                           <p className="text-xl font-bold tracking-tighter text-right">
-                             {agent.is_subscribed ? 'Active Management' : 'Restricted Access'}
+                             {Organization.is_subscribed ? 'Active Management' : 'Restricted Access'}
                           </p>
                        </div>
                     </div>
@@ -821,7 +821,7 @@ export default function AgentProfileClient({ agent, initialClients }: AgentProfi
               </div>
 
               <div className="p-4 md:p-8 pt-0 mt-auto shrink-0">
-                 <p className="text-xs font-bold text-slate-400 tracking-[0.2em] text-center">Players already linked to an agent will not appear in search.</p>
+                 <p className="text-xs font-bold text-slate-400 tracking-[0.2em] text-center">Players already linked to an Organization will not appear in search.</p>
               </div>
            </div>
         </div>

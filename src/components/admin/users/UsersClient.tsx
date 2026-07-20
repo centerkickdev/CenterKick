@@ -151,18 +151,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
   };
 
   const getProfileLink = (user: any) => {
-    const role = user.role?.toLowerCase();
-    const slug = user.profile?.slug;
-    const id = user.profile?.id;
-    
-    if (role === 'player' && slug) return `/admin/players/${slug}`;
-    if (role === 'coach' && slug) return `/admin/coaches/${slug}`;
-    if (role === 'agent' && slug) return `/admin/agents/${slug}`;
-    if (role === 'scout' && slug) return `/admin/scouts/${slug}`;
-    if (role === 'organization' && slug) return `/admin/organizations/${slug}`;
-    
-    // Fallback if no specific profile or unsupported role
-    return `/admin/users/${user.id}`;
+    return `/admin/users/${user.profile?.slug || user.id}`;
   };
 
   return (

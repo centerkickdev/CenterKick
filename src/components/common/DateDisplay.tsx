@@ -22,6 +22,10 @@ export function DateDisplay({ date, showTime = false, className = "" }: DateDisp
 
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
+  if (!dateObj || isNaN(dateObj.getTime())) {
+    return <span className={className}>-</span>;
+  }
+  
   // Before mounting, we render a stable, locale-independent format using UTC
   // to avoid timezone-based hydration mismatches between the server and the client.
   if (!mounted) {

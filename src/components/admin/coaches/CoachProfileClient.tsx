@@ -136,7 +136,6 @@ export default function CoachProfileClient({
 }: CoachProfileClientProps) {
   const router = useRouter();
   const toast = useToast();
-  const [activeTab, setActiveTab] = useState<'profile' | 'bio' | 'statistics' | 'awards' | 'gallery' | 'news' | 'billing'>('profile');
   const [coachStats, setCoachStats] = useState<CoachStat[]>([]);
   const [coachAchievements, setCoachAchievements] = useState<CoachAchievement[]>([]);
   const [isLoadingStats, setIsLoadingStats] = useState(false);
@@ -164,16 +163,14 @@ export default function CoachProfileClient({
   const [isLoadingNews, setIsLoadingNews] = useState(false);
 
   useEffect(() => {
-    if (activeTab === 'billing') {
-      const fetchTransactions = async () => {
-        setIsLoadingTransactions(true);
-        const res = await getPlayerTransactions(coach.id);
-        if (res.success) setPlayerTransactions(res.data || []);
-        setIsLoadingTransactions(false);
-      };
-      fetchTransactions();
-    }
-  }, [coach.id, activeTab]);
+    const fetchTransactions = async () => {
+      setIsLoadingTransactions(true);
+      const res = await getPlayerTransactions(coach.id);
+      if (res.success) setPlayerTransactions(res.data || []);
+      setIsLoadingTransactions(false);
+    };
+    fetchTransactions();
+  }, [coach.id]);
 
   useEffect(() => {
     const fetchEdits = async () => {
@@ -205,16 +202,14 @@ export default function CoachProfileClient({
   }, [coach.id]);
 
   useEffect(() => {
-    if (activeTab === 'news') {
-      const fetchNews = async () => {
-        setIsLoadingNews(true);
-        const res = await getCoachNews(profileTags.length > 0 ? profileTags : [`${coach.first_name} ${coach.last_name}`]);
-        if (res.success) setCoachNews(res.data || []);
-        setIsLoadingNews(false);
-      };
-      fetchNews();
-    }
-  }, [coach.id, activeTab, coach.first_name, coach.last_name, profileTags]);
+    const fetchNews = async () => {
+      setIsLoadingNews(true);
+      const res = await getCoachNews(profileTags.length > 0 ? profileTags : [`${coach.first_name} ${coach.last_name}`]);
+      if (res.success) setCoachNews(res.data || []);
+      setIsLoadingNews(false);
+    };
+    fetchNews();
+  }, [coach.first_name, coach.last_name, profileTags]);
 
   const handleEditAction = async (editId: string, action: 'approve' | 'reject') => {
     const res = await processProfileEdit(editId, action);
@@ -486,30 +481,7 @@ export default function CoachProfileClient({
             )}
           </div>
 
-          <div className="flex flex-col gap-2">
-            {[
-              { id: 'profile', label: 'Overview & Details', icon: LayoutDashboard },
-              { id: 'bio', label: 'Coaching Bio', icon: FileText },
-              { id: 'statistics', label: 'Performance Stats', icon: Activity },
-              { id: 'awards', label: 'Awards & Honours', icon: Award },
-              { id: 'gallery', label: 'Tactics & Media', icon: ImageIcon },
-              { id: 'news', label: 'Latest Mentions', icon: Newspaper },
-              { id: 'billing', label: 'Billing & History', icon: DollarSign },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => { setActiveTab(tab.id as 'profile' | 'bio' | 'statistics' | 'awards' | 'gallery' | 'news' | 'billing'); setEditingSection(null); }}
-                className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-xs font-bold tracking-wide transition-all group ${
- activeTab === tab.id 
- ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/20 translate-x-1' 
- : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
- }`}
-              >
-                <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-white' : 'text-slate-300 group-hover:text-slate-900'} transition-colors`} />
-                {tab.label}
-              </button>
-            ))}
-          </div>
+
 
           <div className="mt-auto pt-6 border-t border-slate-50">
             <div className="bg-slate-50 rounded-2xl p-4">
@@ -525,10 +497,11 @@ export default function CoachProfileClient({
           </div>
         </div>
 
-        {/* Right Content Area */}
-        <div className="flex-1 min-w-0">
-          {activeTab === 'profile' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+        {/* Right Content Area (Sequential Sections) */}
+        <div className="flex-1 min-w-0 space-y-12">
+          
+          {/* PROFILE OVERVIEW SECTION */}
+          <div id="profile" className="space-y-8">
               <div className="grid grid-cols-1 gap-4 md:p-8">
                 {/* Identity Card */}
                 <div className="bg-white rounded-[2.5rem] p-6 border border-slate-100 shadow-sm relative overflow-hidden group">
@@ -680,11 +653,10 @@ export default function CoachProfileClient({
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+          </div>
 
-          {activeTab === 'bio' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8 max-w-5xl mx-auto">
+          {/* COACHING BIO SECTION */}
+          <div id="bio" className="space-y-8 max-w-5xl mx-auto">
               <div className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm relative overflow-hidden group">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-slate-50 rounded-bl-full -mr-12 -mt-12 transition-all group-hover:bg-indigo-50/50"></div>
                 
@@ -730,11 +702,10 @@ export default function CoachProfileClient({
                   </div>
                 )}
               </div>
-            </div>
-          )}
+          </div>
 
-          {activeTab === 'statistics' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-12">
+          {/* PERFORMANCE STATS SECTION */}
+          <div id="statistics" className="space-y-12">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 tracking-tight">Performance Statistics</h3>
@@ -904,11 +875,10 @@ export default function CoachProfileClient({
                   </button>
                 </div>
               )}
-            </div>
-          )}
+          </div>
 
-          {activeTab === 'awards' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-12">
+          {/* AWARDS & HONOURS SECTION */}
+          <div id="awards" className="space-y-12">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 tracking-tight">Awards & Honours</h3>
@@ -972,11 +942,10 @@ export default function CoachProfileClient({
                   </button>
                 </div>
               )}
-            </div>
-          )}
+          </div>
 
-          {activeTab === 'gallery' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+          {/* TACTICS & MEDIA SECTION */}
+          <div id="gallery" className="space-y-8">
                <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-bold text-slate-900 tracking-tight">Tactics & Media</h3>
@@ -1098,11 +1067,10 @@ export default function CoachProfileClient({
                     )}
                   </div>
                </div>
-            </div>
-          )}
+          </div>
 
-           {activeTab === 'news' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+          {/* LATEST MENTIONS SECTION */}
+          <div id="news" className="space-y-8">
               <div className="bg-white rounded-[2.5rem] p-4 md:p-8 border border-slate-100 shadow-sm mb-8">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                   <div className="flex items-center gap-3">
@@ -1225,11 +1193,10 @@ export default function CoachProfileClient({
                   </div>
                 )}
               </div>
-            </div>
-          )}
+          </div>
 
-          {activeTab === 'billing' && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-12">
+          {/* BILLING & HISTORY SECTION */}
+          <div id="billing" className="space-y-12">
                {/* Subscription Hero */}
                <div className="bg-slate-900 rounded-[3rem] p-16 text-white shadow-2xl relative overflow-hidden group">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-[#b50a0a]/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
@@ -1323,8 +1290,7 @@ export default function CoachProfileClient({
                     )}
                   </div>
                </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
 
