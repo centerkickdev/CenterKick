@@ -27,14 +27,12 @@ export default async function DashboardLayout({
 
   // Fetch user record, profile record, and site settings in parallel from cache
   const [userRecord, profile, siteSettings] = await Promise.all([
-    getCachedData(`user:record:${user.id}`, async () => {
-      const { data } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-      return data;
-    }, 1800),
+    supabase
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
+      .single()
+      .then(res => res.data),
     getCachedData(`user:profile:${user.id}`, async () => {
       const { data } = await supabase
         .from('profiles')
