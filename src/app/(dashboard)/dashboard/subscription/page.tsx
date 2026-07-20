@@ -180,18 +180,21 @@ export default function SubscriptionPage() {
       plan: paystackPlanCode || undefined, // pass plan if exists
       currency: 'NGN',
       ref: 'ck_' + Math.floor((Math.random() * 1000000000) + 1),
-      callback: async function(response: any){
-          setIsSubmitting(true);
-          const verifyRes = await verifyPaystackPayment(response.reference, basePrice, paystackPlanCode || undefined);
-          if (verifyRes.success) {
-            setShowSuccessModal(true);
-            setTimeout(() => {
-                window.location.reload();
-            }, 5000);
-          } else {
-             showToast(verifyRes.error || 'Payment verification failed', 'error');
-             setIsSubmitting(false);
-          }
+      callback: function(response: any){
+          const processPayment = async () => {
+              setIsSubmitting(true);
+              const verifyRes = await verifyPaystackPayment(response.reference, basePrice, paystackPlanCode || undefined);
+              if (verifyRes.success) {
+                setShowSuccessModal(true);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 5000);
+              } else {
+                 showToast(verifyRes.error || 'Payment verification failed', 'error');
+                 setIsSubmitting(false);
+              }
+          };
+          processPayment();
       },
       onClose: function(){
           showToast('Payment window closed.', 'error');
