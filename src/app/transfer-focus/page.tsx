@@ -139,7 +139,7 @@ export default function TransferFocusPage() {
 
             // Only display complete profiles as per public directory rules
             const rawProfiles = profilesRes.data || [];
-            const completedProfiles = rawProfiles.filter(p => isProfileComplete(p));
+            const completedProfiles = rawProfiles.filter((p: any) => isProfileComplete(p));
 
             setProfiles(completedProfiles);
             setNewsPosts(newsRes.data || []);

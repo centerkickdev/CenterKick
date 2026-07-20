@@ -37,7 +37,7 @@ export function DashboardNotificationBell({ initialNotifications }: { initialNot
           schema: 'public',
           table: 'notifications',
           filter: `user_id=eq.${data.session.user.id}`
-        }, (payload) => {
+        }, (payload: any) => {
           const newNotif = payload.new as Notification;
           setNotifications(prev => [newNotif, ...prev]);
           const toastType = ['success', 'error', 'warning', 'info'].includes(newNotif.type) ? newNotif.type : 'info';

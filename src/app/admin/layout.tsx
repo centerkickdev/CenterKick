@@ -37,7 +37,7 @@ export default async function AdminLayout({
 
   const { data: userRecord } = await supabase
     .from('users')
-    .select('role')
+    .select('role, avatar_url')
     .eq('id', user.id)
     .single();
 
