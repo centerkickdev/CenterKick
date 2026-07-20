@@ -37,9 +37,15 @@ export default async function AdminLayout({
 
   const { data: userRecord } = await supabase
     .from('users')
-    .select('role, avatar_url')
+    .select('role')
     .eq('id', user.id)
     .single();
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('avatar_url')
+    .eq('user_id', user.id)
+    .maybeSingle();
 
   const adminRoles = ['superadmin', 'admin', 'blogger', 'operations', 'finance'];
   if (!userRecord || !adminRoles.includes(userRecord.role)) {
@@ -117,8 +123,8 @@ export default async function AdminLayout({
                   <p className="text-xs font-bold text-[#b50a0a] tracking-[0.2em]">{userRecord?.role || 'Admin'}</p>
                </div>
                <div className="w-10 h-10 rounded-xl bg-gray-900 border-2 border-gray-800 flex items-center justify-center font-bold text-white shadow-lg shrink-0 overflow-hidden">
-                  {userRecord?.avatar_url ? (
-                    <img src={userRecord.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
                     user?.email?.[0]?.toUpperCase() || 'U'
                   )}
