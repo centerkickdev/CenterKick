@@ -131,3 +131,13 @@ export async function deleteUsers(userIds: string[]) {
   revalidatePath('/admin/users');
   return errors.length > 0 ? { error: `Failed to delete some users: ${errors.join(', ')}` } : { success: true };
 }
+
+export async function updateMarketValue(profileId: string, marketValue: number) {
+  await verifyStaffAccess();
+  const admin = createAdminClient();
+  const { error } = await admin.from('profiles').update({ market_value: marketValue }).eq('id', profileId);
+  if (error) return { error: error.message };
+  revalidatePath('/admin/users');
+  return { success: true };
+}
+

@@ -1,10 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
-import PlayerProfileClient from '@/components/admin/players/PlayerProfileClient';
-import CoachProfileClient from '@/components/admin/coaches/CoachProfileClient';
-import AgentProfileClient from '@/components/admin/agents/AgentProfileClient';
-import OrganizationProfileClient from '@/components/admin/organizations/OrganizationProfileClient';
-import ScoutProfileClient from '@/components/admin/scouts/ScoutProfileClient';
+import AdminUserProfileClient from '@/components/admin/users/AdminUserProfileClient';
 
 export default async function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -31,7 +27,7 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
     return notFound();
   }
 
-  const role = profile.role || 'player'; // default fallback
+  const role = (profile.role || 'player').toLowerCase();
 
   // Fetch common reference data needed for Player and Coach clients
   const [
@@ -64,73 +60,15 @@ export default async function UserDetailPage({ params }: { params: Promise<{ id:
   }
 
   // Route to the appropriate Client Component
-  let RenderedClient = null;
-
-  switch (role) {
-    case 'player':
-      RenderedClient = (
-        <PlayerProfileClient 
-          player={profile} 
-          agents={agents} 
-          leagues={leagues || []}
-          clubs={clubs || []}
-          seasons={seasons || []}
-          countries={countries || []}
-        />
-      );
-      break;
-    case 'coach':
-      RenderedClient = (
-        <CoachProfileClient 
-          coach={profile} 
-          agents={agents} 
-          leagues={leagues || []}
-          clubs={clubs || []}
-          seasons={seasons || []}
-          countries={countries || []}
-        />
-      );
-      break;
-    case 'agent':
-      RenderedClient = (
-        <AgentProfileClient 
-          agent={profile} 
-          initialClients={linkedAccounts} 
-        />
-      );
-      break;
-    case 'organization':
-      RenderedClient = (
-        <OrganizationProfileClient 
-          Organization={profile} 
-          initialClients={linkedAccounts} 
-        />
-      );
-      break;
-    case 'scout':
-      RenderedClient = (
-        <ScoutProfileClient 
-          Scout={profile} 
-          initialClients={linkedAccounts} 
-        />
-      );
-      break;
-    default:
-      RenderedClient = (
-        <PlayerProfileClient 
-          player={profile} 
-          agents={agents} 
-          leagues={leagues || []}
-          clubs={clubs || []}
-          seasons={seasons || []}
-          countries={countries || []}
-        />
-      );
-  }
-
   return (
-    <div className="min-h-screen bg-[#f8fafc]">
-      {RenderedClient}
-    </div>
+    <AdminUserProfileClient 
+      profile={profile} 
+      role={role} 
+      initialClients={linkedAccounts} 
+      clubsList={clubs || []}
+      leaguesList={leagues || []}
+      seasonsList={seasons || []}
+      countriesList={countries || []}
+    />
   );
 }
