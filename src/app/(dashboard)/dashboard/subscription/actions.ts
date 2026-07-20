@@ -198,7 +198,7 @@ export async function activateFreeSubscription() {
       currency: 'NGN',
       status: 'confirmed',
       reference: 'free_activation_' + Math.random().toString(36).substring(7),
-      method: 'free_tier',
+      method: 'other',
       metadata: {
         type: 'subscription',
         description: `Lifetime free tier activation for ${profile.role}`
@@ -265,19 +265,24 @@ export async function verifyPaystackPayment(reference: string, amount: number, p
     const data = await res.json();
     if (data.status && data.data.status === 'success') {
       // Create confirmed transaction
-      await adminClient.from('transactions').insert({
+      const { error: insertError } = await adminClient.from('transactions').insert({
         user_id: profile.id,
         amount: data.data.amount / 100, // Paystack returns in kobo
         currency: 'NGN',
         status: 'confirmed',
         reference: reference,
-        method: 'paystack',
+        method: 'paystack_integration',
         metadata: {
           type: 'subscription',
           description: `Paystack Payment for ${profile.role}`,
           paystack_plan: planCode || data.data.plan
         }
       });
+      
+      if (insertError) {
+        console.error('Transaction insert error:', insertError);
+        return { error: 'Failed to record transaction' };
+      }
       
       // Update profile status
       await adminClient.from('profiles').update({

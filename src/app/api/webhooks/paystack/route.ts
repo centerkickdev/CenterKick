@@ -44,19 +44,23 @@ export async function POST(req: Request) {
         
       if (profile) {
          // Create transaction
-         await supabase.from('transactions').insert({
+         const { error: txError } = await supabase.from('transactions').insert({
             user_id: profile.id,
             amount: amount / 100, // convert kobo to NGN
             currency: 'NGN',
             status: 'confirmed',
             reference: reference,
-            method: 'paystack',
+            method: 'paystack_integration',
             metadata: {
               type: 'subscription',
               description: `Paystack Auto-Debit for ${profile.role}`,
               paystack_plan: plan
             }
          });
+         
+         if (txError) {
+             console.error('Webhook tx insert error:', txError);
+         }
          
          // Update profile status
          await supabase.from('profiles').update({
