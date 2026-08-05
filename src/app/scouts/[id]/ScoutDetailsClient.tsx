@@ -80,6 +80,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
 
    const totalPages = Math.max(1, Math.ceil(filteredDiscoveries.length / itemsPerPage));
    const paginatedDiscoveries = filteredDiscoveries.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+   const currentDiscoveries = paginatedDiscoveries;
 
    return (
       <div className="min-h-screen bg-white">
