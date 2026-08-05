@@ -4,6 +4,7 @@ import { CheckCircle2, Circle, ChevronDown, ChevronUp, Target } from 'lucide-rea
 import { useState } from 'react';
 
 interface ProfileCompletenessWidgetProps {
+  role?: string;
   formData: {
     avatar_url?: string;
     cover_url?: string;
@@ -14,17 +15,21 @@ interface ProfileCompletenessWidgetProps {
   };
 }
 
-export function ProfileCompletenessWidget({ formData }: ProfileCompletenessWidgetProps) {
+export function ProfileCompletenessWidget({ role, formData }: ProfileCompletenessWidgetProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
+
+  const isPlayer = role === 'player' || role === 'athlete';
 
   const checks = [
     { id: 'avatar', label: 'Profile Picture', completed: Boolean(formData.avatar_url) },
     { id: 'cover', label: 'Cover Image', completed: Boolean(formData.cover_url) },
     { id: 'first_name', label: 'First Name', completed: Boolean(formData.first_name) },
     { id: 'last_name', label: 'Last Name', completed: Boolean(formData.last_name) },
-    { id: 'gallery', label: 'Portfolio Images (2+)', completed: Boolean(formData.gallery_urls && formData.gallery_urls.length >= 2) },
-    { id: 'video', label: 'Portfolio Videos (1+)', completed: Boolean(formData.video_links && formData.video_links.length >= 1) },
+    ...(isPlayer ? [
+      { id: 'gallery', label: 'Portfolio Images (2+)', completed: Boolean(formData.gallery_urls && formData.gallery_urls.length >= 2) },
+      { id: 'video', label: 'Portfolio Videos (1+)', completed: Boolean(formData.video_links && formData.video_links.length >= 1) },
+    ] : []),
   ];
 
   const completedCount = checks.filter(c => c.completed).length;

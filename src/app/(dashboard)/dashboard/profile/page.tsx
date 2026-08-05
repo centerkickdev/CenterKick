@@ -632,11 +632,14 @@ export default function ProfileEditor() {
      );
   }
 
+  const isPlayer = role === 'player' || role === 'athlete';
   const checks = [
     Boolean(profile?.avatar_url),
     Boolean(profile?.cover_url),
-    Boolean(profile?.gallery_urls?.length >= 2),
-    Boolean(profile?.video_links?.length >= 1),
+    ...(isPlayer ? [
+      Boolean(profile?.gallery_urls?.length >= 2),
+      Boolean(profile?.video_links?.length >= 1)
+    ] : []),
     Boolean(profile?.first_name),
     Boolean(profile?.last_name)
   ];
@@ -645,6 +648,7 @@ export default function ProfileEditor() {
   return (
     <div className="max-w-full max-w-[1000px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       <ProfileCompletenessWidget 
+        role={role}
         formData={{
           avatar_url: profile?.avatar_url,
           cover_url: profile?.cover_url,

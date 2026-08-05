@@ -78,11 +78,14 @@ export default async function DashboardLayout({
 
   // Compute profile completeness
   const p = (profile || {}) as any;
+  const isPlayer = role === 'player' || role === 'athlete';
   const checks = [
     Boolean(p.avatar_url),
     Boolean(p.cover_url),
-    Boolean(p.gallery_urls?.length >= 2),
-    Boolean(p.video_links?.length >= 1),
+    ...(isPlayer ? [
+      Boolean(p.gallery_urls?.length >= 2),
+      Boolean(p.video_links?.length >= 1)
+    ] : []),
     Boolean(p.first_name),
     Boolean(p.last_name)
   ];

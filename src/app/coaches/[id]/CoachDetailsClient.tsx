@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import parse from 'html-react-parser';
 import { ImageLightbox } from '@/components/common/ImageLightbox';
+import { useToast } from '@/context/ToastContext';
 
 const formatAbsoluteUrl = (url: string) => {
    if (!url) return '';
@@ -20,6 +21,7 @@ interface CoachDetailsClientProps {
 }
 
 export default function CoachDetailsClient({ profile }: CoachDetailsClientProps) {
+   const { showToast } = useToast();
    const mergedLinks = { ...(profile.social_links || {}), ...(profile.official_links || {}) };
    const [activeTab, setActiveTab] = useState("Profile");
    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -31,6 +33,30 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
    const nameParts = displayName.split(' ');
    const firstName = nameParts[0];
    const restOfName = nameParts.slice(1).join(' ');
+
+   const handleShareProfile = async () => {
+      const currentUrl = window.location.href;
+      const shareData = {
+         title: `${displayName} - CenterKick Profile`,
+         text: `Check out ${displayName}'s profile on CenterKick!`,
+         url: currentUrl,
+      };
+
+      if (navigator.share) {
+         try {
+            await navigator.share(shareData);
+         } catch (e) {
+            // Ignore cancel
+         }
+      }
+
+      try {
+         await navigator.clipboard.writeText(currentUrl);
+         showToast('Profile link copied to clipboard!', 'success');
+      } catch (e) {
+         showToast('Failed to copy link', 'error');
+      }
+   };
 
    // Use real stats if available, otherwise fallback to 0
    const managerialHistory = profile.managerial_history || [];
@@ -54,8 +80,8 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
 
    const profileAge = calculateAge(profile.date_of_birth);
    
-   let calcYearsExp = profile.years_of_experience || 0;
-   if (managerialHistory.length > 0) {
+   let calcYearsExp = (profile.years_of_experience && !isNaN(Number(profile.years_of_experience))) ? Number(profile.years_of_experience) : 0;
+   if (calcYearsExp === 0 && managerialHistory.length > 0) {
       let earliestYear = new Date().getFullYear();
       managerialHistory.forEach((stint: any) => {
          const fromYear = parseInt(stint.startDate?.split('/')[0] || stint.startDate, 10);
@@ -76,13 +102,20 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
          <main className="pt-[72px] lg:pt-[76px]">
             {/* Back Button Bar */}
             <div className="bg-white border-b border-gray-100 py-4">
-               <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
+               <div className="max-w-[1200px] mx-auto px-4 lg:px-0 flex items-center justify-between">
                   <button 
                      onClick={() => router.back()}
                      className="group inline-flex items-center gap-2 text-gray-500 hover:text-black font-bold text-sm tracking-wide transition-colors"
                   >
                      <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> 
                      Back
+                  </button>
+                  <button
+                     onClick={handleShareProfile}
+                     className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-black text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm"
+                  >
+                     <Share2 className="w-3.5 h-3.5" />
+                     Share Profile
                   </button>
                </div>
             </div>

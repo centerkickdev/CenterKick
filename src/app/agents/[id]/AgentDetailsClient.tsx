@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import parse from 'html-react-parser';
+import { useToast } from '@/context/ToastContext';
 
 const formatAbsoluteUrl = (url: string) => {
    if (!url) return '';
@@ -21,6 +22,7 @@ interface AgentDetailsClientProps {
 }
 
 export default function AgentDetailsClient({ profile, managedClients }: AgentDetailsClientProps) {
+   const { showToast } = useToast();
    const mergedLinks = { ...(profile.social_links || {}), ...(profile.official_links || {}) };
    const [activeTab, setActiveTab] = useState("Bio");
    const [showLicense, setShowLicense] = useState(false);
@@ -31,7 +33,32 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
    const firstName = nameParts[0];
    const restOfName = nameParts.slice(1).join(' ');
 
-   const profileAgency = profile.agency_name || 'Free Agent';
+   const rawAgency = profile.agency_name;
+   const profileAgency = (rawAgency && rawAgency.toLowerCase() !== 'free agent') ? rawAgency : null;
+
+   const handleShareProfile = async () => {
+      const currentUrl = window.location.href;
+      const shareData = {
+         title: `${displayName} - CenterKick Profile`,
+         text: `Check out ${displayName}'s profile on CenterKick!`,
+         url: currentUrl,
+      };
+
+      if (navigator.share) {
+         try {
+            await navigator.share(shareData);
+         } catch (e) {
+            // Ignore cancel
+         }
+      }
+
+      try {
+         await navigator.clipboard.writeText(currentUrl);
+         showToast('Profile link copied to clipboard!', 'success');
+      } catch (e) {
+         showToast('Failed to copy link', 'error');
+      }
+   };
 
    const regionsArr = profile.regions_of_operation || [];
    const allRegionsSelected = regionsArr.length === 5 && !regionsArr.includes('Global');
@@ -70,13 +97,20 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
          <main className="pt-[72px] lg:pt-[76px]">
             {/* Back Button Bar */}
             <div className="bg-white border-b border-gray-100 py-4">
-               <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
+               <div className="max-w-[1200px] mx-auto px-4 lg:px-0 flex items-center justify-between">
                   <button 
                      onClick={() => router.back()}
                      className="group inline-flex items-center gap-2 text-gray-500 hover:text-black font-bold text-sm tracking-wide transition-colors"
                   >
                      <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" /> 
                      Back
+                  </button>
+                  <button
+                     onClick={handleShareProfile}
+                     className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-black text-white rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm"
+                  >
+                     <Share2 className="w-3.5 h-3.5" />
+                     Share Profile
                   </button>
                </div>
             </div>
@@ -104,10 +138,17 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                         loading="lazy"
                      />
                   </div>
-                  <span className="text-[#ff4d4d] font-bold tracking-[0.3em] mb-2 text-xs uppercase">{profileAgency}</span>
-                  <h1 className="text-4xl font-bold tracking-tight leading-none mb-8 drop-shadow-2xl">
+                  {profileAgency && <span className="text-[#ff4d4d] font-bold tracking-[0.3em] mb-2 text-xs uppercase">{profileAgency}</span>}
+                  <h1 className="text-4xl font-bold tracking-tight leading-none mb-6 drop-shadow-2xl mt-2">
                      {firstName} <span className="text-white">{restOfName}</span>
                   </h1>
+                  <button
+                     onClick={handleShareProfile}
+                     className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl text-xs font-bold tracking-wide transition-all backdrop-blur-md shadow-sm"
+                  >
+                     <Share2 className="w-4 h-4" />
+                     Share Profile
+                  </button>
                </div>
 
                {/* Desktop: side-by-side layout */}
@@ -124,13 +165,20 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                      </div>
                   </div>
                   <div className="w-[60%] flex flex-col justify-center items-start pl-16 text-white z-20">
-                     <span className="text-[#ff4d4d] font-bold tracking-[0.4em] mb-3 text-base uppercase">{profileAgency}</span>
-                     <h1 className="flex flex-col leading-none drop-shadow-2xl mb-12">
+                     {profileAgency && <span className="text-[#ff4d4d] font-bold tracking-[0.4em] mb-3 text-base uppercase">{profileAgency}</span>}
+                     <h1 className="flex flex-col leading-none drop-shadow-2xl mb-8 mt-2">
                         <span className="text-7xl font-black tracking-tight">{firstName}</span>
                         <span className="text-8xl font-black tracking-tighter text-white">{restOfName}</span>
                      </h1>
                      
                      <div className="flex items-center gap-6">
+                        <button
+                           onClick={handleShareProfile}
+                           className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-xl text-xs font-bold tracking-wide transition-all backdrop-blur-md shadow-sm"
+                        >
+                           <Share2 className="w-4 h-4" />
+                           Share Profile
+                        </button>
                         <div className="flex flex-wrap items-center gap-4">
                            {mergedLinks.website && (
                               <a href={formatAbsoluteUrl(mergedLinks.website)} target="_blank" rel="noopener noreferrer" title="Website" className="hover:text-[#b50a0a] transition-colors">

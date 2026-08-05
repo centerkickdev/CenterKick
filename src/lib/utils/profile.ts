@@ -17,13 +17,22 @@ export function isProfileComplete(profile: any): boolean {
     Boolean(profile.cover_url || profile.cover_image_url),
   ];
 
-  if (role === 'player' || role === 'coach') {
+  if (role === 'player' || role === 'athlete') {
     const checks = [
       ...baseChecks,
       Boolean(profile.first_name),
       Boolean(profile.last_name),
       Boolean(profile.gallery_urls && profile.gallery_urls.length >= 2),
       Boolean(profile.video_links && profile.video_links.length >= 1)
+    ];
+    return checks.filter(Boolean).length === checks.length;
+  }
+
+  if (role === 'coach' || role === 'coachs') {
+    const checks = [
+      ...baseChecks,
+      Boolean(profile.first_name),
+      Boolean(profile.last_name),
     ];
     return checks.filter(Boolean).length === checks.length;
   } 
