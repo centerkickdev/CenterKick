@@ -84,8 +84,8 @@ export function ProfileCarousel({ items, renderItem, mobileLimit }: ProfileCarou
 
   return (
     <div className="relative w-full group">
-      {/* Mobile/Tablet: Vertical Stack / Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:hidden pb-6">
+      {/* Mobile/Tablet: 2 Columns Grid on Mobile */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:hidden pb-6">
         {items.slice(0, mobileLimit || items.length).map((item, idx) => (
           <div key={idx} className="w-full">
             {renderItem(item, idx)}
@@ -197,7 +197,7 @@ export function HomeClient({
                     alt={mainNews.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90 group-hover:opacity-100 transition-opacity" />
 
                   <div className="absolute top-6 left-6 z-20 flex gap-2">
                     {mainNews.category && (
@@ -207,20 +207,22 @@ export function HomeClient({
                     )}
                   </div>
 
-                  <div className="absolute bottom-0 left-0 w-full p-8 lg:p-10 z-20 flex flex-col justify-end">
-                    <div className="flex items-center gap-3 mb-3">
-                      <DateDisplay date={mainNews.published_at} className="text-[#ff4d4d] text-xs font-bold tracking-wide" />
+                  <div className="absolute bottom-0 left-0 w-full p-6 sm:p-8 lg:p-10 z-20 flex flex-col justify-end">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-3">
+                      <DateDisplay date={mainNews.published_at} className="text-[#ff4d4d] text-[11px] sm:text-xs font-bold tracking-wide" />
                       <span className="text-white/60 text-xs font-bold tracking-wide">•</span>
-                      <span className="text-white/80 text-xs font-bold tracking-wide">
+                      <span className="text-white/80 text-[11px] sm:text-xs font-bold tracking-wide">
                         {(mainNews.author as any)?.email ? (mainNews.author as any).email.split('@')[0] : 'CenterKick Editor'}
                       </span>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-[1.1] mb-4 tracking-tighter group-hover:text-[#ff4d4d] transition-colors line-clamp-3">
+                    <h2 className="text-lg sm:text-3xl lg:text-4xl font-bold text-white leading-snug sm:leading-[1.1] mb-2 sm:mb-4 tracking-tight group-hover:text-[#ff4d4d] transition-colors">
                       {mainNews.title}
                     </h2>
-                    <p className="text-white/80 text-base font-medium leading-relaxed line-clamp-2 max-w-2xl">
-                      {mainNews.excerpt}
-                    </p>
+                    {mainNews.excerpt && (
+                      <p className="text-white/80 text-xs sm:text-base font-medium leading-normal sm:leading-relaxed max-w-2xl">
+                        {mainNews.excerpt}
+                      </p>
+                    )}
                   </div>
                 </Link>
               </div>
@@ -283,7 +285,7 @@ export function HomeClient({
                 renderItem={(news) => (
                   <Link
                     href={`/news/${news.slug}`}
-                    className="group flex flex-col bg-white rounded-[1.8rem] overflow-hidden border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 h-full"
+                    className="group flex flex-col bg-white rounded-2xl sm:rounded-[1.8rem] overflow-hidden border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 h-full"
                   >
                     {/* Image Area */}
                     <div className="relative w-full aspect-[16/9] overflow-hidden bg-black shrink-0">
@@ -291,15 +293,15 @@ export function HomeClient({
                         src={news.cover_image_url || IMG_NEWS_DEFAULT}
                         alt={news.title}
                         fill
-                        sizes="256px"
+                        sizes="(max-width:640px) 50vw, 256px"
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     </div>
                     {/* Text Area */}
-                    <div className="p-5 text-left flex-1 flex flex-col justify-between">
+                    <div className="p-3.5 sm:p-5 text-left flex-1 flex flex-col justify-between">
                       <div>
-                        <DateDisplay date={news.published_at} className="text-gray-400 text-xs font-bold tracking-wide mb-2 block" />
-                        <h5 className="text-base font-bold text-gray-900 leading-snug line-clamp-3 group-hover:text-[#b50a0a] transition-colors">
+                        <DateDisplay date={news.published_at} className="text-gray-400 text-[10px] sm:text-xs font-bold tracking-wide mb-1 sm:mb-2 block" />
+                        <h5 className="text-xs sm:text-base font-bold text-gray-900 leading-tight sm:leading-snug line-clamp-4 group-hover:text-[#b50a0a] transition-colors">
                           {news.title}
                         </h5>
                       </div>
@@ -333,28 +335,30 @@ export function HomeClient({
 
           <ProfileCarousel
             items={playersData}
-            mobileLimit={5}
+            mobileLimit={6}
             renderItem={(player) => (
-              <Link href={`/players/${player.slug}`} className="group relative block aspect-[4/5] rounded-3xl overflow-hidden bg-black shadow-lg border border-gray-100">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10" />
+              <Link href={`/players/${player.slug}`} className="group relative block aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-black shadow-lg border border-gray-100">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
                 <Image
                   src={player.avatar_url || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop"}
                   alt={getDisplayName(player)}
                   fill
-                  sizes="(max-width:640px) 90vw, (max-width:1024px) 50vw, 256px"
-                  className="object-cover transition-all duration-700 group-hover:scale-105 opacity-85"
+                  sizes="(max-width:640px) 50vw, (max-width:1024px) 50vw, 256px"
+                  className="object-cover transition-all duration-700 group-hover:scale-105 opacity-90"
                 />
 
-                <div className="absolute bottom-0 left-0 p-6 z-20 w-full">
-                  <span className="text-red-500 text-sm font-bold tracking-[0.2em] block mb-1">
-                    {player.position || 'Footballer'}
-                  </span>
-                  <h3 className="text-xl font-bold text-white leading-tight tracking-tight group-hover:text-[#b50a0a] transition-colors">
+                <div className="absolute bottom-0 inset-x-0 p-2.5 sm:p-3.5 z-20 flex flex-col justify-end items-center text-center gap-0.5 sm:gap-1 backdrop-blur-[3px] bg-black/30 rounded-b-2xl sm:rounded-b-3xl">
+                  <div>
+                    <span className="inline-flex items-center justify-center bg-white text-[#b50a0a] text-[9px] sm:text-xs font-black tracking-wider px-2.5 py-0.5 rounded-full shadow-sm border-0 max-w-full truncate">
+                      {player.position || 'Footballer'}
+                    </span>
+                  </div>
+                  <h3 className="text-xs sm:text-base font-bold text-white leading-tight tracking-tight group-hover:text-red-400 transition-colors line-clamp-1 w-full text-center">
                     {getDisplayName(player)}
                   </h3>
-                  <div className="flex items-center gap-1.5 text-white/60 text-xs font-bold tracking-wide mt-2.5">
-                    <MapPin className="w-3 h-3 text-[#b50a0a]" />
-                    <span>{player.country || 'Global'}</span>
+                  <div className="flex items-center justify-center gap-1 text-white/90 text-[9px] sm:text-xs font-semibold tracking-wide truncate w-full">
+                    <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#ff4d4d] shrink-0" />
+                    <span className="truncate">{player.country || 'Global'}</span>
                   </div>
                 </div>
               </Link>
@@ -415,32 +419,40 @@ export function HomeClient({
 
           <ProfileCarousel
             items={coachesData}
-            mobileLimit={4}
-            renderItem={(coach) => (
-              <Link href={`/coaches/${coach.slug}`} className="group relative block aspect-[4/5] rounded-3xl overflow-hidden bg-white shadow-lg border border-gray-100 hover:border-[#b50a0a]/30 transition-colors">
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-900/10 to-transparent z-10" />
-                <Image
-                  src={coach.avatar_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=600&auto=format&fit=crop"}
-                  alt={getDisplayName(coach)}
-                  fill
-                  sizes="(max-width:640px) 90vw, (max-width:1024px) 50vw, 256px"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+            mobileLimit={6}
+            renderItem={(coach) => {
+              const coachPos = (Array.isArray(coach.current_position) ? coach.current_position[0] : coach.current_position) || coach.position;
+              const hasValidPos = coachPos && !['player', 'coach'].includes(String(coachPos).toLowerCase().trim());
+              return (
+                <Link href={`/coaches/${coach.slug}`} className="group relative block aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-white shadow-lg border border-gray-100 hover:border-[#b50a0a]/30 transition-colors">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+                  <Image
+                    src={coach.avatar_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=600&auto=format&fit=crop"}
+                    alt={getDisplayName(coach)}
+                    fill
+                    sizes="(max-width:640px) 50vw, (max-width:1024px) 50vw, 256px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
 
-                <div className="absolute bottom-0 left-0 p-6 z-20 w-full">
-                  <span className="text-red-500 text-sm font-bold tracking-[0.2em] block mb-1">
-                    {coach.position || 'Professional Coach'}
-                  </span>
-                  <h3 className="text-xl font-bold text-white leading-tight tracking-tight">
-                    {getDisplayName(coach)}
-                  </h3>
-                  <div className="flex items-center gap-1.5 text-white/70 text-xs font-bold tracking-wide mt-2.5">
-                    <MapPin className="w-3 h-3 text-[#b50a0a]" />
-                    <span>{coach.country || 'Global'}</span>
+                  <div className="absolute bottom-0 inset-x-0 p-2.5 sm:p-3.5 z-20 flex flex-col justify-end items-center text-center gap-0.5 sm:gap-1 backdrop-blur-[3px] bg-black/30 rounded-b-2xl sm:rounded-b-3xl">
+                    {hasValidPos && (
+                      <div>
+                        <span className="inline-flex items-center justify-center bg-white text-[#b50a0a] text-[9px] sm:text-xs font-black tracking-wider px-2.5 py-0.5 rounded-full shadow-sm border-0 max-w-full truncate">
+                          {coachPos}
+                        </span>
+                      </div>
+                    )}
+                    <h3 className="text-xs sm:text-base font-bold text-white leading-tight tracking-tight group-hover:text-red-400 transition-colors line-clamp-1 w-full text-center">
+                      {getDisplayName(coach)}
+                    </h3>
+                    <div className="flex items-center justify-center gap-1 text-white/90 text-[9px] sm:text-xs font-semibold tracking-wide truncate w-full">
+                      <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#ff4d4d] shrink-0" />
+                      <span className="truncate">{coach.country || 'Global'}</span>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            )}
+                </Link>
+              );
+            }}
           />
 
           {/* Coach Full-Width CTA Sub-section */}
@@ -497,45 +509,46 @@ export function HomeClient({
 
           <ProfileCarousel
             items={agentsData}
-            mobileLimit={3}
+            mobileLimit={4}
             renderItem={(agent) => (
-              <div className="group bg-white border border-gray-100 rounded-[2rem] p-6 shadow-md hover:shadow-xl transition-all duration-500 h-full flex flex-col justify-between">
+              <div className="group bg-white border border-gray-100 rounded-2xl sm:rounded-[2rem] p-3.5 sm:p-6 shadow-md hover:shadow-xl transition-all duration-500 h-full flex flex-col justify-between">
                 <div>
-                  <div className="relative w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-4 border border-gray-100">
+                  <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl overflow-hidden mx-auto mb-2 sm:mb-4 border border-gray-100 shrink-0">
                     <Image
                       src={agent.avatar_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"}
                       alt={getDisplayName(agent)}
                       fill
-                      sizes="80px"
+                      sizes="(max-width:640px) 60px, 80px"
                       className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                     />
                   </div>
 
-                  <div className="text-center mb-4">
-                    <span className={`inline-block text-xs font-bold tracking-wide px-2.5 py-1 rounded-full mb-2 ${(agent.users?.role === 'scout')
+                  <div className="text-center mb-2 sm:mb-4">
+                    <span className={`inline-block text-[10px] sm:text-xs font-bold tracking-wide px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full mb-1 sm:mb-2 ${(agent.users?.role === 'scout')
                       ? 'bg-blue-50 text-blue-600 border border-blue-100'
                       : 'bg-[#b50a0a]/5 text-[#b50a0a] border border-[#b50a0a]/10'
                       }`}>
                       {agent.users?.role === 'scout' ? 'Scout' : 'Agent'}
                     </span>
-                    <h3 className="text-lg font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-[#b50a0a] transition-colors">
+                    <h3 className="text-xs sm:text-lg font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-[#b50a0a] transition-colors">
                       {getDisplayName(agent)}
                     </h3>
-                    <span className="text-gray-400 text-xs font-bold tracking-wide block mt-1">
+                    <span className="text-gray-400 text-[10px] sm:text-xs font-bold tracking-wide block mt-0.5 sm:mt-1 truncate">
                       {agent.country || 'Global Representative'}
                     </span>
                   </div>
 
-                  <p className="text-gray-500 text-sm text-center font-medium leading-relaxed line-clamp-3 mb-6">
+                  <p className="text-gray-500 text-[11px] sm:text-sm text-center font-medium leading-normal sm:leading-relaxed line-clamp-2 sm:line-clamp-3 mb-3 sm:mb-6">
                     {(agent.bio || 'Verified representative dedicated to scouting academy stars and negotiating professional club deals.').replace(/<[^>]+>/g, '')}
                   </p>
                 </div>
 
-                <Link href={`/${agent.users?.role === 'scout' ? 'scouts' : 'agents'}/${agent.slug}`} className="w-full">
-                    <div className="w-full bg-gray-50 hover:bg-[#b50a0a] text-gray-700 hover:text-white border border-gray-100 hover:border-[#b50a0a] text-xs font-bold tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
-                    View Portfolio <ExternalLink className="w-3 h-3" />
+                <Link href={`/${agent.users?.role === 'scout' ? 'scouts' : 'agents'}/${agent.slug}`} className="w-full block">
+                  <div className="w-full bg-gray-50 hover:bg-[#b50a0a] text-gray-700 hover:text-white border border-gray-100 hover:border-[#b50a0a] text-[10px] sm:text-xs font-bold tracking-wide py-2 sm:py-3 px-1 sm:px-3 rounded-xl transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap overflow-hidden">
+                    <span>View Portfolio</span>
+                    <ExternalLink className="w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0" />
                   </div>
-                  </Link>
+                </Link>
               </div>
             )}
           />
@@ -594,36 +607,38 @@ export function HomeClient({
 
           <ProfileCarousel
             items={organizationsData}
+            mobileLimit={4}
             renderItem={(org) => (
-              <div className="group bg-white border border-gray-100 rounded-3xl p-6 shadow-md hover:shadow-xl hover:border-amber-500/10 transition-all duration-500 h-full flex flex-col justify-between">
+              <div className="group bg-white border border-gray-100 rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-md hover:shadow-xl hover:border-amber-500/10 transition-all duration-500 h-full flex flex-col justify-between">
                 <div>
-                  <div className="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4 border border-amber-100 group-hover:scale-105 transition-transform overflow-hidden">
-                     {(org.avatar_url || org.logo_url) ? (
-                        <img src={org.avatar_url || org.logo_url} alt={getDisplayName(org)} className="w-full h-full object-cover" />
-                     ) : (
-                        <Building className="w-6 h-6 text-amber-600" />
-                     )}
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-2 sm:mb-4 border border-amber-100 group-hover:scale-105 transition-transform overflow-hidden shrink-0">
+                    {(org.avatar_url || org.logo_url) ? (
+                      <img src={org.avatar_url || org.logo_url} alt={getDisplayName(org)} className="w-full h-full object-cover" />
+                    ) : (
+                      <Building className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
+                    )}
                   </div>
 
-                  <div className="text-center mb-4">
-                    <h3 className="text-base font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-amber-600 transition-colors">
+                  <div className="text-center mb-2 sm:mb-4">
+                    <h3 className="text-xs sm:text-base font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-amber-600 transition-colors">
                       {getDisplayName(org)}
                     </h3>
-                    <span className="text-gray-400 text-xs font-bold tracking-wide block mt-1">
+                    <span className="text-gray-400 text-[10px] sm:text-xs font-bold tracking-wide block mt-0.5 sm:mt-1 truncate">
                       {org.country || 'Global Club'}
                     </span>
                   </div>
 
-                  <p className="text-gray-500 text-sm text-center font-medium leading-relaxed line-clamp-3 mb-6">
+                  <p className="text-gray-500 text-[11px] sm:text-sm text-center font-medium leading-normal sm:leading-relaxed line-clamp-2 sm:line-clamp-3 mb-3 sm:mb-6">
                     {(org.bio || 'Premium sports organization committed to developing academy prospects and providing professional infrastructure.').replace(/<[^>]+>/g, '')}
                   </p>
                 </div>
 
-                <Link href={`/organizations/${org.slug}`} className="w-full">
-                    <div className="w-full bg-gray-50 hover:bg-amber-600 text-gray-700 hover:text-white border border-gray-100 hover:border-amber-600 text-xs font-bold tracking-wide py-3 rounded-xl transition-all flex items-center justify-center gap-1.5">
-                    View Portfolio <ArrowRight className="w-3 h-3" />
+                <Link href={`/organizations/${org.slug}`} className="w-full block">
+                  <div className="w-full bg-gray-50 hover:bg-amber-600 text-gray-700 hover:text-white border border-gray-100 hover:border-amber-600 text-[10px] sm:text-xs font-bold tracking-wide py-2 sm:py-3 px-1 sm:px-3 rounded-xl transition-all flex items-center justify-center gap-1 sm:gap-1.5 whitespace-nowrap overflow-hidden">
+                    <span>View Portfolio</span>
+                    <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0" />
                   </div>
-                  </Link>
+                </Link>
               </div>
             )}
           />
@@ -742,15 +757,15 @@ export function HomeClient({
 
               <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                 <Link href="/contact">
-                    <div className="w-full sm:w-auto bg-white hover:bg-black text-[#b50a0a] hover:text-white px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] shadow-2xl transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
+                  <div className="w-full sm:w-auto bg-white hover:bg-black text-[#b50a0a] hover:text-white px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] shadow-2xl transition-all hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2">
                     Contact Us <ArrowRight className="w-4 h-4" />
                   </div>
-                  </Link>
+                </Link>
                 <Link href="/about">
-                    <div className="w-full sm:w-auto bg-transparent text-white border-2 border-white/20 hover:bg-white/10 px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] transition-all hover:-translate-y-0.5 active:scale-95">
+                  <div className="w-full sm:w-auto bg-transparent text-white border-2 border-white/20 hover:bg-white/10 px-12 py-5 rounded-2xl text-xs font-bold tracking-[0.2em] transition-all hover:-translate-y-0.5 active:scale-95">
                     About Us
                   </div>
-                  </Link>
+                </Link>
               </div>
             </div>
 
@@ -768,7 +783,7 @@ export function HomeClient({
 
       {activeVideoUrl && (
         <div className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-          <button 
+          <button
             onClick={() => setActiveVideoUrl(null)}
             className="absolute top-6 right-6 sm:top-8 sm:right-8 z-[250] w-12 h-12 bg-white/10 text-white rounded-full flex items-center justify-center hover:bg-[#b50a0a] transition-all border border-white/20 hover:scale-110 shadow-xl backdrop-blur-md"
           >
