@@ -4,6 +4,46 @@ import { notFound } from 'next/navigation';
 import CoachDetailsClient from './CoachDetailsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
 import { trackProfileView } from '@/app/actions/tracking';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+   const { id } = await params;
+   const supabaseAdmin = createAdminClient();
+
+   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+   if (isUuid) return {};
+
+   const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('first_name, last_name, current_position, position, country, avatar_url, cover_url, bio')
+      .eq('slug', id)
+      .maybeSingle();
+
+   if (!profile) return {};
+
+   const coachPos = (Array.isArray(profile.current_position) ? profile.current_position[0] : profile.current_position) || profile.position || 'Coach';
+   const name = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Coach Profile';
+   const title = `${name} (${coachPos}) - CenterKick`;
+   const description = profile.bio || `${name} is a ${coachPos} from ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
+   const image = profile.avatar_url || profile.cover_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=1200&auto=format&fit=crop";
+
+   return {
+      title,
+      description,
+      openGraph: {
+         title,
+         description,
+         images: [{ url: image, width: 1200, height: 630, alt: name }],
+         type: 'profile',
+      },
+      twitter: {
+         card: 'summary_large_image',
+         title,
+         description,
+         images: [image],
+      },
+   };
+}
 export default async function CoachPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = await params;
    const supabaseUser = await createClient();

@@ -3,6 +3,45 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import ScoutDetailsClient from './ScoutDetailsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+   const { id } = await params;
+   const supabaseAdmin = createAdminClient();
+
+   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+   if (isUuid) return {};
+
+   const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('first_name, last_name, agency_name, country, avatar_url, cover_url, bio')
+      .eq('slug', id)
+      .maybeSingle();
+
+   if (!profile) return {};
+
+   const name = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Scout Profile';
+   const title = `${name} (Professional Scout) - CenterKick`;
+   const description = profile.bio || `${name} is a verified talent scout based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
+   const image = profile.avatar_url || profile.cover_url || "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop";
+
+   return {
+      title,
+      description,
+      openGraph: {
+         title,
+         description,
+         images: [{ url: image, width: 1200, height: 630, alt: name }],
+         type: 'profile',
+      },
+      twitter: {
+         card: 'summary_large_image',
+         title,
+         description,
+         images: [image],
+      },
+   };
+}
 
 export default async function ScoutPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = await params;

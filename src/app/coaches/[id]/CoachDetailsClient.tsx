@@ -503,7 +503,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                            type="text" 
                            value={contactFormData.name}
                            onChange={(e) => setContactFormData({...contactFormData, name: e.target.value})}
-                           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#a20000] focus:border-transparent outline-none" 
+                           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 bg-white placeholder:text-gray-400 focus:ring-2 focus:ring-[#a20000] focus:border-transparent outline-none" 
                            placeholder="John Doe"
                         />
                      </div>
@@ -513,7 +513,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                            type="email" 
                            value={contactFormData.email}
                            onChange={(e) => setContactFormData({...contactFormData, email: e.target.value})}
-                           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#a20000] focus:border-transparent outline-none" 
+                           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 bg-white placeholder:text-gray-400 focus:ring-2 focus:ring-[#a20000] focus:border-transparent outline-none" 
                            placeholder="john@example.com"
                         />
                      </div>
@@ -523,7 +523,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                            rows={4}
                            value={contactFormData.message}
                            onChange={(e) => setContactFormData({...contactFormData, message: e.target.value})}
-                           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#a20000] focus:border-transparent outline-none resize-none" 
+                           className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 bg-white placeholder:text-gray-400 focus:ring-2 focus:ring-[#a20000] focus:border-transparent outline-none resize-none" 
                            placeholder="Describe your offer or interest..."
                         />
                      </div>

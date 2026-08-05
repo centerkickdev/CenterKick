@@ -207,7 +207,7 @@ export default async function DashboardPage() {
             </Link>
           )}
           <Link href="/dashboard/profile" className="px-5 py-2.5 bg-gray-900 text-white rounded-xl text-xs font-bold tracking-wide hover:bg-black transition-all flex items-center gap-2 shadow-lg hover:-translate-y-0.5">
-             Edit Profile <ChevronRight className="w-3 h-3" />
+             Click to Edit Profile <ChevronRight className="w-3 h-3" />
           </Link>
         </div>
       </div>

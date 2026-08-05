@@ -76,12 +76,13 @@ export async function approvePaymentTransaction(transactionId: string, reason: s
   const email = tx.profiles?.email || tx.profiles?.users?.email;
   if (email) {
     const firstName = tx.profiles?.first_name || 'Member';
+    const formattedAmount = `${tx.currency === 'NGN' || !tx.currency ? '₦' : tx.currency === 'USD' ? '$' : ''}${Number(tx.amount).toLocaleString()}`;
     const emailBody = `Hello ${firstName},
 
 Your manual bank transfer subscription payment has been successfully confirmed and approved by our finance team.
 
 Payment Details:
-- Amount: ${tx.amount} ${tx.currency}
+- Amount: ${formattedAmount} ${tx.currency || 'NGN'}
 - Reference: ${tx.reference}
 
 Admin Message:

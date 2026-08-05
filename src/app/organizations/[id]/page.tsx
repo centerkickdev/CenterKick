@@ -3,8 +3,47 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import OrgDetailsClient from './OrgDetailsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+   const { id } = await params;
+   const supabaseAdmin = createAdminClient();
+
+   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+   if (isUuid) return {};
+
+   const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('first_name, last_name, club_name, organization_name, country, avatar_url, cover_url, bio')
+      .eq('slug', id)
+      .maybeSingle();
+
+   if (!profile) return {};
+
+   const orgName = profile.club_name || profile.organization_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Sports Organization';
+   const title = `${orgName} - CenterKick`;
+   const description = profile.bio || `${orgName} sports club and academy based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
+   const image = profile.avatar_url || profile.cover_url || "https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1200&auto=format&fit=crop";
+
+   return {
+      title,
+      description,
+      openGraph: {
+         title,
+         description,
+         images: [{ url: image, width: 1200, height: 630, alt: orgName }],
+         type: 'profile',
+      },
+      twitter: {
+         card: 'summary_large_image',
+         title,
+         description,
+         images: [image],
+      },
+   };
+}
 
 export default async function OrgPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = await params;

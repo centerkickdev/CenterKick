@@ -288,7 +288,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                               <input 
                                  type="text" 
                                  placeholder="Search discoveries..." 
-                                 className="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm outline-none focus:border-[#b50a0a] transition-colors w-full sm:w-64"
+                                 className="pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm font-medium text-gray-900 bg-white placeholder:text-gray-400 outline-none focus:border-[#b50a0a] transition-colors w-full sm:w-64"
                                  value={searchQuery}
                                  onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }}
                               />

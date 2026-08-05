@@ -75,6 +75,20 @@ export async function resendInvitation(email: string, role: string, lastName: st
 
   if (!profile) return { success: false, error: "Profile not found" };
 
+  // Fetch dynamic payment settings from DB
+  const { data: settingsRecord } = await supabase
+    .from('site_content')
+    .select('content')
+    .eq('page', 'settings')
+    .eq('section', 'payment')
+    .maybeSingle();
+
+  const settings = (settingsRecord?.content as any) || {};
+  const normalizedRole = role === 'athlete' ? 'player' : role;
+  const rolePlan = settings?.plans?.[normalizedRole];
+  const amountStr = rolePlan?.amount ? `₦${Number(rolePlan.amount).toLocaleString()}` : '';
+  const priceNotice = amountStr ? ` (${amountStr})` : '';
+
   const link = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://centerkick.com'}/register?email=${encodeURIComponent(email)}&role=${role}`;
   
   const subject = type === 'reminder' 
@@ -84,7 +98,7 @@ export async function resendInvitation(email: string, role: string, lastName: st
   const message = type === 'reminder'
     ? `Hello ${profile.first_name || lastName}, 
 
-We noticed your CenterKick ${role} subscription has expired. 
+We noticed your CenterKick ${role} subscription${priceNotice} has expired. 
 To continue enjoying full access to our professional network and tools, please re-activate your account.
 
 You can log in and manage your subscription here:
