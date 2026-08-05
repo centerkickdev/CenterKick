@@ -37,7 +37,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
    const firstName = nameParts[0];
    const restOfName = nameParts.slice(1).join(' ');
 
-   const profileAgency = profile.agency_name || profile.current_affiliation?.name || 'Free Agent';
+   const agencyName = profile.agency_name || profile.current_affiliation?.name || null;
 
    // Discoveries logic
    const pastDiscoveries = profile.past_discoveries || [];
@@ -97,7 +97,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                         loading="lazy"
                      />
                   </div>
-                  <span className="text-[#ff4d4d] font-bold tracking-[0.3em] mb-2 text-xs uppercase">{profileAgency}</span>
+                  {agencyName && <span className="text-[#ff4d4d] font-bold tracking-[0.3em] mb-2 text-xs uppercase">{agencyName}</span>}
                   <h1 className="text-4xl font-bold tracking-tight leading-none mb-8 drop-shadow-2xl mt-4">
                      {firstName} <span className="text-white">{restOfName}</span>
                   </h1>
@@ -117,7 +117,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                      </div>
                   </div>
                   <div className="w-[60%] flex flex-col justify-center items-start pl-16 text-white z-20">
-                     <span className="text-[#ff4d4d] font-bold tracking-[0.4em] mb-3 text-base uppercase">{profileAgency}</span>
+                     {agencyName && <span className="text-[#ff4d4d] font-bold tracking-[0.4em] mb-3 text-base uppercase">{agencyName}</span>}
                      <h1 className="flex flex-col leading-none drop-shadow-2xl mb-12 mt-4">
                         <span className="text-7xl font-black tracking-tight">{firstName}</span>
                         <span className="text-8xl font-black tracking-tighter text-white">{restOfName}</span>
@@ -181,9 +181,9 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                {activeTab === "Bio" && (
                   <div className="space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
                      {/* Overview Section */}
-                     <div className="bg-gray-50 border border-gray-100 rounded-[40px] p-10 shadow-sm mb-16">
+                     <div className="bg-gray-50 border border-gray-100 rounded-[40px] p-6 sm:p-10 shadow-sm mb-16">
                         <h2 className="text-2xl font-bold text-gray-900 tracking-tight mb-8">Professional Data</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                            <div className="flex flex-col gap-2">
                               <span className="text-xs font-bold text-gray-400 tracking-wide uppercase">License Status</span>
                               {profile.fa_license_number || profile.license_code || profile.license ? (
@@ -202,24 +202,26 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                                     </button>
                                  </div>
                               ) : (
-                                 <span className="text-xl font-black text-gray-400">Unlicensed</span>
+                                 <span className="text-xl font-black text-gray-400">Nil</span>
                               )}
                            </div>
-                           <div className="flex flex-col gap-2 border-l border-gray-200 pl-8">
+                           <div className="flex flex-col gap-2 sm:border-l border-gray-200 sm:pl-8">
                               <span className="text-xs font-bold text-gray-400 tracking-wide uppercase">Agency Name</span>
-                              {profile.organization_id ? (
+                              {profile.organization_id && agencyName ? (
                                  <Link href={`/organizations/${profile.organization_id}`} className="text-xl font-black text-[#a20000] hover:underline">
-                                    {profileAgency}
+                                    {agencyName}
                                  </Link>
+                              ) : agencyName ? (
+                                 <span className="text-xl font-black text-[#a20000]">{agencyName}</span>
                               ) : (
-                                 <span className="text-xl font-black text-[#a20000]">{profileAgency}</span>
+                                 <span className="text-xl font-black text-gray-400">Nil</span>
                               )}
                            </div>
-                           <div className="flex flex-col gap-2 border-l border-gray-200 pl-8">
+                           <div className="flex flex-col gap-2 md:border-l border-gray-200 md:pl-8 col-span-1 sm:col-span-2">
                               <span className="text-xs font-bold text-gray-400 tracking-wide uppercase">Specialized Regions</span>
-                              <div className="flex flex-wrap gap-2 mt-1">
+                              <div className="flex flex-wrap items-center gap-2 mt-1">
                                  {(profile.specialized_regions || []).map((region: string, i: number) => (
-                                    <span key={i} className="px-3 py-1 bg-[#b50a0a]/5 border border-[#b50a0a]/10 text-[#b50a0a] rounded-full text-xs font-bold">
+                                    <span key={i} className="px-3 py-1 bg-[#b50a0a]/5 border border-[#b50a0a]/10 text-[#b50a0a] rounded-full text-xs font-bold inline-block">
                                        {region}
                                     </span>
                                  ))}
@@ -229,29 +231,29 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                               </div>
                            </div>
                            
-                           <div className="flex flex-col gap-2 pt-8 border-t border-gray-200 col-span-2">
+                           <div className="flex flex-col gap-2 pt-8 border-t border-gray-200 col-span-1 sm:col-span-2">
                               <span className="text-xs font-bold text-gray-400 tracking-wide uppercase">Qualifications</span>
-                              <div className="flex flex-wrap gap-2 mt-1">
+                              <div className="flex flex-wrap items-center gap-2 mt-1">
                                  {(profile.scouting_qualifications || []).map((qual: string, i: number) => (
-                                    <span key={i} className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600">
+                                    <span key={i} className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600 inline-block">
                                        {qual}
                                     </span>
                                  ))}
                                  {(!profile.scouting_qualifications || profile.scouting_qualifications.length === 0) && (
-                                    <span className="text-sm font-medium text-gray-500">N/A</span>
+                                    <span className="text-sm font-medium text-gray-500">Nil</span>
                                  )}
                               </div>
                            </div>
-                           <div className="flex flex-col gap-2 pt-8 border-t border-gray-200 col-span-2">
+                           <div className="flex flex-col gap-2 pt-8 border-t border-gray-200 col-span-1 sm:col-span-2">
                               <span className="text-xs font-bold text-gray-400 tracking-wide uppercase">Methodologies</span>
-                              <div className="flex flex-wrap gap-2 mt-1">
+                              <div className="flex flex-wrap items-center gap-2 mt-1">
                                  {(profile.scouting_methodologies || []).map((method: string, i: number) => (
-                                    <span key={i} className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600">
+                                    <span key={i} className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600 inline-block">
                                        {method}
                                     </span>
                                  ))}
                                  {(!profile.scouting_methodologies || profile.scouting_methodologies.length === 0) && (
-                                    <span className="text-sm font-medium text-gray-500">N/A</span>
+                                    <span className="text-sm font-medium text-gray-500">Nil</span>
                                  )}
                               </div>
                            </div>
