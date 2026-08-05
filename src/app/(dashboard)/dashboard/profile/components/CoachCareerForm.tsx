@@ -5,11 +5,97 @@ import { Plus, Trash2, Trophy } from 'lucide-react';
 import { SearchableCombobox } from '@/components/common/SearchableCombobox';
 
 export function CoachCareerForm({ data, onChange, achievements, onAchievementsChange, disabled, clubsList = [], leaguesList = [], seasonsList = [] }: { data: any, onChange: (val: any) => void, achievements?: any[], onAchievementsChange?: (val: any[]) => void, disabled?: boolean, clubsList?: any[], leaguesList?: any[], seasonsList?: any[] }) {
-  const licenses = ['UEFA Pro', 'UEFA A', 'UEFA B', 'UEFA C', 'AFC Pro', 'AFC A', 'CONCACAF Pro', 'National Badge', 'Other'];
-  const specializations = ['Youth Development', 'Tactical Analysis', 'Physical Conditioning', 'Goalkeeping', 'Set Pieces', 'Data Analytics'];
-  const languages = ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Arabic', 'Chinese'];
+  const licenses = ['UEFA Pro', 'UEFA A', 'UEFA B', 'UEFA C', 'AFC Pro', 'AFC A', 'CONCACAF Pro', 'National Badge', 'Other(s)'];
+  const specializations = ['Youth Development', 'Tactical Analysis', 'Physical Conditioning', 'Goalkeeping', 'Set Pieces', 'Data Analytics', 'Other(s)'];
+  const languages = ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Arabic', 'Chinese', 'Other(s)'];
   const positions = ['Head Coach', 'Assistant Coach', 'Goalkeeper Coach', 'Academy Director', 'Fitness Coach', 'Free Agent'];
   const formations = ['4-3-3', '4-4-2', '4-2-3-1', '3-5-2', '3-4-3', '5-3-2', '4-1-4-1', '4-3-2-1'];
+
+  const renderArrayFieldWithOthers = (
+    label: string,
+    field: string,
+    predefinedList: string[],
+    buttonColorClass: string,
+    placeholderText: string
+  ) => {
+    const currentItems: string[] = data[field] || [];
+    const standardItems = predefinedList.filter(item => item !== 'Other(s)');
+    const customItems = currentItems.filter(item => item !== 'Other(s)' && !standardItems.includes(item));
+    const isOthersSelected = currentItems.includes('Other(s)') || customItems.length > 0;
+
+    const toggleStandardItem = (item: string) => {
+      if (currentItems.includes(item)) {
+        onChange({ ...data, [field]: currentItems.filter((v: string) => v !== item) });
+      } else {
+        onChange({ ...data, [field]: [...currentItems, item] });
+      }
+    };
+
+    const toggleOthers = () => {
+      if (isOthersSelected) {
+        onChange({ ...data, [field]: currentItems.filter((v: string) => standardItems.includes(v)) });
+      } else {
+        onChange({ ...data, [field]: [...currentItems, 'Other(s)'] });
+      }
+    };
+
+    const handleCustomTextChange = (text: string) => {
+      const parsedCustom = text.split(',').map(s => s.trim()).filter(Boolean);
+      const selectedStandard = currentItems.filter(v => standardItems.includes(v));
+      const newArray = Array.from(new Set([...selectedStandard, 'Other(s)', ...parsedCustom]));
+      onChange({ ...data, [field]: newArray });
+    };
+
+    const customTextValue = customItems.join(', ');
+
+    return (
+      <div className="space-y-3">
+        <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">{label}</label>
+        <div className="flex flex-wrap gap-2">
+          {standardItems.map(item => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => toggleStandardItem(item)}
+              disabled={disabled}
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                currentItems.includes(item)
+                  ? buttonColorClass
+                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={toggleOthers}
+            disabled={disabled}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+              isOthersSelected
+                ? buttonColorClass
+                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            Other(s)
+          </button>
+        </div>
+        {isOthersSelected && (
+          <div className="mt-2 animate-in fade-in duration-200">
+            <input
+              type="text"
+              disabled={disabled}
+              defaultValue={customTextValue}
+              onChange={(e) => handleCustomTextChange(e.target.value)}
+              placeholder={placeholderText}
+              className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-900 focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none"
+            />
+            <p className="text-[11px] text-gray-400 mt-1 ml-1">Type multiple options separated by commas (e.g. Option 1, Option 2)</p>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const handleArrayChange = (field: string, value: string) => {
     const currentArray = data[field] || [];
@@ -79,7 +165,6 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
         </div>
         
 
-
         <div className="space-y-3">
           <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Primary Formation</label>
           <SearchableCombobox
@@ -96,69 +181,32 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
       </div>
 
       {/* Coaching Licenses */}
-      <div className="space-y-3 border-t border-gray-100 pt-6">
-        <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">Coaching Licenses</label>
-        <div className="flex flex-wrap gap-2 mt-3">
-          {licenses.map(lic => (
-            <button
-              key={lic}
-              type="button"
-              onClick={() => handleArrayChange('coaching_licenses', lic)}
-              disabled={disabled}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
-                (data.coaching_licenses || []).includes(lic) 
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20' 
-                  : 'bg-white text-gray-600 border border-gray-200 hover:border-blue-300 hover:bg-blue-50'
-              }`}
-            >
-              {lic}
-            </button>
-          ))}
-        </div>
+      <div className="border-t border-gray-100 pt-6">
+        {renderArrayFieldWithOthers(
+          'Coaching Licenses',
+          'coaching_licenses',
+          licenses,
+          'bg-blue-600 text-white shadow-md shadow-blue-600/20',
+          'Type custom licenses (e.g. CAF A, USSF Pro)...'
+        )}
       </div>
 
       {/* Specializations & Languages */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-gray-100 pt-6">
-         <div className="space-y-3">
-            <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">Specializations</label>
-            <div className="flex flex-wrap gap-2">
-              {specializations.map(spec => (
-                <button
-                  key={spec}
-                  type="button"
-                  onClick={() => handleArrayChange('specializations', spec)}
-                  disabled={disabled}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                    (data.specializations || []).includes(spec) 
-                      ? 'bg-amber-500 text-white shadow-sm' 
-                      : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-                  }`}
-                >
-                  {spec}
-                </button>
-              ))}
-            </div>
-         </div>
-         <div className="space-y-3">
-            <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">Languages Spoken</label>
-            <div className="flex flex-wrap gap-2">
-              {languages.map(lang => (
-                <button
-                  key={lang}
-                  type="button"
-                  onClick={() => handleArrayChange('languages_spoken', lang)}
-                  disabled={disabled}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                    (data.languages_spoken || []).includes(lang) 
-                      ? 'bg-emerald-600 text-white shadow-sm' 
-                      : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-                  }`}
-                >
-                  {lang}
-                </button>
-              ))}
-            </div>
-         </div>
+        {renderArrayFieldWithOthers(
+          'Specializations',
+          'specializations',
+          specializations,
+          'bg-amber-500 text-white shadow-sm',
+          'Type custom specializations (e.g. Set Pieces, Youth Scouting)...'
+        )}
+        {renderArrayFieldWithOthers(
+          'Languages Spoken',
+          'languages_spoken',
+          languages,
+          'bg-emerald-600 text-white shadow-sm',
+          'Type custom languages (e.g. Swahili, Yoruba, Igbo)...'
+        )}
       </div>
 
       {/* Managerial History Dynamic Array */}

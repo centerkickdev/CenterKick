@@ -699,11 +699,11 @@ export default function ProfileEditor() {
         router.refresh(); }}
                 className={`px-6 py-2.5 rounded-xl text-xs font-bold tracking-wide transition-all ${isEditing ? 'bg-red-100 text-red-700' : 'bg-gray-900 text-white hover:bg-black'}`}
               >
-                {isEditing ? 'Close Editor' : 'Edit Profile'}
+                {isEditing ? 'Close Editor' : 'Click to Edit Profile'}
               </button>
             </div>
           </div>
-          <div className={`bg-white rounded-[40px] border border-gray-100 shadow-sm overflow-hidden p-4 md:p-8 md:p-6 space-y-8 ${!isEditing && 'opacity-90 pointer-events-none'}`} onClickCapture={(e) => { if (!isEditing) { e.preventDefault(); e.stopPropagation(); showToast('Click "Edit Profile" to make changes.', 'error'); } }}>
+          <div className={`bg-white rounded-[40px] border border-gray-100 shadow-sm overflow-hidden p-4 md:p-8 md:p-6 space-y-8 ${!isEditing && 'opacity-90 pointer-events-none'}`} onClickCapture={(e) => { if (!isEditing) { e.preventDefault(); e.stopPropagation(); showToast('Click "Click to Edit Profile" to make changes.', 'error'); } }}>
 
             {activeTab === 'Basic Info' && (
               <form onSubmit={saveBasicInfo} onChange={() => setIsDirty(true)} className="space-y-6 animate-in fade-in duration-500">

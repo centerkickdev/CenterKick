@@ -202,7 +202,7 @@ export default async function DashboardPage() {
             <CopyableProfileLink slugOrId={profile.slug || profile.id} role={role} />
           )}
           {(profile?.slug || profile?.id) && (
-            <Link href={`/${role === 'player' ? 'players' : role + 's'}/${profile?.slug || profile?.id}`} className="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl text-xs font-bold tracking-wide hover:bg-gray-50 transition-all flex items-center gap-2 shadow-sm">
+            <Link href={`/${role === 'player' ? 'players' : role === 'coach' ? 'coaches' : role === 'agent' ? 'agents' : role === 'scout' ? 'scouts' : role === 'organization' ? 'organizations' : `${role}s`}/${profile?.slug || profile?.id}`} className="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl text-xs font-bold tracking-wide hover:bg-gray-50 transition-all flex items-center gap-2 shadow-sm">
                View Public Profile <ExternalLink className="w-3 h-3" />
             </Link>
           )}

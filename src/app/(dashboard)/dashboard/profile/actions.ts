@@ -89,16 +89,37 @@ export async function invalidateProfileCache() {
   }
 }
 
-export async function submitUserLeague(name: string, country_id: string | null) {
+const isValidUUID = (id: string | null | undefined): boolean => {
+  if (!id) return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+};
+
+export async function submitUserLeague(name: string, countryInput: string | null) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
+
+  let validCountryId: string | null = null;
+  if (countryInput) {
+    if (isValidUUID(countryInput)) {
+      validCountryId = countryInput;
+    } else {
+      const { data: countryRecord } = await supabase
+        .from('countries')
+        .select('id')
+        .ilike('name', countryInput.trim())
+        .maybeSingle();
+      if (countryRecord?.id) {
+        validCountryId = countryRecord.id;
+      }
+    }
+  }
 
   const { data, error } = await supabase
     .from('leagues')
     .insert({
       name,
-      country_id,
+      country_id: validCountryId,
       is_user_submitted: true,
       is_verified: false,
       is_active: true
@@ -124,16 +145,30 @@ export async function submitUserLeague(name: string, country_id: string | null) 
   return { success: true, data };
 }
 
-export async function submitUserClub(name: string, league_id: string) {
+export async function submitUserClub(name: string, leagueInput: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
+
+  let validLeagueId: string | null = null;
+  if (isValidUUID(leagueInput)) {
+    validLeagueId = leagueInput;
+  } else if (leagueInput) {
+    const { data: leagueRecord } = await supabase
+      .from('leagues')
+      .select('id')
+      .ilike('name', leagueInput.trim())
+      .maybeSingle();
+    if (leagueRecord?.id) {
+      validLeagueId = leagueRecord.id;
+    }
+  }
 
   const { data, error } = await supabase
     .from('clubs')
     .insert({
       name,
-      league_id,
+      league_id: validLeagueId,
       is_user_submitted: true,
       is_verified: false,
       is_active: true

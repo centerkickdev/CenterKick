@@ -15,7 +15,7 @@ export function CopyableProfileLink({ slugOrId, role }: CopyableProfileLinkProps
   const { showToast } = useToast();
 
   useEffect(() => {
-    const rolePath = role === 'player' ? 'players' : `${role}s`;
+    const rolePath = role === 'player' ? 'players' : role === 'coach' ? 'coaches' : role === 'agent' ? 'agents' : role === 'scout' ? 'scouts' : role === 'organization' ? 'organizations' : `${role}s`;
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
     // ensure no double slashes if NEXT_PUBLIC_SITE_URL has trailing slash
     const formattedBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;

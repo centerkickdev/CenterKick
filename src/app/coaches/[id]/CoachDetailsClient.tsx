@@ -323,34 +323,40 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                               Performance Status
                               <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-[#b50a0a]"></span>
                            </h2>
-                           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                              <div className="p-6 rounded-[2rem] bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center">
-                                 <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4">
-                                    <Target className="w-6 h-6 text-[#b50a0a]" />
+                           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                              <div className="p-4 sm:p-6 rounded-2xl sm:rounded-[2rem] bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center">
+                                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 sm:mb-4">
+                                    <Target className="w-5 h-5 sm:w-6 sm:h-6 text-[#b50a0a]" />
                                  </div>
-                                 <p className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">Matches</p>
-                                 <p className="text-3xl font-black text-gray-900">{totalMatches}</p>
+                                 <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">Matches</p>
+                                 <p className="text-xl sm:text-3xl font-black text-gray-900">{totalMatches}</p>
                               </div>
-                              <div className="p-6 rounded-[2rem] bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center">
-                                 <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4">
-                                    <Trophy className="w-6 h-6 text-emerald-500" />
+                              <div className="p-4 sm:p-6 rounded-2xl sm:rounded-[2rem] bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center">
+                                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 sm:mb-4">
+                                    <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500" />
                                  </div>
-                                 <p className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">W / D / L</p>
-                                 <p className="text-2xl font-black text-gray-900">{stats.wins} <span className="text-gray-300">/</span> {stats.draws} <span className="text-gray-300">/</span> {stats.losses}</p>
+                                 <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">W / D / L</p>
+                                 <p className="text-base sm:text-xl lg:text-2xl font-black text-gray-900 whitespace-nowrap flex items-center justify-center gap-1 sm:gap-1.5">
+                                    <span>{stats.wins}</span>
+                                    <span className="text-gray-300 font-normal">/</span>
+                                    <span>{stats.draws}</span>
+                                    <span className="text-gray-300 font-normal">/</span>
+                                    <span>{stats.losses}</span>
+                                 </p>
                               </div>
-                              <div className="p-6 rounded-[2rem] bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center">
-                                 <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4">
-                                    <TrendingUp className="w-6 h-6 text-blue-500" />
+                              <div className="p-4 sm:p-6 rounded-2xl sm:rounded-[2rem] bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center">
+                                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 sm:mb-4">
+                                    <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
                                  </div>
-                                 <p className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">Points</p>
-                                 <p className="text-3xl font-black text-gray-900">{totalPoints}</p>
+                                 <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">Points</p>
+                                 <p className="text-xl sm:text-3xl font-black text-gray-900">{totalPoints}</p>
                               </div>
-                              <div className="p-6 rounded-[2rem] bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center">
-                                 <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4">
-                                    <Settings2 className="w-6 h-6 text-amber-500" />
+                              <div className="p-4 sm:p-6 rounded-2xl sm:rounded-[2rem] bg-gray-50 border border-gray-100 flex flex-col items-center justify-center text-center">
+                                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white shadow-sm flex items-center justify-center mb-3 sm:mb-4">
+                                    <Settings2 className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
                                  </div>
-                                 <p className="text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">Formation</p>
-                                 <p className="text-xl font-black text-gray-900">{profile.formation || 'N/A'}</p>
+                                 <p className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-wide mb-1">Formation</p>
+                                 <p className="text-lg sm:text-xl font-black text-gray-900 truncate max-w-full">{profile.formation || 'N/A'}</p>
                               </div>
                            </div>
                         </section>
