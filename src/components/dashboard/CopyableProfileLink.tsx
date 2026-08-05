@@ -53,7 +53,7 @@ export function CopyableProfileLink({ slugOrId, role }: CopyableProfileLinkProps
       ) : (
         <>
           <Copy className="w-4 h-4" />
-          Copy Profile Link
+          Copy Link
         </>
       )}
     </button>
