@@ -101,7 +101,7 @@ export function DirectoryTable<T>({
         </div>
       )}
 
-      <div className="relative overflow-x-auto w-full" ref={dropdownRef}>
+      <div className="relative overflow-x-auto w-full [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-gray-200 [&::-webkit-scrollbar-thumb]:rounded-full" ref={dropdownRef}>
         {isPending && (
           <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-[1px] flex items-center justify-center animate-in fade-in duration-300">
             <div className="flex flex-col items-center gap-2">
@@ -111,7 +111,7 @@ export function DirectoryTable<T>({
           </div>
         )}
         
-        <table className="w-full text-left border-collapse table-fixed">
+        <table className="w-full text-left border-collapse min-w-[700px] md:min-w-[750px]">
           <thead>
             <tr className="bg-gray-50/30">
               {onBatchDelete && (

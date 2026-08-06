@@ -172,7 +172,7 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
       )}
 
       {/* Controls */}
-      <div className="p-6 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/50">
+      <div className="p-4 sm:p-6 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/50">
         <form onSubmit={handleSearch} className="relative flex-1 max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
@@ -184,15 +184,15 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
           />
         </form>
 
-        <div className="flex items-center gap-3">
-          <div className="flex bg-white p-1 border border-gray-200 rounded-xl">
+        <div className="flex items-center gap-3 overflow-hidden">
+          <div className="flex bg-white p-1 border border-gray-200 rounded-xl overflow-x-auto max-w-full [&::-webkit-scrollbar]:hidden">
             {['all', 'player', 'coach', 'agent', 'scout', 'organization'].map((r) => (
               <button
                 key={r}
                 onClick={() => handleRoleFilter(r)}
-                className={`px-4 py-2 rounded-lg text-xs font-bold tracking-wide transition-all ${
- currentRole === r ? 'bg-[#b50a0a] text-white shadow-lg' : 'text-gray-400 hover:text-[#b50a0a]'
- }`}
+                className={`px-3.5 py-2 rounded-lg text-xs font-bold tracking-wide transition-all shrink-0 ${
+                  currentRole === r ? 'bg-[#b50a0a] text-white shadow-lg' : 'text-gray-400 hover:text-[#b50a0a]'
+                }`}
               >
                 {r === 'all' ? 'All Roles' : r === 'organization' ? 'Orgs' : r + 's'}
               </button>
@@ -206,11 +206,11 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
         <DirectoryTable
         data={filteredUsers}
         columns={[
-          { key: 'account', label: 'Account User', width: 'w-[35%]' },
-          { key: 'identity', label: 'Identity / Role', width: 'w-[20%]', className: 'whitespace-nowrap' },
-          { key: 'status', label: 'Subscription', width: 'w-[15%]', className: 'whitespace-nowrap' },
-          { key: 'registered', label: 'Registered On', width: 'w-[15%]', className: 'whitespace-nowrap' },
-          { key: 'actions', label: 'Actions', width: 'w-[15%]', className: 'text-right whitespace-nowrap' }
+          { key: 'account', label: 'Account User', className: 'min-w-[220px]' },
+          { key: 'identity', label: 'Identity / Role', className: 'min-w-[140px] whitespace-nowrap' },
+          { key: 'status', label: 'Subscription', className: 'min-w-[130px] whitespace-nowrap' },
+          { key: 'registered', label: 'Registered On', className: 'min-w-[120px] whitespace-nowrap' },
+          { key: 'actions', label: 'Actions', className: 'min-w-[100px] text-right whitespace-nowrap' }
         ]}
         isPending={isPending}
         isDeleting={isDeleting}
