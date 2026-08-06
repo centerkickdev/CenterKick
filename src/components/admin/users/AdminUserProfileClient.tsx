@@ -52,82 +52,83 @@ export default function AdminUserProfileClient({
   const roleDisplay = role.charAt(0).toUpperCase() + role.slice(1);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f8fafc] animate-in fade-in duration-500 pb-20 pt-8 space-y-8">
+    <div className="flex flex-col min-h-screen bg-[#f8fafc] animate-in fade-in duration-500 pb-28 sm:pb-20 pt-4 sm:pt-8 space-y-6 sm:space-y-8">
       {/* Top Bar Card */}
-      <div className="w-full px-4 md:px-8 xl:px-12">
-        <div className="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-6 xl:gap-8">
-          {/* Left: Back & Profile Identity */}
-          <div className="flex items-center gap-6 xl:w-auto w-full">
+      <div className="w-full px-3 sm:px-6 md:px-8 xl:px-12">
+        <div className="bg-white p-4 sm:p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm flex flex-col gap-4 sm:gap-6">
+          {/* Top Row: Back Link */}
+          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <Link 
               href="/admin/users"
-              className="group flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-all font-bold text-sm tracking-wide shrink-0"
+              className="group inline-flex items-center gap-1.5 text-slate-500 hover:text-[#b50a0a] transition-all font-bold text-xs sm:text-sm tracking-wide shrink-0"
             >
               <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-              Back
+              <span>Back to Accounts</span>
             </Link>
-            <div className="h-8 w-px bg-slate-200 hidden md:block shrink-0"></div>
-            
-            <div className="flex items-center gap-5">
-              <div className="w-14 h-14 rounded-2xl bg-slate-900 flex items-center justify-center text-white overflow-hidden shadow-sm border border-slate-100 relative shrink-0">
+          </div>
+
+          <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5 sm:gap-6">
+            {/* Profile Avatar & Name */}
+            <div className="flex items-center gap-4 sm:gap-5 min-w-0">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-900 flex items-center justify-center text-white overflow-hidden shadow-sm border border-slate-100 relative shrink-0">
                 {profile.avatar_url ? (
                   <Image src={profile.avatar_url} alt="Avatar" fill className="w-full h-full object-cover" />
                 ) : (
                   <User className="w-6 h-6 text-slate-300" />
                 )}
               </div>
-              <div className="flex flex-col justify-center">
-                <h1 className="text-xl font-bold text-slate-900 tracking-tight leading-none flex items-center gap-3 mb-1.5">
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight leading-snug truncate">
                   {profile.first_name} <span className="text-[#b50a0a]">{profile.last_name}</span>
                 </h1>
-                <span className="text-sm font-medium text-slate-500 truncate max-w-[200px] sm:max-w-none">
+                <p className="text-xs sm:text-sm font-medium text-slate-500 truncate" title={profile.users?.email || profile.contact_email}>
                   {profile.users?.email || profile.contact_email || 'No email provided'}
-                </span>
+                </p>
               </div>
             </div>
-          </div>
 
-          <div className="hidden xl:block h-12 w-px bg-slate-200 shrink-0"></div>
+            {/* Role & Status & Socials */}
+            <div className="flex items-center gap-4 sm:gap-8 flex-wrap pt-2 xl:pt-0 border-t xl:border-t-0 border-slate-100">
+              <div className="flex flex-col min-w-max">
+                <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Role</span>
+                <span className="text-xs sm:text-sm font-bold text-slate-900 capitalize">{roleDisplay}</span>
+              </div>
 
-          {/* Middle: Role & Status */}
-          <div className="flex items-center gap-8 xl:w-auto w-full overflow-x-auto pb-2 xl:pb-0">
-            <div className="flex flex-col min-w-max">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Role</span>
-              <span className="text-sm font-bold text-slate-900 capitalize">{roleDisplay}</span>
+              <div className="h-6 w-px bg-slate-200"></div>
+
+              <div className="flex flex-col min-w-max">
+                <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Status</span>
+                <span className={`text-[10px] uppercase px-2.5 py-1 rounded-full font-bold tracking-widest inline-flex w-fit ${
+                  subStatus === 'PAID' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 
+                  subStatus === 'PENDING APPROVAL' ? 'bg-blue-50 text-blue-600 border border-blue-100' : 
+                  subStatus === 'EXPIRED' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-slate-50 text-slate-500 border border-slate-200'
+                }`}>
+                  {subStatus}
+                </span>
+              </div>
+
+              {profile.official_links && Object.values(profile.official_links).some(Boolean) && (
+                <>
+                  <div className="h-6 w-px bg-slate-200 hidden sm:block"></div>
+                  <div className="flex items-center gap-2">
+                    {Object.entries(profile.official_links).map(([platform, url]: [string, any]) => {
+                      if (!url) return null;
+                      let Icon = Globe;
+                      if (platform === 'instagram') Icon = Instagram;
+                      else if (platform === 'facebook') Icon = Facebook;
+                      else if (platform === 'twitter') Icon = Twitter;
+                      else if (platform === 'linkedin') Icon = Linkedin;
+
+                      return (
+                        <Link key={platform} href={url} target="_blank" className="text-slate-400 hover:text-[#b50a0a] transition-colors p-2 bg-slate-50 rounded-full hover:bg-red-50">
+                          <Icon className="w-4 h-4" />
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
-
-            <div className="h-8 w-px bg-slate-200 shrink-0"></div>
-
-            <div className="flex flex-col min-w-max">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5">Status</span>
-              <span className={`text-[10px] uppercase px-2.5 py-1 rounded-full font-bold tracking-widest inline-flex w-fit ${
-                subStatus === 'PAID' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 
-                subStatus === 'PENDING APPROVAL' ? 'bg-blue-50 text-blue-600 border border-blue-100' : 
-                subStatus === 'EXPIRED' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-slate-50 text-slate-500 border border-slate-200'
-              }`}>
-                {subStatus}
-              </span>
-            </div>
-          </div>
-
-          <div className="hidden xl:block h-12 w-px bg-slate-200 shrink-0"></div>
-
-          {/* Right: Social Links */}
-          <div className="flex items-center gap-4 xl:w-auto w-full">
-             {profile.official_links && Object.entries(profile.official_links).map(([platform, url]: [string, any]) => {
-                if (!url) return null;
-                
-                let Icon = Globe;
-                if (platform === 'instagram') Icon = Instagram;
-                else if (platform === 'facebook') Icon = Facebook;
-                else if (platform === 'twitter') Icon = Twitter;
-                else if (platform === 'linkedin') Icon = Linkedin;
-
-                return (
-                  <Link key={platform} href={url} target="_blank" className="text-slate-400 hover:text-[#b50a0a] transition-colors p-2 bg-slate-50 rounded-full hover:bg-red-50">
-                    <Icon className="w-5 h-5" />
-                  </Link>
-                );
-             })}
           </div>
         </div>
       </div>

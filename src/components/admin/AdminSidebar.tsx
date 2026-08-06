@@ -24,7 +24,6 @@ export function AdminSidebar({ role }: { role: string }) {
     {
       group: 'Core',
       items: [
-        { label: 'My Account', href: '/admin/account', icon: User },
         ...(['superadmin', 'admin', 'operations', 'finance'].includes(role) 
           ? [
               { label: 'Verification Hub', href: '/admin/approvals', icon: ShieldCheck }
@@ -59,6 +58,7 @@ export function AdminSidebar({ role }: { role: string }) {
     {
       group: 'Infrastructure',
       items: [
+        { label: 'My Account', href: '/admin/account', icon: User },
         ...(isSuperOrAdmin ? [{ label: 'Manage Roles', href: '#', icon: ShieldCheck, isComingSoon: true }] : []),
         ...(['superadmin', 'admin', 'operations'].includes(role) ? [{ label: 'Data Management', href: '/admin/data-management', icon: Database }] : []),
         ...(isFinance || isSuperOrAdmin ? [
