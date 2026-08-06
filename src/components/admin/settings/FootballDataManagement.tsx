@@ -221,57 +221,45 @@ export default function FootballDataManagement() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tighter flex items-center gap-3">
-            <Database className="w-8 h-8 text-[#b50a0a]" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tighter flex items-center gap-3">
+            <Database className="w-7 h-7 sm:w-8 sm:h-8 text-[#b50a0a]" />
             Data <span className="text-[#b50a0a]">Management</span>
           </h1>
-          <p className="text-sm font-normal text-slate-500 mt-1">Ecosystem constants & historical records management</p>
+          <p className="text-xs sm:text-sm font-normal text-slate-500 mt-1">Ecosystem constants & historical records management</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full md:w-auto">
           <button 
             onClick={handleSeed}
-            className="px-6 py-3 bg-white text-slate-600 border border-slate-200 rounded-2xl text-xs font-bold tracking-wide hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm"
+            className="flex-1 sm:flex-none px-4 sm:px-6 py-3 bg-white text-slate-600 border border-slate-200 rounded-2xl text-xs font-bold tracking-wide hover:bg-slate-50 transition-all flex items-center justify-center gap-2 shadow-sm"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} /> Refresh
           </button>
-          <div className="flex-1 flex flex-col md:flex-row items-stretch md:items-center gap-3">
-              <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <input 
-                  type="text"
-                  placeholder={`Search ${activeTab}...`}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#b50a0a] transition-all"
-                />
-              </div>
-              
-              {(activeTab === 'leagues' || activeTab === 'clubs') && (
-                <button
-                  onClick={() => setShowUnverifiedOnly(!showUnverifiedOnly)}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-2xl text-sm font-bold border transition-colors ${
-                    showUnverifiedOnly 
-                      ? 'bg-amber-50 text-amber-600 border-amber-200' 
-                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-                  }`}
-                >
-                  <AlertCircle className="w-4 h-4" />
-                  Pending Verification
-                </button>
-              )}
+          
+          {(activeTab === 'leagues' || activeTab === 'clubs') && (
+            <button
+              onClick={() => setShowUnverifiedOnly(!showUnverifiedOnly)}
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold border transition-colors ${
+                showUnverifiedOnly 
+                  ? 'bg-amber-50 text-amber-600 border-amber-200' 
+                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+              }`}
+            >
+              <AlertCircle className="w-4 h-4" />
+              Pending
+            </button>
+          )}
 
-              <button 
-                onClick={() => handleOpenModal()}
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl text-sm font-bold hover:bg-black transition-colors"
-              >
-                <Plus className="w-4 h-4" /> Add {getSingularLabel(activeTab)}
-              </button>
-            </div>
+          <button 
+            onClick={() => handleOpenModal()}
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 sm:px-6 py-3 bg-slate-900 text-white rounded-2xl text-xs sm:text-sm font-bold hover:bg-black transition-colors shrink-0"
+          >
+            <Plus className="w-4 h-4" /> Add {getSingularLabel(activeTab)}
+          </button>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap items-center gap-3 bg-white p-2 rounded-[2.5rem] border border-slate-100 shadow-sm w-fit">
+      <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 bg-white p-2 rounded-2xl sm:rounded-[2.5rem] border border-slate-100 shadow-sm w-full sm:w-fit">
         {[
           { id: 'countries', label: 'Countries', icon: Globe },
           { id: 'leagues', label: 'Leagues', icon: Trophy },
@@ -285,14 +273,14 @@ export default function FootballDataManagement() {
               setSearchQuery(''); 
               setSelectedClubs([]); 
             }}
-            className={`flex items-center gap-3 px-6 py-4 rounded-[1.8rem] text-xs font-bold tracking-wide transition-all ${
- activeTab === tab.id 
- ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/10 scale-[1.02]' 
- : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
- }`}
+            className={`flex items-center justify-center sm:justify-start gap-2.5 sm:gap-3 px-3 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-[1.8rem] text-xs font-bold tracking-wide transition-all ${
+              activeTab === tab.id 
+                ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/10 scale-[1.02]' 
+                : 'text-slate-400 hover:bg-slate-50 hover:text-slate-900'
+            }`}
           >
             <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-white' : 'text-slate-300'}`} />
-            {tab.label}
+            <span>{tab.label}</span>
           </button>
         ))}
       </div>
@@ -300,19 +288,19 @@ export default function FootballDataManagement() {
       {/* List Content Area */}
       <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden flex flex-col">
         {/* Sub-header with Search */}
-        <div className="px-6 py-4 bg-slate-50/50 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="relative w-full md:w-96 group">
+        <div className="px-4 sm:px-6 py-4 bg-slate-50/50 border-b border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="relative w-full sm:w-80 md:w-96 group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-[#b50a0a] transition-colors" />
             <input 
               type="text" 
               placeholder={`Search in ${activeTab}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-slate-200 rounded-2xl py-3 pl-12 pr-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-[#b50a0a] focus:border-transparent outline-none transition-all shadow-sm"
+              className="w-full bg-white border border-slate-200 rounded-2xl py-2.5 sm:py-3 pl-11 pr-4 text-xs sm:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-[#b50a0a] focus:border-transparent outline-none transition-all shadow-sm"
             />
           </div>
-          <div className="flex items-center gap-4">
-             <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-slate-200 text-xs font-bold tracking-wide text-slate-400">
+          <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4">
+             <div className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white rounded-xl border border-slate-200 text-xs font-bold tracking-wide text-slate-400">
                 <ArrowUpDown className="w-3.5 h-3.5" /> Sort: Name
              </div>
              <p className="text-xs font-bold text-slate-400 tracking-wide">
@@ -503,21 +491,21 @@ export default function FootballDataManagement() {
 
       {/* Modal Overlay */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-6 animate-in fade-in duration-300">
-          <div className="bg-white w-full max-w-xl rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
-            <div className="px-10 py-8 bg-slate-900 text-white flex items-center justify-between shrink-0">
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-300">
+          <div className="bg-white w-[95%] sm:w-full max-w-xl rounded-3xl sm:rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
+            <div className="px-5 sm:px-10 py-5 sm:py-8 bg-slate-900 text-white flex items-center justify-between shrink-0">
               <div>
-                <h2 className="text-xl font-bold tracking-tighter flex items-center gap-3">
-                  {editingItem ? <Edit className="w-6 h-6 border-2 border-white/20 p-1.5 rounded-lg" /> : <Plus className="w-6 h-6 border-2 border-white/20 p-1.5 rounded-lg" />}
+                <h2 className="text-lg sm:text-xl font-bold tracking-tighter flex items-center gap-2.5 sm:gap-3">
+                  {editingItem ? <Edit className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-white/20 p-1 rounded-lg" /> : <Plus className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-white/20 p-1 rounded-lg" />}
                   {editingItem ? 'Update' : 'Register'} {getSingularLabel(activeTab)}
                 </h2>
-                <p className="text-xs font-bold text-white/40 tracking-[0.4em] mt-1">Blockchain-grade Registry Node</p>
+                <p className="text-[10px] sm:text-xs font-bold text-white/40 tracking-[0.3em] sm:tracking-[0.4em] mt-1">Blockchain-grade Registry Node</p>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-white/10 rounded-2xl transition-all"><X className="w-5 h-5" /></button>
+              <button onClick={() => setIsModalOpen(false)} className="p-2 sm:p-3 hover:bg-white/10 rounded-2xl transition-all"><X className="w-5 h-5" /></button>
             </div>
 
-            <form onSubmit={handleSave} className="p-10 space-y-6 overflow-y-auto">
-              <div className="space-y-5">
+            <form onSubmit={handleSave} className="p-5 sm:p-10 space-y-4 sm:space-y-6 overflow-y-auto">
+              <div className="space-y-4 sm:space-y-5">
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-bold text-slate-400 tracking-wide pl-1">Display Name</label>
                   <input 
@@ -525,7 +513,7 @@ export default function FootballDataManagement() {
                     required
                     value={formData.name || ''}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
+                    className="w-full bg-slate-50 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
                     placeholder={`Registry name for ${getSingularLabel(activeTab)}...`}
                   />
                 </div>
@@ -538,7 +526,7 @@ export default function FootballDataManagement() {
                       maxLength={2}
                       value={formData.code || ''}
                       onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                      className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
+                      className="w-full bg-slate-50 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
                       placeholder="e.g. GB, NG, ES"
                     />
                   </div>
@@ -552,7 +540,7 @@ export default function FootballDataManagement() {
                         required
                         value={formData.country_id || ''}
                         onChange={(e) => setFormData({ ...formData, country_id: e.target.value })}
-                        className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
+                        className="w-full bg-slate-50 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
                       >
                          <option value="">Select Country</option>
                         {data.countries.map((c: Record<string, any>) => (
@@ -567,7 +555,7 @@ export default function FootballDataManagement() {
                            type="file" 
                            accept="image/*"
                            onChange={(e) => handleFileUpload(e, 'logo_url')}
-                           className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner pl-14"
+                           className="w-full bg-slate-50 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner pl-14"
                          />
                          <ImageIcon className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
                       </div>
@@ -589,7 +577,7 @@ export default function FootballDataManagement() {
                         required
                         value={formData.league_id || ''}
                         onChange={(e) => setFormData({ ...formData, league_id: e.target.value })}
-                        className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
+                        className="w-full bg-slate-50 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
                       >
                          <option value="">Select League</option>
                         {data.leagues.map((l: Record<string, any>) => (
@@ -604,7 +592,7 @@ export default function FootballDataManagement() {
                            type="text" 
                            value={formData.logo_url || ''}
                            onChange={(e) => setFormData({ ...formData, logo_url: e.target.value })}
-                           className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner pl-14"
+                           className="w-full bg-slate-50 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner pl-14"
                            placeholder="https://..."
                          />
                          <ImageIcon className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
@@ -621,16 +609,16 @@ export default function FootballDataManagement() {
                         type="number" 
                         value={formData.sort_order || ''}
                         onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) })}
-                        className="w-full bg-slate-50 border-none rounded-2xl p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
+                        className="w-full bg-slate-50 border-none rounded-2xl p-4 sm:p-5 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#b50a0a] outline-none transition-all shadow-inner"
                       />
                     </div>
-                    <div className="flex items-center justify-center bg-slate-50 rounded-[2rem] border-2 border-dotted border-slate-200 p-4 mt-6">
+                    <div className="flex items-center justify-center bg-slate-50 rounded-2xl sm:rounded-[2rem] border-2 border-dotted border-slate-200 p-4 mt-2 sm:mt-6">
                       <label className="flex items-center gap-4 cursor-pointer group">
                         <input 
                           type="checkbox" 
                           checked={formData.is_current || false}
                           onChange={(e) => setFormData({ ...formData, is_current: e.target.checked })}
-                          className="w-6 h-6 rounded-lg border-slate-300 text-[#b50a0a] focus:ring-[#b50a0a] transition-all"
+                          className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg border-slate-300 text-[#b50a0a] focus:ring-[#b50a0a] transition-all"
                         />
                         <span className="text-xs font-bold text-slate-500 tracking-wide group-hover:text-slate-900 transition-colors">Current Active Season</span>
                       </label>
@@ -639,18 +627,18 @@ export default function FootballDataManagement() {
                 )}
               </div>
 
-              <div className="flex gap-4 pt-10 border-t border-slate-50 shrink-0">
+              <div className="flex flex-col sm:flex-row gap-3 pt-6 sm:pt-10 border-t border-slate-50 shrink-0">
                 <button 
                   type="submit" 
                   disabled={isActionLoading}
-                  className="flex-1 px-10 py-5 bg-slate-900 text-white rounded-[2rem] text-xs font-bold tracking-[0.3em] hover:bg-[#b50a0a] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-slate-200 group"
+                  className="flex-1 px-6 sm:px-10 py-3.5 sm:py-5 bg-slate-900 text-white rounded-2xl sm:rounded-[2rem] text-xs font-bold tracking-wider sm:tracking-[0.3em] hover:bg-[#b50a0a] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-slate-200 group"
                 >
                   {isActionLoading ? 'Saving Registry...' : 'Commit to Registry'}
                 </button>
                 <button 
                   type="button" 
                   onClick={() => setIsModalOpen(false)}
-                  className="px-10 py-5 bg-white text-slate-400 border-2 border-slate-100 rounded-[2rem] text-xs font-bold tracking-wide hover:bg-slate-50 transition-all font-bold"
+                  className="px-6 sm:px-10 py-3.5 sm:py-5 bg-white text-slate-400 border-2 border-slate-100 rounded-2xl sm:rounded-[2rem] text-xs font-bold tracking-wide hover:bg-slate-50 transition-all"
                 >
                   Discard
                 </button>
