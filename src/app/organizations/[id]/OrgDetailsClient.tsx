@@ -227,7 +227,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                         </button>
                      ))}
                   </div>
-                  <div className="flex items-center gap-4 shrink-0 py-2">
+                  <div className="hidden lg:flex items-center gap-4 shrink-0 py-2">
                      <button onClick={() => setIsContactModalOpen(true)} className="bg-[#a20000] hover:bg-[#8a0000] text-white px-5 py-2 rounded-lg text-xs font-bold tracking-wide transition-all whitespace-nowrap">
                         Connect Partner
                      </button>
