@@ -132,19 +132,19 @@ export function SubscriptionsClient({
    };
 
    return (
-      <div className="space-y-12 animate-in fade-in duration-500 pb-20">
+      <div className="space-y-8 sm:space-y-12 animate-in fade-in duration-500 pb-20">
          {/* Header */}
-         <div className="flex items-center justify-between">
+         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-               <h1 className="text-3xl font-bold text-gray-900 tracking-tighter">Subscription Registry</h1>
-               <p className="text-sm font-normal text-gray-500 mt-1">
+               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tighter">Subscription Registry</h1>
+               <p className="text-xs sm:text-sm font-normal text-gray-500 mt-1">
                   Centrally manage account growth rates, settlement channels, and gateway integrations.
                </p>
             </div>
             <button
                onClick={handleSave}
                disabled={isSaving}
-               className="bg-black text-white px-4 md:px-8 py-3.5 rounded-2xl font-bold text-xs tracking-wide shadow-xl shadow-gray-200 hover:bg-[#b50a0a] transition-all flex items-center gap-3 disabled:opacity-50"
+               className="w-full sm:w-auto bg-black text-white px-6 py-3.5 rounded-2xl font-bold text-xs tracking-wide shadow-xl shadow-gray-200 hover:bg-[#b50a0a] transition-all flex items-center justify-center gap-3 disabled:opacity-50 shrink-0"
             >
                {isSaving ? 'Processing...' : 'Deploy Changes'}
                <Save className="w-4 h-4" />
@@ -153,14 +153,16 @@ export function SubscriptionsClient({
 
          {/* Validation Banner Summary */}
          {Object.keys(errors).length > 0 && (
-            <div className="bg-red-50 border-2 border-red-200 p-6 rounded-[2rem] text-red-700 space-y-2 animate-in slide-in-from-top-4 duration-300">
-               <h4 className="text-sm font-bold tracking-wide">Validation Errors Found ({Object.keys(errors).length})</h4>
-               <p className="text-sm font-medium">Please review and fix the highlighted fields below before submitting.</p>
+            <div className="bg-red-50 border-2 border-red-200 p-4 sm:p-6 rounded-2xl sm:rounded-[2rem] text-red-700 space-y-2 animate-in slide-in-from-top-4 duration-300">
+               <h4 className="text-xs sm:text-sm font-bold tracking-wide">Validation Errors Found ({Object.keys(errors).length})</h4>
+               <p className="text-xs sm:text-sm font-medium">Please review and fix the highlighted fields below before submitting.</p>
             </div>
          )}
 
-         <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden mb-12">
-            <div className="overflow-x-auto">
+         {/* Gateway Integrations Section */}
+         <div className="bg-white rounded-3xl sm:rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden mb-8 sm:mb-12">
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
                <table className="w-full text-left border-collapse">
                   <thead>
                      <tr className="bg-gray-50/50 border-b border-gray-100">
@@ -448,21 +450,268 @@ export function SubscriptionsClient({
                   </tbody>
                </table>
             </div>
+
+            {/* Mobile Stacked Cards View */}
+            <div className="block lg:hidden divide-y divide-gray-100">
+               {/* Legacy Checkout Mobile Card */}
+               <div className="p-4 sm:p-6 space-y-4">
+                  <div className="flex items-center justify-between gap-3">
+                     <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-600 border border-gray-100 shrink-0">
+                           <ExternalLink className="w-5 h-5" />
+                        </div>
+                        <div>
+                           <h3 className="text-sm font-bold text-gray-900">Legacy Checkout</h3>
+                           <p className="text-[11px] font-bold text-gray-500">Universal Redirect Link</p>
+                        </div>
+                     </div>
+                     <button
+                        onClick={() => setSettings({ ...settings, legacyLinkActive: !settings.legacyLinkActive })}
+                        className={`w-10 h-5 rounded-full relative transition-colors inline-block ${settings.legacyLinkActive ? 'bg-gray-900' : 'bg-gray-200'}`}
+                     >
+                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.legacyLinkActive ? 'right-1' : 'left-1'}`}></div>
+                     </button>
+                  </div>
+                  {settings.legacyLinkActive ? (
+                     <div className="space-y-3 pt-2">
+                        <div className="space-y-1">
+                           <label className="text-xs font-bold text-gray-900">External Payment URL</label>
+                           <input
+                              type="text"
+                              value={settings.paymentLink || ''}
+                              onChange={(e) => setSettings({ ...settings, paymentLink: e.target.value })}
+                              placeholder="https://..."
+                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 ${errors.paymentLink ? 'border-red-500' : 'border-transparent'}`}
+                           />
+                           {errors.paymentLink && <p className="text-xs font-bold text-red-500 mt-1">{errors.paymentLink}</p>}
+                        </div>
+                        <div className="space-y-1">
+                           <label className="text-xs font-bold text-gray-900">Checkout Instructions</label>
+                           <textarea
+                              rows={2}
+                              value={settings.instructions || ''}
+                              onChange={(e) => setSettings({ ...settings, instructions: e.target.value })}
+                              placeholder="Instructions shown for manual/universal links..."
+                              className="w-full bg-gray-50 border-none rounded-xl px-3.5 py-2.5 text-xs font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 resize-none"
+                           />
+                        </div>
+                     </div>
+                  ) : (
+                     <span className="text-xs font-bold text-gray-400 italic block">Gateway Disabled</span>
+                  )}
+               </div>
+
+               {/* Bank Settlement Mobile Card */}
+               <div className="p-4 sm:p-6 space-y-4 bg-amber-50/20">
+                  <div className="flex items-center justify-between gap-3">
+                     <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 border border-amber-100 shrink-0">
+                           <DollarSign className="w-5 h-5" />
+                        </div>
+                        <div>
+                           <h3 className="text-sm font-bold text-gray-900">Bank Settlement</h3>
+                           <p className="text-[11px] font-bold text-gray-500">Local Bank Transfers</p>
+                        </div>
+                     </div>
+                     <span className="px-2.5 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0">Active</span>
+                  </div>
+                  <div className="space-y-3 pt-2">
+                     <div className="space-y-1">
+                        <label className="text-xs font-bold text-gray-900">Institution Name</label>
+                        <input
+                           type="text"
+                           value={settings.bankName || ''}
+                           onChange={(e) => setSettings({ ...settings, bankName: e.target.value })}
+                           placeholder="Bank name"
+                           className={`w-full bg-white border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.bankName ? 'border-red-500' : 'border-slate-200'}`}
+                        />
+                        {errors.bankName && <p className="text-xs font-bold text-red-500 mt-1">{errors.bankName}</p>}
+                     </div>
+                     <div className="space-y-1">
+                        <label className="text-xs font-bold text-gray-900">Account Name</label>
+                        <input
+                           type="text"
+                           value={settings.accountName || ''}
+                           onChange={(e) => setSettings({ ...settings, accountName: e.target.value })}
+                           className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900"
+                        />
+                     </div>
+                     <div className="space-y-1">
+                        <label className="text-xs font-bold text-gray-900">Account Number</label>
+                        <input
+                           type="text"
+                           value={settings.accountNumber || ''}
+                           onChange={(e) => setSettings({ ...settings, accountNumber: e.target.value })}
+                           className={`w-full bg-white border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.accountNumber ? 'border-red-500' : 'border-slate-200'}`}
+                        />
+                        {errors.accountNumber && <p className="text-xs font-bold text-red-500 mt-1">{errors.accountNumber}</p>}
+                     </div>
+                  </div>
+               </div>
+
+               {/* Paystack Mobile Card */}
+               <div className="p-4 sm:p-6 space-y-4">
+                  <div className="flex items-center justify-between gap-3">
+                     <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600 border border-teal-100 shrink-0">
+                           <Zap className="w-5 h-5" />
+                        </div>
+                        <div>
+                           <h3 className="text-sm font-bold text-gray-900">Paystack</h3>
+                           <p className="text-[11px] font-bold text-gray-500">Automated Gateway</p>
+                        </div>
+                     </div>
+                     <button
+                        onClick={() => setSettings({ ...settings, paystackActive: !settings.paystackActive })}
+                        className={`w-10 h-5 rounded-full relative transition-colors inline-block ${settings.paystackActive ? 'bg-teal-500' : 'bg-gray-200'}`}
+                     >
+                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.paystackActive ? 'right-1' : 'left-1'}`}></div>
+                     </button>
+                  </div>
+                  {settings.paystackActive ? (
+                     <div className="space-y-3 pt-2">
+                        <div className="space-y-1">
+                           <label className="text-xs font-bold text-gray-900">Secret Key</label>
+                           <input
+                              type="password"
+                              value={settings.paystackSecret || ''}
+                              onChange={(e) => setSettings({ ...settings, paystackSecret: e.target.value })}
+                              placeholder="sk_live_..."
+                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.paystackSecret ? 'border-red-500' : 'border-transparent'}`}
+                           />
+                           {errors.paystackSecret && <p className="text-xs font-bold text-red-500 mt-1">{errors.paystackSecret}</p>}
+                        </div>
+                        <div className="space-y-1">
+                           <label className="text-xs font-bold text-gray-900">Public Key</label>
+                           <input
+                              type="text"
+                              value={settings.paystackPublicKey || ''}
+                              onChange={(e) => setSettings({ ...settings, paystackPublicKey: e.target.value })}
+                              placeholder="pk_live_..."
+                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.paystackPublicKey ? 'border-red-500' : 'border-transparent'}`}
+                           />
+                           {errors.paystackPublicKey && <p className="text-xs font-bold text-red-500 mt-1">{errors.paystackPublicKey}</p>}
+                        </div>
+                     </div>
+                  ) : (
+                     <span className="text-xs font-bold text-gray-400 italic block">Gateway Disabled</span>
+                  )}
+               </div>
+
+               {/* Stripe Mobile Card */}
+               <div className="p-4 sm:p-6 space-y-4">
+                  <div className="flex items-center justify-between gap-3">
+                     <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100 shrink-0">
+                           <CreditCard className="w-5 h-5" />
+                        </div>
+                        <div>
+                           <h3 className="text-sm font-bold text-gray-900">Stripe</h3>
+                           <p className="text-[11px] font-bold text-gray-500">Global Checkout</p>
+                        </div>
+                     </div>
+                     <button
+                        onClick={() => setSettings({ ...settings, stripeActive: !settings.stripeActive })}
+                        className={`w-10 h-5 rounded-full relative transition-colors inline-block ${settings.stripeActive ? 'bg-indigo-500' : 'bg-gray-200'}`}
+                     >
+                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.stripeActive ? 'right-1' : 'left-1'}`}></div>
+                     </button>
+                  </div>
+                  {settings.stripeActive ? (
+                     <div className="space-y-3 pt-2">
+                        <div className="space-y-1">
+                           <label className="text-xs font-bold text-gray-900">Publishable Key</label>
+                           <input
+                              type="text"
+                              value={settings.stripeKey || ''}
+                              onChange={(e) => setSettings({ ...settings, stripeKey: e.target.value })}
+                              placeholder="pk_live_..."
+                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.stripeKey ? 'border-red-500' : 'border-transparent'}`}
+                           />
+                           {errors.stripeKey && <p className="text-xs font-bold text-red-500 mt-1">{errors.stripeKey}</p>}
+                        </div>
+                        <div className="space-y-1">
+                           <label className="text-xs font-bold text-gray-900">Secret Key</label>
+                           <input
+                              type="password"
+                              value={settings.stripeSecret || ''}
+                              onChange={(e) => setSettings({ ...settings, stripeSecret: e.target.value })}
+                              placeholder="sk_live_..."
+                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.stripeSecret ? 'border-red-500' : 'border-transparent'}`}
+                           />
+                           {errors.stripeSecret && <p className="text-xs font-bold text-red-500 mt-1">{errors.stripeSecret}</p>}
+                        </div>
+                     </div>
+                  ) : (
+                     <span className="text-xs font-bold text-gray-400 italic block">Gateway Disabled</span>
+                  )}
+               </div>
+
+               {/* PayPal Mobile Card */}
+               <div className="p-4 sm:p-6 space-y-4">
+                  <div className="flex items-center justify-between gap-3">
+                     <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
+                           <DollarSign className="w-5 h-5" />
+                        </div>
+                        <div>
+                           <h3 className="text-sm font-bold text-gray-900">PayPal</h3>
+                           <p className="text-[11px] font-bold text-gray-500">Braintree/Legacy</p>
+                        </div>
+                     </div>
+                     <button
+                        onClick={() => setSettings({ ...settings, paypalActive: !settings.paypalActive })}
+                        className={`w-10 h-5 rounded-full relative transition-colors inline-block ${settings.paypalActive ? 'bg-blue-500' : 'bg-gray-200'}`}
+                     >
+                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.paypalActive ? 'right-1' : 'left-1'}`}></div>
+                     </button>
+                  </div>
+                  {settings.paypalActive ? (
+                     <div className="space-y-3 pt-2">
+                        <div className="space-y-1">
+                           <label className="text-xs font-bold text-gray-900">Client ID</label>
+                           <input
+                              type="text"
+                              value={settings.paypalId || ''}
+                              onChange={(e) => setSettings({ ...settings, paypalId: e.target.value })}
+                              placeholder="AZ_..."
+                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.paypalId ? 'border-red-500' : 'border-transparent'}`}
+                           />
+                           {errors.paypalId && <p className="text-xs font-bold text-red-500 mt-1">{errors.paypalId}</p>}
+                        </div>
+                        <div className="space-y-1">
+                           <label className="text-xs font-bold text-gray-900">Environment</label>
+                           <select
+                              value={settings.paypalEnv || 'sandbox'}
+                              onChange={(e) => setSettings({ ...settings, paypalEnv: e.target.value })}
+                              className="w-full bg-gray-50 border-none rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900"
+                           >
+                              <option value="sandbox" className="text-gray-900 bg-white">Sandbox (Testing)</option>
+                              <option value="live" className="text-gray-900 bg-white">Live (Production)</option>
+                           </select>
+                        </div>
+                     </div>
+                  ) : (
+                     <span className="text-xs font-bold text-gray-400 italic block">Gateway Disabled</span>
+                  )}
+               </div>
+            </div>
          </div>
 
-         {/* Role-Based Tiers (Table Layout) */}
+         {/* Role-Based Tiers */}
          <div className="space-y-6">
             <div className="flex items-center gap-4">
                <div className="h-px flex-1 bg-gray-100"></div>
                <div className="text-center px-4">
-                  <h2 className="text-xl font-bold text-gray-900 tracking-tighter">Charge Rate Management</h2>
-                  <p className="text-gray-900 text-xs font-bold tracking-[0.2em] mt-1">Configure subscription units for each account type.</p>
+                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 tracking-tighter">Charge Rate Management</h2>
+                  <p className="text-gray-900 text-[10px] sm:text-xs font-bold tracking-wider sm:tracking-[0.2em] mt-1">Configure subscription units for each account type.</p>
                </div>
                <div className="h-px flex-1 bg-gray-100"></div>
             </div>
 
-            <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
-               <div className="overflow-x-auto">
+            <div className="bg-white rounded-3xl sm:rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+               {/* Desktop Table View */}
+               <div className="hidden lg:block overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                      <thead>
                         <tr className="bg-gray-50/50 border-b border-gray-100">
@@ -475,15 +724,11 @@ export function SubscriptionsClient({
                      <tbody className="divide-y divide-gray-100">
                         {roles.map((role) => {
                            const plan = settings.plans?.[role.id] || {};
-                           const Icon = role.icon;
                            return (
                               <tr key={role.id} className="hover:bg-gray-50/50 transition-colors group">
-                                 {/* Role Label */}
                                  <td className="px-6 py-5 whitespace-nowrap">
                                     <span className="text-sm font-bold text-gray-900">{role.label}</span>
                                  </td>
-
-                                 {/* Plan Name */}
                                  <td className="px-6 py-5 min-w-[200px]">
                                     <input
                                        type="text"
@@ -493,8 +738,6 @@ export function SubscriptionsClient({
                                        placeholder="PLAN NAME"
                                     />
                                  </td>
-
-                                 {/* Amount */}
                                  <td className="px-6 py-5 min-w-[180px]">
                                     <div className={`flex items-center gap-2 bg-gray-50 border rounded-xl px-4 py-2 focus-within:ring-2 focus-within:ring-amber-200 transition-all ${errors[`plan_amount_${role.id}`] ? 'border-red-500' : 'border-transparent'}`}>
                                        <span className="text-sm font-bold text-gray-400 select-none">₦</span>
@@ -508,8 +751,6 @@ export function SubscriptionsClient({
                                     </div>
                                     {errors[`plan_amount_${role.id}`] && <p className="text-xs font-bold text-red-500 mt-1">{errors[`plan_amount_${role.id}`]}</p>}
                                  </td>
-
-                                 {/* Frequency */}
                                  <td className="px-6 py-5 min-w-[180px]">
                                     <select
                                        value={plan.frequency || 'Lifetime Access'}
@@ -523,12 +764,74 @@ export function SubscriptionsClient({
                                        <option value="Yearly">Yearly Billing</option>
                                     </select>
                                  </td>
-
                               </tr>
                            );
                         })}
                      </tbody>
                   </table>
+               </div>
+
+               {/* Mobile Stacked Cards View */}
+               <div className="block lg:hidden divide-y divide-gray-100">
+                  {roles.map((role) => {
+                     const plan = settings.plans?.[role.id] || {};
+                     const Icon = role.icon;
+                     return (
+                        <div key={role.id} className="p-4 sm:p-6 space-y-3">
+                           <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-700">
+                                 <Icon className="w-4 h-4" />
+                              </div>
+                              <span className="text-sm font-bold text-gray-900">{role.label}</span>
+                           </div>
+
+                           <div className="space-y-3 pt-1">
+                              <div className="space-y-1">
+                                 <label className="text-xs font-bold text-gray-400">Plan Name</label>
+                                 <input
+                                    type="text"
+                                    value={plan.name || `CenterKick ${role.id.charAt(0).toUpperCase() + role.id.slice(1)}`}
+                                    onChange={(e) => updatePlan(role.id, 'name', e.target.value)}
+                                    className="w-full bg-gray-50 border border-gray-100 text-xs font-bold text-gray-900 rounded-xl px-3.5 py-2.5 placeholder:text-gray-300"
+                                    placeholder="PLAN NAME"
+                                 />
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                 <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-400">Charge Rate</label>
+                                    <div className={`flex items-center gap-2 bg-gray-50 border rounded-xl px-3.5 py-2.5 ${errors[`plan_amount_${role.id}`] ? 'border-red-500' : 'border-gray-100'}`}>
+                                       <span className="text-xs font-bold text-gray-400 select-none">₦</span>
+                                       <input
+                                          type="text"
+                                          value={plan.amount || '0.00'}
+                                          onChange={(e) => updatePlan(role.id, 'amount', e.target.value)}
+                                          className="bg-transparent border-none text-xs font-bold text-gray-900 focus:ring-0 p-0 w-full"
+                                          placeholder="0.00"
+                                       />
+                                    </div>
+                                    {errors[`plan_amount_${role.id}`] && <p className="text-xs font-bold text-red-500 mt-1">{errors[`plan_amount_${role.id}`]}</p>}
+                                 </div>
+
+                                 <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-400">Billing Interval</label>
+                                    <select
+                                       value={plan.frequency || 'Lifetime Access'}
+                                       onChange={(e) => updatePlan(role.id, 'frequency', e.target.value)}
+                                       className="w-full bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold text-gray-900 px-3.5 py-2.5"
+                                    >
+                                       <option value="Lifetime Access">Lifetime Access</option>
+                                       <option value="Monthly">Monthly Billing</option>
+                                       <option value="Quarterly">Quarterly Billing</option>
+                                       <option value="Biannually">Biannually (6 Months)</option>
+                                       <option value="Yearly">Yearly Billing</option>
+                                    </select>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     );
+                  })}
                </div>
             </div>
          </div>
