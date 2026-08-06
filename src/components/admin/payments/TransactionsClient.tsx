@@ -232,14 +232,14 @@ export function TransactionsClient({
                   </div>
                </div>
 
-               <div className="flex flex-wrap gap-4 items-center justify-end xl:ml-auto">
+               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-stretch sm:items-center justify-between sm:justify-end w-full xl:w-auto xl:ml-auto">
                   {/* Currency Selector */}
-                  <div className="flex bg-white/5 p-1.5 rounded-2xl gap-2 border border-white/5">
+                  <div className="flex bg-white/5 p-1 sm:p-1.5 rounded-2xl gap-1.5 sm:gap-2 border border-white/5 flex-1 sm:flex-initial justify-center">
                      {['USD', 'NGN'].map((curr) => (
                        <button
                          key={curr}
                          onClick={() => setCurrency(curr as 'USD' | 'NGN')}
-                         className={`px-5 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all ${currency === curr ? 'bg-[#b50a0a] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                         className={`flex-1 sm:flex-initial px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all ${currency === curr ? 'bg-[#b50a0a] text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
                        >
                          {curr === 'USD' ? '$ USD' : '₦ NGN'}
                        </button>
@@ -247,12 +247,12 @@ export function TransactionsClient({
                   </div>
 
                   {/* Timeframe Selector */}
-                  <div className="flex bg-white/5 p-1.5 rounded-2xl gap-2 border border-white/5">
+                  <div className="flex bg-white/5 p-1 sm:p-1.5 rounded-2xl gap-1.5 sm:gap-2 border border-white/5 flex-1 sm:flex-initial justify-center">
                      {['Daily', 'Monthly', 'Yearly'].map((t) => (
                        <button
                          key={t}
                          onClick={() => setTimeframe(t)}
-                         className={`px-6 py-2.5 rounded-xl text-sm font-bold tracking-wide transition-all ${timeframe === t ? 'bg-white text-gray-950 shadow-lg' : 'text-gray-400 hover:text-white'}`}
+                         className={`flex-1 sm:flex-initial px-3 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold tracking-wide transition-all ${timeframe === t ? 'bg-white text-gray-950 shadow-lg' : 'text-gray-400 hover:text-white'}`}
                        >
                          {t}
                        </button>
@@ -522,11 +522,11 @@ export function TransactionsClient({
         </div>
 
         {/* Pagination */}
-        <div className="p-6 bg-[#f8f9fa] border-t border-gray-100 flex items-center justify-between">
-           <p className="text-sm font-bold text-gray-600 tracking-wide">
+        <div className="p-4 sm:p-6 bg-[#f8f9fa] border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+           <p className="text-xs sm:text-sm font-bold text-gray-600 tracking-wide">
               Viewing <span className="text-[#b50a0a] font-extrabold">{transactions.length}</span> of <span className="text-[#b50a0a] font-extrabold">{totalCount}</span> Transactions
            </p>
-           <div className="flex items-center gap-1.5">
+           <div className="flex items-center gap-1.5 flex-wrap justify-center">
               <button 
                 onClick={() => navigateToPage(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -539,7 +539,7 @@ export function TransactionsClient({
                     <button 
                       key={i}
                       onClick={() => navigateToPage(i + 1)}
-                      className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${currentPage === i + 1 ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'bg-white border border-gray-200 text-gray-400 hover:bg-gray-50'}`}
+                      className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl text-xs sm:text-sm font-bold transition-all ${currentPage === i + 1 ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'bg-white border border-gray-200 text-gray-400 hover:bg-gray-50'}`}
                     >
                        {i + 1}
                     </button>
@@ -558,45 +558,45 @@ export function TransactionsClient({
 
       {/* Transaction Details Inspector Modal */}
       {inspectPayment && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[150] flex items-center justify-center p-4 animate-in fade-in duration-300" onClick={() => setInspectPayment(null)}>
-          <div className="bg-white w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-[2rem] shadow-2xl relative animate-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setInspectPayment(null)} className="absolute top-4 right-4 w-11 h-11 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100 hover:bg-gray-100 transition-all z-10 cursor-pointer">
-              <X className="w-5 h-5 text-gray-400" />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[150] flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-300" onClick={() => setInspectPayment(null)}>
+          <div className="bg-white w-[95%] sm:w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl sm:rounded-[2rem] shadow-2xl relative animate-in zoom-in duration-300" onClick={(e) => e.stopPropagation()}>
+            <button onClick={() => setInspectPayment(null)} className="absolute top-3 right-3 sm:top-4 sm:right-4 w-9 h-9 sm:w-11 sm:h-11 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100 hover:bg-gray-100 transition-all z-10 cursor-pointer">
+              <X className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
             </button>
-            <div className="p-6 md:p-8">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center border border-green-100 font-bold text-2xl shrink-0">
+            <div className="p-4 sm:p-6 md:p-8">
+              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 pr-8">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-green-50 text-green-600 flex items-center justify-center border border-green-100 font-bold text-xl sm:text-2xl shrink-0">
                   ₦
                 </div>
-                <div>
-                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tighter leading-none mb-1">Transaction Details</h2>
-                  <p className="text-xs font-bold text-[#b50a0a] tracking-[0.2em]">Reference: {inspectPayment.reference}</p>
+                <div className="min-w-0">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 tracking-tighter leading-tight mb-1">Transaction Details</h2>
+                  <p className="text-[10px] sm:text-xs font-bold text-[#b50a0a] tracking-wider break-all">Reference: {inspectPayment.reference}</p>
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 mb-8">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide font-bold"><UserCheck className="w-3.5 h-3.5" /> Payer Name</div>
-                  <p className="text-sm font-bold text-gray-900 truncate pr-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <div className="space-y-1 sm:space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide"><UserCheck className="w-3.5 h-3.5 shrink-0" /> Payer Name</div>
+                  <p className="text-sm font-bold text-gray-900 break-words">
                     {inspectPayment.profiles ? `${inspectPayment.profiles.first_name} ${inspectPayment.profiles.last_name}` : 'N/A'}
                   </p>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide font-bold"><Globe className="w-3.5 h-3.5" /> Email Address</div>
-                  <p className="text-sm font-bold text-gray-900 truncate pr-4">{inspectPayment.profiles?.email || 'N/A'}</p>
+                <div className="space-y-1 sm:space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide"><Globe className="w-3.5 h-3.5 shrink-0" /> Email Address</div>
+                  <p className="text-sm font-bold text-gray-900 break-all">{inspectPayment.profiles?.email || 'N/A'}</p>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide font-bold"><CreditCard className="w-3.5 h-3.5" /> Transaction Amount</div>
+                <div className="space-y-1 sm:space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide"><CreditCard className="w-3.5 h-3.5 shrink-0" /> Transaction Amount</div>
                   <p className="text-sm font-bold text-green-600 font-bold">{formatVal(Number(inspectPayment.amount))} {inspectPayment.currency}</p>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide font-bold"><Clock className="w-3.5 h-3.5" /> Payment Method / Gateway</div>
+                <div className="space-y-1 sm:space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide"><Clock className="w-3.5 h-3.5 shrink-0" /> Payment Method / Gateway</div>
                   <p className="text-sm font-bold text-gray-900 font-bold">{getMethodLabel(inspectPayment.method)}</p>
                 </div>
-                <div className="space-y-2 col-span-2">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide font-bold"><Activity className="w-3.5 h-3.5" /> Transaction Status</div>
+                <div className="space-y-1 sm:space-y-2 sm:col-span-2">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide"><Activity className="w-3.5 h-3.5 shrink-0" /> Transaction Status</div>
                   <div className="flex items-center gap-1.5 mt-1">
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full border text-xs font-bold tracking-wide ${getStatusColor(inspectPayment.status)}`}>
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-xs font-bold tracking-wide ${getStatusColor(inspectPayment.status)}`}>
                       {inspectPayment.status}
                     </span>
                   </div>
@@ -604,16 +604,16 @@ export function TransactionsClient({
               </div>
 
               {inspectPayment.method === 'direct_transfer' && (
-                <div className="bg-slate-50 rounded-[1.5rem] p-5 mb-8 border border-slate-100 space-y-4 text-left">
+                <div className="bg-slate-50 rounded-[1.5rem] p-4 sm:p-5 mb-6 sm:mb-8 border border-slate-100 space-y-4 text-left">
                   <div className="flex items-center justify-between border-b border-slate-200/60 pb-3">
                     <h4 className="text-xs font-bold text-slate-900 tracking-wide flex items-center gap-2">
                       <Building className="w-4 h-4 text-amber-600" /> Direct Transfer Details
                     </h4>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs font-bold text-slate-400 tracking-wide">Depositor Name</p>
-                      <p className="text-sm font-bold text-slate-800">{inspectPayment.metadata?.proofName || 'N/A'}</p>
+                      <p className="text-sm font-bold text-slate-800 break-words">{inspectPayment.metadata?.proofName || 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-xs font-bold text-slate-400 tracking-wide">Depositor Email</p>
@@ -657,28 +657,28 @@ export function TransactionsClient({
                   ) : inspectPayment.metadata?.proofFileName ? (
                     <div className="pt-2 border-t border-slate-200/60">
                       <p className="text-xs font-bold text-slate-400 tracking-wide">Uploaded File Name</p>
-                      <p className="text-sm font-bold text-slate-600">{inspectPayment.metadata.proofFileName}</p>
+                      <p className="text-sm font-bold text-slate-600 break-all">{inspectPayment.metadata.proofFileName}</p>
                     </div>
                   ) : null}
                 </div>
               )}
 
               {inspectPayment.status === 'failed' && (inspectPayment.metadata?.rejection_reason || inspectPayment.metadata?.reason) && (
-                <div className="bg-red-50 rounded-[1.5rem] p-5 mb-6 border border-red-100 space-y-2 text-left">
+                <div className="bg-red-50 rounded-[1.5rem] p-4 sm:p-5 mb-6 border border-red-100 space-y-2 text-left">
                   <p className="text-xs font-bold text-red-700 tracking-wide">Rejection Reason</p>
                   <p className="text-red-900 text-sm font-bold leading-relaxed">{inspectPayment.metadata.rejection_reason || inspectPayment.metadata.reason}</p>
                 </div>
               )}
 
               {inspectPayment.status === 'confirmed' && (inspectPayment.metadata?.approval_comment || inspectPayment.metadata?.comment) && (
-                <div className="bg-green-50 rounded-[1.5rem] p-5 mb-6 border border-green-100 space-y-2 text-left">
+                <div className="bg-green-50 rounded-[1.5rem] p-4 sm:p-5 mb-6 border border-green-100 space-y-2 text-left">
                   <p className="text-xs font-bold text-green-700 tracking-wide">Approval Comment</p>
                   <p className="text-green-900 text-sm font-bold leading-relaxed">{inspectPayment.metadata.approval_comment || inspectPayment.metadata.comment}</p>
                 </div>
               )}
 
               {inspectPayment.status === 'pending' && inspectPayment.method === 'direct_transfer' ? (
-                <div className="bg-gray-50 rounded-[1.5rem] p-5 mb-6 border border-gray-100 flex items-center justify-between animate-pulse">
+                <div className="bg-gray-50 rounded-[1.5rem] p-4 sm:p-5 mb-6 border border-gray-100 flex items-center justify-between animate-pulse">
                   <div>
                     <p className="text-xs font-bold text-gray-900 tracking-wide">Verify Settlement Funds</p>
                     <p className="text-gray-400 text-xs leading-relaxed mt-1">Please confirm that funds matching reference <strong>{inspectPayment.reference}</strong> are fully cleared in the corporate bank account.</p>
@@ -687,7 +687,7 @@ export function TransactionsClient({
               ) : null}
 
               {inspectPayment.status === 'pending' && inspectPayment.method === 'direct_transfer' ? (
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <button 
                     onClick={() => {
                       setInspectPayment(null);
@@ -700,7 +700,7 @@ export function TransactionsClient({
                         targetEmail: inspectPayment.profiles?.email || 'N/A'
                       });
                     }}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-5 rounded-[2rem] font-bold tracking-[0.2em] text-xs transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-green-900/10 cursor-pointer"
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3.5 sm:py-5 rounded-2xl sm:rounded-[2rem] font-bold tracking-wider text-xs transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-green-900/10 cursor-pointer"
                   >
                     <CheckCircle className="w-4 h-4" /> Confirm & Activate
                   </button>
@@ -716,7 +716,7 @@ export function TransactionsClient({
                         targetEmail: inspectPayment.profiles?.email || 'N/A'
                       });
                     }}
-                    className="flex-1 bg-red-50 hover:bg-red-100 text-red-650 border border-red-100 py-5 rounded-[2rem] font-bold tracking-[0.2em] text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
+                    className="flex-1 bg-red-50 hover:bg-red-100 text-red-650 border border-red-100 py-3.5 sm:py-5 rounded-2xl sm:rounded-[2rem] font-bold tracking-wider text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <X className="w-4 h-4" /> Reject Payment
                   </button>
@@ -724,7 +724,7 @@ export function TransactionsClient({
               ) : (
                 <button
                   onClick={() => setInspectPayment(null)}
-                  className="w-full bg-gray-900 hover:bg-gray-950 text-white py-5 rounded-[2rem] font-bold tracking-[0.25em] text-xs transition-all cursor-pointer"
+                  className="w-full bg-gray-900 hover:bg-gray-950 text-white py-3.5 sm:py-5 rounded-2xl sm:rounded-[2rem] font-bold tracking-[0.2em] text-xs transition-all cursor-pointer"
                 >
                   Close Preview
                 </button>
