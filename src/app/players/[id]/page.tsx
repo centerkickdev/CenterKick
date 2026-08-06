@@ -35,7 +35,14 @@ export async function generateMetadata({ params }: AthletePageProps): Promise<Me
    const title = `${name} ${athlete.position ? `(${athlete.position})` : ''} - CenterKick`;
    const cleanBio = stripHtml(athlete.bio || '');
    const description = cleanBio || `${name} is a ${athlete.position || 'football player'} from ${athlete.country || 'Global'} on CenterKick.`;
-   const image = athlete.cover_url || athlete.avatar_url || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1200&auto=format&fit=crop";
+   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com';
+   const getAbsoluteUrl = (urlStr?: string | null) => {
+      if (!urlStr) return null;
+      if (urlStr.startsWith('http://') || urlStr.startsWith('https://')) return urlStr;
+      return `${siteUrl.replace(/\/$/, '')}${urlStr.startsWith('/') ? '' : '/'}${urlStr}`;
+   };
+
+   const image = getAbsoluteUrl(athlete.avatar_url) || getAbsoluteUrl(athlete.cover_url) || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1200&auto=format&fit=crop";
 
    return {
       title,

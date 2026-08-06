@@ -41,19 +41,21 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
          url: currentUrl,
       };
 
-      if (navigator.share) {
+      if (typeof navigator !== 'undefined' && navigator.share) {
          try {
             await navigator.share(shareData);
-         } catch (e) {
-            // Ignore cancel
+         } catch (e: any) {
+            if (e?.name !== 'AbortError') {
+               console.error('Share error:', e);
+            }
          }
-      }
-
-      try {
-         await navigator.clipboard.writeText(currentUrl);
-         showToast('Profile link copied to clipboard!', 'success');
-      } catch (e) {
-         showToast('Failed to copy link', 'error');
+      } else {
+         try {
+            await navigator.clipboard.writeText(currentUrl);
+            showToast('Profile link copied to clipboard!', 'success');
+         } catch (e) {
+            showToast('Failed to copy link', 'error');
+         }
       }
    };
 

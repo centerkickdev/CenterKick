@@ -31,7 +31,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
    const title = `${orgName} - CenterKick`;
    const cleanBio = stripHtml(profile.bio || '');
    const description = cleanBio || `${orgName} sports club and academy based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
-   const image = profile.cover_url || profile.avatar_url || "https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1200&auto=format&fit=crop";
+   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com';
+   const getAbsoluteUrl = (urlStr?: string | null) => {
+      if (!urlStr) return null;
+      if (urlStr.startsWith('http://') || urlStr.startsWith('https://')) return urlStr;
+      return `${siteUrl.replace(/\/$/, '')}${urlStr.startsWith('/') ? '' : '/'}${urlStr}`;
+   };
+
+   const image = getAbsoluteUrl(profile.avatar_url) || getAbsoluteUrl(profile.cover_url) || "https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1200&auto=format&fit=crop";
 
    return {
       title,
