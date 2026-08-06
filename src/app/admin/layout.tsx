@@ -117,19 +117,23 @@ export default async function AdminLayout({
           
           <div className="flex items-center gap-4 sm:gap-6">
             <NotificationBell initialNotifications={notifications || []} />
-            <div className="flex items-center gap-3 pl-4 sm:pl-6 border-l border-gray-100">
+            <Link 
+              href="/admin/account" 
+              className="flex items-center gap-3 pl-4 sm:pl-6 border-l border-gray-100 group hover:opacity-90 transition-all cursor-pointer"
+              title="Manage Admin Account Settings"
+            >
                <div className="text-right hidden md:block">
-                  <p className="text-xs font-bold text-gray-900">{user?.email}</p>
+                  <p className="text-xs font-bold text-gray-900 group-hover:text-[#b50a0a] transition-colors">{user?.email}</p>
                   <p className="text-xs font-bold text-[#b50a0a] tracking-[0.2em]">{userRecord?.role || 'Admin'}</p>
                </div>
-               <div className="w-10 h-10 rounded-xl bg-gray-900 border-2 border-gray-800 flex items-center justify-center font-bold text-white shadow-lg shrink-0 overflow-hidden">
+               <div className="w-10 h-10 rounded-xl bg-gray-900 border-2 border-gray-800 group-hover:border-[#b50a0a] flex items-center justify-center font-bold text-white shadow-lg shrink-0 overflow-hidden transition-all group-hover:scale-105">
                   {profile?.avatar_url ? (
                     <img src={profile.avatar_url} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
                     user?.email?.[0]?.toUpperCase() || 'U'
                   )}
                </div>
-            </div>
+            </Link>
           </div>
         </header>
 
