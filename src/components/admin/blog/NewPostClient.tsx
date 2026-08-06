@@ -564,19 +564,19 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
   return (
     <div className="min-h-screen bg-gray-50/30 pb-48 animate-in fade-in duration-1000">
       <div 
-        className="sticky z-[100] w-[calc(100%+4rem)] -mx-8 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm"
-        style={{ top: '-32px' }}
+        className="sticky z-20 w-full bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm"
       >
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
           <Link 
             href="/admin/blog" 
-            className="flex items-center gap-2 text-xs font-bold tracking-wide text-black hover:text-[#b50a0a] transition-all group shrink-0"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs font-bold tracking-wide text-black hover:text-[#b50a0a] transition-all group shrink-0"
           >
             <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Post Dashboard
+            <span className="hidden sm:inline">Post Dashboard</span>
+            <span className="sm:hidden">Back</span>
           </Link>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             {lastSaved && (
               <div className="hidden sm:flex items-center gap-2 text-xs font-bold tracking-wide text-gray-400">
                 <History className="w-3 h-3" />
@@ -588,10 +588,10 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
               <button 
                 onClick={() => setShowSaveOptions(!showSaveOptions)}
                 disabled={isLoading}
-                className="flex items-center gap-3 px-6 py-2.5 bg-black text-white rounded-xl text-xs font-bold tracking-wide hover:bg-[#b50a0a] transition-all shadow-lg active:scale-95 group"
+                className="flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 sm:py-2.5 bg-black text-white rounded-xl text-xs font-bold tracking-wide hover:bg-[#b50a0a] transition-all shadow-lg active:scale-95 group"
               >
                 {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                Save Post
+                <span>Save Post</span>
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showSaveOptions ? 'rotate-180' : ''}`} />
               </button>
 
@@ -635,10 +635,10 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 pt-12">
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-xl overflow-hidden flex flex-col transition-all">
-          <div className="p-4 md:p-8 sm:p-12 space-y-12">
-             <div className="space-y-8">
+      <div className="max-w-5xl mx-auto px-2 sm:px-6 pt-4 sm:pt-12">
+        <div className="bg-white rounded-2xl sm:rounded-3xl border border-gray-100 shadow-xl overflow-hidden flex flex-col transition-all">
+          <div className="p-4 sm:p-8 md:p-12 space-y-8 sm:space-y-12">
+             <div className="space-y-6 sm:space-y-8">
                 <div className="space-y-2 group">
                    <label className="text-xs font-bold text-black tracking-wide ml-1 opacity-100">Title</label>
                    <textarea 
@@ -656,21 +656,23 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
  
                 <div className="space-y-2">
                    <label className="text-xs font-bold text-black tracking-wide ml-1">Slug</label>
-                   <div className="flex items-center gap-2 text-xs font-bold text-gray-900 bg-gray-50 px-4 py-3 rounded-2xl border border-gray-100 w-full max-w-2xl group focus-within:border-black/10 transition-all">
-                      <LinkIcon className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                      <span className="opacity-40 shrink-0">centerkick.com/news/</span>
+                   <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-xs font-bold text-gray-900 bg-gray-50 p-3 sm:px-4 sm:py-3 rounded-2xl border border-gray-100 w-full max-w-2xl group focus-within:border-black/10 transition-all">
+                      <div className="flex items-center gap-1.5 shrink-0 opacity-60">
+                        <LinkIcon className="w-3.5 h-3.5 text-gray-400" />
+                        <span className="text-[11px] sm:text-xs">centerkick.com/news/</span>
+                      </div>
                       <input 
                          type="text" 
                          maxLength={60}
                          placeholder="post-url-identifier"
-                         className={`bg-transparent border-none p-0 text-xs focus:ring-0 flex-1 font-bold transition-colors ${
- slugStatus === 'unique' ? 'text-green-600' : 'text-black'
- }`}
+                         className={`bg-transparent border-none p-0 text-xs focus:ring-0 flex-1 min-w-[120px] font-bold transition-colors ${
+                           slugStatus === 'unique' ? 'text-green-600' : 'text-black'
+                         }`}
                          value={formData.slug}
                          onChange={(e) => handleSlugChange(e.target.value)}
                       />
-                      <div className="flex items-center gap-2 shrink-0 border-l border-gray-200 pl-3 ml-1">
-                        <span className="text-xs text-gray-400 font-bold tracking-tighter">{formData.slug.length}/60</span>
+                      <div className="flex items-center gap-2 shrink-0 border-l border-gray-200 pl-3 ml-auto">
+                        <span className="text-[10px] sm:text-xs text-gray-400 font-bold tracking-tighter">{formData.slug.length}/60</span>
                         {slugStatus === 'checking' && <Loader2 className="w-3 h-3 animate-spin text-gray-400" />}
                         {slugStatus === 'unique' && <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.4)]" />}
                       </div>

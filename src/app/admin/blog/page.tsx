@@ -41,19 +41,19 @@ export default async function BlogDashboard({
     .order('created_at', { ascending: false });
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
-      <div className="relative overflow-hidden bg-white rounded-[3rem] p-12 border border-slate-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] group">
+    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-500">
+      <div className="relative overflow-hidden bg-white rounded-3xl md:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-slate-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] group">
         <div className="absolute top-0 right-0 w-full max-w-[400px] h-[400px] bg-[#b50a0a]/5 rounded-full blur-[100px] -mr-32 -mt-32 transition-all duration-1000 group-hover:bg-[#b50a0a]/10"></div>
         
-        <div className="relative z-10 space-y-10">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 md:p-8">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-slate-50 rounded-full border border-slate-100">
+        <div className="relative space-y-6 sm:space-y-10">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 md:p-4">
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-slate-50 rounded-full border border-slate-100">
                 <span className="w-1.5 h-1.5 bg-[#b50a0a] rounded-full"></span>
-                <span className="text-xs font-bold tracking-[0.2em] text-slate-400">Content Management</span>
+                <span className="text-[10px] sm:text-xs font-bold tracking-[0.2em] text-slate-400">Content Management</span>
               </div>
-              <h1 className="text-4xl lg:text-6xl font-black tracking-tighter leading-none text-slate-900">
-                Blog <span className="text-[#b50a0a]">&</span> <br />News Room
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black tracking-tighter leading-none text-slate-900">
+                Blog <span className="text-[#b50a0a]">&</span> <br className="hidden sm:block" />News Room
               </h1>
             </div>
 
@@ -64,8 +64,8 @@ export default async function BlogDashboard({
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row items-center gap-6 pt-10 border-t border-slate-50">
-            <div className="flex-1 flex flex-wrap gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-6 sm:pt-10 border-t border-slate-50">
+            <div className="flex-1 flex flex-wrap gap-2.5">
               <BlogManagementClient 
                 categories={categories || []} 
                 tags={tags || []} 
@@ -75,9 +75,9 @@ export default async function BlogDashboard({
             
             <Link 
               href="/admin/blog/new"
-              className="group/btn relative bg-slate-900 text-white px-10 py-5 rounded-2xl font-bold text-xs tracking-[0.15em] transition-all duration-500 flex items-center gap-4 hover:bg-[#b50a0a] hover:shadow-xl hover:shadow-red-900/20 active:scale-95 overflow-hidden"
+              className="group/btn relative bg-slate-900 text-white px-6 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-xs tracking-[0.15em] transition-all duration-500 flex items-center justify-center gap-3 hover:bg-[#b50a0a] hover:shadow-xl hover:shadow-red-900/20 active:scale-95 overflow-hidden shrink-0"
             >
-              <PlusCircle className="w-5 h-5 transition-transform duration-500 group-hover/btn:rotate-90" />
+              <PlusCircle className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-500 group-hover/btn:rotate-90" />
               <span>Write New Article</span>
             </Link>
           </div>

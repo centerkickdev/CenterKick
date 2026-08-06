@@ -132,103 +132,176 @@ export default function BlogListClient({ initialPosts }: BlogListClientProps) {
         </div>
       </div>
 
-      {/* Main Table */}
+      {/* Main Content List */}
       {filteredPosts.length === 0 ? (
         <div className="px-4 md:px-8 py-20 text-center">
           <FileText className="w-12 h-12 text-gray-100 mx-auto mb-4" />
           <p className="text-sm font-bold tracking-wide text-gray-400">No matching content found.</p>
         </div>
       ) : (
-        <div className="w-full overflow-x-auto">
-          <table className="w-full text-left text-base text-gray-600 border-collapse">
-            <thead className="bg-[#f8f9fa] border-b border-gray-100">
-              <tr>
-                <th className="px-4 md:px-8 py-5 text-xs font-bold tracking-wide text-gray-400 text-left">Title &amp; Excerpt</th>
-                <th className="hidden md:table-cell w-[15%] px-4 md:px-8 py-5 text-xs font-bold tracking-wide text-gray-400 text-left">Category</th>
-                <th className="hidden sm:table-cell w-[15%] px-4 md:px-8 py-5 text-xs font-bold tracking-wide text-gray-400 text-left">Status</th>
-                <th className="w-[120px] px-4 md:px-8 py-5 text-xs font-bold tracking-wide text-gray-400 text-right whitespace-nowrap">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {paginatedPosts.map((post) => (
-                <tr key={post.id} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-4 md:px-8 py-6 w-full max-w-[200px] md:max-w-none">
-                    <div className="space-y-1.5">
-                      <p className="font-bold text-gray-900 leading-tight group-hover:text-[#b50a0a] transition-colors line-clamp-2">{post.title}</p>
-                      <p className="text-xs text-gray-400 line-clamp-1">{post.excerpt || 'No excerpt provided...'}</p>
-                      <div className="flex flex-wrap items-center gap-2 text-xs font-bold tracking-wide text-gray-400">
-                        <span className="text-gray-500 lowercase font-bold normal-case truncate max-w-full max-w-[150px] block" title={post.author?.email}>
-                          {post.author?.email || 'System'}
-                        </span>
-                        <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                        <span>{new Date(post.published_at || post.created_at).toLocaleDateString()}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="hidden md:table-cell px-4 md:px-8 py-6">
-                    <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs font-bold tracking-wide inline-block truncate max-w-[150px]">
+        <>
+          {/* Mobile Card List View (< md) */}
+          <div className="block md:hidden divide-y divide-gray-100">
+            {paginatedPosts.map((post) => (
+              <div key={post.id} className="p-4 sm:p-5 space-y-3 bg-white hover:bg-gray-50/50 transition-colors">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1.5 flex-1 min-w-0">
+                    <h3 className="font-bold text-gray-900 leading-snug text-sm">
+                      {post.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 leading-relaxed line-clamp-3">
+                      {post.excerpt || 'No excerpt provided...'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Metadata row */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-gray-50 text-xs text-gray-400 font-bold">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="bg-gray-100 text-gray-700 px-2.5 py-0.5 rounded-md text-[10px] uppercase tracking-wider">
                       {post.category?.name || 'Uncategorized'}
                     </span>
-                  </td>
-                  <td className="hidden sm:table-cell px-4 md:px-8 py-6 whitespace-nowrap">
+                    <span>•</span>
                     <button
                       onClick={() => handleToggleStatus(post.id, post.published_at)}
                       disabled={loadingId === post.id}
-                      className="flex items-center gap-2 group/status"
+                      className="flex items-center gap-1.5"
                     >
-                      <div className={`w-1.5 h-1.5 rounded-full transition-transform group-hover/status:scale-150 ${post.published_at ? 'bg-green-500 shadow-sm shadow-green-500/50' : 'bg-gray-300'}`}></div>
-                      <span className={`text-xs font-bold tracking-wide transition-colors ${post.published_at ? 'text-green-600 hover:text-green-700' : 'text-gray-400 hover:text-gray-600'}`}>
+                      <span className={`w-2 h-2 rounded-full ${post.published_at ? 'bg-green-500' : 'bg-gray-300'}`} />
+                      <span className={post.published_at ? 'text-green-600' : 'text-gray-400'}>
                         {post.published_at ? 'Published' : 'Draft'}
                       </span>
-                      {loadingId === post.id && <Loader2 className="w-3 h-3 animate-spin text-gray-400" />}
                     </button>
-                  </td>
-                  <td className="px-4 md:px-8 py-6 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-2">
-                      <div className="relative group/btn">
-                        <Link
-                          href={`/news/${post.slug}`}
-                          target="_blank"
-                          className="flex items-center justify-center w-8 h-8 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm shrink-0"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                        </Link>
-                        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-xs font-bold tracking-wide rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
-                          View
-                        </span>
-                      </div>
+                  </div>
 
-                      <div className="relative group/btn">
-                        <Link
-                          href={`/admin/blog/edit/${post.id}`}
-                          className="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-900 hover:text-white transition-all shadow-sm shrink-0"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </Link>
-                        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-xs font-bold tracking-wide rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
-                          Edit
-                        </span>
-                      </div>
+                  <span className="text-[10px] text-gray-400">
+                    {new Date(post.published_at || post.created_at).toLocaleDateString()}
+                  </span>
+                </div>
 
-                      <div className="relative group/btn">
-                        <button
-                          onClick={() => handleDelete(post.id, post.title)}
-                          disabled={loadingId === post.id}
-                          className="flex items-center justify-center w-8 h-8 rounded-xl bg-red-50 text-red-600 hover:bg-[#b50a0a] hover:text-white transition-all shadow-sm shrink-0"
-                        >
-                          {loadingId === post.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-                        </button>
-                        <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-xs font-bold tracking-wide rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
-                          Delete
-                        </span>
-                      </div>
-                    </div>
-                  </td>
+                {/* Mobile Actions Bar */}
+                <div className="flex items-center gap-2 pt-2">
+                  <Link
+                    href={`/news/${post.slug}`}
+                    target="_blank"
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-blue-50 text-blue-600 text-xs font-bold hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>View</span>
+                  </Link>
+
+                  <Link
+                    href={`/admin/blog/edit/${post.id}`}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold hover:bg-slate-900 hover:text-white transition-all shadow-sm"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>Edit</span>
+                  </Link>
+
+                  <button
+                    onClick={() => handleDelete(post.id, post.title)}
+                    disabled={loadingId === post.id}
+                    className="flex items-center justify-center gap-1.5 py-2 px-3.5 rounded-xl bg-red-50 text-red-600 text-xs font-bold hover:bg-[#b50a0a] hover:text-white transition-all shadow-sm"
+                  >
+                    {loadingId === post.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Table View (>= md) */}
+          <div className="hidden md:block w-full overflow-x-auto">
+            <table className="w-full text-left text-base text-gray-600 border-collapse">
+              <thead className="bg-[#f8f9fa] border-b border-gray-100">
+                <tr>
+                  <th className="px-6 md:px-8 py-5 text-xs font-bold tracking-wide text-gray-400 text-left">Title &amp; Excerpt</th>
+                  <th className="w-[15%] px-6 md:px-8 py-5 text-xs font-bold tracking-wide text-gray-400 text-left">Category</th>
+                  <th className="w-[15%] px-6 md:px-8 py-5 text-xs font-bold tracking-wide text-gray-400 text-left">Status</th>
+                  <th className="w-[120px] px-6 md:px-8 py-5 text-xs font-bold tracking-wide text-gray-400 text-right whitespace-nowrap">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {paginatedPosts.map((post) => (
+                  <tr key={post.id} className="hover:bg-gray-50/50 transition-colors group">
+                    <td className="px-6 md:px-8 py-6">
+                      <div className="space-y-1.5 max-w-xl">
+                        <p className="font-bold text-gray-900 leading-tight group-hover:text-[#b50a0a] transition-colors">{post.title}</p>
+                        <p className="text-xs text-gray-400 line-clamp-2">{post.excerpt || 'No excerpt provided...'}</p>
+                        <div className="flex flex-wrap items-center gap-2 text-xs font-bold tracking-wide text-gray-400">
+                          <span className="text-gray-500 lowercase font-bold normal-case truncate max-w-[150px] block" title={post.author?.email}>
+                            {post.author?.email || 'System'}
+                          </span>
+                          <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                          <span>{new Date(post.published_at || post.created_at).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 md:px-8 py-6">
+                      <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-lg text-xs font-bold tracking-wide inline-block truncate max-w-[150px]">
+                        {post.category?.name || 'Uncategorized'}
+                      </span>
+                    </td>
+                    <td className="px-6 md:px-8 py-6 whitespace-nowrap">
+                      <button
+                        onClick={() => handleToggleStatus(post.id, post.published_at)}
+                        disabled={loadingId === post.id}
+                        className="flex items-center gap-2 group/status"
+                      >
+                        <div className={`w-1.5 h-1.5 rounded-full transition-transform group-hover/status:scale-150 ${post.published_at ? 'bg-green-500 shadow-sm shadow-green-500/50' : 'bg-gray-300'}`}></div>
+                        <span className={`text-xs font-bold tracking-wide transition-colors ${post.published_at ? 'text-green-600 hover:text-green-700' : 'text-gray-400 hover:text-gray-600'}`}>
+                          {post.published_at ? 'Published' : 'Draft'}
+                        </span>
+                        {loadingId === post.id && <Loader2 className="w-3 h-3 animate-spin text-gray-400" />}
+                      </button>
+                    </td>
+                    <td className="px-6 md:px-8 py-6 text-right whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-2">
+                        <div className="relative group/btn">
+                          <Link
+                            href={`/news/${post.slug}`}
+                            target="_blank"
+                            className="flex items-center justify-center w-8 h-8 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-sm shrink-0"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                          </Link>
+                          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-xs font-bold tracking-wide rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
+                            View
+                          </span>
+                        </div>
+
+                        <div className="relative group/btn">
+                          <Link
+                            href={`/admin/blog/edit/${post.id}`}
+                            className="flex items-center justify-center w-8 h-8 rounded-xl bg-slate-50 text-slate-600 hover:bg-slate-900 hover:text-white transition-all shadow-sm shrink-0"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                          </Link>
+                          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-xs font-bold tracking-wide rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
+                            Edit
+                          </span>
+                        </div>
+
+                        <div className="relative group/btn">
+                          <button
+                            onClick={() => handleDelete(post.id, post.title)}
+                            disabled={loadingId === post.id}
+                            className="flex items-center justify-center w-8 h-8 rounded-xl bg-red-50 text-red-600 hover:bg-[#b50a0a] hover:text-white transition-all shadow-sm shrink-0"
+                          >
+                            {loadingId === post.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                          </button>
+                          <span className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2 py-0.5 bg-slate-900 text-white text-xs font-bold tracking-wide rounded-lg opacity-0 pointer-events-none group-hover/btn:opacity-100 transition-opacity duration-200 whitespace-nowrap shadow-lg z-50">
+                            Delete
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
 
       {/* Pagination Controls */}

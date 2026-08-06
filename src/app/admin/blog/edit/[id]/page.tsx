@@ -28,7 +28,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
   ];
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="p-2 sm:p-6 md:p-8">
       <NewPostClient 
         categories={categories || []} 
         tags={allTags} 

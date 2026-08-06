@@ -110,7 +110,7 @@ export default async function AdminLayout({
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Admin Top Header */}
-        <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-6 sm:px-4 md:px-8 shadow-sm relative z-10 shrink-0">
+        <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-6 sm:px-4 md:px-8 shadow-sm relative z-40 shrink-0">
           <div className="flex items-center gap-4">
             <AdminMobileNav role={userRecord?.role || 'player'} adminLogoUrl={adminLogoUrl} />
           </div>
