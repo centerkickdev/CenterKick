@@ -34,57 +34,90 @@ export async function POST(req: Request) {
        console.error("Error fetching target profile:", err);
     }
 
+    // Fetch admin user IDs to notify in-app
+    try {
+      const { data: adminUsers } = await supabase
+        .from('users')
+        .select('id')
+        .in('role', ['admin', 'superadmin', 'operations']);
+
+      if (adminUsers && adminUsers.length > 0) {
+        const adminNotifications = adminUsers.map(admin => ({
+          user_id: admin.id,
+          title: `New ${targetType === 'coach' ? 'Coach Inquiry' : 'Partner Inquiry'} for ${targetName}`,
+          message: `${name} (${email}) sent an inquiry for ${targetName}: "${message.slice(0, 120)}${message.length > 120 ? '...' : ''}"`,
+          type: 'info',
+          link: '/admin'
+        }));
+        await supabase.from('notifications').insert(adminNotifications);
+      }
+    } catch (notifErr) {
+      console.error('Failed to create in-app admin notifications:', notifErr);
+    }
+
     const adminEmail = process.env.ADMIN_EMAIL || 'support@centerkick.com';
 
     // 1. Email to Admin
-    await resend.emails.send({
-      from: 'CenterKick Contact <noreply@centerkick.com>',
-      to: adminEmail,
-      subject: `New Inquiry for ${targetType} - ${targetName}`,
-      html: `
-        <h3>New Contact Request</h3>
-        <p><strong>From:</strong> ${name} (${email})</p>
-        <p><strong>Target:</strong> ${targetName} (${targetType} - ${targetId})</p>
-        <p><strong>Message:</strong></p>
-        <blockquote>${message}</blockquote>
-      `
-    });
-
-    // 2. Email to Requester (Confirmation)
-    await resend.emails.send({
-      from: 'CenterKick <noreply@centerkick.com>',
-      to: email,
-      subject: `CenterKick: Inquiry sent to ${targetName}`,
-      html: `
-        <h3>Hello ${name},</h3>
-        <p>Your inquiry for <strong>${targetName}</strong> has been received by our team.</p>
-        <p>We are reviewing your request and will connect you shortly if appropriate.</p>
-        <p><strong>Your Message:</strong></p>
-        <blockquote>${message}</blockquote>
-        <br/>
-        <p>Best Regards,</p>
-        <p>CenterKick Team</p>
-      `
-    });
-
-    // 3. Email to Target (if we have their email)
-    if (targetEmail) {
+    try {
       await resend.emails.send({
-        from: 'CenterKick <noreply@centerkick.com>',
-        to: targetEmail,
-        subject: `CenterKick: New Inquiry from ${name}`,
+        from: 'CenterKick Contact <noreply@centerkick.com>',
+        to: adminEmail,
+        subject: `New Inquiry for ${targetType} - ${targetName}`,
         html: `
-          <h3>Hello ${targetName},</h3>
-          <p>You have received a new professional inquiry via CenterKick from <strong>${name}</strong>.</p>
+          <h3>New Contact Request</h3>
+          <p><strong>From:</strong> ${name} (${email})</p>
+          <p><strong>Target:</strong> ${targetName} (${targetType} - ${targetId})</p>
           <p><strong>Message:</strong></p>
           <blockquote>${message}</blockquote>
-          <br/>
-          <p>You can reply directly to them at: <a href="mailto:${email}">${email}</a></p>
+        `
+      });
+    } catch (e) {
+      console.error('Email sending to admin failed:', e);
+    }
+
+    // 2. Email to Requester (Confirmation)
+    try {
+      await resend.emails.send({
+        from: 'CenterKick <noreply@centerkick.com>',
+        to: email,
+        subject: `CenterKick: Inquiry sent to ${targetName}`,
+        html: `
+          <h3>Hello ${name},</h3>
+          <p>Your inquiry for <strong>${targetName}</strong> has been received by our team.</p>
+          <p>We are reviewing your request and will connect you shortly if appropriate.</p>
+          <p><strong>Your Message:</strong></p>
+          <blockquote>${message}</blockquote>
           <br/>
           <p>Best Regards,</p>
           <p>CenterKick Team</p>
         `
       });
+    } catch (e) {
+      console.error('Email sending to requester failed:', e);
+    }
+
+    // 3. Email to Target (if we have their email)
+    if (targetEmail) {
+      try {
+        await resend.emails.send({
+          from: 'CenterKick <noreply@centerkick.com>',
+          to: targetEmail,
+          subject: `CenterKick: New Inquiry from ${name}`,
+          html: `
+            <h3>Hello ${targetName},</h3>
+            <p>You have received a new professional inquiry via CenterKick from <strong>${name}</strong>.</p>
+            <p><strong>Message:</strong></p>
+            <blockquote>${message}</blockquote>
+            <br/>
+            <p>You can reply directly to them at: <a href="mailto:${email}">${email}</a></p>
+            <br/>
+            <p>Best Regards,</p>
+            <p>CenterKick Team</p>
+          `
+        });
+      } catch (e) {
+        console.error('Email sending to target failed:', e);
+      }
     }
 
     return NextResponse.json({ success: true });

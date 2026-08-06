@@ -7,6 +7,11 @@ import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
+function stripHtml(html: string): string {
+   if (!html) return '';
+   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
    const { id } = await params;
    const supabaseAdmin = createAdminClient();
@@ -24,8 +29,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
    const orgName = profile.club_name || profile.organization_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Sports Organization';
    const title = `${orgName} - CenterKick`;
-   const description = profile.bio || `${orgName} sports club and academy based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
-   const image = profile.avatar_url || profile.cover_url || "https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1200&auto=format&fit=crop";
+   const cleanBio = stripHtml(profile.bio || '');
+   const description = cleanBio || `${orgName} sports club and academy based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
+   const image = profile.cover_url || profile.avatar_url || "https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1200&auto=format&fit=crop";
 
    return {
       title,

@@ -7,6 +7,11 @@ import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
+function stripHtml(html: string): string {
+   if (!html) return '';
+   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
    const { id } = await params;
    const supabaseAdmin = createAdminClient();
@@ -23,9 +28,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
    if (!profile) return {};
 
    const name = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || profile.agency_name || 'Agent Profile';
-   const title = `${name} ${profile.agency_name ? `(${profile.agency_name})` : '(Licensed Agent)'} - CenterKick`;
-   const description = profile.bio || `${name} is a licensed football agent based in ${profile.country || 'Global'} on CenterKick.`;
-   const image = profile.avatar_url || profile.cover_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1200&auto=format&fit=crop";
+   const title = `${name} ${profile.agency_name ? `(${profile.agency_name})` : ''} - CenterKick`;
+   const cleanBio = stripHtml(profile.bio || '');
+   const description = cleanBio || `${name} is a licensed football agent based in ${profile.country || 'Global'} on CenterKick.`;
+   const image = profile.cover_url || profile.avatar_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1200&auto=format&fit=crop";
 
    return {
       title,

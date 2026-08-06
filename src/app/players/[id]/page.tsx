@@ -10,6 +10,11 @@ interface AthletePageProps {
   params: Promise<{ id: string }>;
 }
 
+function stripHtml(html: string): string {
+   if (!html) return '';
+   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 export async function generateMetadata({ params }: AthletePageProps): Promise<Metadata> {
    const { id } = await params;
    const supabaseAdmin = createAdminClient();
@@ -28,8 +33,9 @@ export async function generateMetadata({ params }: AthletePageProps): Promise<Me
 
    const name = `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Player Profile';
    const title = `${name} ${athlete.position ? `(${athlete.position})` : ''} - CenterKick`;
-   const description = athlete.bio || `${name} is a ${athlete.position || 'football player'} from ${athlete.country || 'Global'} on CenterKick.`;
-   const image = athlete.avatar_url || athlete.cover_url || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1200&auto=format&fit=crop";
+   const cleanBio = stripHtml(athlete.bio || '');
+   const description = cleanBio || `${name} is a ${athlete.position || 'football player'} from ${athlete.country || 'Global'} on CenterKick.`;
+   const image = athlete.cover_url || athlete.avatar_url || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1200&auto=format&fit=crop";
 
    return {
       title,

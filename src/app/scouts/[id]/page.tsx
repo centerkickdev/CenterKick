@@ -5,6 +5,11 @@ import ScoutDetailsClient from './ScoutDetailsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
 import type { Metadata } from 'next';
 
+function stripHtml(html: string): string {
+   if (!html) return '';
+   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
    const { id } = await params;
    const supabaseAdmin = createAdminClient();
@@ -22,8 +27,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
    const name = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Scout Profile';
    const title = `${name} (Professional Scout) - CenterKick`;
-   const description = profile.bio || `${name} is a verified talent scout based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
-   const image = profile.avatar_url || profile.cover_url || "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop";
+   const cleanBio = stripHtml(profile.bio || '');
+   const description = cleanBio || `${name} is a verified talent scout based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
+   const image = profile.cover_url || profile.avatar_url || "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop";
 
    return {
       title,

@@ -6,6 +6,11 @@ import { isProfileComplete } from '@/lib/utils/profile';
 import { trackProfileView } from '@/app/actions/tracking';
 import type { Metadata } from 'next';
 
+function stripHtml(html: string): string {
+   if (!html) return '';
+   return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
    const { id } = await params;
    const supabaseAdmin = createAdminClient();
@@ -24,8 +29,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
    const coachPos = (Array.isArray(profile.current_position) ? profile.current_position[0] : profile.current_position) || profile.position || 'Coach';
    const name = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Coach Profile';
    const title = `${name} (${coachPos}) - CenterKick`;
-   const description = profile.bio || `${name} is a ${coachPos} from ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
-   const image = profile.avatar_url || profile.cover_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=1200&auto=format&fit=crop";
+   const cleanBio = stripHtml(profile.bio || '');
+   const description = cleanBio || `${name} is a ${coachPos} from ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
+   const image = profile.cover_url || profile.avatar_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=1200&auto=format&fit=crop";
 
    return {
       title,

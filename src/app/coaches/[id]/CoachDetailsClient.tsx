@@ -160,12 +160,18 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                         <span className="text-base font-bold text-white">{profileFormation}</span>
                      </div>
                   </div>
-                  <div className="flex items-center gap-3 text-base font-bold mb-8 text-white/80">
+                  <div className="flex items-center gap-3 text-base font-bold mb-6 text-white/80">
                      <MapPin className="w-3.5 h-3.5 text-[#b50a0a]" />
                      <span>{profileClub}</span>
                      <span className="text-white/30">—</span>
                      <span>{profile.country || 'NIL'}</span>
                   </div>
+                  <button
+                     onClick={() => setIsContactModalOpen(true)}
+                     className="w-full max-w-xs bg-[#a20000] hover:bg-[#8a0000] text-white py-3 rounded-xl text-xs font-bold tracking-wide transition-all shadow-lg mb-6"
+                  >
+                     Hire Coach
+                  </button>
                </div>
 
                {/* Desktop: side-by-side layout */}
@@ -252,8 +258,8 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                         </button>
                      ))}
                   </div>
-                  <div className="hidden lg:flex items-center gap-4">
-                     <button onClick={() => setIsContactModalOpen(true)} className="bg-[#a20000] hover:bg-[#8a0000] text-white px-6 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all">
+                  <div className="flex items-center gap-4 shrink-0 py-2">
+                     <button onClick={() => setIsContactModalOpen(true)} className="bg-[#a20000] hover:bg-[#8a0000] text-white px-5 py-2 rounded-lg text-xs font-bold tracking-wide transition-all whitespace-nowrap">
                         Hire Coach
                      </button>
                   </div>
@@ -278,7 +284,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-16 border border-gray-100 rounded-3xl p-10 bg-gray-50 shadow-sm">
                            {[
                               { label: "Current League", value: profile.league_name || "N/A" },
-                              { label: "Current Club", value: profile.current_club || "Free Agent" },
+                              { label: "Current Club", value: profile.current_club || "N/A" },
                               { label: "Contract Expiry", value: profile.contract_expiry ? new Date(profile.contract_expiry).toLocaleDateString() : "N/A" },
                               { label: "Current Position", value: profile.current_position?.[0] || profile.role || "Head Coach" },
                               { label: "Coaching Licenses", value: profile.coaching_licenses?.join(', ') || profile.license || "N/A" },

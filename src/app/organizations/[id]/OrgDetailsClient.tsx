@@ -135,6 +135,12 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                         <span className="text-base font-bold text-white">{profileEst}</span>
                      </div>
                   </div>
+                  <button
+                     onClick={() => setIsContactModalOpen(true)}
+                     className="w-full max-w-xs bg-[#a20000] hover:bg-[#8a0000] text-white py-3 rounded-xl text-xs font-bold tracking-wide transition-all shadow-lg mt-2"
+                  >
+                     Connect Partner
+                  </button>
                </div>
 
                {/* Desktop: side-by-side layout */}
@@ -221,8 +227,8 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                         </button>
                      ))}
                   </div>
-                  <div className="hidden lg:flex items-center gap-4">
-                     <button onClick={() => setIsContactModalOpen(true)} className="bg-[#a20000] hover:bg-[#8a0000] text-white px-6 py-2.5 rounded-lg text-xs font-bold tracking-wide transition-all">
+                  <div className="flex items-center gap-4 shrink-0 py-2">
+                     <button onClick={() => setIsContactModalOpen(true)} className="bg-[#a20000] hover:bg-[#8a0000] text-white px-5 py-2 rounded-lg text-xs font-bold tracking-wide transition-all whitespace-nowrap">
                         Connect Partner
                      </button>
                   </div>

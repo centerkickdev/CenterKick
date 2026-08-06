@@ -56,7 +56,7 @@ export default function AgentsClient({ agents }: { agents: any[] }) {
                            <span className="text-[#a20000] text-xs font-bold tracking-wide block mb-1">{agent.country || 'Global'}</span>
                            <h3 className="text-gray-900 font-bold text-base leading-tight tracking-tight line-clamp-1 group-hover:text-[#a20000] transition-colors">{name}</h3>
                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
-                              <span className="text-gray-400 text-xs font-bold tracking-wide truncate">{agent.agency_name || 'Free Agent'}</span>
+                              <span className="text-gray-400 text-xs font-bold tracking-wide truncate">{agent.agency_name || ''}</span>
                               <ArrowRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#a20000] group-hover:translate-x-0.5 transition-all shrink-0" />
                            </div>
                         </div>

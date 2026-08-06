@@ -586,6 +586,18 @@ export default function ProfileEditor() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    if (galleryUrls.length >= 15) {
+      showToast('Maximum photo limit reached (15 photos). Remove an existing photo to upload more.', 'error');
+      e.target.value = '';
+      return;
+    }
+
+    if (galleryUrls.length + files.length > 15) {
+      showToast(`Uploading these files would exceed the 15-photo limit. You can add at most ${15 - galleryUrls.length} more photo(s).`, 'error');
+      e.target.value = '';
+      return;
+    }
+
     setIsSaving(true);
     showToast('Uploading gallery images...', 'success');
 
@@ -1210,6 +1222,14 @@ export default function ProfileEditor() {
 
             {activeTab === 'Media Center' && (
               <form onSubmit={saveMediaCenter} onChange={() => setIsDirty(true)} className="space-y-6 animate-in fade-in duration-500">
+                {/* Helpful Media Limits Tip */}
+                <div className="p-4 bg-amber-50 border border-amber-200/80 rounded-2xl flex items-start gap-3 text-amber-900">
+                  <span className="text-base leading-none mt-0.5">💡</span>
+                  <div className="text-xs font-semibold leading-relaxed">
+                    <strong className="font-bold">Media Upload Tip:</strong> You can upload up to <span className="font-bold text-amber-950">15 action photos</span> and embed up to <span className="font-bold text-amber-950">6 video highlights</span> to your profile.
+                  </div>
+                </div>
+
                 {/* Cover Photo */}
                 <div className="space-y-6">
                   <h4 className="text-xs font-bold text-gray-900 tracking-wide">Cover Photo</h4>
@@ -1242,7 +1262,7 @@ export default function ProfileEditor() {
                 <div className="space-y-6 pt-10 border-t border-gray-50">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-bold text-gray-900 tracking-wide">Video Highlights</h4>
-                    <span className="text-xs font-bold bg-gray-900 text-white px-2 py-1 rounded">YouTube / Vimeo</span>
+                    <span className="text-xs font-bold bg-gray-900 text-white px-2.5 py-1 rounded-lg">{videoLinks.length} / 6 Videos</span>
                   </div>
 
                   <div className="space-y-1.5">
@@ -1275,21 +1295,27 @@ export default function ProfileEditor() {
                         <input
                           id="new_video_url"
                           type="url"
-                          placeholder="https://youtube.com/watch?v=..."
-                          className="flex-1 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] outline-none"
+                          disabled={videoLinks.length >= 6}
+                          placeholder={videoLinks.length >= 6 ? "Maximum 6 videos limit reached" : "https://youtube.com/watch?v=..."}
+                          className="flex-1 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] outline-none disabled:opacity-50"
                         />
                         <button
                           type="button"
+                          disabled={videoLinks.length >= 6}
                           onClick={() => {
+                            if (videoLinks.length >= 6) {
+                              showToast('Maximum video limit reached (6 videos). Remove a video to add a new link.', 'error');
+                              return;
+                            }
                             const el = document.getElementById('new_video_url') as HTMLInputElement;
                             if (el && el.value) {
                               setVideoLinks([...videoLinks, el.value]);
                               el.value = '';
                             }
                           }}
-                          className="bg-gray-900 text-white px-6 py-3 rounded-xl text-xs font-bold hover:bg-black transition-all whitespace-nowrap"
+                          className="bg-gray-900 text-white px-6 py-3 rounded-xl text-xs font-bold hover:bg-black transition-all whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          Add Link
+                          {videoLinks.length >= 6 ? 'Limit Reached' : 'Add Link'}
                         </button>
                       </div>
                     )}
@@ -1300,9 +1326,9 @@ export default function ProfileEditor() {
                 <div className="space-y-6 pt-10 border-t border-gray-50">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-bold text-gray-900 tracking-wide">Action Photos</h4>
-                    <span className="text-xs font-bold bg-gray-900 text-white px-2 py-1 rounded">Multiple Allowed</span>
+                    <span className="text-xs font-bold bg-gray-900 text-white px-2.5 py-1 rounded-lg">{galleryUrls.length} / 15 Photos</span>
                   </div>
-                  <input disabled={!isEditing} type="file" id="gallery_upload" multiple className="hidden" accept="image/*" onChange={handleGalleryUpload} />
+                  <input disabled={!isEditing || galleryUrls.length >= 15} type="file" id="gallery_upload" multiple className="hidden" accept="image/*" onChange={handleGalleryUpload} />
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {galleryUrls.map((url, i) => (
                       <div key={i} className="aspect-square bg-gray-100 rounded-2xl relative group overflow-hidden border border-gray-100">
@@ -1322,11 +1348,18 @@ export default function ProfileEditor() {
                     ))}
                       <button
                         type="button"
-                        onClick={() => document.getElementById('gallery_upload')?.click()}
-                        className={`aspect-square border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center text-gray-900 hover:border-[#b50a0a] hover:text-[#b50a0a] hover:bg-gray-50 transition-all ${!isEditing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={!isEditing || galleryUrls.length >= 15}
+                        onClick={() => {
+                          if (galleryUrls.length >= 15) {
+                            showToast('Maximum photo limit reached (15 photos). Remove a photo to add more.', 'error');
+                            return;
+                          }
+                          document.getElementById('gallery_upload')?.click();
+                        }}
+                        className={`aspect-square border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center text-gray-900 transition-all ${(!isEditing || galleryUrls.length >= 15) ? 'opacity-40 cursor-not-allowed bg-gray-50' : 'hover:border-[#b50a0a] hover:text-[#b50a0a] hover:bg-gray-50'}`}
                       >
                         <Plus className="w-6 h-6 mb-2" />
-                        <span className="text-xs font-bold tracking-[0.2em]">Add Photos</span>
+                        <span className="text-xs font-bold tracking-[0.2em]">{galleryUrls.length >= 15 ? 'Limit Reached' : 'Add Photos'}</span>
                       </button>
                   </div>
                 </div>

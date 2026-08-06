@@ -43,13 +43,15 @@ export async function GET(request: Request) {
       return match ? match[1] : '';
     };
 
-    const title = getMetaTag(html, 'og:title') || getTitle(html) || domain;
-    const description = getMetaTag(html, 'og:description') || getMetaTag(html, 'description') || targetUrl;
+    const titleRaw = getMetaTag(html, 'og:title') || getTitle(html) || domain;
+    const descriptionRaw = getMetaTag(html, 'og:description') || getMetaTag(html, 'description') || targetUrl;
     const image = getMetaTag(html, 'og:image') || '';
 
+    const cleanText = (str: string) => str.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+
     return NextResponse.json({
-      title: title.trim(),
-      description: description.trim(),
+      title: cleanText(titleRaw),
+      description: cleanText(descriptionRaw),
       image,
       domain
     });
