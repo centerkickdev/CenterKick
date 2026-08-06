@@ -42,15 +42,17 @@ export async function requestVerification(formData: FormData) {
     return { error: 'Profile not found' };
   }
 
-  // Fetch dynamic amount from pricing_plans
-  const { data: plan } = await supabase
-    .from('pricing_plans')
-    .select('amount')
-    .eq('role', profile.role)
-    .eq('is_active', true)
+  // Fetch dynamic amount from CMS site_content payment settings
+  const { data: settingsData } = await supabase
+    .from('site_content')
+    .select('content')
+    .eq('page', 'settings')
+    .eq('section', 'payment')
     .single();
 
-  const amount = plan ? Number(plan.amount) : 15000;
+  const userRole = profile.role || 'player';
+  const rolePlan = settingsData?.content?.plans?.[userRole];
+  const amount = rolePlan?.amount ? Number(rolePlan.amount) : 0;
 
   const adminClient = createAdminClient();
   let proofFileUrl = '';
