@@ -79,11 +79,21 @@ export function AdminSidebar({ role }: { role: string }) {
         <div key={idx} className="space-y-1">
           <span className="px-4 text-xs font-bold text-gray-500 tracking-[0.2em]">{section.group}</span>
           {section.items.map((item: any) => {
-            const isActive = item.href === '/admin' 
-              ? pathname === '/admin' 
-              : item.href !== '#' && item.href.includes('?role=') 
-                ? searchParams.get('role') === item.href.split('=')[1]
-                : item.href !== '#' && pathname.startsWith(item.href) && !item.href.includes('?role=');
+            const itemRole = item.href.includes('?role=') ? item.href.split('role=')[1] : null;
+            const currentRoleParam = searchParams.get('role');
+
+            let isActive = false;
+            if (item.href === '/admin') {
+              isActive = pathname === '/admin';
+            } else if (item.href !== '#') {
+              if (itemRole) {
+                isActive = pathname.startsWith('/admin/users') && currentRoleParam === itemRole;
+              } else if (item.href === '/admin/users') {
+                isActive = pathname === '/admin/users' && !currentRoleParam;
+              } else {
+                isActive = pathname.startsWith(item.href);
+              }
+            }
                 
             return (
               <Link

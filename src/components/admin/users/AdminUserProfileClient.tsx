@@ -188,25 +188,23 @@ export default function AdminUserProfileClient({
 
             {/* Editable Market Value */}
             {role === 'player' && (
-              <div className="lg:col-span-3 bg-slate-50 p-6 rounded-2xl border border-slate-100 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">Market Value (€)</p>
-                  <div className="flex items-center gap-3">
-                    <input 
-                      type="number" 
-                      value={marketValue} 
-                      onChange={(e) => setMarketValue(e.target.value)}
-                      className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm font-bold w-48 focus:outline-none focus:ring-2 focus:ring-[#b50a0a]"
-                      placeholder="e.g. 500000"
-                    />
-                    <button 
-                      onClick={handleSaveMarketValue}
-                      disabled={isSaving || Number(marketValue) === profile.market_value}
-                      className="bg-[#b50a0a] text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-red-800 transition-colors disabled:opacity-50 flex items-center gap-2"
-                    >
-                      {isSaving ? 'Saving...' : <><Save className="w-3 h-3" /> Save</>}
-                    </button>
-                  </div>
+              <div className="col-span-full lg:col-span-3 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100 space-y-3">
+                <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">Market Value (€)</p>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <input 
+                    type="number" 
+                    value={marketValue} 
+                    onChange={(e) => setMarketValue(e.target.value)}
+                    className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-[#b50a0a]"
+                    placeholder="e.g. 500000"
+                  />
+                  <button 
+                    onClick={handleSaveMarketValue}
+                    disabled={isSaving || Number(marketValue) === profile.market_value}
+                    className="bg-[#b50a0a] text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-red-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 shadow-sm"
+                  >
+                    {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Market Value</>}
+                  </button>
                 </div>
               </div>
             )}

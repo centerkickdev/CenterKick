@@ -73,17 +73,6 @@ export function AdminMobileNav({ role, adminLogoUrl }: { role: string; adminLogo
             <div className="flex-1 overflow-y-auto flex flex-col min-h-0" onClick={() => setIsOpen(false)}>
               <AdminSidebar role={role} />
             </div>
-
-            {/* Bottom options */}
-            <div className="p-6 border-t border-gray-800 flex flex-col gap-4 shrink-0">
-              <Link 
-                href="/dashboard" 
-                className="flex items-center gap-2 text-xs font-bold tracking-wide text-gray-500 hover:text-white transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                <Home className="w-4 h-4" /> User Dashboard
-              </Link>
-            </div>
           </aside>
         </div>
       )}
