@@ -29,43 +29,7 @@ export default async function AdminTransactionsPage(props: {
     redirect('/admin');
   }
 
-  // Self-Seeding logic: Seed dummy transactions if table is empty (Dev mode only)
-  if (process.env.NODE_ENV !== 'production') {
-    const { count: txCount } = await supabase.from('transactions').select('*', { count: 'exact', head: true });
-    if (txCount === null || txCount === 0) {
-      const { data: profiles } = await supabase.from('profiles').select('id').limit(5);
-      const profileIds = profiles?.map(p => p.id) || [];
-      
-      const dummyTxs = [];
-      const statuses = ['confirmed', 'confirmed', 'confirmed', 'pending', 'failed'];
-    const methods = ['direct_transfer', 'paystack_integration', 'paystack_link'];
-    const now = new Date();
 
-    // Generate 45 transactions spread across the last 12 months
-    for (let i = 0; i < 45; i++) {
-      const daysAgo = Math.floor(Math.random() * 365);
-      const txDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-      const amount = (Math.floor(Math.random() * 4) + 1) * 15000; // NGN 15k - 60k
-      const ref = `TXN-${txDate.getFullYear()}${(txDate.getMonth() + 1).toString().padStart(2, '0')}${txDate.getDate().toString().padStart(2, '0')}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-      
-      dummyTxs.push({
-        user_id: profileIds.length > 0 ? profileIds[Math.floor(Math.random() * profileIds.length)] : null,
-        reference: ref,
-        amount: amount,
-        currency: 'NGN',
-        status: statuses[Math.floor(Math.random() * statuses.length)],
-        method: methods[Math.floor(Math.random() * methods.length)],
-        created_at: txDate.toISOString(),
-        updated_at: txDate.toISOString()
-      });
-    }
-
-    const { error: seedError } = await supabase.from('transactions').insert(dummyTxs);
-    if (seedError) {
-      console.error('Error seeding transactions:', seedError);
-    }
-  }
-}
 
   const page = parseInt(searchParams.page || '1');
   const pageSize = 20;

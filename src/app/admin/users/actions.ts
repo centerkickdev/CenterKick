@@ -120,6 +120,15 @@ export async function deleteUsers(userIds: string[]) {
     }
 
     // Clean up stranded data in public tables
+    const { data: userProfiles } = await admin.from('profiles').select('id').eq('user_id', id);
+    const profileIds = (userProfiles || []).map(p => p.id);
+
+    // Delete associated transactions
+    if (profileIds.length > 0) {
+      await admin.from('transactions').delete().in('user_id', profileIds);
+    }
+    await admin.from('transactions').delete().eq('user_id', id);
+
     await admin.from('profiles').delete().eq('user_id', id);
     const { error: dbError } = await admin.from('users').delete().eq('id', id);
     

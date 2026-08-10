@@ -21,7 +21,10 @@ export default async function AdminUsersPage({
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
-  // 1. Fetch Stats for all roles (using admin client for reliable counts)
+  const ADMIN_ROLES = ['superadmin', 'admin', 'blogger', 'operations', 'finance'];
+  const ENTITY_ROLES = ['player', 'coach', 'agent', 'scout', 'organization'];
+
+  // 1. Fetch Stats for entity roles from profiles
   const [
     { count: totalCount },
     { count: activeCount },
@@ -32,22 +35,30 @@ export default async function AdminUsersPage({
     { count: orgsCount },
     { data: countryData }
   ] = await Promise.all([
-    adminClient.from('users').select('*', { count: 'exact', head: true }),
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'player'),
-    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'coach'),
-    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'agent'),
-    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'scout'),
-    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'organization'),
-    adminClient.from('profiles').select('country').not('country', 'is', null)
+    adminClient
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+      .in('role', ENTITY_ROLES),
+    adminClient
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'active')
+      .in('role', ENTITY_ROLES),
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'player'),
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'coach'),
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'agent'),
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'scout'),
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'organization'),
+    adminClient.from('profiles').select('country').not('country', 'is', null).in('role', ENTITY_ROLES)
   ]);
 
   const globalReachCount = new Set((countryData || []).map(p => p.country)).size;
 
-  // 2. Fetch Users with Filters (admin client bypasses RLS completely)
+  // 2. Fetch Users with Filters (excluding system staff roles)
   let query = adminClient
     .from('users')
     .select('id, email, role, is_active, created_at', { count: 'exact' })
+    .not('role', 'in', `(${ADMIN_ROLES.join(',')})`)
     .order('created_at', { ascending: false })
     .range(offset, offset + pageSize - 1);
 
@@ -159,9 +170,9 @@ export default async function AdminUsersPage({
           </div>
           <div className="pt-4 mt-auto">
             <div className="w-full bg-gray-50 rounded-full h-1.5 overflow-hidden">
-              <div className="bg-green-500 h-full rounded-full" style={{ width: `${totalCount ? Math.round(((activeCount || 0) / totalCount) * 100) : 0}%` }}></div>
+              <div className="bg-green-500 h-full rounded-full" style={{ width: `${totalCount ? Math.min(Math.round(((activeCount || 0) / totalCount) * 100), 100) : 0}%` }}></div>
             </div>
-            <p className="text-[10px] font-bold text-gray-400 mt-2 uppercase">{totalCount ? Math.round(((activeCount || 0) / totalCount) * 100) : 0}% of all accounts (System Admin accounts inclusive)</p>
+            <p className="text-[10px] font-bold text-gray-400 mt-2 uppercase">{totalCount ? Math.min(Math.round(((activeCount || 0) / totalCount) * 100), 100) : 0}% of all registered entity accounts</p>
           </div>
         </div>
 

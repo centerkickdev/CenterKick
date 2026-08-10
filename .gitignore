@@ -105,6 +105,7 @@ build_error_*.log
 /artifacts/
 /scratch/
 /scripts/
+/src/scripts/
 build_log_ui.txt
 check_users.js
 tmp_tournaments.sql

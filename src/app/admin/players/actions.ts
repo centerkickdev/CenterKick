@@ -140,8 +140,10 @@ export async function deletePlayer(id: string) {
     .eq('id', id)
     .single();
 
+  // Delete transaction records linked to this profile ID or user ID
+  await supabase.from('transactions').delete().eq('user_id', id);
   if (profile?.user_id) {
-    // Deleting from 'users' cascades to 'profiles'
+    await supabase.from('transactions').delete().eq('user_id', profile.user_id);
     const { error } = await supabase
       .from('users')
       .delete()
