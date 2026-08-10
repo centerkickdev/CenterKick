@@ -22,9 +22,8 @@ export default async function AdminUsersPage({
   const offset = (page - 1) * pageSize;
 
   const ADMIN_ROLES = ['superadmin', 'admin', 'blogger', 'operations', 'finance'];
-  const ENTITY_ROLES = ['player', 'coach', 'agent', 'scout', 'organization'];
 
-  // 1. Fetch Stats for entity roles from profiles
+  // 1. Fetch Stats for public registered entity accounts (strictly excluding staff/admin accounts)
   const [
     { count: totalCount },
     { count: activeCount },
@@ -36,20 +35,24 @@ export default async function AdminUsersPage({
     { data: countryData }
   ] = await Promise.all([
     adminClient
-      .from('profiles')
+      .from('users')
       .select('*', { count: 'exact', head: true })
-      .in('role', ENTITY_ROLES),
+      .not('role', 'in', `(${ADMIN_ROLES.join(',')})`),
     adminClient
       .from('profiles')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'active')
-      .in('role', ENTITY_ROLES),
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'player'),
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'coach'),
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'agent'),
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'scout'),
-    adminClient.from('profiles').select('*', { count: 'exact', head: true }).eq('role', 'organization'),
-    adminClient.from('profiles').select('country').not('country', 'is', null).in('role', ENTITY_ROLES)
+      .not('role', 'in', `(${ADMIN_ROLES.join(',')})`),
+    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'player'),
+    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'coach'),
+    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'agent'),
+    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'scout'),
+    adminClient.from('users').select('*', { count: 'exact', head: true }).eq('role', 'organization'),
+    adminClient
+      .from('profiles')
+      .select('country')
+      .not('country', 'is', null)
+      .not('role', 'in', `(${ADMIN_ROLES.join(',')})`)
   ]);
 
   const globalReachCount = new Set((countryData || []).map(p => p.country)).size;
