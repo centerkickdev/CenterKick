@@ -82,16 +82,20 @@ export default async function AdminTransactionsPage(props: {
     return sum + (tx.currency === 'USD' ? amount * 1500 : amount);
   }, 0) || 0;
 
+  const ADMIN_ROLES = ['superadmin', 'admin', 'blogger', 'operations', 'finance'];
+
   const { count: activeSubs } = await supabase
     .from('profiles')
     .select('*', { count: 'exact', head: true })
-    .eq('is_subscribed', true);
+    .eq('is_subscribed', true)
+    .not('role', 'in', `(${ADMIN_ROLES.join(',')})`);
 
   const { count: expiredSubs } = await supabase
     .from('profiles')
     .select('*', { count: 'exact', head: true })
     .eq('is_subscribed', false)
-    .not('updated_at', 'is', null);
+    .not('updated_at', 'is', null)
+    .not('role', 'in', `(${ADMIN_ROLES.join(',')})`);
 
   const stats = [
     { label: 'Total Revenue', value: totalRevenue, icon: 'DollarSign', trend: '+14.2%', color: 'text-green-600', isCurrency: true },
