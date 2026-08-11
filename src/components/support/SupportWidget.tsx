@@ -7,15 +7,20 @@ import { submitSupportTicket, SupportCategory, SupportChannel } from '@/app/acti
 
 export function SupportWidget() {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Hide widget completely on user dashboard and admin panel routes
   if (pathname?.startsWith('/dashboard') || pathname?.startsWith('/admin')) {
     return null;
   }
+
+  return <SupportWidgetContent />;
+}
+
+function SupportWidgetContent() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Form State
   const [name, setName] = useState('');

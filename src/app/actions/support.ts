@@ -83,7 +83,7 @@ export async function submitSupportTicket(formData: FormData) {
 
   // Record ticket in database if table exists
   try {
-    await adminClient.from('support_tickets').insert([{
+    const { error: dbInsertError } = await adminClient.from('support_tickets').insert([{
       user_id: user?.id || null,
       name,
       email,
@@ -95,6 +95,9 @@ export async function submitSupportTicket(formData: FormData) {
       status: 'open',
       created_at: new Date().toISOString()
     }]);
+    if (dbInsertError) {
+      console.warn('Support ticket DB insert note (run migration if table missing):', dbInsertError.message);
+    }
   } catch (dbErr) {
     console.error('Support ticket DB insert fallback error:', dbErr);
   }
