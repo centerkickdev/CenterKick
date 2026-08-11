@@ -4,10 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { 
   Headphones, Search, Filter, Mail, MessageSquare, Clock, 
   CheckCircle2, AlertCircle, Eye, ExternalLink, FileText, 
-  Image as ImageIcon, RefreshCw, X, ChevronDown, User, ShieldCheck
+  Image as ImageIcon, RefreshCw, X, User, ShieldCheck,
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { getSupportTickets, updateSupportTicketStatus } from './actions';
 import { useToast } from '@/context/ToastContext';
+import { openMaskedBlobUrl } from '@/lib/blob-utils';
 
 export default function AdminSupportPage() {
   const { showToast } = useToast();
@@ -18,6 +20,10 @@ export default function AdminSupportPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Pagination (20 items per page)
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 20;
 
   // Selected Ticket for Detail Modal
   const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
@@ -37,6 +43,11 @@ export default function AdminSupportPage() {
   useEffect(() => {
     loadData();
   }, [statusFilter, categoryFilter]);
+
+  // Reset pagination when search or filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter, categoryFilter]);
 
   const handleStatusChange = async (ticketId: string, newStatus: 'open' | 'in_progress' | 'resolved') => {
     setIsUpdatingStatus(ticketId);
@@ -64,6 +75,12 @@ export default function AdminSupportPage() {
     );
   });
 
+  // Pagination calculation
+  const totalPages = Math.ceil(filteredTickets.length / ITEMS_PER_PAGE) || 1;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredTickets.length);
+  const paginatedTickets = filteredTickets.slice(startIndex, endIndex);
+
   // Metrics
   const openCount = tickets.filter(t => t.status === 'open').length;
   const inProgressCount = tickets.filter(t => t.status === 'in_progress').length;
@@ -71,7 +88,7 @@ export default function AdminSupportPage() {
   const totalCount = tickets.length;
 
   return (
-    <div className="p-6 lg:p-10 space-y-8 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-10 space-y-6 lg:space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-gray-900 via-black to-[#b50a0a] p-6 lg:p-8 rounded-[32px] text-white shadow-xl">
         <div className="space-y-2">
@@ -92,45 +109,45 @@ export default function AdminSupportPage() {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-500">Open Tickets</span>
             <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
               <AlertCircle className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-amber-600">{openCount}</p>
+          <p className="text-xl sm:text-2xl font-black text-amber-600">{openCount}</p>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-500">In Progress</span>
             <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-blue-600">{inProgressCount}</p>
+          <p className="text-xl sm:text-2xl font-black text-blue-600">{inProgressCount}</p>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-500">Resolved</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-emerald-600">{resolvedCount}</p>
+          <p className="text-xl sm:text-2xl font-black text-emerald-600">{resolvedCount}</p>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
+        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-500">Total Requests</span>
             <div className="w-8 h-8 rounded-xl bg-gray-100 text-gray-700 flex items-center justify-center">
               <Headphones className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-gray-900">{totalCount}</p>
+          <p className="text-xl sm:text-2xl font-black text-gray-900">{totalCount}</p>
         </div>
       </div>
 
@@ -181,8 +198,77 @@ export default function AdminSupportPage() {
         </div>
       </div>
 
-      {/* Tickets Table */}
-      <div className="bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
+      {/* Tickets List - Mobile & Tablet Stacked List View (Visible on < md) */}
+      <div className="block md:hidden space-y-3">
+        {isLoading ? (
+          <div className="bg-white p-8 rounded-3xl text-center text-xs font-bold text-gray-400 animate-pulse">Loading support tickets...</div>
+        ) : filteredTickets.length === 0 ? (
+          <div className="bg-white p-12 rounded-3xl text-center space-y-2 border border-gray-100">
+            <ShieldCheck className="w-10 h-10 text-gray-300 mx-auto" />
+            <p className="text-xs font-bold text-gray-500">No support tickets found.</p>
+          </div>
+        ) : (
+          paginatedTickets.map(ticket => (
+            <div key={ticket.id} className="bg-white p-4.5 rounded-2xl border border-gray-100 shadow-sm space-y-3">
+              <div className="flex items-start justify-between gap-2 border-b border-gray-50 pb-2.5">
+                <div>
+                  <h4 className="text-xs font-extrabold text-gray-900">{ticket.name}</h4>
+                  <p className="text-[11px] text-gray-500 font-medium">{ticket.email}</p>
+                </div>
+                <select
+                  value={ticket.status || 'open'}
+                  disabled={isUpdatingStatus === ticket.id}
+                  onChange={e => handleStatusChange(ticket.id, e.target.value as any)}
+                  className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full border cursor-pointer focus:outline-none ${
+                    ticket.status === 'resolved' 
+                      ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                      : ticket.status === 'in_progress' 
+                      ? 'bg-blue-50 text-blue-700 border-blue-200' 
+                      : 'bg-amber-50 text-amber-700 border-amber-200'
+                  }`}
+                >
+                  <option value="open">Open</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase text-[#b50a0a] bg-red-50 px-2 py-0.5 rounded-md">
+                    {ticket.category?.replace('_', ' ')}
+                  </span>
+                  <span className="text-[10px] font-medium text-gray-400">{new Date(ticket.created_at).toLocaleDateString()}</span>
+                </div>
+                <p className="text-xs font-bold text-gray-900 line-clamp-1 pt-0.5">{ticket.subject}</p>
+                <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">{ticket.message}</p>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-gray-100 text-xs">
+                <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                  ticket.channel === 'whatsapp' 
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                    : 'bg-gray-100 text-gray-700'
+                }`}>
+                  {ticket.channel === 'whatsapp' ? <MessageSquare className="w-3 h-3" /> : <Mail className="w-3 h-3" />}
+                  {ticket.channel?.toUpperCase()}
+                </span>
+
+                <button
+                  onClick={() => setSelectedTicket(ticket)}
+                  className="px-3.5 py-1.5 rounded-xl bg-gray-900 hover:bg-[#b50a0a] text-white transition-all cursor-pointer inline-flex items-center gap-1.5 text-xs font-bold shadow-sm"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  View Details
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Tickets Table - Desktop View (Visible on >= md) */}
+      <div className="hidden md:block bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="py-20 text-center text-xs font-bold text-gray-400 animate-pulse">Loading support tickets...</div>
         ) : filteredTickets.length === 0 ? (
@@ -204,7 +290,7 @@ export default function AdminSupportPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-xs">
-                {filteredTickets.map(ticket => (
+                {paginatedTickets.map(ticket => (
                   <tr key={ticket.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="p-4 pl-6">
                       <div className="space-y-0.5">
@@ -268,28 +354,65 @@ export default function AdminSupportPage() {
         )}
       </div>
 
+      {/* Pagination Controls Bar (20 per page) */}
+      {!isLoading && filteredTickets.length > 0 && (
+        <div className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <div className="text-gray-500 font-medium text-center sm:text-left">
+            Showing <span className="font-bold text-gray-900">{startIndex + 1}</span> to{' '}
+            <span className="font-bold text-gray-900">{endIndex}</span> of{' '}
+            <span className="font-bold text-gray-900">{filteredTickets.length}</span> tickets
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className="p-2 rounded-xl border border-gray-200 hover:border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-all flex items-center gap-1 font-bold"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>Prev</span>
+              </button>
+
+              <span className="px-3 py-1.5 bg-gray-100 text-gray-900 rounded-xl font-extrabold text-xs">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                className="p-2 rounded-xl border border-gray-200 hover:border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-all flex items-center gap-1 font-bold"
+              >
+                <span>Next</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Ticket Detail Modal */}
       {selectedTicket && (
-        <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
             {/* Modal Header */}
-            <div className="p-6 bg-gradient-to-r from-gray-900 to-black text-white flex items-center justify-between">
+            <div className="p-5 sm:p-6 bg-gradient-to-r from-gray-900 to-black text-white flex items-center justify-between">
               <div className="space-y-1">
                 <span className="text-[10px] font-black uppercase tracking-wider text-red-400 bg-red-950/80 px-2.5 py-1 rounded-md border border-red-800">
                   {selectedTicket.category?.replace('_', ' ')}
                 </span>
-                <h3 className="text-lg font-black text-white pt-1">{selectedTicket.subject}</h3>
+                <h3 className="text-base sm:text-lg font-black text-white pt-1">{selectedTicket.subject}</h3>
               </div>
               <button
                 onClick={() => setSelectedTicket(null)}
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white flex items-center justify-center transition-all cursor-pointer"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
+            <div className="p-5 sm:p-6 overflow-y-auto space-y-5 sm:space-y-6 flex-1 custom-scrollbar">
               {/* Sender Details Box */}
               <div className="p-4 rounded-2xl bg-gray-50 border border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
@@ -318,7 +441,7 @@ export default function AdminSupportPage() {
                 </div>
               </div>
 
-              {/* Attachments */}
+              {/* Attachments (Uses openMaskedBlobUrl to mask raw Supabase storage bucket URLs) */}
               {selectedTicket.attachment_urls && selectedTicket.attachment_urls.length > 0 && (
                 <div className="space-y-3">
                   <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -328,19 +451,18 @@ export default function AdminSupportPage() {
                     {selectedTicket.attachment_urls.map((url: string, idx: number) => {
                       const isPdf = url.toLowerCase().includes('.pdf');
                       return (
-                        <a
+                        <button
                           key={idx}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-3 rounded-2xl border border-gray-200 hover:border-[#b50a0a] bg-gray-50 hover:bg-red-50/20 transition-all flex items-center justify-between group"
+                          type="button"
+                          onClick={() => openMaskedBlobUrl(url)}
+                          className="p-3 rounded-2xl border border-gray-200 hover:border-[#b50a0a] bg-gray-50 hover:bg-red-50/20 transition-all flex items-center justify-between group cursor-pointer text-left w-full"
                         >
                           <div className="flex items-center gap-2.5 truncate">
                             {isPdf ? <FileText className="w-5 h-5 text-red-600 shrink-0" /> : <ImageIcon className="w-5 h-5 text-blue-600 shrink-0" />}
                             <span className="text-xs font-bold text-gray-800 truncate group-hover:text-[#b50a0a]">Attachment {idx + 1}</span>
                           </div>
                           <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-[#b50a0a] shrink-0" />
-                        </a>
+                        </button>
                       );
                     })}
                   </div>
@@ -349,7 +471,7 @@ export default function AdminSupportPage() {
             </div>
 
             {/* Modal Footer Controls */}
-            <div className="p-6 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="p-5 sm:p-6 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-2 w-full sm:w-auto">
                 <span className="text-xs font-bold text-gray-500">Update Status:</span>
                 <select
@@ -363,10 +485,10 @@ export default function AdminSupportPage() {
                 </select>
               </div>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 w-full sm:w-auto">
                 <a
                   href={`mailto:${selectedTicket.email}?subject=Re: ${encodeURIComponent(selectedTicket.subject)}`}
-                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-all"
                 >
                   <Mail className="w-4 h-4" />
                   Reply via Email
@@ -375,7 +497,7 @@ export default function AdminSupportPage() {
                   href={`https://wa.me/2349112600300?text=Support%20Ticket%20${selectedTicket.id}:%20Regarding%20${encodeURIComponent(selectedTicket.subject)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all"
                 >
                   <MessageSquare className="w-4 h-4" />
                   WhatsApp Support

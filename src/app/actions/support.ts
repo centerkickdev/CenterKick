@@ -21,9 +21,14 @@ export async function submitSupportTicket(formData: FormData) {
   const subject = (formData.get('subject') as string || '').trim();
   const message = (formData.get('message') as string || '').trim();
   const channel = (formData.get('channel') as SupportChannel || 'email');
+  const whatsappNumber = (formData.get('whatsapp_number') as string || '').trim();
 
   if (!name || !email || !subject || !message) {
     return { success: false, error: 'Please fill in all required fields.' };
+  }
+
+  if (channel === 'whatsapp' && !whatsappNumber) {
+    return { success: false, error: 'Please provide your WhatsApp phone number.' };
   }
 
   // Handle files
@@ -119,6 +124,7 @@ export async function submitSupportTicket(formData: FormData) {
   const emailBody = `
     <strong>Support Request Received</strong><br /><br />
     <strong>Channel:</strong> ${channel.toUpperCase()}<br />
+    ${whatsappNumber ? `<strong>WhatsApp Number:</strong> ${whatsappNumber}<br />` : ''}
     <strong>Category:</strong> ${categoryLabel}<br />
     <strong>Submitted By:</strong> ${name} (${email})<br />
     <strong>Subject:</strong> ${subject}<br /><br />
@@ -131,7 +137,7 @@ export async function submitSupportTicket(formData: FormData) {
 
   // If WhatsApp channel selected, return pre-filled WhatsApp link
   if (channel === 'whatsapp') {
-    const waText = encodeURIComponent(`Support [${categoryLabel}]: ${subject}\n\nFrom: ${name} (${email})\n\nMessage: ${message}`);
+    const waText = encodeURIComponent(`Support [${categoryLabel}]: ${subject}\n\nFrom: ${name} (${email})\nWhatsApp: ${whatsappNumber}\n\nMessage: ${message}`);
     const waUrl = `https://wa.me/2349112600300?text=${waText}`;
     return { success: true, channel: 'whatsapp', whatsappUrl: waUrl };
   }

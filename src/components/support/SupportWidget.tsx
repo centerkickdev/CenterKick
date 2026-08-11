@@ -25,6 +25,7 @@ function SupportWidgetContent() {
   // Form State
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [whatsappNumber, setWhatsappNumber] = useState('');
   const [category, setCategory] = useState<SupportCategory>('general');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
@@ -69,9 +70,16 @@ function SupportWidgetContent() {
     setIsSubmitting(true);
     setErrorMessage(null);
 
+    if (channel === 'whatsapp' && !whatsappNumber.trim()) {
+      setErrorMessage('Please enter your WhatsApp phone number.');
+      setIsSubmitting(false);
+      return;
+    }
+
     const formData = new FormData();
     formData.append('name', name);
     formData.append('email', email);
+    formData.append('whatsapp_number', whatsappNumber);
     formData.append('category', category);
     formData.append('subject', subject);
     formData.append('message', message);
@@ -227,6 +235,24 @@ function SupportWidgetContent() {
                     />
                   </div>
                 </div>
+
+                {/* WhatsApp Phone Number Field (Only when WhatsApp channel is selected) */}
+                {channel === 'whatsapp' && (
+                  <div className="space-y-1 animate-in fade-in duration-200">
+                    <label className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1">
+                      <MessageSquare className="w-3 h-3 text-emerald-600" />
+                      WhatsApp Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={whatsappNumber}
+                      onChange={e => setWhatsappNumber(e.target.value)}
+                      placeholder="+234 800 000 0000"
+                      className="w-full bg-emerald-50/50 border border-emerald-200 rounded-xl px-3 py-2 text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:bg-white transition-all"
+                    />
+                  </div>
+                )}
 
                 {/* Category */}
                 <div className="space-y-1">
