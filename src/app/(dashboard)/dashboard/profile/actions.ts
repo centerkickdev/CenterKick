@@ -99,20 +99,26 @@ export async function submitUserLeague(name: string, countryInput: string | null
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
 
+  if (!countryInput || !countryInput.trim()) {
+    return { error: 'Country selection is required when adding a new league.' };
+  }
+
   let validCountryId: string | null = null;
-  if (countryInput) {
-    if (isValidUUID(countryInput)) {
-      validCountryId = countryInput;
-    } else {
-      const { data: countryRecord } = await supabase
-        .from('countries')
-        .select('id')
-        .ilike('name', countryInput.trim())
-        .maybeSingle();
-      if (countryRecord?.id) {
-        validCountryId = countryRecord.id;
-      }
+  if (isValidUUID(countryInput)) {
+    validCountryId = countryInput;
+  } else {
+    const { data: countryRecord } = await supabase
+      .from('countries')
+      .select('id')
+      .ilike('name', countryInput.trim())
+      .maybeSingle();
+    if (countryRecord?.id) {
+      validCountryId = countryRecord.id;
     }
+  }
+
+  if (!validCountryId) {
+    return { error: 'Selected country could not be found. Please select a valid country.' };
   }
 
   const { data, error } = await supabase

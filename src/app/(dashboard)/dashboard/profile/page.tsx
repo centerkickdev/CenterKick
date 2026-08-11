@@ -131,7 +131,7 @@ export default function ProfileEditor() {
           transfer_history: profileRecord?.transfer_history || [],
         });
 
-        const { data: countries } = await supabase.from('countries').select('name, code').order('name');
+        const { data: countries } = await supabase.from('countries').select('id, name, code').order('name');
         setCountriesList(countries || []);
 
         const { data: clubs } = await supabase.from('clubs').select('name, league_id').order('name');
@@ -347,6 +347,11 @@ export default function ProfileEditor() {
 
     let finalLeagueId = profile?.league;
     if (finalLeagueId && finalLeagueId.startsWith('NEW:')) {
+      if (!profile?.new_league_country?.trim()) {
+        showToast('Please select a country for the new league before saving.', 'error');
+        setIsSaving(false);
+        return;
+      }
       const newLeagueName = finalLeagueId.replace('NEW:', '');
       const res = await submitUserLeague(newLeagueName, profile?.new_league_country || null);
       if (res.success && res.data) {
@@ -361,6 +366,22 @@ export default function ProfileEditor() {
     const finalClubName = profile?.current_club;
     if (finalClubName && finalLeagueId && !clubsList.some(c => c.name === finalClubName && c.league_id === finalLeagueId)) {
        await submitUserClub(finalClubName, finalLeagueId);
+    }
+
+    // Resolve any NEW: leagues in per-season stats
+    let resolvedCareerStats = [...careerStats];
+    for (let i = 0; i < resolvedCareerStats.length; i++) {
+      const stat = resolvedCareerStats[i];
+      if (stat.league && stat.league.startsWith('NEW:')) {
+        const newLeagueName = stat.league.replace('NEW:', '');
+        const res = await submitUserLeague(newLeagueName, profile?.new_league_country || profile?.country || null);
+        if (res.success && res.data) {
+          resolvedCareerStats[i].league = res.data.id;
+        }
+      }
+      if (stat.club && resolvedCareerStats[i].league && !clubsList.some(c => c.name === stat.club && c.league_id === resolvedCareerStats[i].league)) {
+        await submitUserClub(stat.club, resolvedCareerStats[i].league);
+      }
     }
 
     const profileData: any = {
@@ -382,7 +403,8 @@ export default function ProfileEditor() {
       profileData.current_position = roleData.current_position;
       profileData.years_of_experience = roleData.years_of_experience;
     } else if (role === 'player') {
-      profileData.career_stats = careerStats;
+      profileData.career_stats = resolvedCareerStats;
+      setCareerStats(resolvedCareerStats);
       profileData.transfer_history = roleData.transfer_history;
       profileData.physical_technical_attributes = roleData.physical_technical_attributes;
     } else if (role === 'agent') {
