@@ -12,6 +12,8 @@ function stripHtml(html: string): string {
    return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+import { getProfileOgImage } from '@/lib/utils/og';
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
    const { id } = await params;
    const supabaseAdmin = createAdminClient();
@@ -21,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
    const { data: profile } = await supabaseAdmin
       .from('profiles')
-      .select('first_name, last_name, agency_name, country, avatar_url, cover_url, bio')
+      .select('first_name, last_name, agency_name, country, avatar_url, logo_url, club_logo, cover_url, gallery, bio')
       .eq('slug', id)
       .maybeSingle();
 
@@ -31,14 +33,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
    const title = `${name} ${profile.agency_name ? `(${profile.agency_name})` : ''} - CenterKick`;
    const cleanBio = stripHtml(profile.bio || '');
    const description = cleanBio || `${name} is a licensed football agent based in ${profile.country || 'Global'} on CenterKick.`;
-   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com';
-   const getAbsoluteUrl = (urlStr?: string | null) => {
-      if (!urlStr) return null;
-      if (urlStr.startsWith('http://') || urlStr.startsWith('https://')) return urlStr;
-      return `${siteUrl.replace(/\/$/, '')}${urlStr.startsWith('/') ? '' : '/'}${urlStr}`;
-   };
+   const defaultFallback = "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1200&auto=format&fit=crop";
 
-   const image = getAbsoluteUrl(profile.avatar_url) || getAbsoluteUrl(profile.cover_url) || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1200&auto=format&fit=crop";
+   const image = getProfileOgImage(profile, defaultFallback);
 
    return {
       title,
