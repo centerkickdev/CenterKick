@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
    const name = `${firstName} ${lastName}`.trim() || 'Coach Profile';
    const title = `${name} (${coachPos}) - CenterKick`;
    const cleanBio = stripHtml(profile.bio || '');
-   const description = cleanBio || `${name} is a ${coachPos} from ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
+   const description = (cleanBio.length > 160 ? `${cleanBio.slice(0, 157)}...` : cleanBio) || `${name} is a ${coachPos} from ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
    const defaultFallback = "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=1200&auto=format&fit=crop";
 
    const image = getProfileOgImage(profile, defaultFallback);

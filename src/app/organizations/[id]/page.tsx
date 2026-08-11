@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
    const { data: profile } = await supabaseAdmin
       .from('profiles')
-      .select('first_name, last_name, club_name, organization_name, country, avatar_url, cover_url, gallery_urls, bio')
+      .select('first_name, last_name, agency_name, current_club, country, avatar_url, cover_url, gallery_urls, bio')
       .eq('slug', id)
       .maybeSingle();
 
@@ -32,10 +32,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
    const firstName = (profile.first_name || '').trim();
    const lastName = (profile.last_name || '').trim();
    const fullName = `${firstName} ${lastName}`.trim();
-   const orgName = profile.club_name || profile.organization_name || fullName || 'Sports Organization';
+   const orgName = profile.agency_name || profile.current_club || fullName || 'Sports Organization';
    const title = `${orgName} - CenterKick`;
    const cleanBio = stripHtml(profile.bio || '');
-   const description = cleanBio || `${orgName} sports club and academy based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
+   const description = (cleanBio.length > 160 ? `${cleanBio.slice(0, 157)}...` : cleanBio) || `${orgName} sports club and academy based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
    const defaultFallback = "https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=1200&auto=format&fit=crop";
 
    const image = getProfileOgImage(profile, defaultFallback);

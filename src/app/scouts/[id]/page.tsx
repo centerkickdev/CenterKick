@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
    const name = `${firstName} ${lastName}`.trim() || 'Scout Profile';
    const title = `${name} (Professional Scout) - CenterKick`;
    const cleanBio = stripHtml(profile.bio || '');
-   const description = cleanBio || `${name} is a verified talent scout based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
+   const description = (cleanBio.length > 160 ? `${cleanBio.slice(0, 157)}...` : cleanBio) || `${name} is a verified talent scout based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
    const defaultFallback = "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1200&auto=format&fit=crop";
 
    const image = getProfileOgImage(profile, defaultFallback);

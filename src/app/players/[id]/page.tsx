@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: AthletePageProps): Promise<Me
    const name = `${firstName} ${lastName}`.trim() || 'Player Profile';
    const title = `${name} ${athlete.position ? `(${athlete.position})` : ''} - CenterKick`;
    const cleanBio = stripHtml(athlete.bio || '');
-   const description = cleanBio || `${name} is a ${athlete.position || 'football player'} from ${athlete.country || 'Global'} on CenterKick.`;
+   const description = (cleanBio.length > 160 ? `${cleanBio.slice(0, 157)}...` : cleanBio) || `${name} is a ${athlete.position || 'football player'} from ${athlete.country || 'Global'} on CenterKick.`;
    const defaultFallback = "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1200&auto=format&fit=crop";
 
    const image = getProfileOgImage(athlete, defaultFallback);

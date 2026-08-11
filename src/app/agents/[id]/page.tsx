@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
    const name = `${firstName} ${lastName}`.trim() || profile.agency_name || 'Agent Profile';
    const title = `${name} ${profile.agency_name ? `(${profile.agency_name})` : ''} - CenterKick`;
    const cleanBio = stripHtml(profile.bio || '');
-   const description = cleanBio || `${name} is a licensed football agent based in ${profile.country || 'Global'} on CenterKick.`;
+   const description = (cleanBio.length > 160 ? `${cleanBio.slice(0, 157)}...` : cleanBio) || `${name} is a licensed football agent based in ${profile.country || 'Global'} on CenterKick.`;
    const defaultFallback = "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1200&auto=format&fit=crop";
 
    const image = getProfileOgImage(profile, defaultFallback);
