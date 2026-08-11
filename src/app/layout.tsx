@@ -34,6 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const faviconUrl = resolveUrl(settings.faviconUrl) || "/favicon.ico";
     
     return {
+      metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com'),
       title: settings.siteTitle || "CenterKick | Sports Profile Management",
       description: "Premium sports profile management and subscription platform.",
       icons: {
@@ -43,6 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch (err) {
     console.error("Warning: Could not fetch metadata settings during build-time:", err);
     return {
+      metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com'),
       title: "CenterKick | Sports Profile Management",
       description: "Premium sports profile management and subscription platform.",
       icons: {

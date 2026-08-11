@@ -41,13 +41,27 @@ export async function generateMetadata({ params }: AthletePageProps): Promise<Me
 
    const image = getProfileOgImage(athlete, defaultFallback);
 
+   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com';
+   const profileUrl = `${siteUrl.replace(/\/$/, '')}/players/${id}`;
+
    return {
       title,
       description,
       openGraph: {
          title,
          description,
-         images: [{ url: image, width: 1200, height: 630, alt: name }],
+         url: profileUrl,
+         siteName: 'CenterKick',
+         images: [
+            {
+               url: image,
+               secureUrl: image,
+               width: 1200,
+               height: 630,
+               type: 'image/jpeg',
+               alt: name,
+            },
+         ],
          type: 'profile',
       },
       twitter: {
