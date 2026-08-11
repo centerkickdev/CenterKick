@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
 
 export async function requestProfileEdit(profileId: string, changes: Record<string, { old: any; new: any; document_url?: string }>) {
@@ -29,24 +30,13 @@ export async function requestProfileEdit(profileId: string, changes: Record<stri
   // Insert edits
   const editsToInsert = Object.entries(changes).map(([field_name, values]) => ({
     profile_id: profileId,
+    requested_by: user.id,
     field_name,
-    old_value: values.old ? String(values.old) : null,
-    new_value: values.new ? String(values.new) : null,
+    old_value: String(values.old ?? ''),
+    new_value: String(values.new ?? ''),
     document_url: values.document_url || null,
     status: 'pending'
   }));
-
-  if (editsToInsert.length === 0) return { success: true };
-
-  const fields = editsToInsert.map(e => e.field_name);
-  if (fields.length > 0) {
-    await supabase
-      .from('profile_edits')
-      .delete()
-      .eq('profile_id', profileId)
-      .eq('status', 'pending')
-      .in('field_name', fields);
-  }
 
   const { error: insertError } = await supabase
     .from('profile_edits')
@@ -56,23 +46,6 @@ export async function requestProfileEdit(profileId: string, changes: Record<stri
     return { error: insertError.message };
   }
 
-  // Notify admins
-  const { data: admins } = await supabase
-    .from('users')
-    .select('id')
-    .in('role', ['admin', 'superadmin', 'operations']);
-
-  if (admins && admins.length > 0) {
-    const adminNotifications = admins.map(admin => ({
-      user_id: admin.id,
-      title: 'Profile Edits Requested',
-      message: `${profile.first_name || 'A user'} has requested profile edits.`,
-      type: 'info',
-      action_url: '/admin/approvals/edits'
-    }));
-    await supabase.from('notifications').insert(adminNotifications);
-  }
-
   return { success: true };
 }
 
@@ -80,12 +53,12 @@ export async function invalidateProfileCache() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (user) {
-    try {
-      const { redis } = await import('@/lib/redis');
-      await redis.del(`user:profile:${user.id}`);
-    } catch (e) {
-      console.error('Failed to invalidate profile cache', e);
-    }
+    revalidatePath('/dashboard/profile');
+    revalidatePath('/players');
+    revalidatePath('/coaches');
+    revalidatePath('/agents');
+    revalidatePath('/scouts');
+    revalidatePath('/organizations');
   }
 }
 
@@ -103,11 +76,13 @@ export async function submitUserLeague(name: string, countryInput: string | null
     return { error: 'Country selection is required when adding a new league.' };
   }
 
+  const adminClient = createAdminClient();
+
   let validCountryId: string | null = null;
   if (isValidUUID(countryInput)) {
     validCountryId = countryInput;
   } else {
-    const { data: countryRecord } = await supabase
+    const { data: countryRecord } = await adminClient
       .from('countries')
       .select('id')
       .ilike('name', countryInput.trim())
@@ -121,10 +96,22 @@ export async function submitUserLeague(name: string, countryInput: string | null
     return { error: 'Selected country could not be found. Please select a valid country.' };
   }
 
-  const { data, error } = await supabase
+  // Check if league already exists with same name and country
+  const { data: existingLeague } = await adminClient
+    .from('leagues')
+    .select('id, name')
+    .ilike('name', name.trim())
+    .eq('country_id', validCountryId)
+    .maybeSingle();
+
+  if (existingLeague?.id) {
+    return { success: true, data: existingLeague };
+  }
+
+  const { data, error } = await adminClient
     .from('leagues')
     .insert({
-      name,
+      name: name.trim(),
       country_id: validCountryId,
       is_user_submitted: true,
       is_verified: false,
@@ -136,7 +123,7 @@ export async function submitUserLeague(name: string, countryInput: string | null
   if (error) return { error: error.message };
 
   // Notify admins
-  const { data: admins } = await supabase.from('users').select('id').in('role', ['admin', 'superadmin', 'operations']);
+  const { data: admins } = await adminClient.from('users').select('id').in('role', ['admin', 'superadmin', 'operations']);
   if (admins && admins.length > 0) {
     const adminNotifications = admins.map(admin => ({
       user_id: admin.id,
@@ -145,7 +132,7 @@ export async function submitUserLeague(name: string, countryInput: string | null
       type: 'info',
       action_url: '/admin/settings/football-data'
     }));
-    await supabase.from('notifications').insert(adminNotifications);
+    await adminClient.from('notifications').insert(adminNotifications);
   }
 
   return { success: true, data };
@@ -156,11 +143,13 @@ export async function submitUserClub(name: string, leagueInput: string) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: 'Unauthorized' };
 
+  const adminClient = createAdminClient();
+
   let validLeagueId: string | null = null;
   if (isValidUUID(leagueInput)) {
     validLeagueId = leagueInput;
   } else if (leagueInput) {
-    const { data: leagueRecord } = await supabase
+    const { data: leagueRecord } = await adminClient
       .from('leagues')
       .select('id')
       .ilike('name', leagueInput.trim())
@@ -170,10 +159,23 @@ export async function submitUserClub(name: string, leagueInput: string) {
     }
   }
 
-  const { data, error } = await supabase
+  if (validLeagueId) {
+    const { data: existingClub } = await adminClient
+      .from('clubs')
+      .select('id, name, league_id')
+      .ilike('name', name.trim())
+      .eq('league_id', validLeagueId)
+      .maybeSingle();
+
+    if (existingClub?.id) {
+      return { success: true, data: existingClub };
+    }
+  }
+
+  const { data, error } = await adminClient
     .from('clubs')
     .insert({
-      name,
+      name: name.trim(),
       league_id: validLeagueId,
       is_user_submitted: true,
       is_verified: false,
@@ -185,7 +187,7 @@ export async function submitUserClub(name: string, leagueInput: string) {
   if (error) return { error: error.message };
 
   // Notify admins
-  const { data: admins } = await supabase.from('users').select('id').in('role', ['admin', 'superadmin', 'operations']);
+  const { data: admins } = await adminClient.from('users').select('id').in('role', ['admin', 'superadmin', 'operations']);
   if (admins && admins.length > 0) {
     const adminNotifications = admins.map(admin => ({
       user_id: admin.id,
@@ -194,7 +196,7 @@ export async function submitUserClub(name: string, leagueInput: string) {
       type: 'info',
       action_url: '/admin/settings/football-data'
     }));
-    await supabase.from('notifications').insert(adminNotifications);
+    await adminClient.from('notifications').insert(adminNotifications);
   }
 
   return { success: true, data };
