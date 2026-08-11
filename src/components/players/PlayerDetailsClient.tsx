@@ -35,18 +35,21 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
 
    const handleShareProfile = async () => {
       const currentUrl = window.location.href;
-      const shareData = {
-         title: `${displayName} - CenterKick Profile`,
-         text: `Check out ${displayName}'s profile on CenterKick!`,
-         url: currentUrl,
-      };
 
       if (typeof navigator !== 'undefined' && navigator.share) {
          try {
-            await navigator.share(shareData);
+            await navigator.share({
+               title: `${displayName} | CenterKick Profile`,
+               url: currentUrl,
+            });
          } catch (e: any) {
             if (e?.name !== 'AbortError') {
-               console.error('Share error:', e);
+               try {
+                  await navigator.clipboard.writeText(currentUrl);
+                  showToast('Profile link copied to clipboard!', 'success');
+               } catch (err) {
+                  showToast('Failed to share profile', 'error');
+               }
             }
          }
       } else {

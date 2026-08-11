@@ -1,7 +1,22 @@
 /**
  * Resolves Open Graph dynamic image URLs for profile sharing (WhatsApp, Twitter, Facebook, Telegram).
- * Ensures WebP images and relative Supabase storage paths convert to 100% compatible JPEG Open Graph endpoints.
+ * Ensures Supabase storage URLs and WebP images convert to 100% compatible Open Graph image cards with correct X-Robots-Tag permissions.
  */
+
+export function getBaseSiteUrl(): string {
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return window.location.origin.replace(/\/$/, '');
+  }
+  if (process.env.NEXT_PUBLIC_APP_URL && process.env.NEXT_PUBLIC_APP_URL.startsWith('http')) {
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '');
+  }
+  if (process.env.VERCEL_URL) {
+    const vUrl = process.env.VERCEL_URL.replace(/\/$/, '');
+    return vUrl.startsWith('http') ? vUrl : `https://${vUrl}`;
+  }
+  return 'https://www.centerkick.com';
+}
+
 export function resolveOgImageUrl(rawUrl?: string | null): string | null {
   if (!rawUrl || typeof rawUrl !== 'string') return null;
   const trimmed = rawUrl.trim();
@@ -22,21 +37,20 @@ export function resolveOgImageUrl(rawUrl?: string | null): string | null {
         fullUrl = `${cleanSupabaseBase}/storage/v1/object/public/${trimmed.startsWith('/') ? trimmed.slice(1) : trimmed}`;
       }
     } else {
-      const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com';
-      fullUrl = `${siteUrl.replace(/\/$/, '')}${trimmed.startsWith('/') ? '' : '/'}${trimmed}`;
+      const siteUrl = getBaseSiteUrl();
+      fullUrl = `${siteUrl}${trimmed.startsWith('/') ? '' : '/'}${trimmed}`;
     }
   }
 
-  // 2. Route image through dynamic JPEG generator endpoint to guarantee WhatsApp/iMessage compatibility
-  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com';
-  const cleanSite = siteUrl.replace(/\/$/, '');
+  // 2. Route image through dynamic Open Graph PNG generator endpoint to bypass Supabase x-robots-tag restrictions
+  const cleanSite = getBaseSiteUrl();
   return `${cleanSite}/api/og/profile-image?url=${encodeURIComponent(fullUrl)}`;
 }
 
 export function getProfileOgImage(profile: any, fallbackDefaultUrl: string): string {
   if (!profile) {
-    const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com';
-    return `${siteUrl.replace(/\/$/, '')}/api/og/profile-image?url=${encodeURIComponent(fallbackDefaultUrl)}`;
+    const cleanSite = getBaseSiteUrl();
+    return `${cleanSite}/api/og/profile-image?url=${encodeURIComponent(fallbackDefaultUrl)}`;
   }
   
   const candidate = 

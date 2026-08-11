@@ -12,10 +12,10 @@ export async function GET(req: NextRequest) {
       return new NextResponse('Missing image URL parameter', { status: 400 });
     }
 
-    // 1. Fetch the raw image from remote source (Supabase, Unsplash, etc.)
+    // 1. Fetch source image from remote location (Supabase CDN, etc.)
     const response = await fetch(imageUrl, {
       headers: {
-        'User-Agent': 'CenterKick-OG-Fetcher/1.0',
+        'User-Agent': 'Mozilla/5.0 (compatible; CenterKick-OG-Proxy/1.0)',
       },
     });
 
@@ -27,11 +27,11 @@ export async function GET(req: NextRequest) {
     const arrayBuffer = await response.arrayBuffer();
     const inputBuffer = Buffer.from(arrayBuffer);
 
-    // 2. Process with Sharp: create standard 1200x630 JPEG Open Graph card with dark branded background
+    // 2. Process with Sharp: 1200x630 PNG card with dark background (#0a0a0b)
     const width = 1200;
     const height = 630;
 
-    // Resize input image to fit neatly within 500x500 square box
+    // Resize input image to fit in a 480x480 box
     const avatarResized = await sharp(inputBuffer)
       .resize({
         width: 480,
@@ -41,13 +41,13 @@ export async function GET(req: NextRequest) {
       })
       .toBuffer();
 
-    // Create a 1200x630 dark canvas (#0a0a0b) with CenterKick styling
-    const ogJpegBuffer = await sharp({
+    // Composite onto 1200x630 canvas
+    const ogPngBuffer = await sharp({
       create: {
         width,
         height,
-        channels: 3,
-        background: { r: 10, g: 10, b: 11 }, // #0a0a0b
+        channels: 4,
+        background: { r: 10, g: 10, b: 11, alpha: 1 }, // #0a0a0b
       },
     })
       .composite([
@@ -56,20 +56,22 @@ export async function GET(req: NextRequest) {
           gravity: 'center',
         },
       ])
-      .jpeg({ quality: 90, progressive: true })
+      .png({ compressionLevel: 6 })
       .toBuffer();
 
-    // 3. Return response with strictly JPEG headers for WhatsApp/iMessage compatibility
-    return new NextResponse(ogJpegBuffer as unknown as BodyInit, {
+    // 3. Return response overriding x-robots-tag to allow WhatsApp, iMessage, Twitter & Facebook crawlers
+    return new NextResponse(ogPngBuffer as unknown as BodyInit, {
       status: 200,
       headers: {
-        'Content-Type': 'image/jpeg',
-        'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800',
-        'Content-Length': ogJpegBuffer.length.toString(),
+        'Content-Type': 'image/png',
+        'X-Robots-Tag': 'all, index, follow, max-image-preview:large',
+        'Cache-Control': 'public, max-age=31536000, s-maxage=31536000, immutable',
+        'Access-Control-Allow-Origin': '*',
+        'Content-Length': ogPngBuffer.length.toString(),
       },
     });
   } catch (error: any) {
-    console.error('Error generating OG JPEG image:', error);
+    console.error('Error generating OG PNG image:', error);
     return new NextResponse('Internal Server Error generating OG image', { status: 500 });
   }
 }
