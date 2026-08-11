@@ -84,26 +84,42 @@ export default async function AdminTransactionsPage(props: {
 
   const ADMIN_ROLES = ['superadmin', 'admin', 'blogger', 'operations', 'finance'];
 
-  const { count: activeSubs } = await supabase
+  const { data: profiles } = await supabase
     .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .eq('is_subscribed', true)
+    .select('id, user_id, is_subscribed')
     .not('role', 'in', `(${ADMIN_ROLES.join(',')})`);
 
-  const { count: expiredSubs } = await supabase
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .eq('is_subscribed', false)
-    .not('updated_at', 'is', null)
-    .not('role', 'in', `(${ADMIN_ROLES.join(',')})`);
+  const { data: activeSubscriptions } = await supabase
+    .from('subscriptions')
+    .select('user_id, status')
+    .eq('status', 'active');
 
-  const stats = [
-    { label: 'Total Revenue', value: totalRevenue, icon: 'DollarSign', trend: '+14.2%', color: 'text-green-600', isCurrency: true },
-    { label: 'Active Subs', value: activeSubs?.toString() || '0', icon: 'UserCheck', trend: '+8.3%', color: 'text-blue-600' },
-    { label: 'Expired Subs', value: expiredSubs?.toString() || '0', icon: 'UserX', trend: '-1.5%', color: 'text-red-600' },
-  ];
+  const { data: confirmedTxs } = await supabase
+    .from('transactions')
+    .select('user_id, status, created_at')
+    .eq('status', 'confirmed');
 
-  // Dynamic Growth calculation for Growth Monitor
+  let activeSubsCount = 0;
+  let expiredSubsCount = 0;
+
+  profiles?.forEach(profile => {
+    const hasActiveSubTable = activeSubscriptions?.some(s => s.user_id === profile.user_id || s.user_id === profile.id);
+    const hasProfileFlag = profile.is_subscribed === true;
+    const hasConfirmedTx = confirmedTxs?.some(tx => tx.user_id === profile.id || tx.user_id === profile.user_id);
+
+    const isSubscribed = hasActiveSubTable || hasProfileFlag || hasConfirmedTx;
+
+    if (isSubscribed) {
+      activeSubsCount++;
+    } else {
+      const hasPastTx = confirmedTxs?.some(tx => tx.user_id === profile.id || tx.user_id === profile.user_id);
+      if (hasPastTx) {
+        expiredSubsCount++;
+      }
+    }
+  });
+
+  // Dynamic Growth calculation for Growth Monitor & Metric Trends
   const dailyData = [
     { name: 'MON', value: 0 },
     { name: 'TUE', value: 0 },
@@ -134,6 +150,11 @@ export default async function AdminTransactionsPage(props: {
 
   let lastMonthRevenue = 0;
   let currentMonthRevenue = 0;
+  let currentMonthNewSubs = 0;
+  let lastMonthNewSubs = 0;
+
+  const lastMonthIndex = currentMonth === 0 ? 11 : currentMonth - 1;
+  const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
 
   revenueData?.forEach(tx => {
     const date = new Date(tx.created_at);
@@ -150,6 +171,7 @@ export default async function AdminTransactionsPage(props: {
     // 2. Monthly calculation (current month weeks)
     if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
       currentMonthRevenue += amount;
+      currentMonthNewSubs++;
       const day = date.getDate();
       if (day <= 7) monthlyData[0].value += amount;
       else if (day <= 14) monthlyData[1].value += amount;
@@ -158,10 +180,9 @@ export default async function AdminTransactionsPage(props: {
     }
 
     // 3. Last month revenue for growth rate calculation
-    const lastMonthIndex = currentMonth === 0 ? 11 : currentMonth - 1;
-    const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
     if (date.getMonth() === lastMonthIndex && date.getFullYear() === lastMonthYear) {
       lastMonthRevenue += amount;
+      lastMonthNewSubs++;
     }
 
     // 4. Yearly calculation (current year)
@@ -171,10 +192,29 @@ export default async function AdminTransactionsPage(props: {
     }
   });
 
+  // Dynamic MoM Trends Calculation
+  const revGrowth = lastMonthRevenue > 0
+    ? ((currentMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100
+    : currentMonthRevenue > 0 ? 100 : 0;
+  const revTrendStr = `${revGrowth >= 0 ? '+' : ''}${revGrowth.toFixed(1)}%`;
+
+  const activeSubGrowth = lastMonthNewSubs > 0
+    ? ((currentMonthNewSubs - lastMonthNewSubs) / lastMonthNewSubs) * 100
+    : currentMonthNewSubs > 0 ? 100 : 0;
+  const activeSubTrendStr = `${activeSubGrowth >= 0 ? '+' : ''}${activeSubGrowth.toFixed(1)}%`;
+
+  const expiredSubTrendStr = '0.0%';
+
+  const stats = [
+    { label: 'Total Revenue', value: totalRevenue, icon: 'DollarSign', trend: revTrendStr, color: 'text-green-600', isCurrency: true },
+    { label: 'Active Subs', value: activeSubsCount.toString(), icon: 'UserCheck', trend: activeSubTrendStr, color: 'text-blue-600' },
+    { label: 'Expired Subs', value: expiredSubsCount.toString(), icon: 'UserX', trend: expiredSubTrendStr, color: 'text-red-600' },
+  ];
+
   // Calculate dynamic growth rate and projection
   const growthRate = lastMonthRevenue > 0 
     ? ((currentMonthRevenue - lastMonthRevenue) / lastMonthRevenue) * 100 
-    : 18.5; // robust default positive growth rate if no last month records exist
+    : revGrowth;
 
   const currentProjection = currentMonthRevenue > 0 
     ? currentMonthRevenue * 1.25 
