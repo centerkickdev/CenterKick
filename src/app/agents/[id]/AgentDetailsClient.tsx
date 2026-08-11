@@ -38,11 +38,14 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
 
    const handleShareProfile = async () => {
       const currentUrl = window.location.href;
+      const shareTitle = `${displayName} | CenterKick Profile`;
+      const shareText = `Check out ${displayName}${profileAgency ? ` (${profileAgency})` : ' (Football Agent)'} on CenterKick!`;
 
       if (typeof navigator !== 'undefined' && navigator.share) {
          try {
             await navigator.share({
-               title: `${displayName} | CenterKick Profile`,
+               title: shareTitle,
+               text: shareText,
                url: currentUrl,
             });
          } catch (e: any) {

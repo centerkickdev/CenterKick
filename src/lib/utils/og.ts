@@ -7,8 +7,9 @@ export function getBaseSiteUrl(): string {
   if (typeof window !== 'undefined' && window.location?.origin) {
     return window.location.origin.replace(/\/$/, '');
   }
-  if (process.env.NEXT_PUBLIC_APP_URL && process.env.NEXT_PUBLIC_APP_URL.startsWith('http')) {
-    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, '');
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL;
+  if (envUrl && envUrl.startsWith('http') && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
+    return envUrl.replace(/\/$/, '');
   }
   if (process.env.VERCEL_URL) {
     const vUrl = process.env.VERCEL_URL.replace(/\/$/, '');

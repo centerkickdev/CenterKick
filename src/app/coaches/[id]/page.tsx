@@ -11,7 +11,7 @@ function stripHtml(html: string): string {
    return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-import { getProfileOgImage } from '@/lib/utils/og';
+import { getProfileOgImage, getBaseSiteUrl } from '@/lib/utils/og';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
    const { id } = await params;
@@ -39,8 +39,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
    const image = getProfileOgImage(profile, defaultFallback);
 
-   const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com';
-   const profileUrl = `${siteUrl.replace(/\/$/, '')}/coaches/${id}`;
+   const siteUrl = getBaseSiteUrl();
+   const profileUrl = `${siteUrl}/coaches/${id}`;
 
    return {
       title,

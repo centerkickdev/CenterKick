@@ -35,11 +35,15 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
    
    const handleShareProfile = async () => {
       const currentUrl = window.location.href;
+      const orgName = profile.club_name || profile.organization_name || displayName;
+      const shareTitle = `${orgName} | CenterKick Profile`;
+      const shareText = `Check out ${orgName} on CenterKick!`;
 
       if (typeof navigator !== 'undefined' && navigator.share) {
          try {
             await navigator.share({
-               title: `${displayName} | CenterKick Profile`,
+               title: shareTitle,
+               text: shareText,
                url: currentUrl,
             });
          } catch (e: any) {
