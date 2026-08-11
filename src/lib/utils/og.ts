@@ -55,10 +55,8 @@ export function getProfileOgImage(profile: any, fallbackDefaultUrl: string): str
   
   const candidate = 
     profile.avatar_url || 
-    profile.logo_url || 
-    profile.club_logo || 
     profile.cover_url || 
-    (Array.isArray(profile.gallery) && profile.gallery[0] ? profile.gallery[0] : null) ||
+    (Array.isArray(profile.gallery_urls) && profile.gallery_urls[0] ? profile.gallery_urls[0] : null) ||
     fallbackDefaultUrl;
 
   return resolveOgImageUrl(candidate) || fallbackDefaultUrl;

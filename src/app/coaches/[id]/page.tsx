@@ -22,14 +22,16 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
    const { data: profile } = await supabaseAdmin
       .from('profiles')
-      .select('first_name, last_name, current_position, position, country, avatar_url, logo_url, club_logo, cover_url, gallery, bio')
+      .select('first_name, last_name, current_position, position, country, avatar_url, cover_url, gallery_urls, bio')
       .eq('slug', id)
       .maybeSingle();
 
    if (!profile) return {};
 
    const coachPos = (Array.isArray(profile.current_position) ? profile.current_position[0] : profile.current_position) || profile.position || 'Coach';
-   const name = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Coach Profile';
+   const firstName = (profile.first_name || '').trim();
+   const lastName = (profile.last_name || '').trim();
+   const name = `${firstName} ${lastName}`.trim() || 'Coach Profile';
    const title = `${name} (${coachPos}) - CenterKick`;
    const cleanBio = stripHtml(profile.bio || '');
    const description = cleanBio || `${name} is a ${coachPos} from ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
@@ -54,7 +56,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
                secureUrl: image,
                width: 1200,
                height: 630,
-               type: 'image/jpeg',
+               type: 'image/png',
                alt: name,
             },
          ],

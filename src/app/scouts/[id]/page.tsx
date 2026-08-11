@@ -21,13 +21,15 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
    const { data: profile } = await supabaseAdmin
       .from('profiles')
-      .select('first_name, last_name, agency_name, country, avatar_url, logo_url, club_logo, cover_url, gallery, bio')
+      .select('first_name, last_name, agency_name, country, avatar_url, cover_url, gallery_urls, bio')
       .eq('slug', id)
       .maybeSingle();
 
    if (!profile) return {};
 
-   const name = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Scout Profile';
+   const firstName = (profile.first_name || '').trim();
+   const lastName = (profile.last_name || '').trim();
+   const name = `${firstName} ${lastName}`.trim() || 'Scout Profile';
    const title = `${name} (Professional Scout) - CenterKick`;
    const cleanBio = stripHtml(profile.bio || '');
    const description = cleanBio || `${name} is a verified talent scout based in ${profile.country || 'Global'} on CenterKick Professional Football Network.`;
@@ -52,7 +54,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
                secureUrl: image,
                width: 1200,
                height: 630,
-               type: 'image/jpeg',
+               type: 'image/png',
                alt: name,
             },
          ],

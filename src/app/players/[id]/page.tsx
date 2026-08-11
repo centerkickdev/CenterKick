@@ -26,14 +26,16 @@ export async function generateMetadata({ params }: AthletePageProps): Promise<Me
 
    const { data } = await supabaseAdmin
       .from('profiles')
-      .select('first_name, last_name, position, country, avatar_url, logo_url, club_logo, cover_url, gallery, bio')
+      .select('first_name, last_name, position, country, avatar_url, cover_url, gallery_urls, bio')
       .eq('slug', id)
       .limit(1);
 
    const athlete = data?.[0];
    if (!athlete) return {};
 
-   const name = `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Player Profile';
+   const firstName = (athlete.first_name || '').trim();
+   const lastName = (athlete.last_name || '').trim();
+   const name = `${firstName} ${lastName}`.trim() || 'Player Profile';
    const title = `${name} ${athlete.position ? `(${athlete.position})` : ''} - CenterKick`;
    const cleanBio = stripHtml(athlete.bio || '');
    const description = cleanBio || `${name} is a ${athlete.position || 'football player'} from ${athlete.country || 'Global'} on CenterKick.`;
@@ -58,7 +60,7 @@ export async function generateMetadata({ params }: AthletePageProps): Promise<Me
                secureUrl: image,
                width: 1200,
                height: 630,
-               type: 'image/jpeg',
+               type: 'image/png',
                alt: name,
             },
          ],
