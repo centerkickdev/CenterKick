@@ -8,14 +8,19 @@ import {
    Send,
    ChevronDown,
    MessageSquare,
-   Globe,
    Instagram,
-   Twitter,
    Facebook,
+   Youtube,
    Loader2
 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/context/ToastContext";
+
+const XIcon = ({ className }: { className?: string }) => (
+   <svg viewBox="0 0 24 24" className={className || "w-5 h-5 fill-current"} fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+   </svg>
+);
 
 interface ContactContent {
   header?: { title: string; description: string };
@@ -33,6 +38,18 @@ interface ContactClientProps {
 export function ContactClient({ layout, content, navContent, footerContent, siteSettings }: ContactClientProps) {
    const [openFaq, setOpenFaq] = useState<number | null>(0);
    const { showToast } = useToast();
+
+   const fbUrl = siteSettings?.facebookUrl || '#';
+   const igUrl = siteSettings?.instagramUrl || '#';
+   const twUrl = siteSettings?.twitterUrl || '#';
+   const ytUrl = siteSettings?.youtubeUrl || '#';
+
+   const socialItems = [
+      { name: 'Facebook', url: fbUrl, icon: Facebook },
+      { name: 'Instagram', url: igUrl, icon: Instagram },
+      { name: 'X / Twitter', url: twUrl, icon: XIcon },
+      { name: 'YouTube', url: ytUrl, icon: Youtube },
+   ];
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [formData, setFormData] = useState({
       name: '',
@@ -108,7 +125,7 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                            </div>
                            <div>
                               <h3 className="font-bold text-gray-900 mb-1 text-lg">General Support</h3>
-                              <a href="mailto:support@centerkick.com" className="block text-gray-500 hover:text-[#b50a0a] font-medium transition-colors">support@centerkick.com</a>
+                              <a href="mailto:info.centerkick@gmail.com" className="block text-gray-500 hover:text-[#b50a0a] font-medium transition-colors">info.centerkick@gmail.com</a>
                            </div>
                         </div>
                         <div className="group flex items-center gap-5 p-5 -ml-5 rounded-2xl hover:bg-white hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-transparent hover:border-gray-100 transition-all cursor-pointer">
@@ -117,17 +134,27 @@ export function ContactClient({ layout, content, navContent, footerContent, site
                            </div>
                            <div>
                               <h3 className="font-bold text-gray-900 mb-1 text-lg">Partnerships</h3>
-                              <a href="mailto:partnerships@centerkick.com" className="block text-gray-500 hover:text-[#b50a0a] font-medium transition-colors">partnerships@centerkick.com</a>
+                              <a href="mailto:info.centerkick@gmail.com" className="block text-gray-500 hover:text-[#b50a0a] font-medium transition-colors">info.centerkick@gmail.com</a>
                            </div>
                         </div>
                      </div>
                   </div>
                   <div className="flex gap-4">
-                     {[Instagram, function XIcon(props: any) { return <svg viewBox="0 0 24 24" aria-hidden="true" className={props.className || "w-5 h-5 fill-current"}><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>; }, Facebook, Globe].map((Icon: any, i) => (
-                        <a key={i} href="#" className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-900 hover:text-white hover:shadow-lg transition-all group">
-                           <Icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                        </a>
-                     ))}
+                     {socialItems.map((item, i) => {
+                        const Icon = item.icon;
+                        return (
+                           <a 
+                              key={i} 
+                              href={item.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              aria-label={item.name}
+                              className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-900 hover:text-white hover:shadow-lg transition-all group"
+                           >
+                              <Icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                           </a>
+                        );
+                     })}
                   </div>
                </div>
             );
