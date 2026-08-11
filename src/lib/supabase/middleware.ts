@@ -119,7 +119,7 @@ export async function updateSession(request: NextRequest) {
     // 5. Mandatory subscription check for participants in the dashboard
     if (!isPublicAdminPath && isDashboardPath) {
       if (!isSubscribed) {
-        const allowedPaths = ['/dashboard', '/dashboard/settings', '/dashboard/subscription'];
+        const allowedPaths = ['/dashboard', '/dashboard/settings', '/dashboard/subscription', '/dashboard/support'];
         if (!allowedPaths.includes(request.nextUrl.pathname)) {
           const url = request.nextUrl.clone();
           url.pathname = '/dashboard/subscription';

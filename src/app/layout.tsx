@@ -54,6 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 import { ToastProvider } from "@/context/ToastContext";
 import NextTopLoader from 'nextjs-toploader';
+import { SupportWidget } from '@/components/support/SupportWidget';
 
 export default function RootLayout({
   children,
@@ -76,6 +77,7 @@ export default function RootLayout({
         />
         <ToastProvider>
           {children}
+          <SupportWidget />
         </ToastProvider>
         {/* <SpeedInsights /> */}
         {/* <Analytics /> */}

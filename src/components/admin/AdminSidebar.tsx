@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import {
   Users, UserCheck, Briefcase, FileText, PenTool, User,
-  ShieldCheck, CreditCard, Settings, LayoutDashboard, Clock, Trophy, Search, Database, AlertTriangle
+  ShieldCheck, CreditCard, Settings, LayoutDashboard, Clock, Trophy, Search, Database, AlertTriangle, Headphones
 } from 'lucide-react';
 import { SignOutButton } from '@/components/dashboard/SignOutButton';
 import { Home } from 'lucide-react';
@@ -26,7 +26,8 @@ export function AdminSidebar({ role }: { role: string }) {
       items: [
         ...(['superadmin', 'admin', 'operations', 'finance'].includes(role) 
           ? [
-              { label: 'Verification Hub', href: '/admin/approvals', icon: ShieldCheck }
+              { label: 'Verification Hub', href: '/admin/approvals', icon: ShieldCheck },
+              { label: 'Support Tickets', href: '/admin/support', icon: Headphones }
             ] 
           : [])
       ]
