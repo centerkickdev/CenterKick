@@ -75,6 +75,9 @@ export default function ProfileEditor() {
   const [roleData, setRoleData] = useState<any>({});
   const [linkedPartnerName, setLinkedPartnerName] = useState<string>('');
 
+  // Subscription check
+  const [isSubscribedUser, setIsSubscribedUser] = useState(false);
+
   useEffect(() => {
     async function loadData() {
       const supabase = createClient();
@@ -92,6 +95,25 @@ export default function ProfileEditor() {
           .select('*')
           .eq('user_id', user.id)
           .single();
+
+        const { data: subscriptions } = await supabase
+          .from('subscriptions')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('status', 'active');
+
+        const { data: confirmedTxs } = await supabase
+          .from('transactions')
+          .select('id')
+          .eq('user_id', profileRecord?.id)
+          .eq('status', 'confirmed')
+          .limit(1);
+
+        const subActive = 
+          (subscriptions && subscriptions.length > 0) || 
+          Boolean(profileRecord?.is_subscribed) ||
+          (confirmedTxs && confirmedTxs.length > 0);
+        setIsSubscribedUser(subActive);
 
         setRole(userRecord?.role || 'player');
         setProfile(profileRecord || {});
@@ -252,6 +274,12 @@ export default function ProfileEditor() {
   const saveBasicInfo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSaving(true);
+    if (!isSubscribedUser && !isAdminOrOps) {
+      showToast('An active subscription is required to save profile updates.', 'error');
+      setIsSaving(false);
+      router.push('/dashboard/subscription');
+      return;
+    }
     const { supabase, user } = await getSupabaseAndUser();
     if (!user) { showToast('You must be logged in', 'error'); setIsSaving(false); return; }
     
@@ -340,6 +368,12 @@ export default function ProfileEditor() {
   const saveCareerData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSaving(true);
+    if (!isSubscribedUser && !isAdminOrOps) {
+      showToast('An active subscription is required to save profile updates.', 'error');
+      setIsSaving(false);
+      router.push('/dashboard/subscription');
+      return;
+    }
     const { supabase, user } = await getSupabaseAndUser();
     if (!user) { showToast('You must be logged in', 'error'); setIsSaving(false); return; }
 
@@ -446,6 +480,12 @@ export default function ProfileEditor() {
   const saveBioAndPortfolio = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSaving(true);
+    if (!isSubscribedUser && !isAdminOrOps) {
+      showToast('An active subscription is required to save profile updates.', 'error');
+      setIsSaving(false);
+      router.push('/dashboard/subscription');
+      return;
+    }
     const { supabase, user } = await getSupabaseAndUser();
     if (!user) { showToast('You must be logged in', 'error'); setIsSaving(false); return; }
 
@@ -470,6 +510,12 @@ export default function ProfileEditor() {
   const saveMediaCenter = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSaving(true);
+    if (!isSubscribedUser && !isAdminOrOps) {
+      showToast('An active subscription is required to save profile updates.', 'error');
+      setIsSaving(false);
+      router.push('/dashboard/subscription');
+      return;
+    }
     const { supabase, user } = await getSupabaseAndUser();
     if (!user) { showToast('You must be logged in', 'error'); setIsSaving(false); return; }
 
@@ -495,6 +541,12 @@ export default function ProfileEditor() {
   const saveSocialLinks = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSaving(true);
+    if (!isSubscribedUser && !isAdminOrOps) {
+      showToast('An active subscription is required to save profile updates.', 'error');
+      setIsSaving(false);
+      router.push('/dashboard/subscription');
+      return;
+    }
     const { supabase, user } = await getSupabaseAndUser();
     if (!user) { showToast('You must be logged in', 'error'); setIsSaving(false); return; }
 
@@ -732,12 +784,20 @@ export default function ProfileEditor() {
             <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
-                onClick={async () => { setIsEditing(!isEditing); if (isEditing) setIsDirty(false);
-        await invalidateProfileCache();
-        router.refresh(); }}
-                className={`px-6 py-2.5 rounded-xl text-xs font-bold tracking-wide transition-all ${isEditing ? 'bg-red-100 text-red-700' : 'bg-gray-900 text-white hover:bg-black'}`}
+                onClick={async () => {
+                  if (!isSubscribedUser && !isAdminOrOps) {
+                    showToast('An active subscription is required to edit your profile.', 'error');
+                    router.push('/dashboard/subscription');
+                    return;
+                  }
+                  setIsEditing(!isEditing);
+                  if (isEditing) setIsDirty(false);
+                  await invalidateProfileCache();
+                  router.refresh();
+                }}
+                className={`px-6 py-2.5 rounded-xl text-xs font-bold tracking-wide transition-all ${!isSubscribedUser && !isAdminOrOps ? 'bg-amber-600 text-white hover:bg-amber-700' : isEditing ? 'bg-red-100 text-red-700' : 'bg-gray-900 text-white hover:bg-black'}`}
               >
-                {isEditing ? 'Close Editor' : 'Click to Edit Profile'}
+                {!isSubscribedUser && !isAdminOrOps ? 'Subscribe to Edit Profile' : isEditing ? 'Close Editor' : 'Click to Edit Profile'}
               </button>
             </div>
           </div>
