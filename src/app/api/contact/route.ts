@@ -34,12 +34,28 @@ export async function POST(req: Request) {
        console.error("Error fetching target profile:", err);
     }
 
-    // Fetch admin user IDs to notify in-app
+    // 1. Record inquiry as a support ticket in support_tickets table
+    try {
+      await supabase.from('support_tickets').insert([{
+        name,
+        email,
+        category: 'general',
+        subject: `New ${targetType === 'coach' ? 'Coach' : 'Partner'} Inquiry for ${targetName}`,
+        message: `Inquiry for ${targetName} (${targetType} - ID: ${targetId}):\n\n${message}`,
+        channel: 'email',
+        status: 'open',
+        created_at: new Date().toISOString()
+      }]);
+    } catch (ticketErr) {
+      console.error('Failed to record support ticket for inquiry:', ticketErr);
+    }
+
+    // 2. Fetch admin user IDs to notify in-app
     try {
       const { data: adminUsers } = await supabase
         .from('users')
         .select('id')
-        .in('role', ['admin', 'superadmin', 'operations']);
+        .in('role', ['admin', 'superadmin', 'operations', 'finance']);
 
       if (adminUsers && adminUsers.length > 0) {
         const adminNotifications = adminUsers.map(admin => ({
@@ -47,7 +63,7 @@ export async function POST(req: Request) {
           title: `New ${targetType === 'coach' ? 'Coach Inquiry' : 'Partner Inquiry'} for ${targetName}`,
           message: `${name} (${email}) sent an inquiry for ${targetName}: "${message.slice(0, 120)}${message.length > 120 ? '...' : ''}"`,
           type: 'info',
-          link: '/admin'
+          link: '/admin/support'
         }));
         await supabase.from('notifications').insert(adminNotifications);
       }
