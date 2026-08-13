@@ -42,6 +42,13 @@ export async function requestVerification(formData: FormData) {
     return { error: 'Profile not found' };
   }
 
+  // Fetch official user role from public.users table
+  const { data: userData } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
   // Fetch dynamic amount from CMS site_content payment settings
   const { data: settingsData } = await supabase
     .from('site_content')
@@ -50,7 +57,7 @@ export async function requestVerification(formData: FormData) {
     .eq('section', 'payment')
     .single();
 
-  const userRole = profile.role || 'player';
+  const userRole = userData?.role || profile.role || 'player';
   const rolePlan = settingsData?.content?.plans?.[userRole];
   const amount = rolePlan?.amount ? Number(rolePlan.amount) : 0;
 
@@ -87,6 +94,7 @@ export async function requestVerification(formData: FormData) {
     .update({
       verification_requested: true,
       payment_reference: paymentReference,
+      role: userRole,
       updated_at: new Date().toISOString()
     })
     .eq('user_id', user.id);
@@ -108,7 +116,7 @@ export async function requestVerification(formData: FormData) {
         method: 'direct_transfer',
         metadata: {
            type: 'subscription',
-           description: `Billing Claim: Onboarding subscription for ${profile.role}`,
+           description: `Billing Claim: Onboarding subscription for ${userRole}`,
            proofFileUrl,
            proofFileName,
            proofName: `${profile.first_name} ${profile.last_name}`,
