@@ -12,8 +12,14 @@ async function verifyStaffAccess() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Unauthorized');
 
-  const role = user.app_metadata?.role;
-  const staffRoles = ['superadmin', 'admin', 'operations'];
+  const { data: userRecord } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  const staffRoles = ['superadmin', 'admin', 'operations', 'blogger', 'finance'];
+  const role = userRecord?.role || user.app_metadata?.role;
   if (!role || !staffRoles.includes(role)) {
     throw new Error('Insufficient permissions');
   }
@@ -142,11 +148,32 @@ export async function deleteUsers(userIds: string[]) {
 }
 
 export async function updateMarketValue(profileId: string, marketValue: number) {
-  await verifyStaffAccess();
-  const admin = createAdminClient();
-  const { error } = await admin.from('profiles').update({ market_value: marketValue }).eq('id', profileId);
-  if (error) return { error: error.message };
-  revalidatePath('/admin/users');
-  return { success: true };
+  try {
+    await verifyStaffAccess();
+    const admin = createAdminClient();
+    
+    const { data: profile } = await admin.from('profiles').select('id, user_id, slug').eq('id', profileId).single();
+
+    const { error } = await admin
+      .from('profiles')
+      .update({ market_value: Number(marketValue) })
+      .eq('id', profileId);
+
+    if (error) return { error: error.message };
+
+    revalidatePath('/admin/users');
+    revalidatePath('/admin/players');
+    if (profile) {
+      if (profile.user_id) revalidatePath(`/admin/users/${profile.user_id}`);
+      if (profile.slug) {
+        revalidatePath(`/admin/users/${profile.slug}`);
+        revalidatePath(`/players/${profile.slug}`);
+      }
+    }
+    revalidatePath('/players');
+    return { success: true };
+  } catch (err: any) {
+    return { error: err.message || 'Failed to update market value' };
+  }
 }
 

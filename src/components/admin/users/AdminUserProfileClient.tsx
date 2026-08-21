@@ -15,6 +15,8 @@ import { AgentPortfolioForm } from '@/app/(dashboard)/dashboard/profile/componen
 import { ScoutDiscoveriesForm } from '@/app/(dashboard)/dashboard/profile/components/ScoutDiscoveriesForm';
 import { OrganizationDetailsForm } from '@/app/(dashboard)/dashboard/profile/components/OrganizationDetailsForm';
 
+import { useRouter } from 'next/navigation';
+
 export default function AdminUserProfileClient({
   profile,
   role,
@@ -34,17 +36,22 @@ export default function AdminUserProfileClient({
   seasonsList?: any[];
   countriesList?: any[];
 }) {
-  const [marketValue, setMarketValue] = useState(profile.market_value || '');
+  const router = useRouter();
+  const [marketValue, setMarketValue] = useState(profile.market_value ?? '');
+  const [savedMarketValue, setSavedMarketValue] = useState<number | string>(profile.market_value ?? '');
   const [isSaving, setIsSaving] = useState(false);
   const { showToast } = useToast();
 
   const handleSaveMarketValue = async () => {
     setIsSaving(true);
-    const { error, success } = await updateMarketValue(profile.id, Number(marketValue));
+    const numValue = Number(marketValue);
+    const { error, success } = await updateMarketValue(profile.id, numValue);
     if (error) {
       showToast(`Error updating market value: ${error}`, 'error');
     } else if (success) {
+      setSavedMarketValue(numValue);
       showToast('Market value updated successfully!', 'success');
+      router.refresh();
     }
     setIsSaving(false);
   };
@@ -200,7 +207,7 @@ export default function AdminUserProfileClient({
                   />
                   <button 
                     onClick={handleSaveMarketValue}
-                    disabled={isSaving || Number(marketValue) === profile.market_value}
+                    disabled={isSaving || Number(marketValue) === Number(savedMarketValue)}
                     className="bg-[#b50a0a] text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-red-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 shadow-sm"
                   >
                     {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Market Value</>}
