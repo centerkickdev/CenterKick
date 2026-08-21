@@ -11,7 +11,7 @@ interface Column {
 interface DirectoryTableProps<T> {
   data: T[];
   columns: Column[];
-  renderRow: (item: T, isSelected: boolean, toggleSelect: () => void, triggerDelete: () => void) => React.ReactNode;
+  renderRow: (item: T, isSelected: boolean, toggleSelect: () => void, triggerDelete: () => void, index: number, totalCount: number) => React.ReactNode;
   isPending?: boolean;
   onBatchDelete?: (ids: string[]) => Promise<void>;
   isDeleting?: boolean;
@@ -142,7 +142,7 @@ export function DirectoryTable<T>({
                 </td>
               </tr>
             ) : (
-              data.map((item) => {
+              data.map((item, index) => {
                 const id = getItemId(item);
                 const isSelected = selectedIds.includes(id);
                 return renderRow(item, isSelected, () => {
@@ -151,7 +151,7 @@ export function DirectoryTable<T>({
                   // Trigger delete for this specific item
                   setSelectedIds([id]);
                   setShowConfirmModal(true);
-                });
+                }, index, data.length);
               })
             )}
           </tbody>

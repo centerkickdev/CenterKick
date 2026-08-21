@@ -251,18 +251,19 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
         isDeleting={isDeleting}
         onBatchDelete={handleBatchDelete}
         emptyStateMessage="No users found."
-        renderRow={(user, isSelected, toggleSelect, triggerDelete) => {
+        renderRow={(user, isSelected, toggleSelect, triggerDelete, index, totalCount) => {
           const isLoading = actionLoading === user.id;
           const profileStatus = user.profile?.status;
           const isActive = user.is_active !== false;
           const isPendingActivation = profileStatus === 'pending' && isActive;
           const isParticipant = PARTICIPANT_ROLES.includes(user.role);
+          const isBottomRow = index >= totalCount - 3;
 
           return (
             <tr 
               key={user.id} 
               onClick={() => router.push(getProfileLink(user))}
-              className={`hover:bg-gray-50/50 transition-colors group cursor-pointer ${isSelected ? 'bg-red-50/30' : ''}`}
+              className={`hover:bg-gray-50/50 transition-colors group/row cursor-pointer ${isSelected ? 'bg-red-50/30' : ''}`}
             >
               <td className="px-4 md:px-6 py-6 border-b border-gray-50" onClick={(e) => e.stopPropagation()}>
                 <input 
@@ -319,10 +320,10 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
                     <div className="flex items-center justify-end gap-2">
                       <Link
                         href={getProfileLink(user)}
-                        className="p-2.5 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-900 hover:text-white transition-all shadow-sm group"
+                        className="p-2.5 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-900 hover:text-white transition-all shadow-sm group/btn"
                         title="View full profile"
                       >
-                        <Eye className="w-4 h-4 text-gray-600 group-hover:text-white" />
+                        <Eye className="w-4 h-4 text-gray-600 group-hover/btn:text-white" />
                       </Link>
 
                       <div className="relative">
@@ -343,7 +344,11 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
                               className="fixed inset-0 z-40" 
                               onClick={() => setOpenDropdown(null)}
                             />
-                            <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                            <div className={`absolute right-0 w-52 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in duration-200 ${
+                              isBottomRow 
+                                ? 'bottom-full mb-2 origin-bottom-right slide-in-from-bottom-2' 
+                                : 'top-full mt-2 origin-top-right slide-in-from-top-2'
+                            }`}>
                             <div className="p-2">
                               {isActive ? (
                                 <button
