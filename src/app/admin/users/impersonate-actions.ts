@@ -84,6 +84,7 @@ export async function stopImpersonation() {
     }
   }
 
+  // Clear impersonation cookie
   cookieStore.delete(IMPERSONATION_COOKIE);
-  redirect('/admin/users');
+  return { success: true };
 }

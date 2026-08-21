@@ -15,7 +15,16 @@ export function ImpersonationBanner({ targetEmail, targetId, targetRole }: Imper
 
   const handleExit = () => {
     startTransition(async () => {
-      await stopImpersonation();
+      const res = await stopImpersonation();
+      if (res?.success) {
+        // Attempt to close the preview tab since it was opened via window.open
+        window.close();
+
+        // Fallback in case browser blocks window.close()
+        setTimeout(() => {
+          window.location.href = '/admin/users';
+        }, 300);
+      }
     });
   };
 
