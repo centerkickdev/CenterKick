@@ -22,6 +22,39 @@ interface PlayerDetailsClientProps {
   news?: any[];
 }
 
+const formatMarketValue = (val: string | number | null | undefined) => {
+   if (val === null || val === undefined || val === '') return 'N/A';
+   const str = String(val).trim();
+   if (!str || str === 'N/A' || str === '—') return 'N/A';
+   if (/[€$£₦¥₹]/.test(str)) return str;
+   
+   const cleanStr = str.replace(/,/g, '');
+   const num = parseFloat(cleanStr);
+   if (isNaN(num)) return str;
+
+   return `$${num.toLocaleString('en-US')}`;
+};
+
+const formatFee = (val: string | number | null | undefined) => {
+   if (val === null || val === undefined || val === '') return '—';
+   const str = String(val).trim();
+   if (!str || str === '—' || str === 'N/A') return '—';
+
+   if (/[€$£₦]/.test(str)) {
+      const match = str.match(/([$€£₦][\d,.]+\s*[MkBk]?)/i);
+      if (match) return match[1];
+      return str;
+   }
+
+   const cleanStr = str.replace(/,/g, '');
+   const num = parseFloat(cleanStr);
+   if (!isNaN(num)) {
+      return `$${num.toLocaleString('en-US')}`;
+   }
+
+   return str;
+};
+
 export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: PlayerDetailsClientProps) {
    const { showToast } = useToast();
    const mergedLinks = { ...(athlete.social_links || {}), ...(athlete.official_links || {}) };
@@ -32,6 +65,11 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
    const nameParts = displayName.split(' ');
    const firstName = nameParts[0];
    const restOfName = nameParts.slice(1).join(' ');
+
+   const posLower = (athlete.position || '').toLowerCase();
+   const isGoalkeeper = posLower.includes('goalkeeper') || posLower.includes('gk') || careerStats.some(s => s.clean_sheets !== undefined && s.clean_sheets !== null && s.clean_sheets !== '');
+   const hasYellowCards = careerStats.some(s => Number(s.yellow_cards || 0) > 0);
+   const hasRedCards = careerStats.some(s => Number(s.red_cards || 0) > 0);
 
    const handleShareProfile = async () => {
       const currentUrl = window.location.href;
@@ -259,7 +297,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                               { label: 'Height', value: athlete.height_cm ? `${athlete.height_cm}cm` : 'N/A' },
                               { label: 'Weight', value: athlete.weight_kg ? `${athlete.weight_kg}kg` : 'N/A' },
                               { label: 'Jersey #', value: athlete.jersey_number || 'N/A' },
-                              { label: 'Market Value', value: athlete.market_value || 'N/A' },
+                              { label: 'Market Value', value: formatMarketValue(athlete.market_value) },
                               { label: 'Managing Agent', value: 'Independent' },
                            ].map((item, i) => (
                               <div key={i} className="flex py-3 border-b border-gray-50">
@@ -430,8 +468,9 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                                        <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Apps</th>
                                        <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Gls</th>
                                        <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Ast</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Yel</th>
-                                       <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Red</th>
+                                       {isGoalkeeper && <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-emerald-600 text-center uppercase">CS</th>}
+                                       {hasYellowCards && <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Yel</th>}
+                                       {hasRedCards && <th className="px-4 py-4 sm:px-6 sm:py-5 text-xs sm:text-xs font-bold tracking-wide text-gray-400 text-center uppercase">Red</th>}
                                     </tr>
                                  </thead>
                                  <tbody className="text-xs sm:text-sm font-bold text-gray-700 divide-y divide-gray-50">
@@ -439,7 +478,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                                        <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle text-gray-400">{i + 1}</td>
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle">{stat.season}</td>
-                                          <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle text-gray-500 font-medium">{stat.league_name || '—'}</td>
+                                          <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle text-gray-500 font-medium">{stat.league_name || stat.league || '—'}</td>
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle text-gray-900">
                                              <div className="flex items-center gap-3">
                                                 {stat.club_flag && (
@@ -447,18 +486,27 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                                                       <img src={stat.club_flag} alt="" className="object-contain w-full h-full" />
                                                    </div>
                                                 )}
-                                                <span>{stat.club_name}</span>
+                                                <span>{stat.club_name || stat.club || '—'}</span>
                                              </div>
                                           </td>
-                                          <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle">{stat.appearances || 0}</td>
+                                          <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle">{stat.appearances || stat.apps || 0}</td>
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle">{stat.goals || 0}</td>
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle">{stat.assists || 0}</td>
-                                          <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle">
-                                             <span className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-yellow-100/50 text-yellow-700 rounded-md border border-yellow-200">{stat.yellow_cards || 0}</span>
-                                          </td>
-                                          <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle">
-                                             <span className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-red-100/50 text-red-700 rounded-md border border-red-200">{stat.red_cards || 0}</span>
-                                          </td>
+                                          {isGoalkeeper && (
+                                             <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle">
+                                                <span className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-emerald-100/50 text-emerald-800 rounded-md border border-emerald-200">{stat.clean_sheets || 0}</span>
+                                             </td>
+                                          )}
+                                          {hasYellowCards && (
+                                             <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle">
+                                                <span className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-yellow-100/50 text-yellow-700 rounded-md border border-yellow-200">{stat.yellow_cards || 0}</span>
+                                             </td>
+                                          )}
+                                          {hasRedCards && (
+                                             <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle">
+                                                <span className="px-1.5 py-0.5 sm:px-2 sm:py-1 bg-red-100/50 text-red-700 rounded-md border border-red-200">{stat.red_cards || 0}</span>
+                                             </td>
+                                          )}
                                        </tr>
                                     ))}
                                  </tbody>
@@ -504,8 +552,8 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                                                 <span>{transfer.to_club || 'Unknown'}</span>
                                              </div>
                                           </td>
-                                          <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle text-right text-[#b50a0a]">{transfer.fee || '—'}</td>
-                                          <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle text-right text-gray-500 font-medium">{transfer.market_value || '—'}</td>
+                                          <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle text-right text-[#b50a0a]">{formatFee(transfer.fee)}</td>
+                                          <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle text-right text-gray-500 font-medium">{formatMarketValue(transfer.market_value)}</td>
                                        </tr>
                                     ))}
                                  </tbody>

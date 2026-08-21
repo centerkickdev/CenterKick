@@ -130,13 +130,20 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
    athlete.country_flag = getCountryFlag(athlete.country);
 
    // Enrich career stats (mapping 'club' to 'club_name' and 'apps' to 'appearances' for backward compatibility)
-   const careerStats = (athlete.career_stats || []).map((stat: any) => ({
-      ...stat,
-      club_name: stat.club || stat.club_name,
-      appearances: stat.apps || stat.appearances,
-      club_flag: getClubLogo(stat.club || stat.club_name),
-      league_name: stat.league ? getLeagueName(stat.league) : null,
-   }));
+   const careerStats = (athlete.career_stats || []).map((stat: any) => {
+      const clubName = stat.club_name || stat.club || '';
+      const rawLeague = stat.league_name || stat.league || '';
+      const resolvedLeague = leagues?.find(l => l.id === rawLeague || l.name === rawLeague)?.name || (rawLeague.startsWith('NEW:') ? rawLeague.replace('NEW:', '') : rawLeague);
+
+      return {
+         ...stat,
+         club_name: clubName,
+         club: clubName,
+         appearances: stat.appearances ?? stat.apps ?? 0,
+         club_flag: getClubLogo(clubName),
+         league_name: resolvedLeague || null,
+      };
+   });
 
    // Enrich transfer history
    if (athlete.transfer_history && Array.isArray(athlete.transfer_history)) {

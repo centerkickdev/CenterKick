@@ -1230,6 +1230,12 @@ export default function ProfileEditor() {
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Ast</label>
                               <input disabled={!isEditing} type="number" placeholder="0" value={stat.assists} onChange={(e) => { const newStats = [...careerStats]; newStats[i].assists = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-gray-100" />
                             </div>
+                            {((profile?.position || '').toLowerCase().includes('goalkeeper') || (profile?.position || '').toLowerCase().includes('gk')) && (
+                              <div className="flex flex-col space-y-1 w-16">
+                                <label className="text-xs font-bold text-emerald-700 uppercase tracking-wider text-center" title="Clean Sheets (Goalkeepers)">CS</label>
+                                <input disabled={!isEditing} type="number" placeholder="0" value={stat.clean_sheets || 0} onChange={(e) => { const newStats = [...careerStats]; newStats[i].clean_sheets = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-emerald-200 bg-emerald-50 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-emerald-500 text-center outline-none disabled:opacity-70 disabled:bg-emerald-100" />
+                              </div>
+                            )}
                             <div className="flex flex-col space-y-1 w-16">
                               <label className="text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Yel</label>
                               <input disabled={!isEditing} type="number" placeholder="0" value={stat.yellow_cards} onChange={(e) => { const newStats = [...careerStats]; newStats[i].yellow_cards = Number(e.target.value); setCareerStats(newStats); setIsDirty(true); }} className="w-full bg-white border border-yellow-200 bg-yellow-50 rounded-xl px-2 py-2 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-[#b50a0a] text-center outline-none disabled:opacity-70 disabled:bg-yellow-100" />
