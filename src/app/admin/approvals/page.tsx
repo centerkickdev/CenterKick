@@ -35,11 +35,10 @@ export default async function AdminApprovalsPage({
     { data: pendingStaff },
     { data: pendingEdits }
   ] = await Promise.all([
-    // 1. Fetch staff unassigned verification queue
+    // 1. Fetch user verification queue (includes all roles requesting verification)
     adminClient
       .from('users')
-      .select('*, profiles(first_name, last_name, email, country, avatar_url)')
-      .eq('role', 'unassigned')
+      .select('*, profiles(first_name, last_name, email, country, avatar_url, role)')
       .eq('is_verification_requested', true)
       .order('created_at', { ascending: false }),
 

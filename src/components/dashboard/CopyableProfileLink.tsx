@@ -39,7 +39,8 @@ export function CopyableProfileLink({ slugOrId, role }: CopyableProfileLinkProps
   return (
     <button
       onClick={handleCopy}
-      className={`shrink-0 flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm ${
+      title={copied ? "Link Copied" : "Copy Profile Link"}
+      className={`shrink-0 flex items-center justify-center gap-2 px-3.5 sm:px-5 py-2.5 rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm ${
         copied 
           ? 'bg-green-50 text-green-700 border border-green-200 shadow-green-900/5' 
           : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 hover:border-gray-300'
@@ -47,13 +48,13 @@ export function CopyableProfileLink({ slugOrId, role }: CopyableProfileLinkProps
     >
       {copied ? (
         <>
-          <CheckCircle2 className="w-4 h-4" />
-          Copied
+          <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <span className="hidden sm:inline">Copied</span>
         </>
       ) : (
         <>
-          <Copy className="w-4 h-4" />
-          Copy Link
+          <Copy className="w-4 h-4 shrink-0" />
+          <span className="hidden sm:inline">Copy Link</span>
         </>
       )}
     </button>

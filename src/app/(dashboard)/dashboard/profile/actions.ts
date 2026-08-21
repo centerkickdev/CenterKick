@@ -46,6 +46,21 @@ export async function requestProfileEdit(profileId: string, changes: Record<stri
     return { error: insertError.message };
   }
 
+  // Notify admins of new profile edit request
+  const adminClient = createAdminClient();
+  const { data: admins } = await adminClient.from('users').select('id').in('role', ['admin', 'superadmin', 'operations']);
+  if (admins && admins.length > 0) {
+    const playerName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'A user';
+    const adminNotifications = admins.map(admin => ({
+      user_id: admin.id,
+      title: 'Profile Edit Request',
+      message: `${playerName} requested changes to profile details.`,
+      type: 'info',
+      action_url: '/admin/approvals?tab=edits'
+    }));
+    await adminClient.from('notifications').insert(adminNotifications);
+  }
+
   return { success: true };
 }
 

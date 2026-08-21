@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   User,
   MapPin,
@@ -12,6 +12,7 @@ import {
   Plus,
   Trash2,
   ChevronRight,
+  ChevronLeft,
   Info,
   Globe,
   Award,
@@ -56,6 +57,23 @@ export default function ProfileEditor() {
   const [status, setStatus] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
   const { showToast } = useToast();
   const router = useRouter();
+  const tabsNavRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkTabScroll = () => {
+    if (tabsNavRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tabsNavRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    checkTabScroll();
+    window.addEventListener('resize', checkTabScroll);
+    return () => window.removeEventListener('resize', checkTabScroll);
+  }, []);
   const [achievements, setAchievements] = useState<any[]>([]);
   const [videoLinks, setVideoLinks] = useState<string[]>([]);
   const [galleryUrls, setGalleryUrls] = useState<string[]>([]);
@@ -757,24 +775,58 @@ export default function ProfileEditor() {
       <div className="flex flex-col lg:flex-row gap-8 items-start relative">
         {/* Sticky Sidebar Navigation */}
         <aside className="w-full lg:w-64 shrink-0 lg:sticky lg:top-24 space-y-2">
-          <nav className="flex lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 scrollbar-hide">
-            {[
-              { id: 'Basic Info', icon: User },
-              { id: 'Career Data', icon: BarChart3 },
-              { id: 'Bio & Portfolio', icon: Info },
-              { id: 'Media Center', icon: Camera },
-              { id: 'Official Links', icon: Globe },
-            ].map((tab) => (
+          <div className="flex items-center gap-2">
+            {canScrollLeft && (
               <button
-                key={tab.id}
-                onClick={() => { setActiveTab(tab.id); setIsDirty(false); router.refresh(); }}
-                className={`flex items-center gap-3 px-6 py-4 rounded-2xl text-sm font-bold tracking-wide transition-all whitespace-nowrap lg:w-full ${activeTab === tab.id ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-900 hover:bg-gray-100'}`}
+                type="button"
+                onClick={() => {
+                  if (tabsNavRef.current) {
+                    tabsNavRef.current.scrollBy({ left: -160, behavior: 'smooth' });
+                  }
+                }}
+                className="lg:hidden p-3 bg-red-50 text-[#b50a0a] hover:bg-red-100 rounded-2xl border border-red-100 shadow-sm shrink-0 flex items-center justify-center group mb-4"
+                title="Scroll to previous tab"
               >
-                <tab.icon className="w-4 h-4" />
-                {tab.id}
+                <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
               </button>
-            ))}
-          </nav>
+            )}
+            <nav
+              ref={tabsNavRef}
+              onScroll={checkTabScroll}
+              className="flex lg:flex-col gap-2 overflow-x-auto pb-4 lg:pb-0 scrollbar-hide flex-1 min-w-0"
+            >
+              {[
+                { id: 'Basic Info', icon: User },
+                { id: 'Career Data', icon: BarChart3 },
+                { id: 'Bio & Portfolio', icon: Info },
+                { id: 'Media Center', icon: Camera },
+                { id: 'Official Links', icon: Globe },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => { setActiveTab(tab.id); setIsDirty(false); router.refresh(); }}
+                  className={`flex items-center gap-3 px-6 py-4 rounded-2xl text-sm font-bold tracking-wide transition-all whitespace-nowrap lg:w-full ${activeTab === tab.id ? 'bg-[#b50a0a] text-white shadow-lg shadow-red-900/20' : 'text-gray-900 hover:bg-gray-100'}`}
+                >
+                  <tab.icon className="w-4 h-4" />
+                  {tab.id}
+                </button>
+              ))}
+            </nav>
+            {canScrollRight && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (tabsNavRef.current) {
+                    tabsNavRef.current.scrollBy({ left: 160, behavior: 'smooth' });
+                  }
+                }}
+                className="lg:hidden p-3 bg-red-50 text-[#b50a0a] hover:bg-red-100 rounded-2xl border border-red-100 shadow-sm shrink-0 flex items-center justify-center group mb-4"
+                title="Scroll to next tab"
+              >
+                <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
+              </button>
+            )}
+          </div>
         </aside>
 
         {/* Editor Main Content */}
@@ -803,7 +855,7 @@ export default function ProfileEditor() {
           </div>
           <div className={`bg-white rounded-[40px] border border-gray-100 shadow-sm overflow-hidden p-4 md:p-8 md:p-6 space-y-8 ${!isEditing && 'opacity-90 pointer-events-none'}`} onClickCapture={(e) => { if (!isEditing) { e.preventDefault(); e.stopPropagation(); showToast('Click "Click to Edit Profile" to make changes.', 'error'); } }}>
 
-            {activeTab === 'Basic Info' && (
+            {(activeTab === 'Basic Info' || activeTab === 'Career Data') && (
               <form onSubmit={saveBasicInfo} onChange={() => setIsDirty(true)} className="space-y-6 animate-in fade-in duration-500">
                 <div className="flex flex-col gap-6 md:p-2 border-b border-gray-50 pb-8 mb-4">
                   <div className="flex flex-col items-center justify-center md:items-start md:justify-start">
@@ -1260,13 +1312,20 @@ export default function ProfileEditor() {
                    {role === 'organization' && <OrganizationDetailsForm data={roleData} onChange={(data) => {setRoleData(data); setIsDirty(true);}} disabled={!isEditing} onUploadImage={uploadPersonnelImage} />}
                 </div>
 
-                {isEditing && (
-                  <div className="pt-6 border-t border-gray-50 flex justify-end">
-                    <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="px-8 py-3 bg-[#b50a0a] text-white rounded-xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
+                <div className="pt-6 border-t border-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <button
+                    type="button"
+                    onClick={() => { setActiveTab('Bio & Portfolio'); setIsDirty(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-900 hover:bg-black text-white rounded-2xl text-xs font-bold tracking-wide transition-all shadow-sm"
+                  >
+                    Next: Bio & Portfolio <ChevronRight className="w-4 h-4" />
+                  </button>
+                  {isEditing && (
+                    <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="w-full sm:w-auto px-8 py-3.5 bg-[#b50a0a] text-white rounded-2xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
                       {isSaving ? 'Saving...' : 'Save Career Data'}
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </form>
             )}
             {activeTab === 'Bio & Portfolio' && (
@@ -1298,13 +1357,29 @@ export default function ProfileEditor() {
                     </div>
                   </div>
                 )}
-                {isEditing && (
-                  <div className="pt-6 border-t border-gray-50 flex justify-end">
-                    <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="px-8 py-3 bg-[#b50a0a] text-white rounded-xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
-                      {isSaving ? 'Saving...' : 'Save Bio & Portfolio'}
+                <div className="pt-6 border-t border-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => { setActiveTab('Basic Info'); setIsDirty(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-2xl text-xs font-bold tracking-wide transition-all"
+                    >
+                      <ChevronLeft className="w-4 h-4" /> Previous: Basic Info
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setActiveTab('Media Center'); setIsDirty(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-900 hover:bg-black text-white rounded-2xl text-xs font-bold tracking-wide transition-all shadow-sm"
+                    >
+                      Next: Media Center <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
-                )}
+                  {isEditing && (
+                    <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="w-full sm:w-auto px-8 py-3.5 bg-[#b50a0a] text-white rounded-2xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
+                      {isSaving ? 'Saving...' : 'Save Bio & Portfolio'}
+                    </button>
+                  )}
+                </div>
               </form>
             )}
 
@@ -1451,13 +1526,29 @@ export default function ProfileEditor() {
                       </button>
                   </div>
                 </div>
-                {isEditing && (
-                  <div className="pt-6 border-t border-gray-50 flex justify-end">
-                    <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="px-8 py-3 bg-[#b50a0a] text-white rounded-xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
-                      {isSaving ? 'Saving...' : 'Save Media Center'}
+                <div className="pt-6 border-t border-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => { setActiveTab('Bio & Portfolio'); setIsDirty(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-2xl text-xs font-bold tracking-wide transition-all"
+                    >
+                      <ChevronLeft className="w-4 h-4" /> Previous: Bio & Portfolio
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setActiveTab('Official Links'); setIsDirty(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-900 hover:bg-black text-white rounded-2xl text-xs font-bold tracking-wide transition-all shadow-sm"
+                    >
+                      Next: Official Links <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
-                )}
+                  {isEditing && (
+                    <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="w-full sm:w-auto px-8 py-3.5 bg-[#b50a0a] text-white rounded-2xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
+                      {isSaving ? 'Saving...' : 'Save Media Center'}
+                    </button>
+                  )}
+                </div>
               </form>
             )}
             {activeTab === 'Official Links' && (
@@ -1499,13 +1590,34 @@ export default function ProfileEditor() {
                     </div>
                   ))}
                 </div>
-                {isEditing && (
-                  <div className="pt-6 border-t border-gray-50 flex justify-end">
-                    <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="px-8 py-3 bg-[#b50a0a] text-white rounded-xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
+                <div className="pt-6 border-t border-gray-50 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => { setActiveTab('Media Center'); setIsDirty(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-2xl text-xs font-bold tracking-wide transition-all"
+                    >
+                      <ChevronLeft className="w-4 h-4" /> Previous: Media Center
+                    </button>
+                    {(profile?.slug || profile?.id) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const targetRoute = role === 'agent' ? `/agents/${profile.slug || profile.id}` : role === 'organization' ? `/organizations/${profile.slug || profile.id}` : role === 'coach' ? `/coaches/${profile.slug || profile.id}` : `/players/${profile.slug || profile.id}`;
+                          router.push(targetRoute);
+                        }}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-xs font-bold tracking-wide transition-all shadow-sm"
+                      >
+                        ✓ View Public Profile
+                      </button>
+                    )}
+                  </div>
+                  {isEditing && (
+                    <button type="submit" disabled={isSaving || !isEditing || !isDirty} className="w-full sm:w-auto px-8 py-3.5 bg-[#b50a0a] text-white rounded-2xl font-bold tracking-wide shadow-md hover:bg-red-800 transition-colors">
                       {isSaving ? 'Saving...' : 'Save Official Links'}
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </form>
             )}
 

@@ -18,12 +18,11 @@ export default async function AdminRolesPage() {
     .in('role', adminRoles)
     .order('created_at', { ascending: false });
 
-  // Fetch users in verification queue (unassigned role)
+  // Fetch users in verification queue
   const { data: verificationQueue } = await supabase
     .from('users')
     .select('*, profiles(*)')
-    .eq('role', 'unassigned')
-    .order('is_verification_requested', { ascending: false })
+    .eq('is_verification_requested', true)
     .order('created_at', { ascending: false });
 
   // Fetch pending invitations

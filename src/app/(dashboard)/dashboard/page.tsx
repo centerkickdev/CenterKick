@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { 
   Users, TrendingUp, ExternalLink, Star, Target, Eye, 
   Calendar, ChevronRight, Shield, AlertTriangle, ArrowRight,
-  CheckCircle, Globe, Award, FileText, Smartphone, Mail, MapPin
+  CheckCircle, Globe, Award, FileText, Smartphone, Mail, MapPin, Edit
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -204,17 +204,27 @@ export default async function DashboardPage() {
             {profile?.country && <FlagIcon country={profile.country} className="w-5 h-3 rounded-sm shadow-sm shrink-0" />}
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {(profile?.slug || profile?.id) && (
             <CopyableProfileLink slugOrId={profile.slug || profile.id} role={role} />
           )}
           {(profile?.slug || profile?.id) && (
-            <Link href={`/${role === 'player' ? 'players' : role === 'coach' ? 'coaches' : role === 'agent' ? 'agents' : role === 'scout' ? 'scouts' : role === 'organization' ? 'organizations' : `${role}s`}/${profile?.slug || profile?.id}`} className="px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl text-xs font-bold tracking-wide hover:bg-gray-50 transition-all flex items-center gap-2 shadow-sm">
-               View Profile <ExternalLink className="w-3 h-3" />
+            <Link 
+              href={`/${role === 'player' ? 'players' : role === 'coach' ? 'coaches' : role === 'agent' ? 'agents' : role === 'scout' ? 'scouts' : role === 'organization' ? 'organizations' : `${role}s`}/${profile?.slug || profile?.id}`} 
+              title="View Public Profile"
+              className="px-3.5 sm:px-5 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl text-xs font-bold tracking-wide hover:bg-gray-50 transition-all flex items-center gap-2 shadow-sm shrink-0"
+            >
+               <Eye className="w-4 h-4 shrink-0" />
+               <span className="hidden sm:inline">View Profile</span>
             </Link>
           )}
-          <Link href="/dashboard/profile" className="px-5 py-2.5 bg-gray-900 text-white rounded-xl text-xs font-bold tracking-wide hover:bg-black transition-all flex items-center gap-2 shadow-lg hover:-translate-y-0.5">
-             Click to Edit Profile <ChevronRight className="w-3 h-3" />
+          <Link 
+            href="/dashboard/profile" 
+            title="Edit Profile"
+            className="px-3.5 sm:px-5 py-2.5 bg-gray-900 text-white rounded-xl text-xs font-bold tracking-wide hover:bg-black transition-all flex items-center gap-2 shadow-lg hover:-translate-y-0.5 shrink-0"
+          >
+             <Edit className="w-4 h-4 shrink-0" />
+             <span className="hidden sm:inline">Edit Profile</span>
           </Link>
         </div>
       </div>
