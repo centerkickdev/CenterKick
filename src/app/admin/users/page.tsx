@@ -126,6 +126,17 @@ export default async function AdminUsersPage({
     });
   }
 
+  const { data: { user } } = await supabase.auth.getUser();
+  let isSuperAdmin = false;
+  if (user) {
+    const { data: currentUserRecord } = await adminClient
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+    isSuperAdmin = currentUserRecord?.role === 'superadmin' || user.app_metadata?.role === 'superadmin';
+  }
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* Header */}
@@ -203,6 +214,7 @@ export default async function AdminUsersPage({
         totalCount={filteredTotal || 0}
         currentPage={page}
         pageSize={pageSize}
+        isSuperAdmin={isSuperAdmin}
       />
     </div>
   );

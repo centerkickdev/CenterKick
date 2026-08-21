@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { activateUser, deactivateUser, changeUserRole, rejectUser, deleteUsers } from '@/app/admin/users/actions';
+import { startImpersonation } from '@/app/admin/users/impersonate-actions';
 import { DirectoryTable } from '@/components/admin/shared/DirectoryTable';
 
 interface UsersClientProps {
@@ -18,11 +19,12 @@ interface UsersClientProps {
   totalCount: number;
   currentPage: number;
   pageSize: number;
+  isSuperAdmin?: boolean;
 }
 
 const PARTICIPANT_ROLES = ['player', 'coach', 'agent', 'scout', 'organization'];
 
-export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }: UsersClientProps) {
+export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, isSuperAdmin = false }: UsersClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -117,6 +119,24 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
     } finally {
       setActionLoading(null);
       setTimeout(() => setToast(null), 5000);
+    }
+  };
+
+  const handleImpersonate = async (userId: string) => {
+    setActionLoading(userId);
+    setOpenDropdown(null);
+    try {
+      const result = await startImpersonation(userId, 'SuperAdmin View-As Preview');
+      if (result?.error) {
+        showToast('error', result.error);
+        setActionLoading(null);
+      }
+    } catch (err: any) {
+      // Next.js redirect throws an error internally when navigating
+      if (err?.message !== 'NEXT_REDIRECT') {
+        showToast('error', err.message || 'Failed to initiate preview mode.');
+        setActionLoading(null);
+      }
     }
   };
 
@@ -328,7 +348,18 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize }:
 
 
 
-                              <div className="h-px bg-gray-100 my-1"></div>
+                              {isSuperAdmin && (
+                                <>
+                                  <button
+                                    onClick={() => handleImpersonate(user.id)}
+                                    className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold tracking-wide text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-xl transition-all border border-amber-200/60 my-1"
+                                    title="Preview user dashboard in View-As mode"
+                                  >
+                                    <Eye className="w-3.5 h-3.5 text-amber-600" /> View-As User
+                                  </button>
+                                  <div className="h-px bg-gray-100 my-1"></div>
+                                </>
+                              )}
 
                               <Link
                                 href={getProfileLink(user)}

@@ -13,31 +13,38 @@ import { ToastProvider } from '@/context/ToastContext';
 import { getCachedSettings } from '@/lib/cms';
 import { getCachedData } from '@/lib/redis';
 
+import { getEffectiveUserSession } from '@/lib/auth/impersonation';
+import { ImpersonationBanner } from '@/components/admin/ImpersonationBanner';
+
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await getEffectiveUserSession();
 
-  if (!user) {
+  if (!session) {
     redirect('/login');
   }
 
-  // Fetch user record, profile record, and site settings in parallel from cache
+  const activeUserId = session.effectiveUserId;
+
+  // Use service role admin client when impersonating or fetching cached user records
+  const adminClient = createAdminClient();
+
+  // Fetch user record, profile record, and site settings in parallel
   const [userRecord, profile, siteSettings] = await Promise.all([
-    supabase
+    adminClient
       .from('users')
       .select('*')
-      .eq('id', user.id)
+      .eq('id', activeUserId)
       .single()
       .then(res => res.data),
-    getCachedData(`user:profile:${user.id}`, async () => {
-      const { data } = await supabase
+    getCachedData(`user:profile:${activeUserId}`, async () => {
+      const { data } = await adminClient
         .from('profiles')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', activeUserId)
         .single();
       return data;
     }, 1800),
@@ -45,14 +52,13 @@ export default async function DashboardLayout({
   ]);
 
   // Fetch user subscriptions
-  const { data: subscriptions } = await supabase
+  const { data: subscriptions } = await adminClient
     .from('subscriptions')
     .select('*')
-    .eq('user_id', user.id)
+    .eq('user_id', activeUserId)
     .eq('status', 'active');
     
-  // Fetch confirmed transactions as fallback using adminClient to bypass RLS
-  const adminClient = createAdminClient();
+  // Fetch confirmed transactions as fallback using adminClient
   const { data: confirmedTxs } = await adminClient
     .from('transactions')
     .select('id')
@@ -69,10 +75,10 @@ export default async function DashboardLayout({
     (confirmedTxs && confirmedTxs.length > 0);
 
   // Fetch notifications
-  const { data: notifications } = await supabase
+  const { data: notifications } = await adminClient
     .from('notifications')
     .select('*')
-    .eq('user_id', user.id)
+    .eq('user_id', activeUserId)
     .order('created_at', { ascending: false })
     .limit(20);
 
@@ -94,8 +100,9 @@ export default async function DashboardLayout({
   const isProfileComplete = completedCount === checks.length;
 
   // Forced Redirect for Administrative roles to the unified Admin Portal
+  // (Bypassed if SuperAdmin is in active View-As Impersonation mode)
   const adminRoles = ['superadmin', 'admin', 'blogger', 'operations', 'finance'];
-  if (adminRoles.includes(role)) {
+  if (!session.isImpersonating && adminRoles.includes(role)) {
     redirect('/admin');
   }
 
@@ -111,38 +118,48 @@ export default async function DashboardLayout({
 
   return (
     <ToastProvider>
-      <div className="flex h-screen bg-gray-50 overflow-hidden">
-        {/* Desktop Collapsible Sidebar */}
-        <DesktopSidebar 
-          role={role} 
-          isSubscribed={isSubscribed ?? false} 
-          sidebarLogoUrl={sidebarLogoUrl} 
-          brandName={brandName} 
-        />
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Banner Bar (Notices) */}
-          <BannerManager isSubscribed={isSubscribed ?? false} isProfileComplete={isProfileComplete} profileCompletionPercentage={profileCompletionPercentage} />
-
-          {/* Top Header */}
-          <DashboardHeader 
-            role={role}
-            email={user?.email}
-            sidebarLogoUrl={sidebarLogoUrl}
-            brandName={brandName}
-            notifications={notifications || []}
-            avatarUrl={resolveUrl(profile?.avatar_url)}
+      <div className="flex h-screen bg-gray-50 overflow-hidden flex-col">
+        {session.isImpersonating && (
+          <ImpersonationBanner
+            targetEmail={session.targetUserEmail}
+            targetId={session.effectiveUserId}
+            targetRole={session.targetUserRole}
+          />
+        )}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Desktop Collapsible Sidebar */}
+          <DesktopSidebar 
+            role={role} 
+            isSubscribed={isSubscribed ?? false} 
+            sidebarLogoUrl={sidebarLogoUrl} 
+            brandName={brandName} 
           />
 
-          {/* Page Content */}
-          <main className="flex-1 overflow-auto bg-[#F9FAFB] relative z-0">
-            <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-in fade-in zoom-in-95 duration-500">
-              {children}
-            </div>
-          </main>
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {/* Banner Bar (Notices) */}
+            <BannerManager isSubscribed={isSubscribed ?? false} isProfileComplete={isProfileComplete} profileCompletionPercentage={profileCompletionPercentage} />
+
+            {/* Top Header */}
+            <DashboardHeader 
+              role={role}
+              email={session.targetUserEmail || userRecord?.email}
+              sidebarLogoUrl={sidebarLogoUrl}
+              brandName={brandName}
+              notifications={notifications || []}
+              avatarUrl={resolveUrl(profile?.avatar_url)}
+            />
+
+            {/* Page Content */}
+            <main className="flex-1 overflow-auto bg-[#F9FAFB] relative z-0">
+              <div className="p-4 lg:p-8 max-w-[1600px] mx-auto animate-in fade-in zoom-in-95 duration-500">
+                {children}
+              </div>
+            </main>
+          </div>
         </div>
       </div>
     </ToastProvider>
   );
 }
+
