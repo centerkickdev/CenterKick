@@ -8,7 +8,7 @@ import { ChevronLeft, Save } from 'lucide-react';
 import { updateMarketValue } from '@/app/admin/users/actions';
 import { useToast } from '@/context/ToastContext';
 import { FlagIcon } from '@/components/common/FlagIcon';
-import { CURRENCIES } from '@/lib/utils/currency';
+import { CURRENCIES, parseCurrencyAndAmount } from '@/lib/utils/currency';
 
 import { CoachCareerForm } from '@/app/(dashboard)/dashboard/profile/components/CoachCareerForm';
 import { PlayerCareerForm } from '@/app/(dashboard)/dashboard/profile/components/PlayerCareerForm';
@@ -38,22 +38,21 @@ export default function AdminUserProfileClient({
   countriesList?: any[];
 }) {
   const router = useRouter();
-  const [marketValue, setMarketValue] = useState(profile.market_value ?? '');
-  const [savedMarketValue, setSavedMarketValue] = useState<number | string>(profile.market_value ?? '');
-  const [marketValueCurrency, setMarketValueCurrency] = useState<string>(profile.market_value_currency || 'EUR');
-  const [savedMarketValueCurrency, setSavedMarketValueCurrency] = useState<string>(profile.market_value_currency || 'EUR');
+  const parsed = parseCurrencyAndAmount(profile.market_value, profile.market_value_currency);
+  
+  const [marketValue, setMarketValue] = useState<string>(parsed.amount);
+  const [savedMarketValue, setSavedMarketValue] = useState<string>(parsed.amount);
+  const [marketValueCurrency, setMarketValueCurrency] = useState<string>(parsed.currency);
+  const [savedMarketValueCurrency, setSavedMarketValueCurrency] = useState<string>(parsed.currency);
   const [isSaving, setIsSaving] = useState(false);
   const { showToast } = useToast();
 
   useEffect(() => {
-    if (profile.market_value !== undefined && profile.market_value !== null) {
-      setMarketValue(profile.market_value);
-      setSavedMarketValue(profile.market_value);
-    }
-    if (profile.market_value_currency) {
-      setMarketValueCurrency(profile.market_value_currency);
-      setSavedMarketValueCurrency(profile.market_value_currency);
-    }
+    const updatedParsed = parseCurrencyAndAmount(profile.market_value, profile.market_value_currency);
+    setMarketValue(updatedParsed.amount);
+    setSavedMarketValue(updatedParsed.amount);
+    setMarketValueCurrency(updatedParsed.currency);
+    setSavedMarketValueCurrency(updatedParsed.currency);
   }, [profile.market_value, profile.market_value_currency]);
 
   const handleSaveMarketValue = async () => {

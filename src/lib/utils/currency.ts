@@ -24,6 +24,36 @@ export function getCurrencySymbol(currencyCode?: string | null): string {
 }
 
 /**
+ * Parses raw or prefixed market values (e.g. "$2000", "€50000", "2000")
+ * into a clean numerical string and CurrencyCode.
+ */
+export function parseCurrencyAndAmount(
+  val: number | string | null | undefined,
+  currencyCodeFromProfile?: string | null
+): { amount: string; currency: CurrencyCode } {
+  if (val === null || val === undefined || val === '') {
+    const curr = (currencyCodeFromProfile?.toUpperCase() as CurrencyCode) || 'EUR';
+    return { amount: '', currency: CURRENCIES.some(c => c.code === curr) ? curr : 'EUR' };
+  }
+
+  const str = String(val).trim();
+  
+  const symbolMatch = str.match(/^([$€£₦])\s*(.*)$/);
+  if (symbolMatch) {
+    const sym = symbolMatch[1];
+    const rawAmt = symbolMatch[2].replace(/,/g, '');
+    const foundCurrency = CURRENCIES.find(c => c.symbol === sym)?.code || 'EUR';
+    return { amount: rawAmt, currency: foundCurrency };
+  }
+
+  const cleanNum = str.replace(/,/g, '');
+  const foundCurrency = (currencyCodeFromProfile?.toUpperCase() as CurrencyCode) || 'EUR';
+  const validCurrency = CURRENCIES.some(c => c.code === foundCurrency) ? foundCurrency : 'EUR';
+
+  return { amount: cleanNum, currency: validCurrency };
+}
+
+/**
  * Formats market values and fees into clean currency strings (e.g. €500,000, $1,200,000, ₦50,000,000)
  */
 export function formatCurrencyAmount(
@@ -35,7 +65,7 @@ export function formatCurrencyAmount(
   const str = String(val).trim();
   if (!str || str === '—' || str === 'N/A') return '—';
 
-  // If input already contains an embedded currency symbol, preserve or update it cleanly
+  // If input already contains an embedded currency symbol, preserve and format cleanly
   const existingSymbolMatch = str.match(/^([$€£₦])\s*(.*)$/);
   if (existingSymbolMatch) {
     const symbol = existingSymbolMatch[1];

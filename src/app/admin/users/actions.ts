@@ -147,6 +147,8 @@ export async function deleteUsers(userIds: string[]) {
   return errors.length > 0 ? { error: `Failed to delete some users: ${errors.join(', ')}` } : { success: true };
 }
 
+import { getCurrencySymbol } from '@/lib/utils/currency';
+
 export async function updateMarketValue(profileId: string, marketValue: number | string, currency: string = 'EUR') {
   try {
     await verifyStaffAccess();
@@ -172,7 +174,9 @@ export async function updateMarketValue(profileId: string, marketValue: number |
       return { error: 'Profile record not found.' };
     }
 
-    const valToSave = String(marketValue);
+    const symbol = getCurrencySymbol(currency);
+    const cleanNum = String(marketValue).replace(/[$€£₦,]/g, '').trim();
+    const valToSave = cleanNum ? `${symbol}${cleanNum}` : '';
 
     // Try updating both market_value and market_value_currency
     const updatePayload: Record<string, any> = {
