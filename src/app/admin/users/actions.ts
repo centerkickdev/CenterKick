@@ -147,17 +147,31 @@ export async function deleteUsers(userIds: string[]) {
   return errors.length > 0 ? { error: `Failed to delete some users: ${errors.join(', ')}` } : { success: true };
 }
 
-export async function updateMarketValue(profileId: string, marketValue: number) {
+export async function updateMarketValue(profileId: string, marketValue: number, currency: string = 'EUR') {
   try {
     await verifyStaffAccess();
     const admin = createAdminClient();
     
     const { data: profile } = await admin.from('profiles').select('id, user_id, slug').eq('id', profileId).single();
 
-    const { error } = await admin
+    const updatePayload: Record<string, any> = {
+      market_value: Number(marketValue),
+      market_value_currency: currency
+    };
+
+    let { error } = await admin
       .from('profiles')
-      .update({ market_value: Number(marketValue) })
+      .update(updatePayload)
       .eq('id', profileId);
+
+    // Fallback if column market_value_currency does not exist yet
+    if (error && error.message.includes('market_value_currency')) {
+      const fallbackRes = await admin
+        .from('profiles')
+        .update({ market_value: Number(marketValue) })
+        .eq('id', profileId);
+      error = fallbackRes.error;
+    }
 
     if (error) return { error: error.message };
 

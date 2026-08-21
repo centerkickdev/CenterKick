@@ -8,6 +8,7 @@ import { ChevronLeft, Save } from 'lucide-react';
 import { updateMarketValue } from '@/app/admin/users/actions';
 import { useToast } from '@/context/ToastContext';
 import { FlagIcon } from '@/components/common/FlagIcon';
+import { CURRENCIES } from '@/lib/utils/currency';
 
 import { CoachCareerForm } from '@/app/(dashboard)/dashboard/profile/components/CoachCareerForm';
 import { PlayerCareerForm } from '@/app/(dashboard)/dashboard/profile/components/PlayerCareerForm';
@@ -25,7 +26,7 @@ export default function AdminUserProfileClient({
   clubsList = [],
   leaguesList = [],
   seasonsList = [],
-  countriesList = []
+  countriesList = [],
 }: {
   profile: any;
   role: string;
@@ -39,17 +40,20 @@ export default function AdminUserProfileClient({
   const router = useRouter();
   const [marketValue, setMarketValue] = useState(profile.market_value ?? '');
   const [savedMarketValue, setSavedMarketValue] = useState<number | string>(profile.market_value ?? '');
+  const [marketValueCurrency, setMarketValueCurrency] = useState<string>(profile.market_value_currency || 'EUR');
+  const [savedMarketValueCurrency, setSavedMarketValueCurrency] = useState<string>(profile.market_value_currency || 'EUR');
   const [isSaving, setIsSaving] = useState(false);
   const { showToast } = useToast();
 
   const handleSaveMarketValue = async () => {
     setIsSaving(true);
     const numValue = Number(marketValue);
-    const { error, success } = await updateMarketValue(profile.id, numValue);
+    const { error, success } = await updateMarketValue(profile.id, numValue, marketValueCurrency);
     if (error) {
       showToast(`Error updating market value: ${error}`, 'error');
     } else if (success) {
       setSavedMarketValue(numValue);
+      setSavedMarketValueCurrency(marketValueCurrency);
       showToast('Market value updated successfully!', 'success');
       router.refresh();
     }
@@ -193,11 +197,22 @@ export default function AdminUserProfileClient({
               </>
             )}
 
-            {/* Editable Market Value */}
+            {/* Editable Market Value with Currency Selector */}
             {role === 'player' && (
               <div className="col-span-full lg:col-span-3 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-                <p className="text-xs font-bold text-slate-800 tracking-wider uppercase">Market Value (€)</p>
+                <p className="text-xs font-bold text-slate-800 tracking-wider uppercase">Market Value</p>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <select
+                    value={marketValueCurrency}
+                    onChange={(e) => setMarketValueCurrency(e.target.value)}
+                    className="bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#b50a0a] focus:border-[#b50a0a] shadow-sm cursor-pointer"
+                  >
+                    {CURRENCIES.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.label}
+                      </option>
+                    ))}
+                  </select>
                   <input 
                     type="number" 
                     value={marketValue} 
@@ -207,7 +222,7 @@ export default function AdminUserProfileClient({
                   />
                   <button 
                     onClick={handleSaveMarketValue}
-                    disabled={isSaving || Number(marketValue) === Number(savedMarketValue)}
+                    disabled={isSaving || (Number(marketValue) === Number(savedMarketValue) && marketValueCurrency === savedMarketValueCurrency)}
                     className="bg-[#b50a0a] text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-red-800 transition-all disabled:bg-slate-200 disabled:text-slate-500 disabled:border disabled:border-slate-300 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2 shrink-0 shadow-sm"
                   >
                     {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Market Value</>}

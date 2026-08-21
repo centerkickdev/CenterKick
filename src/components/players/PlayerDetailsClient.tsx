@@ -10,6 +10,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/context/ToastContext";
 
+import { formatCurrencyAmount } from '@/lib/utils/currency';
+
 const formatAbsoluteUrl = (url: string) => {
    if (!url) return '';
    if (url.startsWith('http://') || url.startsWith('https://')) return url;
@@ -22,17 +24,8 @@ interface PlayerDetailsClientProps {
   news?: any[];
 }
 
-const formatMarketValue = (val: string | number | null | undefined) => {
-   if (val === null || val === undefined || val === '') return 'N/A';
-   const str = String(val).trim();
-   if (!str || str === 'N/A' || str === '—') return 'N/A';
-   if (/[€$£₦¥₹]/.test(str)) return str;
-   
-   const cleanStr = str.replace(/,/g, '');
-   const num = parseFloat(cleanStr);
-   if (isNaN(num)) return str;
-
-   return `$${num.toLocaleString('en-US')}`;
+const formatMarketValue = (val: string | number | null | undefined, currency?: string) => {
+   return formatCurrencyAmount(val, currency || 'EUR');
 };
 
 const formatFee = (val: string | number | null | undefined) => {
@@ -297,7 +290,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                               { label: 'Height', value: athlete.height_cm ? `${athlete.height_cm}cm` : 'N/A' },
                               { label: 'Weight', value: athlete.weight_kg ? `${athlete.weight_kg}kg` : 'N/A' },
                               { label: 'Jersey #', value: athlete.jersey_number || 'N/A' },
-                              { label: 'Market Value', value: formatMarketValue(athlete.market_value) },
+                              { label: 'Market Value', value: formatMarketValue(athlete.market_value, athlete.market_value_currency) },
                               { label: 'Managing Agent', value: 'Independent' },
                            ].map((item, i) => (
                               <div key={i} className="flex py-3 border-b border-gray-50">
