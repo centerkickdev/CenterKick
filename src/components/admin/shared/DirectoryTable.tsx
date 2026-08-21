@@ -127,7 +127,7 @@ export function DirectoryTable<T>({
               {columns.map((col) => (
                 <th 
                   key={col.key} 
-                  className={`px-2 md:px-4 py-5 text-xs font-bold text-gray-400 tracking-wide border-b border-gray-50 ${col.width || ''} ${col.className || ''}`}
+                  className={`px-2 md:px-4 py-5 text-xs font-bold text-gray-700 uppercase tracking-wider border-b border-gray-100 ${col.width || ''} ${col.className || ''}`}
                 >
                   {col.label}
                 </th>

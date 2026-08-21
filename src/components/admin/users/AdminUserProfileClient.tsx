@@ -151,43 +151,43 @@ export default function AdminUserProfileClient({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-8 gap-x-6">
             <div>
-              <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">Gender</p>
+              <p className="text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Gender</p>
               <p className="text-sm font-semibold text-slate-900">{profile.gender || 'Not specified'}</p>
             </div>
             <div>
-              <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">Date of Birth</p>
+              <p className="text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Date of Birth</p>
               <p className="text-sm font-semibold text-slate-900">{profile.date_of_birth ? new Date(profile.date_of_birth).toLocaleDateString() : 'Not specified'}</p>
             </div>
             <div>
-              <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">Country</p>
+              <p className="text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Country</p>
               <p className="text-sm font-semibold text-slate-900 flex items-center gap-2">
                 {profile.country && <FlagIcon country={profile.country} className="w-4 h-3" />}
                 {profile.country || 'Not specified'}
               </p>
             </div>
             <div className="overflow-hidden">
-              <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">Contact Email</p>
+              <p className="text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Contact Email</p>
               <p className="text-sm font-semibold text-slate-900 truncate" title={profile.contact_email || 'Not specified'}>
                 {profile.contact_email || 'Not specified'}
               </p>
             </div>
             <div>
-              <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">Phone Number</p>
+              <p className="text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Phone Number</p>
               <p className="text-sm font-semibold text-slate-900">{profile.phone_number || 'Not specified'}</p>
             </div>
 
             {role === 'player' && (
               <>
                 <div>
-                  <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">Position</p>
+                  <p className="text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Position</p>
                   <p className="text-sm font-semibold text-slate-900">{profile.position || 'Not specified'}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">Strong Foot</p>
+                  <p className="text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Strong Foot</p>
                   <p className="text-sm font-semibold text-slate-900">{profile.foot || 'Not specified'}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">Height / Weight</p>
+                  <p className="text-xs font-bold text-slate-700 tracking-wider uppercase mb-1">Height / Weight</p>
                   <p className="text-sm font-semibold text-slate-900">{profile.height_cm ? `${profile.height_cm}cm` : '--'} / {profile.weight_kg ? `${profile.weight_kg}kg` : '--'}</p>
                 </div>
               </>
@@ -195,20 +195,20 @@ export default function AdminUserProfileClient({
 
             {/* Editable Market Value */}
             {role === 'player' && (
-              <div className="col-span-full lg:col-span-3 bg-slate-50 p-4 sm:p-6 rounded-2xl border border-slate-100 space-y-3">
-                <p className="text-xs font-bold text-slate-400 tracking-widest uppercase">Market Value (€)</p>
+              <div className="col-span-full lg:col-span-3 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <p className="text-xs font-bold text-slate-800 tracking-wider uppercase">Market Value (€)</p>
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <input 
                     type="number" 
                     value={marketValue} 
                     onChange={(e) => setMarketValue(e.target.value)}
-                    className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-[#b50a0a]"
+                    className="bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-base font-bold text-slate-900 placeholder:text-slate-400 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-[#b50a0a] focus:border-[#b50a0a] shadow-sm"
                     placeholder="e.g. 500000"
                   />
                   <button 
                     onClick={handleSaveMarketValue}
                     disabled={isSaving || Number(marketValue) === Number(savedMarketValue)}
-                    className="bg-[#b50a0a] text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-red-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 shadow-sm"
+                    className="bg-[#b50a0a] text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-red-800 transition-all disabled:bg-slate-200 disabled:text-slate-500 disabled:border disabled:border-slate-300 disabled:shadow-none disabled:cursor-not-allowed flex items-center justify-center gap-2 shrink-0 shadow-sm"
                   >
                     {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Market Value</>}
                   </button>

@@ -42,6 +42,32 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
   const currentRole = searchParams.get('role') || 'all';
   const currentSearch = searchParams.get('q') || '';
   const [searchTerm, setSearchTerm] = useState(currentSearch);
+
+  // Sync searchTerm with currentSearch if URL changes externally
+  useEffect(() => {
+    setSearchTerm(currentSearch);
+  }, [currentSearch]);
+
+  // Real-time search effect: automatically triggers search after 350ms debounce when >= 3 characters or cleared
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      const trimmed = searchTerm.trim();
+      if (trimmed.length >= 3 || (trimmed.length === 0 && currentSearch !== '')) {
+        if (trimmed !== currentSearch) {
+          const params = new URLSearchParams(searchParams.toString());
+          if (trimmed.length >= 3) {
+            params.set('q', trimmed);
+          } else {
+            params.delete('q');
+          }
+          params.set('page', '1');
+          startTransition(() => router.push(`/admin/users?${params.toString()}`, { scroll: false }));
+        }
+      }
+    }, 350);
+
+    return () => clearTimeout(handler);
+  }, [searchTerm, currentSearch, router, searchParams]);
   
   const filteredUsers = useMemo(() => initialUsers, [initialUsers]);
 
@@ -67,8 +93,9 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    const trimmed = searchTerm.trim();
     const params = new URLSearchParams(searchParams.toString());
-    if (searchTerm) params.set('q', searchTerm);
+    if (trimmed) params.set('q', trimmed);
     else params.delete('q');
     params.set('page', '1');
     startTransition(() => router.push(`/admin/users?${params.toString()}`, { scroll: false }));
@@ -205,16 +232,39 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
       )}
 
       {/* Controls */}
-      <div className="p-4 sm:p-6 border-b border-gray-50 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/50">
+      <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50/50">
         <form onSubmit={handleSearch} className="relative flex-1 max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
           <input
             type="text"
-            placeholder="Search accounts by email or name..."
-            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#b50a0a]/10 focus:border-[#b50a0a] transition-all"
+            placeholder="Search accounts by email or name (3+ chars)..."
+            className="w-full pl-11 pr-10 py-3 bg-white border border-gray-300 rounded-2xl text-sm font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#b50a0a]/20 focus:border-[#b50a0a] transition-all shadow-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          {searchTerm && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchTerm('');
+                if (currentSearch) {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.delete('q');
+                  params.set('page', '1');
+                  startTransition(() => router.push(`/admin/users?${params.toString()}`, { scroll: false }));
+                }
+              }}
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+              title="Clear search"
+            >
+              <XCircle className="w-4 h-4" />
+            </button>
+          )}
+          {searchTerm.length > 0 && searchTerm.length < 3 && (
+            <span className="absolute left-4 -bottom-5 text-[10px] font-bold text-amber-600">
+              Type at least 3 characters to search...
+            </span>
+          )}
         </form>
 
         <div className="flex items-center gap-3 overflow-hidden">
@@ -224,10 +274,10 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
                 key={r}
                 onClick={() => handleRoleFilter(r)}
                 className={`px-3.5 py-2 rounded-lg text-xs font-bold tracking-wide transition-all shrink-0 ${
-                  currentRole === r ? 'bg-[#b50a0a] text-white shadow-lg' : 'text-gray-400 hover:text-[#b50a0a]'
+                  currentRole === r ? 'bg-[#b50a0a] text-white shadow-md' : 'text-gray-700 hover:text-[#b50a0a] hover:bg-gray-100'
                 }`}
               >
-                {r === 'all' ? 'All Roles' : r === 'organization' ? 'Orgs' : r + 's'}
+                {r === 'all' ? 'All Roles' : r === 'organization' ? 'Orgs' : r.charAt(0).toUpperCase() + r.slice(1) + 's'}
               </button>
             ))}
           </div>
@@ -281,8 +331,8 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-gray-900 truncate">{user.email}</p>
-                    <p className="text-xs font-bold text-gray-400 tracking-wide truncate">
+                    <p className="text-sm font-bold text-gray-900 truncate">{user.email}</p>
+                    <p className="text-xs font-semibold text-gray-600 tracking-wide truncate mt-0.5">
                       {user.profile?.first_name
                         ? `${user.profile.first_name} ${user.profile.last_name || ''}`.trim()
                         : `UID: ${user.id.substring(0, 8)}`}
@@ -292,11 +342,11 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
               </td>
               <td className="px-4 md:px-8 py-6 border-b border-gray-50 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className={`p-1.5 rounded-lg ${user.role ? 'bg-red-50 text-[#b50a0a]' : 'bg-gray-100 text-gray-400'}`}>
+                      <div className={`p-1.5 rounded-lg ${user.role ? 'bg-red-50 text-[#b50a0a]' : 'bg-gray-100 text-gray-500'}`}>
                         {getRoleIcon(user.role)}
                       </div>
-                      <span className={`text-xs font-bold tracking-wide ${user.role ? 'text-gray-900' : 'text-gray-300'}`}>
-                        {user.role || 'Unassigned'}
+                      <span className={`text-xs font-bold tracking-wide ${user.role ? 'text-gray-900' : 'text-gray-500'}`}>
+                        {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Unassigned'}
                       </span>
                     </div>
                   </td>
