@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { User, MapPin, Phone, Mail, Globe, Search, Camera, Info, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -45,14 +45,24 @@ export default function AdminUserProfileClient({
   const [isSaving, setIsSaving] = useState(false);
   const { showToast } = useToast();
 
+  useEffect(() => {
+    if (profile.market_value !== undefined && profile.market_value !== null) {
+      setMarketValue(profile.market_value);
+      setSavedMarketValue(profile.market_value);
+    }
+    if (profile.market_value_currency) {
+      setMarketValueCurrency(profile.market_value_currency);
+      setSavedMarketValueCurrency(profile.market_value_currency);
+    }
+  }, [profile.market_value, profile.market_value_currency]);
+
   const handleSaveMarketValue = async () => {
     setIsSaving(true);
-    const numValue = Number(marketValue);
-    const { error, success } = await updateMarketValue(profile.id, numValue, marketValueCurrency);
+    const { error, success } = await updateMarketValue(profile.id, marketValue, marketValueCurrency);
     if (error) {
       showToast(`Error updating market value: ${error}`, 'error');
     } else if (success) {
-      setSavedMarketValue(numValue);
+      setSavedMarketValue(marketValue);
       setSavedMarketValueCurrency(marketValueCurrency);
       showToast('Market value updated successfully!', 'success');
       router.refresh();

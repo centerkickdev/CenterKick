@@ -147,44 +147,76 @@ export async function deleteUsers(userIds: string[]) {
   return errors.length > 0 ? { error: `Failed to delete some users: ${errors.join(', ')}` } : { success: true };
 }
 
-export async function updateMarketValue(profileId: string, marketValue: number, currency: string = 'EUR') {
+export async function updateMarketValue(profileId: string, marketValue: number | string, currency: string = 'EUR') {
   try {
     await verifyStaffAccess();
     const admin = createAdminClient();
     
-    const { data: profile } = await admin.from('profiles').select('id, user_id, slug').eq('id', profileId).single();
+    // Find profile by id or user_id
+    let { data: profile } = await admin
+      .from('profiles')
+      .select('id, user_id, slug')
+      .eq('id', profileId)
+      .maybeSingle();
 
+    if (!profile) {
+      const { data: altProfile } = await admin
+        .from('profiles')
+        .select('id, user_id, slug')
+        .eq('user_id', profileId)
+        .maybeSingle();
+      profile = altProfile;
+    }
+
+    if (!profile) {
+      return { error: 'Profile record not found.' };
+    }
+
+    const valToSave = String(marketValue);
+
+    // Try updating both market_value and market_value_currency
     const updatePayload: Record<string, any> = {
-      market_value: Number(marketValue),
+      market_value: valToSave,
       market_value_currency: currency
     };
 
-    let { error } = await admin
+    let { data: updatedRows, error } = await admin
       .from('profiles')
       .update(updatePayload)
-      .eq('id', profileId);
+      .eq('id', profile.id)
+      .select('id, market_value');
 
-    // Fallback if column market_value_currency does not exist yet
-    if (error && error.message.includes('market_value_currency')) {
+    // Fallback if column market_value_currency does not exist yet in DB schema
+    if (error) {
       const fallbackRes = await admin
         .from('profiles')
-        .update({ market_value: Number(marketValue) })
-        .eq('id', profileId);
+        .update({ market_value: valToSave })
+        .eq('id', profile.id)
+        .select('id, market_value');
+      
       error = fallbackRes.error;
+      updatedRows = fallbackRes.data;
     }
 
-    if (error) return { error: error.message };
+    if (error) {
+      return { error: error.message };
+    }
+
+    if (!updatedRows || updatedRows.length === 0) {
+      return { error: 'No profile row was updated in the database.' };
+    }
 
     revalidatePath('/admin/users');
     revalidatePath('/admin/players');
-    if (profile) {
-      if (profile.user_id) revalidatePath(`/admin/users/${profile.user_id}`);
-      if (profile.slug) {
-        revalidatePath(`/admin/users/${profile.slug}`);
-        revalidatePath(`/players/${profile.slug}`);
-      }
+    if (profile.id) revalidatePath(`/admin/users/${profile.id}`);
+    if (profile.user_id) revalidatePath(`/admin/users/${profile.user_id}`);
+    if (profile.slug) {
+      revalidatePath(`/admin/users/${profile.slug}`);
+      revalidatePath(`/admin/players/${profile.slug}`);
+      revalidatePath(`/players/${profile.slug}`);
     }
     revalidatePath('/players');
+
     return { success: true };
   } catch (err: any) {
     return { error: err.message || 'Failed to update market value' };
