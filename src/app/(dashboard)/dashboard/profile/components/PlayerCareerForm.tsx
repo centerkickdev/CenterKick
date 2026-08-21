@@ -10,13 +10,17 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
     const transfers = data.transfer_history || [];
     onChange({
       ...data,
-      transfer_history: [...transfers, { club: '', fee: '', date: '', type: 'Permanent' }]
+      transfer_history: [...transfers, { club: '', from_club: '', to_club: '', fee: '', date: '', type: 'Permanent' }]
     });
   };
 
   const updateTransfer = (index: number, field: string, value: any) => {
     const transfers = [...(data.transfer_history || [])];
-    transfers[index] = { ...transfers[index], [field]: value };
+    if (field === 'club' || field === 'from_club') {
+      transfers[index] = { ...transfers[index], club: value, from_club: value };
+    } else {
+      transfers[index] = { ...transfers[index], [field]: value };
+    }
     onChange({ ...data, transfer_history: transfers });
   };
 
@@ -136,15 +140,27 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Previous Club</label>
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Departing Club (From)</label>
                    <SearchableCombobox
                      disabled={disabled}
                      options={clubsList}
-                     value={record.club || ''}
+                     value={record.from_club || record.club || ''}
                      valueField="name"
                      displayField="name"
-                     onChange={(val, isNew, newName) => updateTransfer(index, 'club', isNew ? newName : val)}
-                     placeholder="e.g. Real Madrid"
+                     onChange={(val, isNew, newName) => updateTransfer(index, 'from_club', isNew ? newName : val)}
+                     placeholder="e.g. Gombe United"
+                   />
+                </div>
+                <div>
+                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Joined Club (To) <span className="text-gray-400 font-normal opacity-80">(Optional)</span></label>
+                   <SearchableCombobox
+                     disabled={disabled}
+                     options={clubsList}
+                     value={record.to_club || ''}
+                     valueField="name"
+                     displayField="name"
+                     onChange={(val, isNew, newName) => updateTransfer(index, 'to_club', isNew ? newName : val)}
+                     placeholder="e.g. Shooting Stars"
                    />
                 </div>
                 <div>
@@ -163,15 +179,15 @@ export function PlayerCareerForm({ data, onChange, achievements, onAchievementsC
                 </div>
                 <div>
                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">
-                     Transfer Type {!!record.club && <span className="text-red-500">*</span>}
+                     Transfer Type {(!!record.club || !!record.from_club) && <span className="text-red-500">*</span>}
                    </label>
-                   <select required={!!record.club} className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={record.type} onChange={(e) => updateTransfer(index, 'type', e.target.value)} disabled={disabled}>
+                   <select required={!!record.club || !!record.from_club} className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={record.type} onChange={(e) => updateTransfer(index, 'type', e.target.value)} disabled={disabled}>
                      <option value="Permanent">Permanent</option>
                      <option value="Loan">Loan</option>
                      <option value="Free Transfer">Free Transfer</option>
                    </select>
                 </div>
-                <div>
+                <div className="md:col-span-2">
                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Transfer Fee (Optional)</label>
                    <input type="text" className="w-full px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none text-gray-900 disabled:bg-gray-50 disabled:text-gray-500" value={record.fee} onChange={(e) => updateTransfer(index, 'fee', e.target.value)} placeholder="e.g. €50M, Undisclosed" disabled={disabled} />
                 </div>

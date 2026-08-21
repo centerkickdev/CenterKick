@@ -148,8 +148,10 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
    // Enrich transfer history
    if (athlete.transfer_history && Array.isArray(athlete.transfer_history)) {
       athlete.transfer_history = athlete.transfer_history.map((t: any, index: number, arr: any[]) => {
-         const from_club = t.from_club || t.club;
-         const to_club = t.to_club || (index === 0 ? athlete.current_club : arr[index - 1].club);
+         const from_club = t.from_club || t.club || 'Unknown';
+         const nextTransferFrom = index < arr.length - 1 ? (arr[index + 1].from_club || arr[index + 1].club) : null;
+         const to_club = t.to_club || nextTransferFrom || athlete.current_club || 'Unknown';
+
          return {
             ...t,
             fee: t.transfer_fee || t.fee,
