@@ -16,6 +16,9 @@ export default function SettingsPage() {
     weeklyDigest: false,
     marketingEmails: true,
     profileVisibility: 'public',
+    email_reminders_enabled: true,
+    profile_reminders_enabled: true,
+    subscription_reminders_enabled: true,
   });
 
   useEffect(() => {
@@ -25,9 +28,19 @@ export default function SettingsPage() {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           setUserEmail(user.email || '');
-          const { data: profile } = await supabase.from('profiles').select('visibility').eq('user_id', user.id).single();
-          if (profile && profile.visibility) {
-            setFormData(prev => ({...prev, profileVisibility: profile.visibility}));
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('visibility, email_reminders_enabled, profile_reminders_enabled, subscription_reminders_enabled')
+            .eq('user_id', user.id)
+            .single();
+          if (profile) {
+            setFormData(prev => ({
+              ...prev,
+              profileVisibility: profile.visibility || 'public',
+              email_reminders_enabled: profile.email_reminders_enabled !== false,
+              profile_reminders_enabled: profile.profile_reminders_enabled !== false,
+              subscription_reminders_enabled: profile.subscription_reminders_enabled !== false,
+            }));
           }
           const identities = user.identities || [];
           const googleId = identities.find((id: any) => id.provider === 'google');
@@ -108,8 +121,13 @@ export default function SettingsPage() {
     const { data: { user } } = await supabase.auth.getUser();
     
     if (user) {
-      // Update profile visibility
-      await supabase.from('profiles').update({ visibility: formData.profileVisibility }).eq('user_id', user.id);
+      // Update profile preferences
+      await supabase.from('profiles').update({ 
+        visibility: formData.profileVisibility,
+        email_reminders_enabled: formData.email_reminders_enabled,
+        profile_reminders_enabled: formData.profile_reminders_enabled,
+        subscription_reminders_enabled: formData.subscription_reminders_enabled,
+      }).eq('user_id', user.id);
       
       // Update email if changed
       if (userEmail !== user.email) {
@@ -251,13 +269,68 @@ export default function SettingsPage() {
           )}
 
           {activeSection === 'Notifications' && (
-            <div className="bg-white rounded-[40px] border border-gray-100 shadow-sm p-4 md:p-8 md:p-12 space-y-8 animate-in fade-in duration-500 flex flex-col items-center justify-center min-h-[300px]">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <Bell className="w-8 h-8 text-gray-400" />
+            <form onSubmit={handlePreferencesSave} className="bg-white rounded-[40px] border border-gray-100 shadow-sm p-4 md:p-8 md:p-12 space-y-8 animate-in fade-in duration-500">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-gray-900">Email & Notification Preferences</h2>
+                <p className="text-xs font-bold text-gray-500 mt-1">Control which automated email updates and reminders you receive.</p>
               </div>
-              <h2 className="text-xl font-bold tracking-wide text-gray-900">Coming Soon</h2>
-              <p className="text-sm font-bold text-gray-500 text-center max-w-md">We're working hard on bringing you granular notification controls. Stay tuned!</p>
-            </div>
+
+              <div className="space-y-4">
+                {/* Master Email Reminders */}
+                <div className="p-5 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-between transition-all hover:shadow-sm">
+                  <div className="flex flex-col pr-4">
+                    <p className="text-sm font-bold text-gray-900 tracking-wide">Automated Email Reminders</p>
+                    <p className="text-xs font-bold text-gray-500 mt-1">Master switch to allow periodic reminder emails regarding your account</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, email_reminders_enabled: !prev.email_reminders_enabled }))}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.email_reminders_enabled ? 'bg-[#b50a0a]' : 'bg-gray-200'}`}
+                  >
+                    <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.email_reminders_enabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                  </button>
+                </div>
+
+                {/* Profile Completion Reminders */}
+                <div className="p-5 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-between transition-all hover:shadow-sm">
+                  <div className="flex flex-col pr-4">
+                    <p className="text-sm font-bold text-gray-900 tracking-wide">Profile Completion Reminders</p>
+                    <p className="text-xs font-bold text-gray-500 mt-1">Weekly reminders on Mondays to finish your profile setup and boost scout visibility</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, profile_reminders_enabled: !prev.profile_reminders_enabled }))}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.profile_reminders_enabled ? 'bg-[#b50a0a]' : 'bg-gray-200'}`}
+                  >
+                    <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.profile_reminders_enabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                  </button>
+                </div>
+
+                {/* Subscription Reminders */}
+                <div className="p-5 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-between transition-all hover:shadow-sm">
+                  <div className="flex flex-col pr-4">
+                    <p className="text-sm font-bold text-gray-900 tracking-wide">Subscription & Plan Reminders</p>
+                    <p className="text-xs font-bold text-gray-500 mt-1">Weekly prompts regarding subscription plans and premium membership benefits</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, subscription_reminders_enabled: !prev.subscription_reminders_enabled }))}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.subscription_reminders_enabled ? 'bg-[#b50a0a]' : 'bg-gray-200'}`}
+                  >
+                    <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.subscription_reminders_enabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="w-full sm:w-auto px-6 py-3.5 bg-gray-900 hover:bg-black text-white text-xs font-bold tracking-wide rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+              >
+                <Save className="w-4 h-4" />
+                {isSaving ? 'Saving Preferences...' : 'Save Notification Preferences'}
+              </button>
+            </form>
           )}
         </div>
       </div>

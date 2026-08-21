@@ -95,10 +95,13 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
   const { showToast, hideToast } = useToast();
   const router = useRouter();
 
+  const [isTriggeringCron, setIsTriggeringCron] = useState(false);
+  const [cronLogResult, setCronLogResult] = useState<any>(null);
+
   const sections = [
     { title: 'Global Configuration', label: 'Core', icon: Globe },
     { title: 'Mail & SMTP Settings', label: 'Infrastructure', icon: Mail },
-
+    { title: 'Email Reminders & Automation', label: 'Crons', icon: Activity },
     { title: 'Security & Access', label: 'System', icon: Shield },
     { title: 'Banners & Assets', label: 'Branding', icon: Layers },
     { title: 'Social Links', label: 'Marketing', icon: Layers },
@@ -171,6 +174,26 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
     setSettings(newSettings);
     setShowResetConfirm(false);
     showToast(`${activeSection.split(' ')[0]} settings reset (click Save to persist)`, 'success');
+  };
+
+  const handleTriggerRemindersCron = async () => {
+    setIsTriggeringCron(true);
+    const toastId = showToast('Triggering reminder emails dispatch...', 'loading');
+    try {
+      const res = await fetch('/api/cron/reminders');
+      const data = await res.json();
+      setCronLogResult(data);
+      if (data.success) {
+        showToast(`Reminders dispatch completed! Sent ${data.sentCount} emails.`, 'success');
+      } else {
+        showToast(`Dispatch error: ${data.error || 'Failed'}`, 'error');
+      }
+    } catch (err) {
+      showToast('Failed to execute reminder dispatch', 'error');
+    } finally {
+      setIsTriggeringCron(false);
+      hideToast(toastId);
+    }
   };
 
   const handleTestEmail = async () => {
@@ -450,6 +473,49 @@ export function SettingsClient({ initialSettings }: { initialSettings: Record<st
                       {isSaving ? 'Saving...' : 'Save Mail Settings'}
                     </button>
                  </div>
+              </div>
+            )}
+
+            {activeSection === 'Email Reminders & Automation' && (
+              <div className="space-y-10 animate-in slide-in-from-bottom-2 duration-300">
+                <div className="flex items-center justify-between border-b border-gray-50 pb-6">
+                   <div>
+                      <h3 className="text-base font-bold text-gray-900 tracking-wide">Automated Weekly Reminders</h3>
+                      <p className="text-xs text-gray-900 font-bold mt-1">Scheduled for Mondays at 9:00 AM UTC (Vercel Cron)</p>
+                   </div>
+                   <div className="flex items-center gap-2 bg-green-50 text-green-700 px-4 py-2 rounded-xl text-xs font-bold tracking-wide border border-green-100">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Weekly Cron Active
+                   </div>
+                </div>
+
+                <div className="space-y-6">
+                   <div className="p-6 bg-gray-50 rounded-[2rem] border border-gray-100 space-y-4">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                         <div>
+                            <h4 className="text-sm font-bold text-gray-900">Manual Emergency Dispatch</h4>
+                            <p className="text-xs text-gray-500 font-bold mt-0.5">Trigger catch-up reminders immediately for eligible users (unsubscribed / incomplete profiles)</p>
+                         </div>
+                         <button
+                           onClick={handleTriggerRemindersCron}
+                           disabled={isTriggeringCron}
+                           className="bg-gray-900 text-white px-6 py-3.5 rounded-xl font-bold text-xs tracking-wide transition-all hover:bg-black disabled:opacity-50 flex items-center gap-2 shadow-md shrink-0"
+                         >
+                            {isTriggeringCron ? <Loader2 className="w-4 h-4 animate-spin text-[#b50a0a]" /> : <Zap className="w-4 h-4 text-[#b50a0a]" />}
+                            {isTriggeringCron ? 'Processing Dispatch...' : 'Dispatch Reminders Now'}
+                         </button>
+                      </div>
+                      
+                      {cronLogResult && (
+                         <div className="mt-4 p-4 bg-white rounded-xl border border-gray-200 text-xs font-mono text-gray-800 space-y-1">
+                            <p className="font-bold text-green-700">✓ Execution Completed in {cronLogResult.durationMs}ms</p>
+                            <p>Schedule: {cronLogResult.schedule}</p>
+                            <p>Processed Candidates: {cronLogResult.processedCount}</p>
+                            <p>Emails Sent: {cronLogResult.sentCount} | Failed: {cronLogResult.failedCount}</p>
+                         </div>
+                      )}
+                   </div>
+                </div>
               </div>
             )}
 
