@@ -285,9 +285,15 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, email_reminders_enabled: !prev.email_reminders_enabled }))}
-                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.email_reminders_enabled ? 'bg-[#b50a0a]' : 'bg-gray-200'}`}
+                    className={`relative inline-flex items-center h-7 w-12 shrink-0 cursor-pointer rounded-full p-1 transition-colors duration-300 ease-in-out focus:outline-none ${formData.email_reminders_enabled ? 'bg-emerald-600' : 'bg-[#b50a0a]'}`}
                   >
-                    <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.email_reminders_enabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                    <span 
+                      style={{
+                        transform: formData.email_reminders_enabled ? 'translateX(20px)' : 'translateX(0px)',
+                        transition: 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}
+                      className="pointer-events-none block h-5 w-5 rounded-full bg-white shadow-md" 
+                    />
                   </button>
                 </div>
 
@@ -300,9 +306,15 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, profile_reminders_enabled: !prev.profile_reminders_enabled }))}
-                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.profile_reminders_enabled ? 'bg-[#b50a0a]' : 'bg-gray-200'}`}
+                    className={`relative inline-flex items-center h-7 w-12 shrink-0 cursor-pointer rounded-full p-1 transition-colors duration-300 ease-in-out focus:outline-none ${formData.profile_reminders_enabled ? 'bg-emerald-600' : 'bg-[#b50a0a]'}`}
                   >
-                    <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.profile_reminders_enabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                    <span 
+                      style={{
+                        transform: formData.profile_reminders_enabled ? 'translateX(20px)' : 'translateX(0px)',
+                        transition: 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}
+                      className="pointer-events-none block h-5 w-5 rounded-full bg-white shadow-md" 
+                    />
                   </button>
                 </div>
 
@@ -315,9 +327,15 @@ export default function SettingsPage() {
                   <button
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, subscription_reminders_enabled: !prev.subscription_reminders_enabled }))}
-                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${formData.subscription_reminders_enabled ? 'bg-[#b50a0a]' : 'bg-gray-200'}`}
+                    className={`relative inline-flex items-center h-7 w-12 shrink-0 cursor-pointer rounded-full p-1 transition-colors duration-300 ease-in-out focus:outline-none ${formData.subscription_reminders_enabled ? 'bg-emerald-600' : 'bg-[#b50a0a]'}`}
                   >
-                    <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${formData.subscription_reminders_enabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                    <span 
+                      style={{
+                        transform: formData.subscription_reminders_enabled ? 'translateX(20px)' : 'translateX(0px)',
+                        transition: 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+                      }}
+                      className="pointer-events-none block h-5 w-5 rounded-full bg-white shadow-md" 
+                    />
                   </button>
                 </div>
               </div>
