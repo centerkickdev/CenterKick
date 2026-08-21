@@ -1,4 +1,7 @@
+import { getEffectiveUserSession } from '@/lib/auth/impersonation';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import { 
   Users, TrendingUp, ExternalLink, Star, Target, Eye, 
   Calendar, ChevronRight, Shield, AlertTriangle, ArrowRight,
@@ -11,25 +14,30 @@ import { CopyableProfileLink } from '@/components/dashboard/CopyableProfileLink'
 import { isProfileComplete } from '@/lib/utils/profile';
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  const { data: userRecord, error: userError } = await supabase
+  const session = await getEffectiveUserSession();
+  if (!session) {
+    redirect('/login');
+  }
+
+  const activeUserId = session.effectiveUserId;
+  const db = session.isImpersonating ? createAdminClient() : await createClient();
+
+  const { data: userRecord, error: userError } = await db
     .from('users')
     .select('*')
-    .eq('id', user?.id)
+    .eq('id', activeUserId)
     .single();
 
-  const { data: profile } = await supabase
+  const { data: profile } = await db
     .from('profiles')
     .select('*, agent:users!profiles_agent_id_fkey(id, profiles!profiles_user_id_fkey(*))')
-    .eq('user_id', user?.id)
+    .eq('user_id', activeUserId)
     .single();
 
-  const { data: subscriptions } = await supabase
+  const { data: subscriptions } = await db
     .from('subscriptions')
     .select('*')
-    .eq('user_id', user?.id)
+    .eq('user_id', activeUserId)
     .eq('status', 'active');
 
   let publicViews = 0;
@@ -191,7 +199,7 @@ export default async function DashboardPage() {
                   <span className="text-sm font-bold tracking-wide">Warning: Profile Access Issue</span>
                </div>
                <div className="pl-8 text-xs font-bold tracking-wide leading-relaxed">
-                  <p>Auth Email: <span className="text-gray-900">{user?.email}</span></p>
+                  <p>Account Email: <span className="text-gray-900">{(userRecord as any)?.email || session.targetUserEmail}</span></p>
                   <p className="text-red-500 font-bold mt-2">DB Error: {userError.message}</p>
                </div>
             </div>
@@ -199,7 +207,7 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-bold text-gray-900 tracking-tighter flex flex-col">
               Welcome back,
-              <span className="text-[#b50a0a]">{profile?.first_name || user?.user_metadata?.first_name || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'}</span>
+              <span className="text-[#b50a0a]">{profile?.first_name || (userRecord as any)?.email?.split('@')[0] || session.targetUserEmail?.split('@')[0] || 'User'}</span>
             </h1>
             {profile?.country && <FlagIcon country={profile.country} className="w-5 h-3 rounded-sm shadow-sm shrink-0" />}
           </div>

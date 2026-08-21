@@ -3,17 +3,46 @@
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { revalidatePath } from 'next/cache';
+import { getEffectiveUserSession } from '@/lib/auth/impersonation';
+
+export async function getEffectiveProfileData() {
+  const session = await getEffectiveUserSession();
+  if (!session) return { error: 'Unauthorized' };
+
+  const activeUserId = session.effectiveUserId;
+  const db = session.isImpersonating ? createAdminClient() : await createClient();
+
+  const [
+    { data: userRecord },
+    { data: profileRecord },
+    { data: subscriptions }
+  ] = await Promise.all([
+    db.from('users').select('role').eq('id', activeUserId).single(),
+    db.from('profiles').select('*').eq('user_id', activeUserId).single(),
+    db.from('subscriptions').select('id').eq('user_id', activeUserId).eq('status', 'active')
+  ]);
+
+  return {
+    user: { id: activeUserId },
+    userRecord,
+    profileRecord,
+    isSubscribed: Boolean(subscriptions && subscriptions.length > 0),
+    isImpersonating: session.isImpersonating,
+  };
+}
 
 export async function requestProfileEdit(profileId: string, changes: Record<string, { old: any; new: any; document_url?: string }>) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) {
+  const session = await getEffectiveUserSession();
+  if (!session) {
     return { error: 'Unauthorized' };
   }
 
+  const db = session.isImpersonating ? createAdminClient() : await createClient();
+
+  const activeUserId = session.effectiveUserId;
+
   // Verify the user is the managing agent or the profile owner
-  const { data: profile, error: profileError } = await supabase
+  const { data: profile, error: profileError } = await db
     .from('profiles')
     .select('id, user_id, agent_id, organization_id, first_name, last_name')
     .eq('id', profileId)
@@ -23,14 +52,14 @@ export async function requestProfileEdit(profileId: string, changes: Record<stri
     return { error: 'Profile not found' };
   }
 
-  if (profile.user_id !== user.id && profile.agent_id !== user.id && profile.organization_id !== user.id) {
+  if (profile.user_id !== activeUserId && profile.agent_id !== activeUserId && profile.organization_id !== activeUserId) {
     return { error: 'You do not have permission to edit this profile.' };
   }
 
   // Insert edits
   const editsToInsert = Object.entries(changes).map(([field_name, values]) => ({
     profile_id: profileId,
-    requested_by: user.id,
+    requested_by: activeUserId,
     field_name,
     old_value: String(values.old ?? ''),
     new_value: String(values.new ?? ''),
@@ -38,7 +67,7 @@ export async function requestProfileEdit(profileId: string, changes: Record<stri
     status: 'pending'
   }));
 
-  const { error: insertError } = await supabase
+  const { error: insertError } = await db
     .from('profile_edits')
     .insert(editsToInsert);
 

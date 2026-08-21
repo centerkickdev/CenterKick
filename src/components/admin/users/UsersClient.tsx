@@ -133,10 +133,8 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
         showToast('error', res.error);
         setImpersonatingUser(null);
       } else if (res?.success) {
-        window.open('/dashboard', '_blank');
-        setTimeout(() => {
-          setImpersonatingUser(null);
-        }, 800);
+        showToast('success', `Switching to ${user.first_name || user.email}'s account view...`);
+        window.location.href = '/dashboard';
       }
     } catch (err: any) {
       showToast('error', err?.message || 'Failed to initiate preview mode.');

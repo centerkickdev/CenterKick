@@ -133,18 +133,49 @@ export async function requestVerification(formData: FormData) {
   return { success: true };
 }
 
-export async function getUserTransactions() {
-  const supabase = await createClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
+import { getEffectiveUserSession } from '@/lib/auth/impersonation';
 
-  if (authError || !user) {
+export async function getEffectiveSubscriptionData() {
+  const session = await getEffectiveUserSession();
+  if (!session) return { error: 'Unauthorized' };
+
+  const activeUserId = session.effectiveUserId;
+  const db = session.isImpersonating ? createAdminClient() : await createClient();
+
+  const [
+    { data: profData },
+    { data: userData },
+    { data: settings }
+  ] = await Promise.all([
+    db.from('profiles').select('*').eq('user_id', activeUserId).single(),
+    db.from('users').select('role').eq('id', activeUserId).single(),
+    db.from('site_content').select('content').eq('page', 'settings').eq('section', 'payment').single()
+  ]);
+
+  if (profData) {
+    profData.role = userData?.role || 'player';
+  }
+
+  return {
+    profData,
+    settings: settings?.content || { paymentLink: 'https://paystack.com/pay/centerkick-pro' },
+    isImpersonating: session.isImpersonating
+  };
+}
+
+export async function getUserTransactions() {
+  const session = await getEffectiveUserSession();
+  if (!session) {
     return { error: 'Unauthorized' };
   }
 
-  const { data: profile, error: profileError } = await supabase
+  const activeUserId = session.effectiveUserId;
+  const db = session.isImpersonating ? createAdminClient() : await createClient();
+
+  const { data: profile, error: profileError } = await db
     .from('profiles')
     .select('id')
-    .eq('user_id', user.id)
+    .eq('user_id', activeUserId)
     .single();
 
   if (profileError || !profile || !profile.id) {

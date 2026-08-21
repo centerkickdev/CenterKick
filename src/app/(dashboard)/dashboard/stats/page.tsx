@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { BarChart3, Eye, Trophy, Calendar, Plus, Trash2, Video, Save } from 'lucide-react';
-import { createClient } from '@/lib/supabase/client';
+import { getEffectiveProfileData } from '../profile/actions';
 
 export default function StatsPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -20,15 +20,9 @@ export default function StatsPage() {
 
   useEffect(() => {
     async function loadStats() {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('jersey_number, height_cm, weight_kg, position')
-          .eq('user_id', user.id)
-          .single();
-        // Fallback or load from profiles if needed
+      const data = await getEffectiveProfileData();
+      if (data && data.profileRecord) {
+        // Stats loaded for target effective user
       }
       setIsLoading(false);
     }

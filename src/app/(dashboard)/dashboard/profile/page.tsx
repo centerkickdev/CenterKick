@@ -24,7 +24,7 @@ import {
 import { ProfileCompletenessWidget } from '@/components/dashboard/ProfileCompletenessWidget';
 import { RichTextEditor } from '@/components/cms/RichTextEditor';
 import { createClient } from '@/lib/supabase/client';
-import { requestProfileEdit, invalidateProfileCache, submitUserLeague, submitUserClub } from './actions';
+import { requestProfileEdit, invalidateProfileCache, submitUserLeague, submitUserClub, getEffectiveProfileData } from './actions';
 import { useToast } from '@/context/ToastContext';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
@@ -98,21 +98,13 @@ export default function ProfileEditor() {
 
   useEffect(() => {
     async function loadData() {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const data = await getEffectiveProfileData();
 
-      if (user) {
-        const { data: userRecord } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-
-        const { data: profileRecord } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .single();
+      if (data && data.userRecord && data.profileRecord) {
+        const user = data.user;
+        const userRecord = data.userRecord;
+        const profileRecord = data.profileRecord;
+        const supabase = createClient();
 
         const { data: subscriptions } = await supabase
           .from('subscriptions')

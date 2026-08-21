@@ -21,30 +21,32 @@ export default function SettingsPage() {
     subscription_reminders_enabled: true,
   });
 
+  const [isImpersonating, setIsImpersonating] = useState(false);
+
   useEffect(() => {
     async function loadUser() {
       try {
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          setUserEmail(user.email || '');
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('visibility, email_reminders_enabled, profile_reminders_enabled, subscription_reminders_enabled')
-            .eq('user_id', user.id)
-            .single();
-          if (profile) {
+        const { getEffectiveSettingsData } = await import('./actions');
+        const data = await getEffectiveSettingsData();
+        if (data && !data.error) {
+          setUserEmail(data.email || '');
+          setIsImpersonating(data.isImpersonating || false);
+          const p = data.profile;
+          if (p) {
             setFormData(prev => ({
               ...prev,
-              profileVisibility: profile.visibility || 'public',
-              email_reminders_enabled: profile.email_reminders_enabled !== false,
-              profile_reminders_enabled: profile.profile_reminders_enabled !== false,
-              subscription_reminders_enabled: profile.subscription_reminders_enabled !== false,
+              profileVisibility: p.visibility || 'public',
+              email_reminders_enabled: p.email_reminders_enabled !== false,
+              profile_reminders_enabled: p.profile_reminders_enabled !== false,
+              subscription_reminders_enabled: p.subscription_reminders_enabled !== false,
             }));
           }
-          const identities = user.identities || [];
-          const googleId = identities.find((id: any) => id.provider === 'google');
-          setGoogleIdentity(googleId);
+          const { data: { user } } = await createClient().auth.getUser();
+          if (user) {
+            const identities = user.identities || [];
+            const googleId = identities.find((id: any) => id.provider === 'google');
+            setGoogleIdentity(googleId);
+          }
         }
       } catch (err) {
         console.error("Failed to load user settings:", err);
@@ -56,21 +58,23 @@ export default function SettingsPage() {
   }, []);
 
   const handleLinkGoogle = async () => {
+    if (isImpersonating) {
+      setStatus({ type: 'error', msg: 'Account linking is disabled while in View-As mode.' });
+      return;
+    }
     setIsSaving(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.linkIdentity({
+    await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard/settings`
-      }
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=/dashboard/settings` }
     });
-    if (error) {
-      setStatus({ type: 'error', msg: `Failed to link: ${error.message}` });
-      setIsSaving(false);
-    }
   };
 
   const handleUnlinkGoogle = async () => {
+    if (isImpersonating) {
+      setStatus({ type: 'error', msg: 'Account unlinking is disabled while in View-As mode.' });
+      return;
+    }
     if (!googleIdentity) return;
     if (!confirm("Are you sure you want to unlink your Google account? You will need to use your password to log in.")) return;
 
@@ -88,6 +92,10 @@ export default function SettingsPage() {
 
   const handlePasswordUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isImpersonating) {
+      setStatus({ type: 'error', msg: 'Password updates are disabled while in View-As mode.' });
+      return;
+    }
     setIsSaving(true);
     setStatus(null);
 
@@ -117,34 +125,19 @@ export default function SettingsPage() {
     e.preventDefault();
     setIsSaving(true);
     
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const { updateEffectiveNotificationSettings } = await import('./actions');
+    const res = await updateEffectiveNotificationSettings({
+      visibility: formData.profileVisibility,
+      email_reminders_enabled: formData.email_reminders_enabled,
+      profile_reminders_enabled: formData.profile_reminders_enabled,
+      subscription_reminders_enabled: formData.subscription_reminders_enabled,
+    });
     
-    if (user) {
-      // Update profile preferences
-      await supabase.from('profiles').update({ 
-        visibility: formData.profileVisibility,
-        email_reminders_enabled: formData.email_reminders_enabled,
-        profile_reminders_enabled: formData.profile_reminders_enabled,
-        subscription_reminders_enabled: formData.subscription_reminders_enabled,
-      }).eq('user_id', user.id);
-      
-      // Update email if changed
-      if (userEmail !== user.email) {
-        const { error } = await supabase.auth.updateUser({ email: userEmail });
-        if (error) {
-          setStatus({ type: 'error', msg: `Email update failed: ${error.message}` });
-          setIsSaving(false);
-          return;
-        } else {
-          setStatus({ type: 'success', msg: 'Preferences updated! A confirmation link has been sent to both your old and new email addresses to verify the change.' });
-          setIsSaving(false);
-          return;
-        }
-      }
+    if (res.error) {
+      setStatus({ type: 'error', msg: res.error });
+    } else {
+      setStatus({ type: 'success', msg: 'Preferences updated successfully!' });
     }
-    
-    setStatus({ type: 'success', msg: 'Preferences updated successfully!' });
     setIsSaving(false);
   };
 

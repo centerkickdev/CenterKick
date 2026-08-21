@@ -80,42 +80,13 @@ export default function SubscriptionPage() {
 
   useEffect(() => {
     async function loadData() {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const { getEffectiveSubscriptionData, getUserTransactions } = await import('./actions');
+      const subData = await getEffectiveSubscriptionData();
 
-      if (user) {
-        // Fetch profile for verification status
-        const { data: profData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .single();
+      if (subData && subData.profData) {
+        setProfile(subData.profData);
+        setPaymentSettings(subData.settings);
 
-        // Fetch user role from public.users
-        const { data: userData } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-
-        if (profData) {
-          profData.role = userData?.role || 'player';
-          profData.email = user.email;
-        }
-
-        // Fetch payment settings from CMS
-        const { data: settings } = await supabase
-          .from('site_content')
-          .select('content')
-          .eq('page', 'settings')
-          .eq('section', 'payment')
-          .single();
-
-        setProfile(profData);
-        setPaymentSettings(settings?.content || { paymentLink: 'https://paystack.com/pay/centerkick-pro' });
-
-        // Fetch user transaction history securely
-        const { getUserTransactions } = await import('./actions');
         const txRes = await getUserTransactions();
         if (txRes && txRes.transactions) {
           setTransactions(txRes.transactions);
