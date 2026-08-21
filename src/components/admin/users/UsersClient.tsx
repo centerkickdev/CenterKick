@@ -32,9 +32,10 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   
-  // Selection State
+  // Selection & Impersonation Loading State
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [impersonatingUser, setImpersonatingUser] = useState<{ id: string; email: string } | null>(null);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -122,21 +123,24 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
     }
   };
 
-  const handleImpersonate = async (userId: string) => {
-    setActionLoading(userId);
+  const handleImpersonate = async (user: any) => {
+    setImpersonatingUser({ id: user.id, email: user.email });
     setOpenDropdown(null);
+
     try {
-      const result = await startImpersonation(userId, 'SuperAdmin View-As Preview');
-      if (result?.error) {
-        showToast('error', result.error);
-        setActionLoading(null);
+      const res = await startImpersonation(user.id, 'SuperAdmin View-As Preview');
+      if (res?.error) {
+        showToast('error', res.error);
+        setImpersonatingUser(null);
+      } else if (res?.success) {
+        window.open('/dashboard', '_blank');
+        setTimeout(() => {
+          setImpersonatingUser(null);
+        }, 800);
       }
     } catch (err: any) {
-      // Next.js redirect throws an error internally when navigating
-      if (err?.message !== 'NEXT_REDIRECT') {
-        showToast('error', err.message || 'Failed to initiate preview mode.');
-        setActionLoading(null);
-      }
+      showToast('error', err?.message || 'Failed to initiate preview mode.');
+      setImpersonatingUser(null);
     }
   };
 
@@ -188,6 +192,17 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
  }`}>
           {toast.type === 'success' ? <CheckCircle className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
           <p className="text-xs font-bold tracking-wide">{toast.message}</p>
+        </div>
+      )}
+
+      {/* Full-Screen Loading Overlay when Starting Impersonation */}
+      {impersonatingUser && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md z-[9999] flex flex-col items-center justify-center text-white animate-in fade-in duration-200">
+          <div className="w-16 h-16 rounded-2xl bg-amber-600/90 border border-amber-400/50 flex items-center justify-center mb-4 shadow-2xl animate-bounce">
+            <RefreshCw className="w-8 h-8 text-white animate-spin" />
+          </div>
+          <h3 className="text-xl font-bold tracking-tight">Activating Preview Mode...</h3>
+          <p className="text-xs text-amber-200 mt-1 font-medium">Opening {impersonatingUser.email} in a new tab</p>
         </div>
       )}
 
@@ -351,9 +366,9 @@ export function UsersClient({ initialUsers, totalCount, currentPage, pageSize, i
                               {isSuperAdmin && (
                                 <>
                                   <button
-                                    onClick={() => handleImpersonate(user.id)}
-                                    className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold tracking-wide text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-xl transition-all border border-amber-200/60 my-1"
-                                    title="Preview user dashboard in View-As mode"
+                                    onClick={() => handleImpersonate(user)}
+                                    className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold tracking-wide text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-xl transition-all border border-amber-200/60 my-1 cursor-pointer"
+                                    title="Preview user dashboard in View-As mode in a new tab"
                                   >
                                     <Eye className="w-3.5 h-3.5 text-amber-600" /> View-As User
                                   </button>

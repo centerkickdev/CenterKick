@@ -57,12 +57,11 @@ export async function startImpersonation(targetUserId: string, reason?: string) 
       maxAge: 60 * 60, // 1 hour TTL
       path: '/',
     });
+    return { success: true };
   } catch (err: any) {
     console.error('Failed to log or start impersonation:', err);
     return { error: err.message || 'Failed to start impersonation session.' };
   }
-
-  redirect('/dashboard');
 }
 
 export async function stopImpersonation() {
