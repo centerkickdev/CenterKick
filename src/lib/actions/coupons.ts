@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { CouponCode, ValidationResult, ResolutionMode, generateCouponCodePrefix } from '@/types/coupons';
 import { sendGiftVoucherEmail } from '@/lib/resend';
 
@@ -130,10 +131,10 @@ export async function purchaseGiftVoucher(params: {
   durationMonths: number;
   paymentReference: string;
 }) {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
   const code = generateCouponCodePrefix('GIFT');
 
-  const { data: voucher, error } = await supabase
+  const { data: voucher, error } = await adminClient
     .from('coupon_codes')
     .insert({
       code,
@@ -176,7 +177,7 @@ export async function purchaseGiftVoucher(params: {
   }
 
   // Audit Trail Log
-  await supabase.from('coupon_audit_logs').insert({
+  await adminClient.from('coupon_audit_logs').insert({
     actor_email: params.buyerEmail,
     action: 'CREATED',
     target_id: voucher.id,
@@ -199,10 +200,10 @@ export async function purchaseOrgSponsorshipPackage(params: {
   currency: string;
   paymentReference: string;
 }) {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
 
   // 1. Create Package Record
-  const { data: pkg, error: pkgErr } = await supabase
+  const { data: pkg, error: pkgErr } = await adminClient
     .from('org_sponsorship_packages')
     .insert({
       org_id: params.orgId,
@@ -240,7 +241,7 @@ export async function purchaseOrgSponsorshipPackage(params: {
     });
   }
 
-  const { error: codeErr } = await supabase.from('coupon_codes').insert(codesToInsert);
+  const { error: codeErr } = await adminClient.from('coupon_codes').insert(codesToInsert);
 
   if (codeErr) {
     console.error('Error generating seat codes:', codeErr);
@@ -248,7 +249,7 @@ export async function purchaseOrgSponsorshipPackage(params: {
   }
 
   // Audit Log
-  await supabase.from('coupon_audit_logs').insert({
+  await adminClient.from('coupon_audit_logs').insert({
     actor_id: params.orgId,
     action: 'CREATED',
     target_id: pkg.id,

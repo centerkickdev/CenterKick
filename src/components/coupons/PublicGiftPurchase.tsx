@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { purchaseGiftVoucher } from '@/lib/actions/coupons';
 import { Gift, CheckCircle, RefreshCw, Mail } from 'lucide-react';
+import { useToast } from '@/context/ToastContext';
 
 interface RolePlan {
   name: string;
@@ -15,6 +16,8 @@ interface PublicGiftPurchaseProps {
 }
 
 export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchaseProps) {
+  const { showToast } = useToast();
+
   // Roles configured in CenterKick System Subscription Registry
   const roleOptions = [
     { key: 'player', defaultName: 'Player Account' },
@@ -47,16 +50,25 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
   const baseRate = Number(currentPlan.amount || 0);
 
   const calculateTotalPrice = () => {
-    // If baseRate is defined as yearly in system settings, scale proportionally, else multiply by duration
     const numMonths = duration;
     return (baseRate / 12) * numMonths;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!buyerName || !buyerEmail) return;
+    if (!buyerName || !buyerEmail) {
+      showToast('Please enter your name and email address.', 'error');
+      return;
+    }
+
+    if (deliveryMode === 'EMAIL' && !recipientEmail) {
+      showToast("Please enter the recipient's email address.", 'error');
+      return;
+    }
 
     setLoading(true);
+    showToast('Processing gift voucher purchase...', 'info');
+
     try {
       const mockPaymentRef = `PAY-GIFT-${Date.now()}`;
       const res = await purchaseGiftVoucher({
@@ -71,9 +83,13 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
 
       if (res.success) {
         setCompletedVoucher(res.voucher);
+        showToast('Gift voucher purchased successfully!', 'success');
+      } else {
+        showToast('Failed to create gift voucher. Please try again.', 'error');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      showToast(`Error: ${err.message || 'An unexpected error occurred'}`, 'error');
     } finally {
       setLoading(false);
     }
