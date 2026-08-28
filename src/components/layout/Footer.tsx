@@ -69,6 +69,7 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
    const quickLinks = footerContent?.links?.quickLinks || [
       { title: 'Home', url: '/' },
       { title: 'About Us', url: '/about' },
+      { title: 'Gift a Membership', url: '/gift' },
       { title: 'News', url: '/news' },
       { title: 'Player Profiles', url: '/players' },
       { title: 'Contact Us', url: '/contact' }
