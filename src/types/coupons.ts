@@ -64,6 +64,7 @@ export interface ValidationResult {
   active_subscription?: {
     tier: string;
     valid_until?: string;
+    formatted_expiry?: string;
   };
 }
 

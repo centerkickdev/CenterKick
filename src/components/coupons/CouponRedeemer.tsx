@@ -31,7 +31,13 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
     try {
       const res = await validateCouponCode(code, userId);
       if (!res.valid) {
-        setErrorMsg(getHumanReadableError(res.error));
+        if (res.error === 'ACTIVE_SUBSCRIPTION_BLOCKED' && res.active_subscription) {
+          setErrorMsg(
+            `You currently have an active ${res.active_subscription.tier} subscription that expires on ${res.active_subscription.formatted_expiry || 'the end of your billing cycle'}. You can redeem or stack this coupon code once your current running subscription ends.`
+          );
+        } else {
+          setErrorMsg(getHumanReadableError(res.error));
+        }
       } else {
         setValidation(res);
         if (res.requires_resolution) {

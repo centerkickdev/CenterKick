@@ -72,10 +72,7 @@ export async function validateCouponCode(
     }
   }
 
-  // 3. Check User Active Subscription & Stacking/Upgrade Conflict
-  let requiresResolution = false;
-  let activeSubscription;
-
+  // 3. Block Redemption if User has Active Subscription
   if (userId) {
     const { data: profile } = await supabase
       .from('profiles')
@@ -83,14 +80,27 @@ export async function validateCouponCode(
       .eq('id', userId)
       .maybeSingle();
 
-    if (profile && (profile.subscription_status === 'SPONSORED' || profile.subscription_status === 'ACTIVE')) {
-      if (profile.valid_until && new Date(profile.valid_until) > new Date()) {
-        requiresResolution = true;
-        activeSubscription = {
+    if (
+      profile &&
+      ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes(profile.subscription_status) &&
+      profile.valid_until &&
+      new Date(profile.valid_until) > new Date()
+    ) {
+      const formattedExpiry = new Date(profile.valid_until).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      });
+
+      return {
+        valid: false,
+        error: 'ACTIVE_SUBSCRIPTION_BLOCKED',
+        active_subscription: {
           tier: profile.subscription_tier || 'FREE',
           valid_until: profile.valid_until,
-        };
-      }
+          formatted_expiry: formattedExpiry,
+        },
+      };
     }
   }
 
@@ -105,8 +115,6 @@ export async function validateCouponCode(
   return {
     valid: true,
     coupon: coupon as CouponCode,
-    requires_resolution: requiresResolution,
-    active_subscription: activeSubscription,
   };
 }
 

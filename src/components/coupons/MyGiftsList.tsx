@@ -37,8 +37,7 @@ export default function MyGiftsList({ userEmail }: { userEmail: string }) {
       const { data, error } = await supabase
         .from('coupon_codes')
         .select('*')
-        .eq('buyer_email', userEmail)
-        .eq('is_gift', true)
+        .or(`buyer_email.eq.${userEmail},recipient_email.ilike.%${userEmail}%`)
         .order('created_at', { ascending: false });
 
       if (error) {
