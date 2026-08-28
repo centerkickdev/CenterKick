@@ -184,3 +184,105 @@ export async function sendOtpEmail(email: string, otp: string) {
   }
 }
 
+export async function sendGiftVoucherEmail(params: {
+  recipientEmail: string;
+  buyerName: string;
+  code: string;
+  targetTier: string;
+  durationMonths: number;
+  giftMessage?: string;
+}) {
+  try {
+    const claimLink = `${process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com'}/register?code=${params.code}`;
+    const data = await resend.emails.send({
+      from: 'CenterKick Gifts <gifts@centerkick.com>',
+      to: [params.recipientEmail],
+      subject: `🎁 You've Received a CenterKick ${params.targetTier} Gift Subscription!`,
+      html: `
+        <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1f2937; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <h1 style="font-size: 24px; font-weight: 800; color: #059669; margin: 0;">CenterKick Gift Subscription</h1>
+                <p style="font-size: 14px; font-weight: 600; color: #6b7280; margin-top: 4px;">Sponsored by ${params.buyerName}</p>
+            </div>
+            
+            <div style="margin-bottom: 32px;">
+                <p style="font-size: 16px; line-height: 24px; color: #4b5563; margin-bottom: 24px;">
+                    Great news! <strong>${params.buyerName}</strong> has gifted you a <strong>${params.durationMonths}-Month ${params.targetTier}</strong> membership on CenterKick.
+                </p>
+                
+                ${params.giftMessage ? `
+                <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-bottom: 24px; font-style: italic; color: #166534;">
+                    "${params.giftMessage}"
+                </div>` : ''}
+                
+                <div style="background-color: #111827; border-radius: 16px; padding: 24px; margin-bottom: 24px; text-align: center;">
+                    <p style="font-size: 12px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Your Gift Voucher Code</p>
+                    <div style="font-family: monospace; font-size: 28px; font-weight: 900; color: #34d399; letter-spacing: 0.15em;">
+                        ${params.code}
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <a href="${claimLink}" style="display: inline-block; padding: 16px 32px; background-color: #059669; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; transition: all 0.2s ease;">
+                        Claim Your Membership Now
+                    </a>
+                </div>
+            </div>
+        </div>
+      `,
+    });
+    return data;
+  } catch (error) {
+    console.error('Failed to send gift voucher email:', error);
+    throw error;
+  }
+}
+
+export async function sendOrgSponsorshipInviteEmail(params: {
+  athleteEmail: string;
+  orgName: string;
+  code: string;
+  planTier: string;
+}) {
+  try {
+    const claimLink = `${process.env.NEXT_PUBLIC_APP_URL || 'https://centerkick.com'}/register?code=${params.code}`;
+    const data = await resend.emails.send({
+      from: 'CenterKick Sponsorships <sponsorships@centerkick.com>',
+      to: [params.athleteEmail],
+      subject: `🏆 Organization Sponsorship Invitation from ${params.orgName}`,
+      html: `
+        <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1f2937; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0;">Organization Sponsorship</h1>
+                <p style="font-size: 14px; font-weight: 600; color: #059669; margin-top: 4px;">100% Covered by ${params.orgName}</p>
+            </div>
+            
+            <div style="margin-bottom: 32px;">
+                <p style="font-size: 16px; line-height: 24px; color: #4b5563; margin-bottom: 24px;">
+                    <strong>${params.orgName}</strong> has assigned you an annual <strong>${params.planTier}</strong> seat on CenterKick.
+                </p>
+                
+                <div style="background-color: #111827; border-radius: 16px; padding: 24px; margin-bottom: 24px; text-align: center;">
+                    <p style="font-size: 12px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Your Sponsorship Access Code</p>
+                    <div style="font-family: monospace; font-size: 28px; font-weight: 900; color: #34d399; letter-spacing: 0.15em;">
+                        ${params.code}
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <a href="${claimLink}" style="display: inline-block; padding: 16px 32px; background-color: #111827; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px;">
+                        Activate Sponsored Access
+                    </a>
+                </div>
+            </div>
+        </div>
+      `,
+    });
+    return data;
+  } catch (error) {
+    console.error('Failed to send org sponsorship invite email:', error);
+    throw error;
+  }
+}
+
+

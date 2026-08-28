@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { CouponCode, ValidationResult, ResolutionMode, generateCouponCodePrefix } from '@/types/coupons';
+import { sendGiftVoucherEmail } from '@/lib/resend';
 
 /**
  * Validate a coupon code for redemption, checking rate limits and user eligibility
@@ -156,6 +157,22 @@ export async function purchaseGiftVoucher(params: {
   if (error) {
     console.error('Error purchasing gift voucher:', error);
     return { success: false, error: 'VOUCHER_CREATION_FAILED' };
+  }
+
+  // Dispatch Email if recipient email provided
+  if (params.recipientEmail) {
+    try {
+      await sendGiftVoucherEmail({
+        recipientEmail: params.recipientEmail,
+        buyerName: params.buyerName,
+        code,
+        targetTier: params.targetTier,
+        durationMonths: params.durationMonths,
+        giftMessage: params.giftMessage,
+      });
+    } catch (e) {
+      console.error('Failed to send gift voucher email:', e);
+    }
   }
 
   // Audit Trail Log
