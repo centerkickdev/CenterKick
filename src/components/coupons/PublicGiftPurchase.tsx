@@ -170,7 +170,7 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
                 }`}
               >
                 <Mail className="w-5 h-5 shrink-0" />
-                <span>Send Direct Email Notification to Recipient</span>
+                <span>Send Via Email to Recipient</span>
               </button>
 
               <button
@@ -183,7 +183,7 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
                 }`}
               >
                 <Gift className="w-5 h-5 shrink-0" />
-                <span>I will deliver the voucher code manually</span>
+                <span>Copy Voucher Code Manually</span>
               </button>
             </div>
 
@@ -221,7 +221,7 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
               disabled={loading}
               className="w-full sm:w-auto px-10 py-4 rounded-full bg-[#a20000] hover:bg-black text-white font-bold text-sm tracking-wide shadow-lg hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Complete Gift Voucher Purchase'}
+              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Make Payment'}
             </button>
           </div>
         </form>
