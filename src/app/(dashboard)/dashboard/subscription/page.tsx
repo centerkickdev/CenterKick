@@ -20,12 +20,18 @@ import {
   CreditCard,
   Copy,
   Hand,
-  RefreshCcw
+  RefreshCcw,
+  Gift,
+  Ticket
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { requestVerification, activateFreeSubscription, verifyPaystackPayment } from './actions';
+import CouponRedeemer from '@/components/coupons/CouponRedeemer';
+import MyGiftsList from '@/components/coupons/MyGiftsList';
 
 interface UserProfile {
+  id?: string;
+  user_id?: string;
   role?: string;
   status?: string;
   verification_requested?: boolean;
@@ -290,6 +296,8 @@ export default function SubscriptionPage() {
           <nav className="flex gap-2 overflow-x-auto pb-4 border-b border-gray-100 hide-scrollbar">
             {[
               { id: 'My Plan', icon: ShieldCheck },
+              { id: 'Redeem Voucher', icon: Ticket },
+              { id: 'Purchased Gifts', icon: Gift },
               { id: 'History', icon: History },
             ].map((tab) => (
               <button
@@ -474,6 +482,35 @@ export default function SubscriptionPage() {
                 </div>
 
 
+              </div>
+            )}
+
+            {activeTab === 'Redeem Voucher' && (
+              <div className="bg-white rounded-[40px] border border-gray-100 shadow-sm p-6 md:p-10 animate-in fade-in duration-500">
+                <div className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-100">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                    <Ticket className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-extrabold text-gray-900 tracking-tight">Redeem Gift Voucher or Promo Code</h3>
+                    <p className="text-xs text-gray-500 font-medium mt-1">Have a sponsored voucher or gift code? Claim your membership upgrade or extend your plan below.</p>
+                  </div>
+                </div>
+
+                <CouponRedeemer
+                  userId={profile?.id}
+                  userEmail={profile?.email}
+                  onSuccess={(res) => {
+                    showToast('Voucher redeemed successfully! Reloading subscription data...', 'success');
+                    setTimeout(() => window.location.reload(), 2000);
+                  }}
+                />
+              </div>
+            )}
+
+            {activeTab === 'Purchased Gifts' && (
+              <div className="animate-in fade-in duration-500">
+                <MyGiftsList userEmail={profile?.email || ''} />
               </div>
             )}
 

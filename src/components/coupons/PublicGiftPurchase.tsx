@@ -1,0 +1,355 @@
+'use client';
+
+import React, { useState } from 'react';
+import { purchaseGiftVoucher } from '@/lib/actions/coupons';
+import { Gift, CheckCircle, RefreshCw, Mail } from 'lucide-react';
+import { useToast } from '@/context/ToastContext';
+
+interface RolePlan {
+  name: string;
+  amount: string;
+  frequency: string;
+}
+
+interface PublicGiftPurchaseProps {
+  systemPlans: Record<string, RolePlan>;
+}
+
+export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchaseProps) {
+  const { showToast } = useToast();
+
+  // All candidate roles in CenterKick
+  const allRoleOptions = [
+    { key: 'player', defaultName: 'Player Account' },
+    { key: 'coach', defaultName: 'Coach Account' },
+    { key: 'agent', defaultName: 'Agent Account' },
+    { key: 'scout', defaultName: 'Scout Account' },
+    { key: 'organization', defaultName: 'Organization Account' },
+  ];
+
+  // Filter out any account tiers configured as Free (amount === 0)
+  const paidRoleOptions = allRoleOptions.filter((r) => {
+    const planConfig = systemPlans[r.key];
+    if (!planConfig) return false;
+    const amountNum = Number(planConfig.amount || 0);
+    return amountNum > 0;
+  });
+
+  // If no paid plans are configured (e.g. initial dev setup), fall back to showing all roles to prevent empty dropdown
+  const activeRoleOptions = paidRoleOptions.length > 0 ? paidRoleOptions : allRoleOptions;
+
+  // System Subscription Durations
+  const durationOptions = [
+    { value: 1, label: '1 Month' },
+    { value: 3, label: '3 Months (Quarterly)' },
+    { value: 6, label: '6 Months (Biannual)' },
+    { value: 12, label: '12 Months (Yearly / Annual)' },
+  ];
+
+  const [selectedRole, setSelectedRole] = useState(activeRoleOptions[0]?.key || 'player');
+  const [duration, setDuration] = useState(12);
+  const [buyerName, setBuyerName] = useState('');
+  const [buyerEmail, setBuyerEmail] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('');
+  const [giftMessage, setGiftMessage] = useState('');
+  const [deliveryMode, setDeliveryMode] = useState<'EMAIL' | 'MANUAL'>('EMAIL');
+  const [loading, setLoading] = useState(false);
+  const [completedVoucher, setCompletedVoucher] = useState<any>(null);
+
+  // Dynamic Price & Duration Calculation based on real site_content payment settings
+  const currentPlan = systemPlans[selectedRole] || { amount: '0', frequency: 'Monthly' };
+  const baseRate = Number(currentPlan.amount || 0);
+  const planFrequency = currentPlan.frequency || 'Monthly';
+
+  // Helper to convert plan frequency string into months per billing cycle
+  const getFrequencyMonths = (freq: string): number => {
+    switch (freq) {
+      case 'Monthly':
+        return 1;
+      case 'Quarterly':
+        return 3;
+      case 'Biannually':
+        return 6;
+      case 'Yearly':
+        return 12;
+      case 'Lifetime Access':
+        return 999;
+      default:
+        return 1;
+    }
+  };
+
+  const planCycleMonths = getFrequencyMonths(planFrequency);
+
+  // Available access duration choices depending on plan frequency
+  const getAvailableDurations = () => {
+    if (planFrequency === 'Lifetime Access') {
+      return [{ value: 999, label: 'Lifetime Unrestricted Access' }];
+    }
+    if (planFrequency === 'Yearly') {
+      return [
+        { value: 12, label: '1 Year (12 Months)' },
+        { value: 24, label: '2 Years (24 Months)' },
+      ];
+    }
+    if (planFrequency === 'Biannually') {
+      return [
+        { value: 6, label: '6 Months (1 Cycle)' },
+        { value: 12, label: '12 Months (2 Cycles / 1 Year)' },
+      ];
+    }
+    if (planFrequency === 'Quarterly') {
+      return [
+        { value: 3, label: '3 Months (1 Quarter)' },
+        { value: 6, label: '6 Months (2 Quarters)' },
+        { value: 12, label: '12 Months (4 Quarters / 1 Year)' },
+      ];
+    }
+    // Default Monthly
+    return [
+      { value: 1, label: '1 Month' },
+      { value: 3, label: '3 Months' },
+      { value: 6, label: '6 Months' },
+      { value: 12, label: '12 Months (1 Year)' },
+    ];
+  };
+
+  const availableDurations = getAvailableDurations();
+
+  const calculateTotalPrice = () => {
+    if (planFrequency === 'Lifetime Access') return baseRate;
+    // Calculate cycles based on the plan's unit rate frequency
+    const cycles = duration / planCycleMonths;
+    return baseRate * cycles;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!buyerName || !buyerEmail) {
+      showToast('Please enter your name and email address.', 'error');
+      return;
+    }
+
+    if (deliveryMode === 'EMAIL' && !recipientEmail) {
+      showToast("Please enter the recipient's email address.", 'error');
+      return;
+    }
+
+    setLoading(true);
+    showToast('Processing gift voucher purchase...', 'info');
+
+    try {
+      const mockPaymentRef = `PAY-GIFT-${Date.now()}`;
+      const res = await purchaseGiftVoucher({
+        buyerName,
+        buyerEmail,
+        recipientEmail: deliveryMode === 'EMAIL' ? recipientEmail : undefined,
+        giftMessage,
+        targetTier: selectedRole.toUpperCase(),
+        durationMonths: duration,
+        paymentReference: mockPaymentRef,
+      });
+
+      if (res.success) {
+        setCompletedVoucher(res.voucher);
+        showToast('Gift voucher purchased successfully!', 'success');
+      } else {
+        showToast('Failed to create gift voucher. Please try again.', 'error');
+      }
+    } catch (err: any) {
+      console.error(err);
+      showToast(`Error: ${err.message || 'An unexpected error occurred'}`, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-3xl mx-auto bg-white border border-gray-100 rounded-3xl shadow-2xl p-6 sm:p-10">
+      <div className="flex items-center gap-4 mb-8 pb-6 border-b border-gray-100">
+        <div className="w-14 h-14 rounded-2xl bg-[#a20000]/10 text-[#a20000] flex items-center justify-center shrink-0">
+          <Gift className="w-7 h-7" />
+        </div>
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Gift a CenterKick Membership</h2>
+          <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">Sponsor an athlete, coach, scout, or organization with an official digital access voucher.</p>
+        </div>
+      </div>
+
+      {!completedVoucher ? (
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Tier & Duration Selection */}
+          <div className="space-y-4">
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">1. Select Target Account Type & Duration</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-2">Target Account Type</label>
+                <select
+                  value={selectedRole}
+                  onChange={(e) => {
+                    const newRole = e.target.value;
+                    setSelectedRole(newRole);
+                    const newPlan = systemPlans[newRole] || { frequency: 'Monthly' };
+                    const newFreqMonths = getFrequencyMonths(newPlan.frequency || 'Monthly');
+                    setDuration(newFreqMonths === 999 ? 999 : newFreqMonths);
+                  }}
+                  className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] transition-all"
+                >
+                  {activeRoleOptions.map((r) => {
+                    const planConfig = systemPlans[r.key];
+                    const labelName = planConfig?.name || r.defaultName;
+                    const priceLabel = planConfig?.amount ? ` (₦${Number(planConfig.amount).toLocaleString()})` : '';
+                    return (
+                      <option key={r.key} value={r.key}>
+                        {labelName}{priceLabel}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-2">Access Duration</label>
+                <select
+                  value={duration}
+                  onChange={(e) => setDuration(Number(e.target.value))}
+                  className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] transition-all"
+                >
+                  {availableDurations.map((d) => (
+                    <option key={d.value} value={d.value}>
+                      {d.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Buyer Information */}
+          <div className="space-y-4">
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">2. Your Contact Information (Buyer)</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input
+                type="text"
+                required
+                placeholder="Your Full Name"
+                value={buyerName}
+                onChange={(e) => setBuyerName(e.target.value)}
+                className="px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] placeholder-gray-400"
+              />
+              <input
+                type="email"
+                required
+                placeholder="Your Email Address"
+                value={buyerEmail}
+                onChange={(e) => setBuyerEmail(e.target.value)}
+                className="px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] placeholder-gray-400"
+              />
+            </div>
+          </div>
+
+          {/* Delivery Mode Toggle */}
+          <div className="space-y-4">
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">3. Delivery Option & Personal Note</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setDeliveryMode('EMAIL')}
+                className={`p-4 rounded-2xl border text-xs font-bold text-left transition-all flex items-center gap-3 ${
+                  deliveryMode === 'EMAIL'
+                    ? 'bg-[#a20000]/5 border-[#a20000] text-[#a20000]'
+                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Mail className="w-5 h-5 shrink-0" />
+                <span>Send Via Email to Recipient</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setDeliveryMode('MANUAL')}
+                className={`p-4 rounded-2xl border text-xs font-bold text-left transition-all flex items-center gap-3 ${
+                  deliveryMode === 'MANUAL'
+                    ? 'bg-[#a20000]/5 border-[#a20000] text-[#a20000]'
+                    : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Gift className="w-5 h-5 shrink-0" />
+                <span>Copy Voucher Code Manually</span>
+              </button>
+            </div>
+
+            {deliveryMode === 'EMAIL' && (
+              <input
+                type="email"
+                required
+                placeholder="Recipient's Email Address (e.g. athlete@domain.com)"
+                value={recipientEmail}
+                onChange={(e) => setRecipientEmail(e.target.value)}
+                className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] placeholder-gray-400 mt-3"
+              />
+            )}
+
+            <textarea
+              rows={3}
+              placeholder="Write a custom gift message (e.g. 'Good luck with the new football season!')"
+              value={giftMessage}
+              onChange={(e) => setGiftMessage(e.target.value)}
+              className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] placeholder-gray-400"
+            />
+          </div>
+
+          {/* Checkout Total & Submit */}
+          <div className="pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Calculated Charge</span>
+              <p className="text-3xl font-black text-gray-900 mt-0.5">
+                {baseRate === 0 ? 'Free' : `₦${calculateTotalPrice().toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full sm:w-auto px-10 py-4 rounded-full bg-[#a20000] hover:bg-black text-white font-bold text-sm tracking-wide shadow-lg hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Make Payment'}
+            </button>
+          </div>
+        </form>
+      ) : (
+        /* Voucher Success Confirmation Card */
+        <div className="text-center py-8 space-y-6">
+          <div className="w-20 h-20 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto shadow-sm">
+            <CheckCircle className="w-10 h-10" />
+          </div>
+
+          <div>
+            <h3 className="text-2xl font-black text-gray-900">Gift Voucher Purchased Successfully!</h3>
+            <p className="text-sm text-gray-500 max-w-md mx-auto mt-1">
+              A receipt has been dispatched to <span className="font-semibold text-gray-800">{buyerEmail}</span>.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-3xl bg-gray-50 border border-gray-200 inline-block text-center my-2 shadow-inner">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Voucher Claim Code</p>
+            <div className="font-mono text-3xl font-black text-[#a20000] tracking-widest">
+              {completedVoucher.code}
+            </div>
+          </div>
+
+          <p className="text-xs text-gray-400 max-w-sm mx-auto">
+            The recipient can redeem this code anytime at checkout or registration to activate their membership.
+          </p>
+
+          <button
+            onClick={() => setCompletedVoucher(null)}
+            className="px-8 py-3 rounded-full border border-gray-300 text-gray-700 font-bold text-xs hover:border-[#a20000] hover:text-[#a20000] transition-all"
+          >
+            Buy Another Gift Voucher
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

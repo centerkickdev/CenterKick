@@ -413,7 +413,7 @@ export default function ProfileEditor() {
     }
 
     // Resolve any NEW: leagues in per-season stats
-    let resolvedCareerStats = [...careerStats];
+    const resolvedCareerStats = [...careerStats];
     for (let i = 0; i < resolvedCareerStats.length; i++) {
       const stat = resolvedCareerStats[i];
       if (stat.league && stat.league.startsWith('NEW:')) {

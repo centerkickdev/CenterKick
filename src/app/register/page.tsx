@@ -27,6 +27,8 @@ function RegisterForm() {
    const [isResending, setIsResending] = useState(false);
    const [disabledRoles, setDisabledRoles] = useState<string[]>([]);
 
+   const [code, setCode] = useState('');
+
    useEffect(() => {
       const loadSettings = async () => {
          try {
@@ -40,6 +42,11 @@ function RegisterForm() {
             } else {
                const roleParam = searchParams.get('role');
                if (roleParam) setRole(roleParam);
+            }
+
+            const codeParam = searchParams.get('code');
+            if (codeParam) {
+               setCode(codeParam.toUpperCase());
             }
          } catch (error) {
             console.error('Failed to load signup settings:', error);
