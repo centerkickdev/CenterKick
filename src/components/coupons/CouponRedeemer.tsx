@@ -80,6 +80,8 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
         return 'This code has reached its maximum redemption limit.';
       case 'CODE_REVOKED':
         return 'This coupon has been revoked.';
+      case 'RESTRICTED_RECIPIENT_ONLY':
+        return 'This voucher code is restricted exclusively to a specific account email.';
       default:
         return 'Unable to process coupon code. Please try again.';
     }

@@ -35,6 +35,7 @@ export async function createAdminCoupon(formData: {
   targetTier: string;
   maxRedemptions: number;
   expiryDate?: string;
+  recipientEmail?: string;
 }) {
   const supabase = createAdminClient();
 
@@ -63,6 +64,7 @@ export async function createAdminCoupon(formData: {
       max_redemptions: formData.maxRedemptions,
       redemption_count: 0,
       expiry_date: formData.expiryDate || null,
+      recipient_email: formData.recipientEmail || null,
       status: 'AVAILABLE',
       is_gift: false,
     })

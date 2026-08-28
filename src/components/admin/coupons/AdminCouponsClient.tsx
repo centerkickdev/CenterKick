@@ -84,10 +84,23 @@ export default function AdminCouponsClient({
   const [expiryDate, setExpiryDate] = useState('');
   const [autoSwitchNotice, setAutoSwitchNotice] = useState<string | null>(null);
 
+  // Audience Scope State (ANYONE vs SPECIFIC_USERS)
+  const [audienceScope, setAudienceScope] = useState<'ANYONE' | 'SPECIFIC_USERS'>('ANYONE');
+  const [targetEmails, setTargetEmails] = useState('');
+
   // Get current plan rate for target tier
   const activePlanConfig = targetTier !== 'ALL' ? systemPlans[targetTier.toLowerCase()] : null;
   const targetTierRate = activePlanConfig ? Number(activePlanConfig.amount || 0) : 0;
   const maxAllowedFlatDiscount = targetTierRate > 0 ? targetTierRate * 0.8 : 0;
+
+  // Validation flag checking all fields are filled
+  const isFormValid =
+    title.trim() !== '' &&
+    durationMonths > 0 &&
+    maxRedemptions > 0 &&
+    expiryDate !== '' &&
+    (couponType === 'FULL_COVER' || discountValue > 0) &&
+    (audienceScope === 'ANYONE' || targetEmails.trim() !== '');
 
   // Handle Discount Value change with 80% threshold guard
   const handleDiscountValueChange = (val: number) => {
@@ -146,8 +159,11 @@ export default function AdminCouponsClient({
         discountValue,
         durationMonths,
         targetTier,
-        maxRedemptions,
+        maxRedemptions: audienceScope === 'SPECIFIC_USERS' && targetEmails.includes(',')
+          ? targetEmails.split(',').filter(Boolean).length
+          : maxRedemptions,
         expiryDate: expiryDate || undefined,
+        recipientEmail: audienceScope === 'SPECIFIC_USERS' ? targetEmails : undefined,
       });
 
       if (res.success && res.coupon) {
@@ -333,6 +349,11 @@ export default function AdminCouponsClient({
 
                         <td className="py-4 px-6 font-bold uppercase tracking-wider text-gray-700">
                           {c.target_tier}
+                          {c.recipient_email && (
+                            <span className="block font-normal text-[10px] text-emerald-700 normal-case mt-0.5 truncate max-w-[150px]">
+                              Restricted: {c.recipient_email}
+                            </span>
+                          )}
                         </td>
 
                         <td className="py-4 px-6 font-bold text-gray-800">
@@ -468,6 +489,55 @@ export default function AdminCouponsClient({
                 />
               </div>
 
+              {/* Audience Scope Selector */}
+              <div>
+                <label className="block text-gray-700 mb-1">Target Audience Scope</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setAudienceScope('ANYONE')}
+                    className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all ${
+                      audienceScope === 'ANYONE'
+                        ? 'bg-[#a20000] text-white border-[#a20000] shadow-sm'
+                        : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                    }`}
+                  >
+                    Anyone in Target Tier
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAudienceScope('SPECIFIC_USERS')}
+                    className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all ${
+                      audienceScope === 'SPECIFIC_USERS'
+                        ? 'bg-[#a20000] text-white border-[#a20000] shadow-sm'
+                        : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'
+                    }`}
+                  >
+                    Specific Account Email(s)
+                  </button>
+                </div>
+              </div>
+
+              {/* Specific User Emails Input */}
+              {audienceScope === 'SPECIFIC_USERS' && (
+                <div className="animate-in fade-in duration-200">
+                  <label className="block text-gray-700 mb-1">
+                    Target User Email(s) <span className="text-gray-400 font-normal">(Separate multiple emails with commas)</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. coach.smith@example.com, scout.david@gmail.com"
+                    value={targetEmails}
+                    onChange={(e) => setTargetEmails(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-medium"
+                  />
+                  <p className="text-[11px] text-emerald-700 font-medium mt-1">
+                    ✓ Restricted: Only the specified account email address(es) can redeem this coupon.
+                  </p>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-gray-700 mb-1">Discount Type</label>
@@ -581,6 +651,18 @@ export default function AdminCouponsClient({
                 </div>
               </div>
 
+              <div>
+                <label className="block text-gray-700 mb-1">Expiration Date</label>
+                <input
+                  type="date"
+                  required
+                  value={expiryDate}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => setExpiryDate(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-medium"
+                />
+              </div>
+
               <div className="pt-4 flex gap-3">
                 <button
                   type="button"
@@ -591,8 +673,8 @@ export default function AdminCouponsClient({
                 </button>
                 <button
                   type="submit"
-                  disabled={loading}
-                  className="w-1/2 py-3.5 rounded-xl bg-[#a20000] hover:bg-black text-white font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  disabled={loading || !isFormValid}
+                  className="w-1/2 py-3.5 rounded-xl bg-[#a20000] hover:bg-black text-white font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Create Coupon'}
                 </button>

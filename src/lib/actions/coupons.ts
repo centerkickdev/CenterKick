@@ -54,6 +54,24 @@ export async function validateCouponCode(
     return { valid: false, error: 'MAX_REDEMPTIONS_REACHED' };
   }
 
+  // Check Restricted User Email(s)
+  if (coupon.recipient_email && userId) {
+    const { data: redeemerProfile } = await supabase
+      .from('profiles')
+      .select('email')
+      .eq('id', userId)
+      .maybeSingle();
+
+    const redeemerEmail = redeemerProfile?.email?.toLowerCase().trim();
+    const restrictedEmails = coupon.recipient_email
+      .split(',')
+      .map((e: string) => e.toLowerCase().trim());
+
+    if (redeemerEmail && !restrictedEmails.includes(redeemerEmail)) {
+      return { valid: false, error: 'RESTRICTED_RECIPIENT_ONLY' };
+    }
+  }
+
   // 3. Check User Active Subscription & Stacking/Upgrade Conflict
   let requiresResolution = false;
   let activeSubscription;
