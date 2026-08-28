@@ -58,10 +58,12 @@ export default function AdminCouponsClient({
   initialCoupons,
   auditLogs,
   velocityLogs,
+  systemPlans = {},
 }: {
   initialCoupons: Coupon[];
   auditLogs: AuditLog[];
   velocityLogs: VelocityLog[];
+  systemPlans?: Record<string, any>;
 }) {
   const [coupons, setCoupons] = useState<Coupon[]>(initialCoupons);
   const [activeTab, setActiveTab] = useState<'MANAGEMENT' | 'SECURITY_LOGS'>('MANAGEMENT');
@@ -80,6 +82,41 @@ export default function AdminCouponsClient({
   const [targetTier, setTargetTier] = useState('ALL');
   const [maxRedemptions, setMaxRedemptions] = useState(100);
   const [expiryDate, setExpiryDate] = useState('');
+  const [autoSwitchNotice, setAutoSwitchNotice] = useState<string | null>(null);
+
+  // Get current plan rate for target tier
+  const activePlanConfig = targetTier !== 'ALL' ? systemPlans[targetTier.toLowerCase()] : null;
+  const targetTierRate = activePlanConfig ? Number(activePlanConfig.amount || 0) : 0;
+  const maxAllowedFlatDiscount = targetTierRate > 0 ? targetTierRate * 0.8 : 0;
+
+  // Handle Discount Value change with 80% threshold guard
+  const handleDiscountValueChange = (val: number) => {
+    setAutoSwitchNotice(null);
+
+    // Percentage > 80% or 100% auto-switch
+    if (couponType === 'PERCENTAGE' && val >= 80) {
+      setCouponType('FULL_COVER');
+      setDiscountValue(100);
+      setAutoSwitchNotice(
+        `Percentage discount (${val}%) reached or exceeded 80% limit. Auto-switched to 100% Full Cover.`
+      );
+      showToast('Discount >= 80%. Auto-switched to 100% Full Cover.', 'info');
+      return;
+    }
+
+    // Flat discount > 80% rate auto-switch
+    if (couponType === 'FLAT' && targetTierRate > 0 && val > maxAllowedFlatDiscount) {
+      setCouponType('FULL_COVER');
+      setDiscountValue(100);
+      setAutoSwitchNotice(
+        `Flat discount (₦${val.toLocaleString()}) exceeded 80% of ${targetTier} subscription rate (₦${targetTierRate.toLocaleString()}). Auto-switched to 100% Full Cover.`
+      );
+      showToast('Exceeded 80% limit. Auto-switched to 100% Full Cover.', 'info');
+      return;
+    }
+
+    setDiscountValue(val);
+  };
 
   const filteredCoupons = coupons.filter((c) => {
     const matchesSearch =
@@ -436,7 +473,13 @@ export default function AdminCouponsClient({
                   <label className="block text-gray-700 mb-1">Discount Type</label>
                   <select
                     value={couponType}
-                    onChange={(e) => setCouponType(e.target.value as any)}
+                    onChange={(e) => {
+                      const newType = e.target.value as any;
+                      setCouponType(newType);
+                      setAutoSwitchNotice(null);
+                      if (newType === 'FULL_COVER') setDiscountValue(100);
+                      else if (newType === 'PERCENTAGE') setDiscountValue(50);
+                    }}
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900"
                   >
                     <option value="FULL_COVER">100% Full Cover</option>
@@ -449,7 +492,10 @@ export default function AdminCouponsClient({
                   <label className="block text-gray-700 mb-1">Target Account Tier</label>
                   <select
                     value={targetTier}
-                    onChange={(e) => setTargetTier(e.target.value)}
+                    onChange={(e) => {
+                      setTargetTier(e.target.value);
+                      setAutoSwitchNotice(null);
+                    }}
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900"
                   >
                     <option value="ALL">All Tiers</option>
@@ -461,6 +507,54 @@ export default function AdminCouponsClient({
                   </select>
                 </div>
               </div>
+
+              {/* Target Tier Rate Badge */}
+              {targetTier !== 'ALL' && (
+                <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center justify-between text-xs">
+                  <span className="text-gray-600 font-medium">
+                    <span className="font-bold text-gray-900">{targetTier}</span> Subscription Rate:
+                  </span>
+                  <span className="font-mono font-bold text-[#a20000]">
+                    {targetTierRate > 0 ? `₦${targetTierRate.toLocaleString()}` : 'Free Tier'}
+                  </span>
+                </div>
+              )}
+
+              {/* Dynamic Discount Value Input */}
+              {couponType !== 'FULL_COVER' && (
+                <div>
+                  <label className="block text-gray-700 mb-1">
+                    {couponType === 'PERCENTAGE' ? 'Discount Percentage (%)' : 'Flat Discount Amount (₦)'}
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      required
+                      min={1}
+                      max={couponType === 'PERCENTAGE' ? 100 : undefined}
+                      value={discountValue}
+                      onChange={(e) => handleDiscountValueChange(Number(e.target.value))}
+                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-bold"
+                    />
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
+                      {couponType === 'PERCENTAGE' ? '%' : '₦'}
+                    </span>
+                  </div>
+                  {couponType === 'FLAT' && targetTierRate > 0 && (
+                    <p className="text-[11px] text-gray-400 mt-1">
+                      Max allowed flat discount (80% limit): <span className="font-bold text-gray-700">₦{maxAllowedFlatDiscount.toLocaleString()}</span>
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Auto Switch Notice Alert */}
+              {autoSwitchNotice && (
+                <div className="p-4 bg-amber-100 border border-amber-300 rounded-2xl text-amber-950 text-xs font-black flex items-start gap-3 shadow-sm">
+                  <Lock className="w-4 h-4 text-amber-800 shrink-0 mt-0.5" />
+                  <span className="leading-relaxed text-amber-950">{autoSwitchNotice}</span>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>

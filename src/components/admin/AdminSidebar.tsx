@@ -65,7 +65,7 @@ export function AdminSidebar({ role }: { role: string }) {
         ...(isFinance || isSuperOrAdmin ? [
           { label: 'Transactions', href: '/admin/payments/transactions', icon: CreditCard },
           { label: 'Subscriptions', href: '/admin/payments/subscriptions', icon: Settings },
-          { label: 'Coupons & Sponsorships', href: '/admin/coupons', icon: Ticket }
+          { label: 'Coupons', href: '/admin/coupons', icon: Ticket }
         ] : []),
         ...(role === 'superadmin' ? [
           { label: 'System Settings', href: '/admin/settings', icon: Settings },
