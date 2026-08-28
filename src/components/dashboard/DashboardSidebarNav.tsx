@@ -58,6 +58,13 @@ export function DashboardSidebarNav({ role, isSubscribed = false, isCollapsed = 
         </Link>
       )}
 
+      {['organization', 'agent', 'superadmin', 'admin'].includes(role) && (
+        <Link href="/dashboard/sponsorships" className={`${getLinkClasses('/dashboard/sponsorships')} group`} title={isCollapsed ? "Org Sponsorships" : undefined}>
+          <Shield className={getIconClasses('/dashboard/sponsorships')} />
+          {!isCollapsed && <span className="text-base tracking-wide">Org Sponsorships</span>}
+        </Link>
+      )}
+
       <div className="pt-8 mt-8 border-t border-gray-800">
         {!isCollapsed && <span className="px-4 text-xs font-bold text-gray-500 tracking-[0.2em]">Management</span>}
         
