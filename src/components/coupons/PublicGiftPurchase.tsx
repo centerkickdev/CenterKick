@@ -18,14 +18,25 @@ interface PublicGiftPurchaseProps {
 export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchaseProps) {
   const { showToast } = useToast();
 
-  // Roles configured in CenterKick System Subscription Registry
-  const roleOptions = [
+  // All candidate roles in CenterKick
+  const allRoleOptions = [
     { key: 'player', defaultName: 'Player Account' },
     { key: 'coach', defaultName: 'Coach Account' },
     { key: 'agent', defaultName: 'Agent Account' },
     { key: 'scout', defaultName: 'Scout Account' },
     { key: 'organization', defaultName: 'Organization Account' },
   ];
+
+  // Filter out any account tiers configured as Free (amount === 0)
+  const paidRoleOptions = allRoleOptions.filter((r) => {
+    const planConfig = systemPlans[r.key];
+    if (!planConfig) return false;
+    const amountNum = Number(planConfig.amount || 0);
+    return amountNum > 0;
+  });
+
+  // If no paid plans are configured (e.g. initial dev setup), fall back to showing all roles to prevent empty dropdown
+  const activeRoleOptions = paidRoleOptions.length > 0 ? paidRoleOptions : allRoleOptions;
 
   // System Subscription Durations
   const durationOptions = [
@@ -35,7 +46,7 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
     { value: 12, label: '12 Months (Yearly / Annual)' },
   ];
 
-  const [selectedRole, setSelectedRole] = useState(roleOptions[0].key);
+  const [selectedRole, setSelectedRole] = useState(activeRoleOptions[0]?.key || 'player');
   const [duration, setDuration] = useState(12);
   const [buyerName, setBuyerName] = useState('');
   const [buyerEmail, setBuyerEmail] = useState('');
@@ -45,13 +56,71 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
   const [loading, setLoading] = useState(false);
   const [completedVoucher, setCompletedVoucher] = useState<any>(null);
 
-  // Dynamic Price Calculation based on real site_content payment settings
-  const currentPlan = systemPlans[selectedRole] || { amount: '0' };
+  // Dynamic Price & Duration Calculation based on real site_content payment settings
+  const currentPlan = systemPlans[selectedRole] || { amount: '0', frequency: 'Monthly' };
   const baseRate = Number(currentPlan.amount || 0);
+  const planFrequency = currentPlan.frequency || 'Monthly';
+
+  // Helper to convert plan frequency string into months per billing cycle
+  const getFrequencyMonths = (freq: string): number => {
+    switch (freq) {
+      case 'Monthly':
+        return 1;
+      case 'Quarterly':
+        return 3;
+      case 'Biannually':
+        return 6;
+      case 'Yearly':
+        return 12;
+      case 'Lifetime Access':
+        return 999;
+      default:
+        return 1;
+    }
+  };
+
+  const planCycleMonths = getFrequencyMonths(planFrequency);
+
+  // Available access duration choices depending on plan frequency
+  const getAvailableDurations = () => {
+    if (planFrequency === 'Lifetime Access') {
+      return [{ value: 999, label: 'Lifetime Unrestricted Access' }];
+    }
+    if (planFrequency === 'Yearly') {
+      return [
+        { value: 12, label: '1 Year (12 Months)' },
+        { value: 24, label: '2 Years (24 Months)' },
+      ];
+    }
+    if (planFrequency === 'Biannually') {
+      return [
+        { value: 6, label: '6 Months (1 Cycle)' },
+        { value: 12, label: '12 Months (2 Cycles / 1 Year)' },
+      ];
+    }
+    if (planFrequency === 'Quarterly') {
+      return [
+        { value: 3, label: '3 Months (1 Quarter)' },
+        { value: 6, label: '6 Months (2 Quarters)' },
+        { value: 12, label: '12 Months (4 Quarters / 1 Year)' },
+      ];
+    }
+    // Default Monthly
+    return [
+      { value: 1, label: '1 Month' },
+      { value: 3, label: '3 Months' },
+      { value: 6, label: '6 Months' },
+      { value: 12, label: '12 Months (1 Year)' },
+    ];
+  };
+
+  const availableDurations = getAvailableDurations();
 
   const calculateTotalPrice = () => {
-    const numMonths = duration;
-    return (baseRate / 12) * numMonths;
+    if (planFrequency === 'Lifetime Access') return baseRate;
+    // Calculate cycles based on the plan's unit rate frequency
+    const cycles = duration / planCycleMonths;
+    return baseRate * cycles;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -117,15 +186,22 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
                 <label className="block text-xs font-semibold text-gray-700 mb-2">Target Account Type</label>
                 <select
                   value={selectedRole}
-                  onChange={(e) => setSelectedRole(e.target.value)}
+                  onChange={(e) => {
+                    const newRole = e.target.value;
+                    setSelectedRole(newRole);
+                    const newPlan = systemPlans[newRole] || { frequency: 'Monthly' };
+                    const newFreqMonths = getFrequencyMonths(newPlan.frequency || 'Monthly');
+                    setDuration(newFreqMonths === 999 ? 999 : newFreqMonths);
+                  }}
                   className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] transition-all"
                 >
-                  {roleOptions.map((r) => {
+                  {activeRoleOptions.map((r) => {
                     const planConfig = systemPlans[r.key];
                     const labelName = planConfig?.name || r.defaultName;
+                    const priceLabel = planConfig?.amount ? ` (₦${Number(planConfig.amount).toLocaleString()})` : '';
                     return (
                       <option key={r.key} value={r.key}>
-                        {labelName}
+                        {labelName}{priceLabel}
                       </option>
                     );
                   })}
@@ -139,7 +215,7 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
                   onChange={(e) => setDuration(Number(e.target.value))}
                   className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] transition-all"
                 >
-                  {durationOptions.map((d) => (
+                  {availableDurations.map((d) => (
                     <option key={d.value} value={d.value}>
                       {d.label}
                     </option>
