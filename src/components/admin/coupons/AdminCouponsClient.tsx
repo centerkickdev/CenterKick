@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { createAdminCoupon, toggleCouponStatus } from '@/app/admin/coupons/actions';
+import { createAdminCoupon, toggleCouponStatus, updateAdminCoupon } from '@/app/admin/coupons/actions';
 import {
   Ticket,
   Plus,
@@ -15,6 +15,7 @@ import {
   Users,
   Gift,
   Lock,
+  Edit3,
   X
 } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
@@ -87,6 +88,49 @@ export default function AdminCouponsClient({
   // Audience Scope State (ANYONE vs SPECIFIC_USERS)
   const [audienceScope, setAudienceScope] = useState<'ANYONE' | 'SPECIFIC_USERS'>('ANYONE');
   const [targetEmails, setTargetEmails] = useState('');
+
+  // Edit / Extend Modal State
+  const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [editMaxRedemptions, setEditMaxRedemptions] = useState(100);
+  const [editExpiryDate, setEditExpiryDate] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+
+  const openEditModal = (coupon: Coupon) => {
+    setEditingCoupon(coupon);
+    setEditTitle(coupon.title);
+    setEditMaxRedemptions(coupon.max_redemptions);
+    setEditExpiryDate(coupon.created_at ? new Date().toISOString().split('T')[0] : '');
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCoupon) return;
+
+    setIsEditing(true);
+    try {
+      const res = await updateAdminCoupon({
+        couponId: editingCoupon.id,
+        title: editTitle,
+        maxRedemptions: editMaxRedemptions,
+        expiryDate: editExpiryDate || undefined,
+      });
+
+      if (res.success && res.coupon) {
+        setCoupons((prev) =>
+          prev.map((c) => (c.id === editingCoupon.id ? { ...c, ...res.coupon } : c))
+        );
+        setEditingCoupon(null);
+        showToast(`Coupon ${editingCoupon.code} updated & extended successfully!`, 'success');
+      } else {
+        showToast(res.error || 'Failed to update coupon.', 'error');
+      }
+    } catch (err: any) {
+      showToast(err.message || 'Error updating coupon', 'error');
+    } finally {
+      setIsEditing(false);
+    }
+  };
 
   // Get current plan rate for target tier
   const activePlanConfig = targetTier !== 'ALL' ? systemPlans[targetTier.toLowerCase()] : null;
@@ -375,16 +419,24 @@ export default function AdminCouponsClient({
                         </td>
 
                         <td className="py-4 px-6 text-right">
-                          <button
-                            onClick={() => handleToggleStatus(c.id, c.status)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                              c.status === 'AVAILABLE'
-                                ? 'bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white'
-                                : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white'
-                            }`}
-                          >
-                            {c.status === 'AVAILABLE' ? 'Revoke Code' : 'Enable Code'}
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => openEditModal(c)}
+                              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-800 text-slate-700 hover:text-white transition-all flex items-center gap-1"
+                            >
+                              <Edit3 className="w-3.5 h-3.5" /> Edit & Extend
+                            </button>
+                            <button
+                              onClick={() => handleToggleStatus(c.id, c.status)}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                                c.status === 'AVAILABLE'
+                                  ? 'bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white'
+                                  : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white'
+                              }`}
+                            >
+                              {c.status === 'AVAILABLE' ? 'Revoke' : 'Enable'}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -677,6 +729,86 @@ export default function AdminCouponsClient({
                   className="w-1/2 py-3.5 rounded-xl bg-[#a20000] hover:bg-black text-white font-bold transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Create Coupon'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit & Extend Coupon Modal */}
+      {editingCoupon && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-md w-full rounded-3xl shadow-2xl p-6 sm:p-8 relative animate-in zoom-in duration-300">
+            <button
+              onClick={() => setEditingCoupon(null)}
+              className="absolute top-6 right-6 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-400 hover:text-gray-900 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h3 className="text-lg font-black text-gray-900 mb-2 flex items-center gap-2">
+              <Edit3 className="w-5 h-5 text-[#a20000]" /> Edit & Extend Code
+            </h3>
+
+            <div className="mb-6 p-3 rounded-xl bg-slate-100 border border-slate-200 flex justify-between items-center text-xs font-mono">
+              <span className="font-black text-gray-900">{editingCoupon.code}</span>
+              <span className="text-gray-500 font-bold uppercase">{editingCoupon.target_tier}</span>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="space-y-4 text-xs font-semibold">
+              <div>
+                <label className="block text-gray-700 mb-1">Campaign Title</label>
+                <input
+                  type="text"
+                  required
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700 mb-1">Max Redemptions Limit</label>
+                <input
+                  type="number"
+                  required
+                  min={editingCoupon.redemption_count + 1}
+                  value={editMaxRedemptions}
+                  onChange={(e) => setEditMaxRedemptions(Number(e.target.value))}
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-bold"
+                />
+                <p className="text-[11px] text-gray-400 font-normal mt-1">
+                  Current claimed redemptions: <span className="font-bold text-gray-800">{editingCoupon.redemption_count}</span>
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-gray-700 mb-1">Extend Expiration Date</label>
+                <input
+                  type="date"
+                  required
+                  value={editExpiryDate}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => setEditExpiryDate(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-medium"
+                />
+              </div>
+
+              <div className="pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setEditingCoupon(null)}
+                  className="w-1/2 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isEditing}
+                  className="w-1/2 py-3 rounded-xl bg-[#a20000] hover:bg-black text-white font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {isEditing ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Save & Extend'}
                 </button>
               </div>
             </form>

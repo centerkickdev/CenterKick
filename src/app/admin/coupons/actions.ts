@@ -119,6 +119,70 @@ export async function toggleCouponStatus(couponId: string, currentStatus: string
 }
 
 /**
+ * Update / Extend an existing Coupon (Increase Limit or Expiry Date)
+ */
+export async function updateAdminCoupon(formData: {
+  couponId: string;
+  title: string;
+  maxRedemptions: number;
+  expiryDate?: string;
+}) {
+  const supabase = createAdminClient();
+
+  // Fetch current coupon count
+  const { data: existing } = await supabase
+    .from('coupon_codes')
+    .select('redemption_count, status')
+    .eq('id', formData.couponId)
+    .single();
+
+  if (!existing) {
+    return { success: false, error: 'Coupon not found.' };
+  }
+
+  // Restore status to AVAILABLE if limit is increased beyond current redemption count
+  let newStatus = existing.status;
+  if (existing.status === 'EXPIRED' || existing.status === 'REVOKED') {
+    newStatus = 'AVAILABLE';
+  } else if (formData.maxRedemptions > existing.redemption_count) {
+    newStatus = 'AVAILABLE';
+  }
+
+  const { data: updatedCoupon, error } = await supabase
+    .from('coupon_codes')
+    .update({
+      title: formData.title,
+      max_redemptions: formData.maxRedemptions,
+      expiry_date: formData.expiryDate || null,
+      status: newStatus,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', formData.couponId)
+    .select()
+    .single();
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  // Audit Log
+  await supabase.from('coupon_audit_logs').insert({
+    actor_email: 'ADMIN',
+    action: 'EXTENDED',
+    target_id: formData.couponId,
+    target_type: 'COUPON_CODE',
+    metadata: {
+      max_redemptions: formData.maxRedemptions,
+      expiry_date: formData.expiryDate,
+      new_status: newStatus,
+    },
+  });
+
+  revalidatePath('/admin/coupons');
+  return { success: true, coupon: updatedCoupon };
+}
+
+/**
  * Fetch Velocity Logs & Security Audit Trail
  */
 export async function getCouponSecurityLogs() {
