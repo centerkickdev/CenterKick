@@ -96,6 +96,8 @@ export default function ProfileEditor() {
   // Subscription check
   const [isSubscribedUser, setIsSubscribedUser] = useState(false);
 
+  const [isIdNotAvailable, setIsIdNotAvailable] = useState(false);
+
   useEffect(() => {
     async function loadData() {
       const data = await getEffectiveProfileData();
@@ -128,6 +130,7 @@ export default function ProfileEditor() {
         setRole(userRecord?.role || 'player');
         setProfile(profileRecord || {});
         setOriginalProfile(profileRecord || {});
+        setIsIdNotAvailable(profileRecord?.id_number === 'Not Available' || profileRecord?.id_number === 'NOT_AVAILABLE');
         setAchievements(profileRecord?.achievements || []);
         setVideoLinks(profileRecord?.video_links || []);
         setGalleryUrls(profileRecord?.gallery_urls || []);
@@ -296,14 +299,17 @@ export default function ProfileEditor() {
     const formData = new FormData(e.target as HTMLFormElement);
     
     if (role !== 'organization') {
-      const idNumber = formData.get('id_number') as string;
-      const hasIdNumber = !!idNumber?.trim();
-      const hasIdProof = !!profile?.id_proof_url;
+      const idNumber = isIdNotAvailable ? 'Not Available' : (formData.get('id_number') as string);
       
-      if (hasIdNumber !== hasIdProof) {
-        showToast('Both National ID / Passport Number and the Verification Document must be provided together.', 'error');
-        setIsSaving(false);
-        return;
+      if (!isIdNotAvailable) {
+        const hasIdNumber = !!idNumber?.trim();
+        const hasIdProof = !!profile?.id_proof_url;
+        
+        if (!hasIdNumber || !hasIdProof) {
+          showToast('Both National ID / Passport Number and the Verification Document must be provided together, or mark as "Not Available".', 'error');
+          setIsSaving(false);
+          return;
+        }
       }
     }
     
@@ -330,7 +336,7 @@ export default function ProfileEditor() {
     // Prepare sensitive changes for Admin
     const sensitiveChanges: any = {};
     const trackChange = (field: string, formField: string, label: string) => {
-       const newVal = formData.get(formField) as string;
+       const newVal = formField === 'id_number' && isIdNotAvailable ? 'Not Available' : (formData.get(formField) as string);
        if (newVal !== undefined && newVal !== null && newVal !== (originalProfile?.[field] || '')) {
           if (!originalProfile?.[field]) {
              profileData[field] = newVal;
@@ -942,8 +948,29 @@ export default function ProfileEditor() {
                   </div>
                   {role !== 'organization' && (
                     <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">National ID / Passport Number</label>
-                      <input disabled={!isEditing} name="id_number" type="text" pattern="[a-zA-Z0-9&quot;\-()\s]+" title="Only letters, numbers, spaces, and the symbols &quot; - ( ) are allowed" defaultValue={profile?.id_number} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                      <div className="flex items-center justify-between ml-1">
+                        <label className="text-xs font-bold text-gray-900 tracking-wide">National ID / Passport Number</label>
+                        <label className={`flex items-center gap-1.5 cursor-pointer select-none text-[11px] font-bold transition-colors ${isIdNotAvailable ? 'text-[#b50a0a]' : 'text-gray-500 hover:text-gray-900'}`}>
+                          <input
+                            disabled={!isEditing}
+                            type="checkbox"
+                            checked={isIdNotAvailable}
+                            onChange={(e) => setIsIdNotAvailable(e.target.checked)}
+                            className="rounded border-gray-300 text-[#b50a0a] focus:ring-[#b50a0a] w-4 h-4 cursor-pointer disabled:opacity-50"
+                          />
+                          Not Available
+                        </label>
+                      </div>
+                      <input
+                        disabled={!isEditing || isIdNotAvailable}
+                        name="id_number"
+                        type="text"
+                        pattern="[a-zA-Z0-9&quot;\-()\s]+"
+                        title="Only letters, numbers, spaces, and the symbols &quot; - ( ) are allowed"
+                        value={isIdNotAvailable ? 'Not Available' : (profile?.id_number || '')}
+                        onChange={(e) => setProfile({ ...profile, id_number: e.target.value })}
+                        className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100"
+                      />
                     </div>
                   )}
                 </div>
@@ -954,8 +981,8 @@ export default function ProfileEditor() {
                       <h4 className="text-sm font-bold text-gray-900 tracking-wide">{role === 'organization' ? 'Business Document' : 'Official Nationality Verification'}</h4>
                       <p className="text-xs text-gray-500 font-bold mt-0.5">Required by Admin to prevent false citizenship reporting</p>
                     </div>
-                    <span className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide self-start sm:self-center ${profile?.id_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
-                      {profile?.id_proof_url ? 'Pending Verification' : 'Proof Required'}
+                    <span className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide self-start sm:self-center ${isIdNotAvailable ? 'bg-slate-100 text-slate-700 border border-slate-200' : profile?.id_proof_url ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                      {isIdNotAvailable ? 'Not Available' : profile?.id_proof_url ? 'Pending Verification' : 'Proof Required'}
                     </span>
                   </div>
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
