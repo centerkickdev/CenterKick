@@ -72,6 +72,7 @@ export default async function DashboardLayout({
   const isSubscribed = 
     (subscriptions && subscriptions.length > 0) || 
     ((profile as any)?.is_subscribed === true) ||
+    ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes((profile as any)?.subscription_status) ||
     (confirmedTxs && confirmedTxs.length > 0);
 
   // Fetch notifications

@@ -225,7 +225,7 @@ export default function SubscriptionPage() {
     price: basePrice === 0 ? 'Free' : `₦${basePrice.toLocaleString()}`,
     usdEquivalent: basePrice === 0 ? 'Free' : `$${usdPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
     period: basePrice === 0 ? 'Forever' : durationMonths === 0 ? 'Lifetime Access' : `Per ${durationMonths === 1 ? 'Month' : durationMonths === 3 ? 'Quarter' : durationMonths === 6 ? 'Half-Year' : durationMonths === 12 ? 'Year' : durationMonths + ' Months'}`,
-    status: transactions.some(t => t.status === 'confirmed') ? 'Active' : (profile?.verification_requested ? 'Pending Approval' : 'Unverified'),
+    status: ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes((profile as any)?.subscription_status) || transactions.some(t => t.status === 'confirmed') ? 'Active' : (profile?.verification_requested ? 'Pending Approval' : 'Unverified'),
     features: [
       "Verified Professional Badge",
       "Priority Search & Discovery Listing",

@@ -59,32 +59,63 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
 
   const handleValidate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!code.trim()) return;
+    const cleanCode = code.trim().toUpperCase();
+    if (!cleanCode) return;
 
-    if (validation?.valid && validation.requires_resolution) {
+    let currentVal = validation;
+    if (!currentVal || currentVal.coupon?.code !== cleanCode) {
+      setIsValidating(true);
+      setErrorMsg(null);
+      try {
+        const res = await validateCouponCode(cleanCode, userId);
+        if (!res.valid) {
+          setValidation(null);
+          if (res.error === 'ACTIVE_SUBSCRIPTION_BLOCKED' && res.active_subscription) {
+            setErrorMsg(
+              `You currently have an active ${res.active_subscription.tier} subscription that expires on ${res.active_subscription.formatted_expiry || 'the end of your billing cycle'}. You can redeem or stack this coupon code once your current running subscription ends.`
+            );
+          } else {
+            setErrorMsg(getHumanReadableError(res.error));
+          }
+          setIsValidating(false);
+          return;
+        }
+        currentVal = res;
+        setValidation(res);
+      } catch (err) {
+        setErrorMsg('Validation preview failed.');
+        setIsValidating(false);
+        return;
+      } finally {
+        setIsValidating(false);
+      }
+    }
+
+    if (currentVal?.valid && currentVal.requires_resolution) {
       setShowResolutionModal(true);
       return;
     }
 
-    if (validation?.valid && !validation.requires_resolution && userId) {
-      await handleRedeem('DEFAULT');
+    if (currentVal?.valid && !currentVal.requires_resolution && userId) {
+      await handleRedeem('DEFAULT', currentVal.coupon?.code);
     }
   };
 
-  const handleRedeem = async (mode: ResolutionMode = 'DEFAULT') => {
-    if (!userId || !userEmail || !validation?.coupon) {
+  const handleRedeem = async (mode: ResolutionMode = 'DEFAULT', overrideCode?: string) => {
+    const codeToRedeem = overrideCode || code;
+    if (!userId || !userEmail) {
       setErrorMsg('User authentication required to redeem code.');
       return;
     }
 
     setIsRedeeming(true);
     try {
-      const res = await redeemCouponCode(code, userId, userEmail, mode);
+      const res = await redeemCouponCode(codeToRedeem, userId, userEmail, mode);
       if (res.success) {
         setShowResolutionModal(false);
         if (onSuccess) onSuccess(res);
       } else {
-        setErrorMsg(getHumanReadableError(res.error));
+        setErrorMsg(res.error ? (getHumanReadableError(res.error) !== 'Unable to process coupon code. Please try again.' ? getHumanReadableError(res.error) : res.error) : 'Unable to process coupon code. Please try again.');
       }
     } catch (err) {
       setErrorMsg('Redemption error occurred.');
@@ -146,7 +177,7 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
               <span>Claiming...</span>
             </>
           ) : (
-            'Confirm & Claim'
+            'Claim'
           )}
         </button>
       </form>
@@ -173,9 +204,9 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
 
       {/* Error Message Display */}
       {errorMsg && (
-        <div className="mt-3 p-3 rounded-xl bg-rose-950/40 border border-rose-500/30 flex items-center gap-2 text-xs text-rose-300">
-          <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-          <span>{errorMsg}</span>
+        <div className="mt-3 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 flex items-center gap-2.5 text-xs text-rose-900 font-bold shadow-sm animate-in fade-in slide-in-from-top-1">
+          <AlertCircle className="w-4 h-4 text-[#b50a0a] shrink-0" />
+          <span className="leading-snug">{errorMsg}</span>
         </div>
       )}
 

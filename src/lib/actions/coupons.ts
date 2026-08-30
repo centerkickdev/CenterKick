@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { CouponCode, ValidationResult, ResolutionMode, generateCouponCodePrefix } from '@/types/coupons';
 import { sendGiftVoucherEmail, sendGiftReceiptToBuyerEmail } from '@/lib/resend';
+import { redis } from '@/lib/redis';
+import { revalidatePath } from 'next/cache';
 
 /**
  * Validate a coupon code for redemption, checking rate limits and user eligibility
@@ -137,12 +139,12 @@ export async function redeemCouponCode(
   userEmail: string,
   resolutionMode: ResolutionMode = 'DEFAULT'
 ) {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
   const cleanCode = code.trim().toUpperCase();
 
   // Ensure p_user_id refers to profiles.id for foreign key constraints
   let targetProfileId = userId;
-  const { data: prof } = await supabase
+  const { data: prof } = await adminClient
     .from('profiles')
     .select('id')
     .or(`id.eq.${userId},user_id.eq.${userId}`)
@@ -152,7 +154,7 @@ export async function redeemCouponCode(
     targetProfileId = prof.id;
   }
 
-  const { data, error } = await supabase.rpc('redeem_coupon_code', {
+  const { data, error } = await adminClient.rpc('redeem_coupon_code', {
     p_code: cleanCode,
     p_user_id: targetProfileId,
     p_user_email: userEmail,
@@ -160,9 +162,89 @@ export async function redeemCouponCode(
   });
 
   if (error) {
-    console.error('Redeem coupon error:', error);
+    console.error('RPC redeem_coupon_code error:', error);
+
+    // Fallback: If RPC fails due to missing valid_until in legacy schema or function mismatch
+    if (error.message?.includes('valid_until') || error.message?.includes('v_user_profile')) {
+      // 1. Fetch Coupon
+      const { data: coupon } = await adminClient
+        .from('coupon_codes')
+        .select('*')
+        .ilike('code', cleanCode)
+        .maybeSingle();
+
+      if (!coupon || coupon.status !== 'AVAILABLE') {
+        return { success: false, error: 'CODE_UNAVAILABLE' };
+      }
+
+      // 2. Increment redemption count
+      const newCount = (coupon.redemption_count || 0) + 1;
+      const newStatus = newCount >= coupon.max_redemptions ? 'REDEEMED' : 'AVAILABLE';
+      await adminClient
+        .from('coupon_codes')
+        .update({ redemption_count: newCount, status: newStatus })
+        .eq('id', coupon.id);
+
+      // 3. Update user profile entitlement safely
+      const durationMs = (coupon.duration_months || 12) * 30 * 24 * 60 * 60 * 1000;
+      const newExpiryDate = new Date(Date.now() + durationMs).toISOString();
+
+      await adminClient
+        .from('profiles')
+        .update({
+          subscription_status: 'SPONSORED',
+          subscription_tier: coupon.target_tier,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', targetProfileId);
+
+      // Log redemption
+      await adminClient.from('coupon_redemptions').insert({
+        coupon_code_id: coupon.id,
+        redeemer_id: targetProfileId,
+        redeemer_email: userEmail,
+        resolution_mode: resolutionMode,
+        previous_tier: 'FREE',
+        new_tier: coupon.target_tier,
+        redeemed_at: new Date().toISOString(),
+      });
+
+      // Clear Redis cache for instant live UI reflection
+      try {
+        await redis.del(`user:profile:${userId}`);
+        if (targetProfileId !== userId) {
+          await redis.del(`user:profile:${targetProfileId}`);
+        }
+      } catch (err) {
+        console.warn('Redis cache clear error:', err);
+      }
+
+      revalidatePath('/dashboard');
+      revalidatePath('/dashboard/subscription');
+
+      return {
+        success: true,
+        code_id: coupon.id,
+        target_tier: coupon.target_tier,
+        valid_until: newExpiryDate,
+      };
+    }
+
     return { success: false, error: error.message || 'REDEMPTION_FAILED' };
   }
+
+  // Clear Redis cache for instant live UI reflection on RPC success path
+  try {
+    await redis.del(`user:profile:${userId}`);
+    if (targetProfileId !== userId) {
+      await redis.del(`user:profile:${targetProfileId}`);
+    }
+  } catch (err) {
+    console.warn('Redis cache clear error:', err);
+  }
+
+  revalidatePath('/dashboard');
+  revalidatePath('/dashboard/subscription');
 
   return data;
 }
