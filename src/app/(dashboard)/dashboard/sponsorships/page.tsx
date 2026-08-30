@@ -35,6 +35,17 @@ export default async function OrgSponsorshipsPage() {
     .eq('buyer_id', profile?.id || user.id)
     .order('created_at', { ascending: false });
 
+  // Fetch Payment Settings & System Plans from CMS site_content (same query as /gift)
+  const { data: paymentContent } = await supabase
+    .from('site_content')
+    .select('content')
+    .eq('page', 'settings')
+    .eq('section', 'payment')
+    .single();
+
+  const paymentSettings = paymentContent?.content || {};
+  const systemPlans = paymentSettings.plans || {};
+
   const orgName = profile?.first_name ? `${profile.first_name} ${profile.last_name || ''}` : 'Organization';
 
   return (
@@ -42,8 +53,11 @@ export default async function OrgSponsorshipsPage() {
       <OrgSponsorshipDashboard
         orgId={profile?.id || user.id}
         orgName={orgName}
+        userEmail={user.email || profile?.email || ''}
         existingPackages={packages || []}
         existingCodes={codes || []}
+        systemPlans={systemPlans}
+        paymentSettings={paymentSettings}
       />
     </div>
   );

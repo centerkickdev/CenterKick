@@ -201,7 +201,7 @@ export async function sendGiftVoucherEmail(params: {
       html: `
         <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1f2937; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;">
             <div style="text-align: center; margin-bottom: 32px;">
-                <h1 style="font-size: 24px; font-weight: 800; color: #059669; margin: 0;">CenterKick Gift Subscription</h1>
+                <h1 style="font-size: 24px; font-weight: 800; color: #a20000; margin: 0;">CenterKick Gift Subscription</h1>
                 <p style="font-size: 14px; font-weight: 600; color: #6b7280; margin-top: 4px;">Sponsored by ${params.buyerName}</p>
             </div>
             
@@ -211,13 +211,13 @@ export async function sendGiftVoucherEmail(params: {
                 </p>
                 
                 ${params.giftMessage ? `
-                <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-bottom: 24px; font-style: italic; color: #166534;">
+                <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 20px; margin-bottom: 24px; font-style: italic; color: #991b1b;">
                     "${params.giftMessage}"
                 </div>` : ''}
                 
                 <div style="background-color: #111827; border-radius: 16px; padding: 24px; margin-bottom: 24px; text-align: center;">
                     <p style="font-size: 12px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Your Gift Voucher Code</p>
-                    <div style="font-family: monospace; font-size: 28px; font-weight: 900; color: #34d399; letter-spacing: 0.15em;">
+                    <div style="font-family: monospace; font-size: 28px; font-weight: 900; color: #ffffff; letter-spacing: 0.15em;">
                         ${params.code}
                     </div>
                 </div>
@@ -236,7 +236,7 @@ export async function sendGiftVoucherEmail(params: {
                 </div>
                 
                 <div style="text-align: center;">
-                    <a href="${claimLink}" style="display: inline-block; padding: 16px 32px; background-color: #059669; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; transition: all 0.2s ease;">
+                    <a href="${claimLink}" style="display: inline-block; padding: 16px 32px; background-color: #a20000; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; transition: all 0.2s ease;">
                         Register &amp; Claim Membership Now
                     </a>
                 </div>
@@ -318,7 +318,7 @@ export async function sendOrgSponsorshipInviteEmail(params: {
         <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1f2937; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;">
             <div style="text-align: center; margin-bottom: 32px;">
                 <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0;">Organization Sponsorship</h1>
-                <p style="font-size: 14px; font-weight: 600; color: #059669; margin-top: 4px;">100% Covered by ${params.orgName}</p>
+                <p style="font-size: 14px; font-weight: 600; color: #a20000; margin-top: 4px;">100% Covered by ${params.orgName}</p>
             </div>
             
             <div style="margin-bottom: 32px;">
@@ -328,13 +328,13 @@ export async function sendOrgSponsorshipInviteEmail(params: {
                 
                 <div style="background-color: #111827; border-radius: 16px; padding: 24px; margin-bottom: 24px; text-align: center;">
                     <p style="font-size: 12px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Your Sponsorship Access Code</p>
-                    <div style="font-family: monospace; font-size: 28px; font-weight: 900; color: #34d399; letter-spacing: 0.15em;">
+                    <div style="font-family: monospace; font-size: 28px; font-weight: 900; color: #ffffff; letter-spacing: 0.15em;">
                         ${params.code}
                     </div>
                 </div>
                 
                 <div style="text-align: center;">
-                    <a href="${claimLink}" style="display: inline-block; padding: 16px 32px; background-color: #111827; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px;">
+                    <a href="${claimLink}" style="display: inline-block; padding: 16px 32px; background-color: #a20000; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px;">
                         Activate Sponsored Access
                     </a>
                 </div>

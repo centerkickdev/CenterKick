@@ -82,7 +82,6 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
   ];
 
   const [selectedRole, setSelectedRole] = useState(activeRoleOptions[0]?.key || 'player');
-  const [duration, setDuration] = useState(12);
   const [buyerName, setBuyerName] = useState('');
   const [buyerEmail, setBuyerEmail] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('');
@@ -92,70 +91,11 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
   const [completedVoucher, setCompletedVoucher] = useState<any>(null);
 
   // Dynamic Price & Duration Calculation based on real site_content payment settings
-  const currentPlan = systemPlans[selectedRole] || { amount: '0', frequency: 'Monthly' };
+  const currentPlan = systemPlans[selectedRole] || { amount: '0', frequency: 'Yearly' };
   const baseRate = Number(currentPlan.amount || 0);
-  const planFrequency = currentPlan.frequency || 'Monthly';
-
-  // Helper to convert plan frequency string into months per billing cycle
-  const getFrequencyMonths = (freq: string): number => {
-    switch (freq) {
-      case 'Monthly':
-        return 1;
-      case 'Quarterly':
-        return 3;
-      case 'Biannually':
-        return 6;
-      case 'Yearly':
-        return 12;
-      case 'Lifetime Access':
-        return 999;
-      default:
-        return 1;
-    }
-  };
-
-  const planCycleMonths = getFrequencyMonths(planFrequency);
-
-  // Available access duration choices depending on plan frequency
-  const getAvailableDurations = () => {
-    if (planFrequency === 'Lifetime Access') {
-      return [{ value: 999, label: 'Lifetime Unrestricted Access' }];
-    }
-    if (planFrequency === 'Yearly') {
-      return [
-        { value: 12, label: '1 Year (12 Months)' },
-        { value: 24, label: '2 Years (24 Months)' },
-      ];
-    }
-    if (planFrequency === 'Biannually') {
-      return [
-        { value: 6, label: '6 Months (1 Cycle)' },
-        { value: 12, label: '12 Months (2 Cycles / 1 Year)' },
-      ];
-    }
-    if (planFrequency === 'Quarterly') {
-      return [
-        { value: 3, label: '3 Months (1 Quarter)' },
-        { value: 6, label: '6 Months (2 Quarters)' },
-        { value: 12, label: '12 Months (4 Quarters / 1 Year)' },
-      ];
-    }
-    // Default Monthly
-    return [
-      { value: 1, label: '1 Month' },
-      { value: 3, label: '3 Months' },
-      { value: 6, label: '6 Months' },
-      { value: 12, label: '12 Months (1 Year)' },
-    ];
-  };
-
-  const availableDurations = getAvailableDurations();
 
   const calculateTotalPrice = () => {
-    if (planFrequency === 'Lifetime Access') return baseRate;
-    // Calculate cycles based on the plan's unit rate frequency
-    const cycles = duration / planCycleMonths;
-    return baseRate * cycles;
+    return baseRate;
   };
 
   const executeVoucherCreation = async (paymentRef: string) => {
@@ -169,7 +109,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
         recipientEmail: deliveryMode === 'EMAIL' ? recipientEmail : undefined,
         giftMessage,
         targetTier: selectedRole.toUpperCase(),
-        durationMonths: duration,
+        durationMonths: 12,
         paymentReference: paymentRef,
       });
 
@@ -249,7 +189,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
           custom_fields: [
             { display_name: 'Buyer Name', variable_name: 'buyer_name', value: buyerName },
             { display_name: 'Gift Tier', variable_name: 'gift_tier', value: selectedRole.toUpperCase() },
-            { display_name: 'Duration Months', variable_name: 'duration_months', value: duration },
+            { display_name: 'Duration Months', variable_name: 'duration_months', value: 12 },
           ]
         },
         callback: function (response: any) {
@@ -295,63 +235,40 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
           <Gift className="w-7 h-7" />
         </div>
         <div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Gift a CenterKick Membership</h2>
-          <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">Sponsor an athlete, coach, scout, or organization with an official digital access voucher.</p>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Buy a Gift Voucher</h2>
+          <p className="text-xs sm:text-sm text-gray-500 font-medium mt-1">Sponsor a player, coach, scout, or organization with a digital membership voucher.</p>
         </div>
       </div>
 
       {!completedVoucher ? (
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Tier & Duration Selection */}
+          {/* Plan Selection */}
           <div className="space-y-4">
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">1. Select Target Account Type & Duration</label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-2">Target Account Type</label>
-                <select
-                  value={selectedRole}
-                  onChange={(e) => {
-                    const newRole = e.target.value;
-                    setSelectedRole(newRole);
-                    const newPlan = systemPlans[newRole] || { frequency: 'Monthly' };
-                    const newFreqMonths = getFrequencyMonths(newPlan.frequency || 'Monthly');
-                    setDuration(newFreqMonths === 999 ? 999 : newFreqMonths);
-                  }}
-                  className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] transition-all"
-                >
-                  {activeRoleOptions.map((r) => {
-                    const planConfig = systemPlans[r.key];
-                    const labelName = planConfig?.name || r.defaultName;
-                    const priceLabel = planConfig?.amount ? ` (₦${Number(planConfig.amount).toLocaleString()})` : '';
-                    return (
-                      <option key={r.key} value={r.key}>
-                        {labelName}{priceLabel}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-2">Access Duration</label>
-                <select
-                  value={duration}
-                  onChange={(e) => setDuration(Number(e.target.value))}
-                  className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] transition-all"
-                >
-                  {availableDurations.map((d) => (
-                    <option key={d.value} value={d.value}>
-                      {d.label}
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">1. Choose Membership Plan</label>
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-2">Account Type</label>
+              <select
+                value={selectedRole}
+                onChange={(e) => setSelectedRole(e.target.value)}
+                className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] transition-all"
+              >
+                {activeRoleOptions.map((r) => {
+                  const planConfig = systemPlans[r.key];
+                  const labelName = planConfig?.name || r.defaultName;
+                  const priceLabel = planConfig?.amount ? ` (₦${Number(planConfig.amount).toLocaleString()} - ${planConfig.frequency || 'Yearly'})` : '';
+                  return (
+                    <option key={r.key} value={r.key}>
+                      {labelName}{priceLabel}
                     </option>
-                  ))}
-                </select>
-              </div>
+                  );
+                })}
+              </select>
             </div>
           </div>
 
           {/* Buyer Information */}
           <div className="space-y-4">
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">2. Your Contact Information (Buyer)</label>
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">2. Your Details</label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <input
                 type="text"
@@ -374,7 +291,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
 
           {/* Delivery Mode Toggle */}
           <div className="space-y-4">
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">3. Delivery Option & Personal Note</label>
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">3. Delivery Method & Message</label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <button
                 type="button"
@@ -386,7 +303,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
                 }`}
               >
                 <Mail className="w-5 h-5 shrink-0" />
-                <span>Send Via Email to Recipient</span>
+                <span>Email to Recipient Directly</span>
               </button>
 
               <button
@@ -399,7 +316,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
                 }`}
               >
                 <Gift className="w-5 h-5 shrink-0" />
-                <span>Copy Voucher Code Manually</span>
+                <span>Get Code to Share Myself</span>
               </button>
             </div>
 
@@ -407,7 +324,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
               <input
                 type="email"
                 required
-                placeholder="Recipient's Email Address (e.g. athlete@domain.com)"
+                placeholder="Recipient's Email Address"
                 value={recipientEmail}
                 onChange={(e) => setRecipientEmail(e.target.value)}
                 className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] placeholder-gray-400 mt-3"
@@ -416,16 +333,16 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
 
             <textarea
               rows={3}
-              placeholder="Write a custom gift message (e.g. 'Good luck with the new football season!')"
+              placeholder="Add a personal gift note (optional)..."
               value={giftMessage}
               onChange={(e) => setGiftMessage(e.target.value)}
               className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] placeholder-gray-400"
             />
           </div>
 
-          {/* Payment Method Selector (Step 4) */}
+          {/* Payment Method Selector */}
           <div className="space-y-4">
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">4. Select Payment Channel</label>
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">4. Payment Option</label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {isPaystackActive && (
                 <button
@@ -438,7 +355,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
                   }`}
                 >
                   <p className="font-extrabold text-sm">Paystack</p>
-                  <p className="text-[11px] font-normal text-gray-500 mt-0.5">Card, USSD, Bank Transfer & Auto-Debit</p>
+                  <p className="text-[11px] font-normal text-gray-500 mt-0.5">Debit Card, Bank Transfer & USSD</p>
                 </button>
               )}
 
@@ -453,7 +370,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
                   }`}
                 >
                   <p className="font-extrabold text-sm">Stripe</p>
-                  <p className="text-[11px] font-normal text-gray-500 mt-0.5">International Cards, Apple Pay & Google Pay</p>
+                  <p className="text-[11px] font-normal text-gray-500 mt-0.5">Credit / Debit Cards, Apple Pay & Google Pay</p>
                 </button>
               )}
 
@@ -467,8 +384,8 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
                       : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
                   }`}
                 >
-                  <p className="font-extrabold text-sm">External Checkout Portal</p>
-                  <p className="text-[11px] font-normal text-gray-500 mt-0.5">Custom Admin Payment Link</p>
+                  <p className="font-extrabold text-sm">Custom Payment Link</p>
+                  <p className="text-[11px] font-normal text-gray-500 mt-0.5">Admin Payment Page</p>
                 </button>
               )}
             </div>
@@ -477,7 +394,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
           {/* Checkout Total & Submit */}
           <div className="pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Calculated Charge</span>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Amount</span>
               <p className="text-3xl font-black text-gray-900 mt-0.5">
                 {baseRate === 0 ? 'Free' : `₦${calculateTotalPrice().toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
               </p>
@@ -488,7 +405,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
               disabled={loading}
               className="w-full sm:w-auto px-10 py-4 rounded-full bg-[#a20000] hover:bg-black text-white font-bold text-sm tracking-wide shadow-lg hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Make Payment'}
+              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Pay Now'}
             </button>
           </div>
         </form>
@@ -500,14 +417,14 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
           </div>
 
           <div>
-            <h3 className="text-2xl font-black text-gray-900">Gift Voucher Purchased Successfully!</h3>
+            <h3 className="text-2xl font-black text-gray-900">Voucher Created!</h3>
             <p className="text-sm text-gray-500 max-w-md mx-auto mt-1">
-              A receipt has been dispatched to <span className="font-semibold text-gray-800">{buyerEmail}</span>.
+              We sent a receipt to <span className="font-semibold text-gray-800">{buyerEmail}</span>.
             </p>
           </div>
 
           <div className="p-6 rounded-3xl bg-gray-50 border border-gray-200 inline-block text-center my-2 shadow-inner relative group">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Voucher Claim Code</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Voucher Code</p>
             <div className="flex items-center justify-center gap-3">
               <span className="font-mono text-3xl font-black text-[#a20000] tracking-widest">
                 {completedVoucher.code}
@@ -530,7 +447,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
           </div>
 
           <p className="text-xs text-gray-400 max-w-sm mx-auto">
-            The recipient can redeem this code anytime at checkout or registration to activate their membership.
+            The recipient can enter this code at sign-up or on their account page to activate their membership.
           </p>
 
           <button

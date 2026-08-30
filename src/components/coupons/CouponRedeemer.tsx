@@ -126,19 +126,19 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
               setCode(sanitized);
             }}
             placeholder="Enter Promo or Gift Code (e.g. CK-GIFT-8812)"
-            className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono uppercase tracking-wider text-sm"
+            className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#a20000] font-mono uppercase tracking-wider text-sm"
             disabled={isRedeeming}
           />
           {isValidating && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <RefreshCw className="w-4 h-4 text-emerald-400 animate-spin" />
+              <RefreshCw className="w-4 h-4 text-red-400 animate-spin" />
             </div>
           )}
         </div>
         <button
           type="submit"
           disabled={isValidating || isRedeeming || !validation?.valid}
-          className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+          className="px-6 py-3 rounded-xl bg-[#a20000] hover:bg-black text-white font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm shadow-md"
         >
           {isRedeeming ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Confirm & Claim'}
         </button>
@@ -146,7 +146,7 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
 
       {/* Validation Success Badge */}
       {validation?.valid && !validation.requires_resolution && (
-        <div className="mt-4 p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="mt-4 p-4 rounded-xl bg-slate-900 border border-emerald-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
             <div>
@@ -160,7 +160,7 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
             <button
               onClick={() => handleRedeem('DEFAULT')}
               disabled={isRedeeming}
-              className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 text-xs font-bold hover:bg-emerald-400 transition-all flex items-center gap-1 shrink-0"
+              className="px-4 py-2 rounded-lg bg-[#a20000] text-white text-xs font-bold hover:bg-black transition-all flex items-center gap-1 shrink-0"
             >
               {isRedeeming ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : 'Confirm & Claim'}
             </button>
