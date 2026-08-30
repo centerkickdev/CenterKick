@@ -42,29 +42,37 @@ export function SubscriptionsClient({
       }
 
       // 3. Paystack Validation
+      const paystackEnv = settings.paystackEnv || 'live';
+      const activePaystackSecret = paystackEnv === 'test' ? settings.paystackTestSecretKey : settings.paystackSecret;
+      const activePaystackPublic = paystackEnv === 'test' ? settings.paystackTestPublicKey : settings.paystackPublicKey;
+
       if (settings.paystackActive) {
-         if (!settings.paystackSecret) {
-            errs.paystackSecret = 'Secret key is required when Paystack is active';
-         } else if (!settings.paystackSecret.startsWith('sk_')) {
+         if (!activePaystackSecret) {
+            errs.paystackSecret = `Paystack Secret key (${paystackEnv.toUpperCase()}) is required when Paystack is active`;
+         } else if (!activePaystackSecret.startsWith('sk_')) {
             errs.paystackSecret = 'Secret key must be a valid Paystack key starting with sk_';
          }
-         if (!settings.paystackPublicKey) {
-            errs.paystackPublicKey = 'Public key is required when Paystack is active';
-         } else if (!settings.paystackPublicKey.startsWith('pk_')) {
+         if (!activePaystackPublic) {
+            errs.paystackPublicKey = `Paystack Public key (${paystackEnv.toUpperCase()}) is required when Paystack is active`;
+         } else if (!activePaystackPublic.startsWith('pk_')) {
             errs.paystackPublicKey = 'Public key must be a valid Paystack key starting with pk_';
          }
       }
 
       // 4. Stripe Validation
+      const stripeEnv = settings.stripeEnv || 'live';
+      const activeStripeKey = stripeEnv === 'test' ? settings.stripeTestPublicKey : settings.stripeKey;
+      const activeStripeSecret = stripeEnv === 'test' ? settings.stripeTestSecretKey : settings.stripeSecret;
+
       if (settings.stripeActive) {
-         if (!settings.stripeKey) {
-            errs.stripeKey = 'Publishable key is required when Stripe is active';
-         } else if (!settings.stripeKey.startsWith('pk_')) {
+         if (!activeStripeKey) {
+            errs.stripeKey = `Stripe Publishable key (${stripeEnv.toUpperCase()}) is required when Stripe is active`;
+         } else if (!activeStripeKey.startsWith('pk_')) {
             errs.stripeKey = 'Publishable key must be a valid Stripe key starting with pk_';
          }
-         if (!settings.stripeSecret) {
-            errs.stripeSecret = 'Secret key is required when Stripe is active';
-         } else if (!settings.stripeSecret.startsWith('sk_')) {
+         if (!activeStripeSecret) {
+            errs.stripeSecret = `Stripe Secret key (${stripeEnv.toUpperCase()}) is required when Stripe is active`;
+         } else if (!activeStripeSecret.startsWith('sk_')) {
             errs.stripeSecret = 'Secret key must be a valid Stripe key starting with sk_';
          }
       }
@@ -160,539 +168,458 @@ export function SubscriptionsClient({
          )}
 
          {/* Gateway Integrations Section */}
-         <div className="bg-white rounded-3xl sm:rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden mb-8 sm:mb-12">
-            {/* Desktop Table View */}
-            <div className="hidden lg:block overflow-x-auto">
-               <table className="w-full text-left border-collapse">
-                  <thead>
-                     <tr className="bg-gray-50/50 border-b border-gray-100">
-                        <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Gateway / Channel</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap text-center">Status</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest min-w-[400px]">Configuration Keys & Settings</th>
-                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                     {/* Legacy Checkout */}
-                     <tr className="hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-6 align-top whitespace-nowrap">
-                           <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-600 border border-gray-100">
-                                 <ExternalLink className="w-6 h-6" />
-                              </div>
-                              <div>
-                                 <h3 className="text-base font-bold text-gray-900">Legacy Checkout</h3>
-                                 <p className="text-xs font-bold text-gray-500 tracking-wide mt-0.5">Universal Redirect Link</p>
-                              </div>
-                           </div>
-                        </td>
-                        <td className="px-6 py-6 align-top text-center">
-                           <button
-                              onClick={() => setSettings({ ...settings, legacyLinkActive: !settings.legacyLinkActive })}
-                              className={`w-10 h-5 rounded-full relative transition-colors inline-block mt-3 ${settings.legacyLinkActive ? 'bg-gray-900' : 'bg-gray-200'}`}
-                           >
-                              <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.legacyLinkActive ? 'right-1' : 'left-1'}`}></div>
-                           </button>
-                        </td>
-                        <td className="px-6 py-6 align-top">
-                           {settings.legacyLinkActive ? (
-                              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">External Payment URL</label>
-                                    <div className="relative group">
-                                       <input
-                                          type="text"
-                                          value={settings.paymentLink || ''}
-                                          onChange={(e) => setSettings({ ...settings, paymentLink: e.target.value })}
-                                          placeholder="https://..."
-                                          className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 ${errors.paymentLink ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
-                                       />
-                                       {settings.paymentLink && !errors.paymentLink && (
-                                          <a href={settings.paymentLink} target="_blank" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors">
-                                             <ExternalLink className="w-3.5 h-3.5" />
-                                          </a>
-                                       )}
-                                    </div>
-                                    {errors.paymentLink && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.paymentLink}</p>}
-                                 </div>
-                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Checkout Instructions</label>
-                                    <textarea
-                                       rows={2}
-                                       value={settings.instructions || ''}
-                                       onChange={(e) => setSettings({ ...settings, instructions: e.target.value })}
-                                       placeholder="Instructions shown for manual/universal links..."
-                                       className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 resize-none"
-                                    />
-                                 </div>
-                              </div>
-                           ) : (
-                              <span className="text-xs font-bold text-gray-400 italic mt-4 block">Disabled</span>
-                           )}
-                        </td>
-                     </tr>
-
-                     {/* Bank Settlement */}
-                     <tr className="hover:bg-amber-50/30 transition-colors">
-                        <td className="px-6 py-6 align-top whitespace-nowrap">
-                           <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 border border-amber-100">
-                                 <DollarSign className="w-6 h-6" />
-                              </div>
-                              <div>
-                                 <h3 className="text-base font-bold text-gray-900">Bank Settlement</h3>
-                                 <p className="text-xs font-bold text-gray-500 tracking-wide mt-0.5">Local Transfers</p>
-                              </div>
-                           </div>
-                        </td>
-                        <td className="px-6 py-6 align-top text-center">
-                           <span className="inline-block mt-3 px-3 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-widest rounded-md">Always Active</span>
-                        </td>
-                        <td className="px-6 py-6 align-top">
-                           <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-                              <div className="space-y-1.5">
-                                 <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Institution</label>
-                                 <input
-                                    type="text"
-                                    value={settings.bankName || ''}
-                                    onChange={(e) => setSettings({ ...settings, bankName: e.target.value })}
-                                    placeholder="Bank name"
-                                    className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-amber-200 transition-all ${errors.bankName ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
-                                 />
-                                 {errors.bankName && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.bankName}</p>}
-                              </div>
-                              <div className="space-y-1.5">
-                                 <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Acc. Name</label>
-                                 <input
-                                    type="text"
-                                    value={settings.accountName || ''}
-                                    onChange={(e) => setSettings({ ...settings, accountName: e.target.value })}
-                                    className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900"
-                                 />
-                              </div>
-                              <div className="space-y-1.5">
-                                 <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Number</label>
-                                 <input
-                                    type="text"
-                                    value={settings.accountNumber || ''}
-                                    onChange={(e) => setSettings({ ...settings, accountNumber: e.target.value })}
-                                    className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-amber-200 transition-all ${errors.accountNumber ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
-                                 />
-                                 {errors.accountNumber && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.accountNumber}</p>}
-                              </div>
-                           </div>
-                        </td>
-                     </tr>
-
-                     {/* Paystack */}
-                     <tr className="hover:bg-teal-50/30 transition-colors">
-                        <td className="px-6 py-6 align-top whitespace-nowrap">
-                           <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600 border border-teal-100">
-                                 <Zap className="w-6 h-6" />
-                              </div>
-                              <div>
-                                 <h3 className="text-base font-bold text-gray-900">Paystack</h3>
-                                 <p className="text-xs font-bold text-gray-500 tracking-wide mt-0.5">Automated Gateway</p>
-                              </div>
-                           </div>
-                        </td>
-                        <td className="px-6 py-6 align-top text-center">
-                           <button
-                              onClick={() => setSettings({ ...settings, paystackActive: !settings.paystackActive })}
-                              className={`w-10 h-5 rounded-full relative transition-colors inline-block mt-3 ${settings.paystackActive ? 'bg-teal-500' : 'bg-gray-200'}`}
-                           >
-                              <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.paystackActive ? 'right-1' : 'left-1'}`}></div>
-                           </button>
-                        </td>
-                        <td className="px-6 py-6 align-top">
-                           {settings.paystackActive ? (
-                              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Secret Key</label>
-                                    <input
-                                       type="password"
-                                       value={settings.paystackSecret || ''}
-                                       onChange={(e) => setSettings({ ...settings, paystackSecret: e.target.value })}
-                                       placeholder="sk_live_..."
-                                       className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-teal-100 transition-all ${errors.paystackSecret ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
-                                    />
-                                    {errors.paystackSecret && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.paystackSecret}</p>}
-                                 </div>
-                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Public Key</label>
-                                    <input
-                                       type="text"
-                                       value={settings.paystackPublicKey || ''}
-                                       onChange={(e) => setSettings({ ...settings, paystackPublicKey: e.target.value })}
-                                       placeholder="pk_live_..."
-                                       className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-teal-100 transition-all ${errors.paystackPublicKey ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
-                                    />
-                                    {errors.paystackPublicKey && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.paystackPublicKey}</p>}
-                                 </div>
-                                 <div className="space-y-1.5 xl:col-span-2">
-                                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Webhook URL</label>
-                                    <div className="px-4 py-3 bg-gray-50 rounded-xl text-xs font-mono text-gray-400 break-all select-all border border-gray-100">
-                                       {typeof window !== 'undefined' ? `${window.location.origin}/api/webhooks/paystack` : '.../api/webhooks/paystack'}
-                                    </div>
-                                 </div>
-                              </div>
-                           ) : (
-                              <span className="text-xs font-bold text-gray-400 italic mt-4 block">Disabled</span>
-                           )}
-                        </td>
-                     </tr>
-
-                     {/* Stripe */}
-                     <tr className="hover:bg-indigo-50/30 transition-colors">
-                        <td className="px-6 py-6 align-top whitespace-nowrap">
-                           <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100">
-                                 <CreditCard className="w-6 h-6" />
-                              </div>
-                              <div>
-                                 <h3 className="text-base font-bold text-gray-900">Stripe</h3>
-                                 <p className="text-xs font-bold text-gray-500 tracking-wide mt-0.5">Global Checkout</p>
-                              </div>
-                           </div>
-                        </td>
-                        <td className="px-6 py-6 align-top text-center">
-                           <button
-                              onClick={() => setSettings({ ...settings, stripeActive: !settings.stripeActive })}
-                              className={`w-10 h-5 rounded-full relative transition-colors inline-block mt-3 ${settings.stripeActive ? 'bg-indigo-500' : 'bg-gray-200'}`}
-                           >
-                              <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.stripeActive ? 'right-1' : 'left-1'}`}></div>
-                           </button>
-                        </td>
-                        <td className="px-6 py-6 align-top">
-                           {settings.stripeActive ? (
-                              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Publishable Key</label>
-                                    <input
-                                       type="text"
-                                       value={settings.stripeKey || ''}
-                                       onChange={(e) => setSettings({ ...settings, stripeKey: e.target.value })}
-                                       placeholder="pk_live_..."
-                                       className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-indigo-100 transition-all ${errors.stripeKey ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
-                                    />
-                                    {errors.stripeKey && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.stripeKey}</p>}
-                                 </div>
-                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Secret Key</label>
-                                    <input
-                                       type="password"
-                                       value={settings.stripeSecret || ''}
-                                       onChange={(e) => setSettings({ ...settings, stripeSecret: e.target.value })}
-                                       placeholder="sk_live_..."
-                                       className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-indigo-100 transition-all ${errors.stripeSecret ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
-                                    />
-                                    {errors.stripeSecret && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.stripeSecret}</p>}
-                                 </div>
-                              </div>
-                           ) : (
-                              <span className="text-xs font-bold text-gray-400 italic mt-4 block">Disabled</span>
-                           )}
-                        </td>
-                     </tr>
-
-                     {/* PayPal */}
-                     <tr className="hover:bg-blue-50/30 transition-colors">
-                        <td className="px-6 py-6 align-top whitespace-nowrap">
-                           <div className="flex items-center gap-4">
-                              <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 border border-blue-100">
-                                 <DollarSign className="w-6 h-6" />
-                              </div>
-                              <div>
-                                 <h3 className="text-base font-bold text-gray-900">PayPal</h3>
-                                 <p className="text-xs font-bold text-gray-500 tracking-wide mt-0.5">Braintree/Legacy</p>
-                              </div>
-                           </div>
-                        </td>
-                        <td className="px-6 py-6 align-top text-center">
-                           <button
-                              onClick={() => setSettings({ ...settings, paypalActive: !settings.paypalActive })}
-                              className={`w-10 h-5 rounded-full relative transition-colors inline-block mt-3 ${settings.paypalActive ? 'bg-blue-500' : 'bg-gray-200'}`}
-                           >
-                              <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.paypalActive ? 'right-1' : 'left-1'}`}></div>
-                           </button>
-                        </td>
-                        <td className="px-6 py-6 align-top">
-                           {settings.paypalActive ? (
-                              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Client ID</label>
-                                    <input
-                                       type="text"
-                                       value={settings.paypalId || ''}
-                                       onChange={(e) => setSettings({ ...settings, paypalId: e.target.value })}
-                                       placeholder="AZ_..."
-                                       className={`w-full bg-gray-50 border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-blue-100 transition-all ${errors.paypalId ? 'border-red-500 focus:ring-red-200' : 'border-transparent'}`}
-                                    />
-                                    {errors.paypalId && <p className="text-xs font-bold text-red-500 ml-1 mt-1">{errors.paypalId}</p>}
-                                 </div>
-                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Environment</label>
-                                    <select
-                                       value={settings.paypalEnv || 'sandbox'}
-                                       onChange={(e) => setSettings({ ...settings, paypalEnv: e.target.value })}
-                                       className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold text-gray-900 focus:ring-2 focus:ring-blue-100 transition-all"
-                                    >
-                                       <option value="sandbox" className="text-gray-900 bg-white">Sandbox (Testing)</option>
-                                       <option value="live" className="text-gray-900 bg-white">Live (Production)</option>
-                                    </select>
-                                 </div>
-                              </div>
-                           ) : (
-                              <span className="text-xs font-bold text-gray-400 italic mt-4 block">Disabled</span>
-                           )}
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
+         <div className="bg-white rounded-3xl sm:rounded-[2.5rem] border border-gray-100 shadow-sm p-4 sm:p-8 mb-8 sm:mb-12 space-y-6 sm:space-y-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 gap-2">
+               <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">Payment Gateways & Integrations</h2>
+                  <p className="text-xs sm:text-sm font-semibold text-gray-700 mt-0.5">Configure live and test environment API credentials for player and agent subscriptions.</p>
+               </div>
             </div>
 
-            {/* Mobile Stacked Cards View */}
-            <div className="block lg:hidden divide-y divide-gray-100">
-               {/* Legacy Checkout Mobile Card */}
-               <div className="p-4 sm:p-6 space-y-4">
-                  <div className="flex items-center justify-between gap-3">
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-600 border border-gray-100 shrink-0">
-                           <ExternalLink className="w-5 h-5" />
+            <div className="grid grid-cols-1 gap-6 sm:gap-8">
+               {/* Legacy Checkout Card */}
+               <div className="bg-slate-50/70 border border-slate-200/80 rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-5 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                     <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-slate-700 border border-slate-200 shadow-sm shrink-0">
+                           <ExternalLink className="w-6 h-6" />
                         </div>
                         <div>
-                           <h3 className="text-sm font-bold text-gray-900">Legacy Checkout</h3>
-                           <p className="text-[11px] font-bold text-gray-500">Universal Redirect Link</p>
+                           <div className="flex items-center gap-2">
+                              <h3 className="text-base sm:text-lg font-bold text-gray-900">Legacy Checkout</h3>
+                              <span className="px-2 py-0.5 text-[10px] font-extrabold uppercase bg-gray-200 text-gray-700 rounded-md">Universal</span>
+                           </div>
+                           <p className="text-xs font-semibold text-gray-600 mt-0.5">External Universal Payment Link & Fallback</p>
                         </div>
                      </div>
-                     <button
-                        onClick={() => setSettings({ ...settings, legacyLinkActive: !settings.legacyLinkActive })}
-                        className={`w-10 h-5 rounded-full relative transition-colors inline-block ${settings.legacyLinkActive ? 'bg-gray-900' : 'bg-gray-200'}`}
-                     >
-                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.legacyLinkActive ? 'right-1' : 'left-1'}`}></div>
-                     </button>
+                     <div className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-gray-700 sm:block hidden">{settings.legacyLinkActive ? 'Enabled' : 'Disabled'}</span>
+                        <button
+                           type="button"
+                           onClick={() => setSettings({ ...settings, legacyLinkActive: !settings.legacyLinkActive })}
+                           className={`w-12 h-6 rounded-full relative transition-colors inline-block ${settings.legacyLinkActive ? 'bg-slate-900' : 'bg-gray-300'}`}
+                        >
+                           <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.legacyLinkActive ? 'right-1' : 'left-1'}`}></div>
+                        </button>
+                     </div>
                   </div>
-                  {settings.legacyLinkActive ? (
-                     <div className="space-y-3 pt-2">
-                        <div className="space-y-1">
-                           <label className="text-xs font-bold text-gray-900">External Payment URL</label>
-                           <input
-                              type="text"
-                              value={settings.paymentLink || ''}
-                              onChange={(e) => setSettings({ ...settings, paymentLink: e.target.value })}
-                              placeholder="https://..."
-                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 ${errors.paymentLink ? 'border-red-500' : 'border-transparent'}`}
-                           />
-                           {errors.paymentLink && <p className="text-xs font-bold text-red-500 mt-1">{errors.paymentLink}</p>}
+
+                  {settings.legacyLinkActive && (
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-slate-200/60">
+                        <div className="space-y-1.5">
+                           <label className="text-xs font-bold text-gray-900 tracking-wide">External Payment URL</label>
+                           <div className="relative group">
+                              <input
+                                 type="text"
+                                 value={settings.paymentLink || ''}
+                                 onChange={(e) => setSettings({ ...settings, paymentLink: e.target.value })}
+                                 placeholder="https://..."
+                                 className={`w-full bg-white border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-slate-400 outline-none transition-all ${errors.paymentLink ? 'border-red-500' : 'border-gray-200'}`}
+                              />
+                              {settings.paymentLink && !errors.paymentLink && (
+                                 <a href={settings.paymentLink} target="_blank" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors">
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                 </a>
+                              )}
+                           </div>
+                           {errors.paymentLink && <p className="text-xs font-bold text-red-600 mt-1">{errors.paymentLink}</p>}
                         </div>
-                        <div className="space-y-1">
-                           <label className="text-xs font-bold text-gray-900">Checkout Instructions</label>
+                        <div className="space-y-1.5">
+                           <label className="text-xs font-bold text-gray-900 tracking-wide">Checkout Instructions</label>
                            <textarea
                               rows={2}
                               value={settings.instructions || ''}
                               onChange={(e) => setSettings({ ...settings, instructions: e.target.value })}
-                              placeholder="Instructions shown for manual/universal links..."
-                              className="w-full bg-gray-50 border-none rounded-xl px-3.5 py-2.5 text-xs font-bold focus:ring-2 focus:ring-gray-200 transition-all text-gray-900 resize-none"
+                              placeholder="Instructions shown for manual or fallback links..."
+                              className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-slate-400 outline-none transition-all resize-none"
                            />
                         </div>
                      </div>
-                  ) : (
-                     <span className="text-xs font-bold text-gray-400 italic block">Gateway Disabled</span>
                   )}
                </div>
 
-               {/* Bank Settlement Mobile Card */}
-               <div className="p-4 sm:p-6 space-y-4 bg-amber-50/20">
-                  <div className="flex items-center justify-between gap-3">
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 border border-amber-100 shrink-0">
-                           <DollarSign className="w-5 h-5" />
+               {/* Bank Settlement Card */}
+               <div className="bg-amber-50/40 border border-amber-200/80 rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-5 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                     <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-amber-600 border border-amber-200 shadow-sm shrink-0">
+                           <DollarSign className="w-6 h-6" />
                         </div>
                         <div>
-                           <h3 className="text-sm font-bold text-gray-900">Bank Settlement</h3>
-                           <p className="text-[11px] font-bold text-gray-500">Local Bank Transfers</p>
+                           <div className="flex items-center gap-2">
+                              <h3 className="text-base sm:text-lg font-bold text-gray-900">Bank Settlement</h3>
+                              <span className="px-2 py-0.5 text-[10px] font-extrabold uppercase bg-amber-200 text-amber-900 rounded-md">Always Active</span>
+                           </div>
+                           <p className="text-xs font-semibold text-gray-600 mt-0.5">Manual Direct Bank Transfer Details</p>
                         </div>
                      </div>
-                     <span className="px-2.5 py-1 bg-gray-100 text-gray-500 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0">Active</span>
                   </div>
-                  <div className="space-y-3 pt-2">
-                     <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-900">Institution Name</label>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-amber-200/60">
+                     <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-gray-900 tracking-wide">Institution / Bank Name</label>
                         <input
                            type="text"
                            value={settings.bankName || ''}
                            onChange={(e) => setSettings({ ...settings, bankName: e.target.value })}
-                           placeholder="Bank name"
-                           className={`w-full bg-white border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.bankName ? 'border-red-500' : 'border-slate-200'}`}
+                           placeholder="e.g. Zenith Bank"
+                           className={`w-full bg-white border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-300 outline-none transition-all ${errors.bankName ? 'border-red-500' : 'border-gray-200'}`}
                         />
-                        {errors.bankName && <p className="text-xs font-bold text-red-500 mt-1">{errors.bankName}</p>}
+                        {errors.bankName && <p className="text-xs font-bold text-red-600 mt-1">{errors.bankName}</p>}
                      </div>
-                     <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-900">Account Name</label>
+                     <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-gray-900 tracking-wide">Account Name</label>
                         <input
                            type="text"
                            value={settings.accountName || ''}
                            onChange={(e) => setSettings({ ...settings, accountName: e.target.value })}
-                           className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900"
+                           placeholder="e.g. CenterKick Sports Ltd"
+                           className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-300 outline-none transition-all"
                         />
                      </div>
-                     <div className="space-y-1">
-                        <label className="text-xs font-bold text-gray-900">Account Number</label>
+                     <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-gray-900 tracking-wide">Account Number</label>
                         <input
                            type="text"
                            value={settings.accountNumber || ''}
                            onChange={(e) => setSettings({ ...settings, accountNumber: e.target.value })}
-                           className={`w-full bg-white border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.accountNumber ? 'border-red-500' : 'border-slate-200'}`}
+                           placeholder="e.g. 1012345678"
+                           className={`w-full bg-white border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-300 outline-none transition-all ${errors.accountNumber ? 'border-red-500' : 'border-gray-200'}`}
                         />
-                        {errors.accountNumber && <p className="text-xs font-bold text-red-500 mt-1">{errors.accountNumber}</p>}
+                        {errors.accountNumber && <p className="text-xs font-bold text-red-600 mt-1">{errors.accountNumber}</p>}
                      </div>
                   </div>
                </div>
 
-               {/* Paystack Mobile Card */}
-               <div className="p-4 sm:p-6 space-y-4">
-                  <div className="flex items-center justify-between gap-3">
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center text-teal-600 border border-teal-100 shrink-0">
-                           <Zap className="w-5 h-5" />
+               {/* Paystack Card */}
+               <div className="bg-teal-50/30 border border-teal-200/80 rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-6 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                     <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-teal-600 border border-teal-200 shadow-sm shrink-0">
+                           <Zap className="w-6 h-6" />
                         </div>
                         <div>
-                           <h3 className="text-sm font-bold text-gray-900">Paystack</h3>
-                           <p className="text-[11px] font-bold text-gray-500">Automated Gateway</p>
+                           <div className="flex items-center gap-2">
+                              <h3 className="text-base sm:text-lg font-bold text-gray-900">Paystack</h3>
+                              <span className="px-2.5 py-1 text-[10px] font-extrabold uppercase bg-teal-800 text-white rounded-md tracking-wider">Automated Gateway</span>
+                           </div>
+                           <p className="text-xs font-semibold text-gray-600 mt-0.5">Cards, Transfer, USSD & Auto-Debit Billing</p>
                         </div>
                      </div>
-                     <button
-                        onClick={() => setSettings({ ...settings, paystackActive: !settings.paystackActive })}
-                        className={`w-10 h-5 rounded-full relative transition-colors inline-block ${settings.paystackActive ? 'bg-teal-500' : 'bg-gray-200'}`}
-                     >
-                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.paystackActive ? 'right-1' : 'left-1'}`}></div>
-                     </button>
+                     <div className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-gray-700 sm:block hidden">{settings.paystackActive ? 'Enabled' : 'Disabled'}</span>
+                        <button
+                           type="button"
+                           onClick={() => setSettings({ ...settings, paystackActive: !settings.paystackActive })}
+                           className={`w-12 h-6 rounded-full relative transition-colors inline-block ${settings.paystackActive ? 'bg-teal-600' : 'bg-gray-300'}`}
+                        >
+                           <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.paystackActive ? 'right-1' : 'left-1'}`}></div>
+                        </button>
+                     </div>
                   </div>
-                  {settings.paystackActive ? (
-                     <div className="space-y-3 pt-2">
-                        <div className="space-y-1">
-                           <label className="text-xs font-bold text-gray-900">Secret Key</label>
-                           <input
-                              type="password"
-                              value={settings.paystackSecret || ''}
-                              onChange={(e) => setSettings({ ...settings, paystackSecret: e.target.value })}
-                              placeholder="sk_live_..."
-                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.paystackSecret ? 'border-red-500' : 'border-transparent'}`}
-                           />
-                           {errors.paystackSecret && <p className="text-xs font-bold text-red-500 mt-1">{errors.paystackSecret}</p>}
+
+                  {settings.paystackActive && (
+                     <div className="space-y-6 pt-4 border-t border-teal-200/60">
+                        {/* Active Mode Banner Switcher */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-3 sm:p-4 rounded-2xl border border-teal-100 shadow-sm gap-3">
+                           <div>
+                              <p className="text-xs sm:text-sm font-bold text-gray-900">Active Environment Mode</p>
+                              <p className="text-[11px] font-bold text-gray-700">Toggle which API key pair is actively used during checkout.</p>
+                           </div>
+                           <div className="flex gap-1.5 bg-gray-200 p-1.5 rounded-xl border border-gray-300 shrink-0">
+                              <button
+                                 type="button"
+                                 onClick={() => setSettings({ ...settings, paystackEnv: 'test' })}
+                                 className={`px-4 py-2 text-xs font-extrabold rounded-lg transition-all ${
+                                    (settings.paystackEnv || 'live') === 'test'
+                                       ? 'bg-amber-600 text-white shadow-md'
+                                       : 'bg-white text-gray-900 hover:bg-gray-50 border border-gray-300'
+                                 }`}
+                              >
+                                 Test / Sandbox
+                              </button>
+                              <button
+                                 type="button"
+                                 onClick={() => setSettings({ ...settings, paystackEnv: 'live' })}
+                                 className={`px-4 py-2 text-xs font-extrabold rounded-lg transition-all ${
+                                    (settings.paystackEnv || 'live') === 'live'
+                                       ? 'bg-teal-700 text-white shadow-md'
+                                       : 'bg-white text-gray-900 hover:bg-gray-50 border border-gray-300'
+                                 }`}
+                              >
+                                 Live / Production
+                              </button>
+                           </div>
                         </div>
-                        <div className="space-y-1">
-                           <label className="text-xs font-bold text-gray-900">Public Key</label>
-                           <input
-                              type="text"
-                              value={settings.paystackPublicKey || ''}
-                              onChange={(e) => setSettings({ ...settings, paystackPublicKey: e.target.value })}
-                              placeholder="pk_live_..."
-                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.paystackPublicKey ? 'border-red-500' : 'border-transparent'}`}
-                           />
-                           {errors.paystackPublicKey && <p className="text-xs font-bold text-red-500 mt-1">{errors.paystackPublicKey}</p>}
+
+                        {/* Dual Key Credentials Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                           {/* Test Credentials Block */}
+                           <div className={`p-5 rounded-2xl border space-y-4 transition-all ${ (settings.paystackEnv || 'live') === 'test' ? 'bg-amber-50/70 border-amber-300 shadow-sm' : 'bg-white border-gray-300' }`}>
+                              <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                                 <span className="text-xs font-extrabold text-amber-900 uppercase tracking-wider">Test Credentials</span>
+                                 {(settings.paystackEnv || 'live') === 'test' ? (
+                                    <span className="text-[10px] font-extrabold bg-amber-600 text-white px-2.5 py-0.5 rounded-full shadow-sm">ACTIVE</span>
+                                 ) : (
+                                    <span className="text-[10px] font-extrabold bg-gray-200 text-gray-800 px-2.5 py-0.5 rounded-full">INACTIVE</span>
+                                 )}
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-xs font-bold text-gray-900">Test Secret Key</label>
+                                 <input
+                                    type="password"
+                                    value={settings.paystackTestSecretKey || (settings.paystackEnv === 'test' ? settings.paystackSecret : '') || ''}
+                                    onChange={(e) => setSettings({ ...settings, paystackTestSecretKey: e.target.value })}
+                                    placeholder="sk_test_..."
+                                    className="w-full bg-white border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-400 outline-none"
+                                 />
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-xs font-bold text-gray-900">Test Public Key</label>
+                                 <input
+                                    type="text"
+                                    value={settings.paystackTestPublicKey || (settings.paystackEnv === 'test' ? settings.paystackPublicKey : '') || ''}
+                                    onChange={(e) => setSettings({ ...settings, paystackTestPublicKey: e.target.value })}
+                                    placeholder="pk_test_..."
+                                    className="w-full bg-white border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-400 outline-none"
+                                 />
+                              </div>
+                           </div>
+
+                           {/* Live Credentials Block */}
+                           <div className={`p-5 rounded-2xl border space-y-4 transition-all ${ (settings.paystackEnv || 'live') === 'live' ? 'bg-teal-50/70 border-teal-300 shadow-sm' : 'bg-white border-gray-300' }`}>
+                              <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                                 <span className="text-xs font-extrabold text-teal-950 uppercase tracking-wider">Live Credentials</span>
+                                 {(settings.paystackEnv || 'live') === 'live' ? (
+                                    <span className="text-[10px] font-extrabold bg-teal-700 text-white px-2.5 py-0.5 rounded-full shadow-sm">ACTIVE</span>
+                                 ) : (
+                                    <span className="text-[10px] font-extrabold bg-gray-200 text-gray-800 px-2.5 py-0.5 rounded-full">INACTIVE</span>
+                                 )}
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-xs font-bold text-gray-800">Live Secret Key</label>
+                                 <input
+                                    type="password"
+                                    value={settings.paystackSecret || settings.paystackLiveSecretKey || ''}
+                                    onChange={(e) => setSettings({ ...settings, paystackSecret: e.target.value, paystackLiveSecretKey: e.target.value })}
+                                    placeholder="sk_live_..."
+                                    className="w-full bg-white border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-teal-400 outline-none"
+                                 />
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-xs font-bold text-gray-800">Live Public Key</label>
+                                 <input
+                                    type="text"
+                                    value={settings.paystackPublicKey || settings.paystackLivePublicKey || ''}
+                                    onChange={(e) => setSettings({ ...settings, paystackPublicKey: e.target.value, paystackLivePublicKey: e.target.value })}
+                                    placeholder="pk_live_..."
+                                    className="w-full bg-white border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-teal-400 outline-none"
+                                 />
+                              </div>
+                           </div>
+                        </div>
+
+                        {(errors.paystackSecret || errors.paystackPublicKey) && (
+                           <p className="text-xs font-bold text-red-600 bg-red-50 p-3 rounded-xl border border-red-200">{errors.paystackSecret || errors.paystackPublicKey}</p>
+                        )}
+
+                        <div className="space-y-1.5">
+                           <label className="text-xs font-bold text-gray-900 tracking-wide">Webhook Callback URL</label>
+                           <div className="px-4 py-3 bg-white rounded-xl text-xs font-mono text-gray-800 font-bold break-all select-all border border-gray-200 shadow-sm">
+                              {typeof window !== 'undefined' ? `${window.location.origin}/api/webhooks/paystack` : '.../api/webhooks/paystack'}
+                           </div>
                         </div>
                      </div>
-                  ) : (
-                     <span className="text-xs font-bold text-gray-400 italic block">Gateway Disabled</span>
                   )}
                </div>
 
-               {/* Stripe Mobile Card */}
-               <div className="p-4 sm:p-6 space-y-4">
-                  <div className="flex items-center justify-between gap-3">
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 border border-indigo-100 shrink-0">
-                           <CreditCard className="w-5 h-5" />
+               {/* Stripe Card */}
+               <div className="bg-indigo-50/30 border border-indigo-200/80 rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-6 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                     <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-indigo-600 border border-indigo-200 shadow-sm shrink-0">
+                           <CreditCard className="w-6 h-6" />
                         </div>
                         <div>
-                           <h3 className="text-sm font-bold text-gray-900">Stripe</h3>
-                           <p className="text-[11px] font-bold text-gray-500">Global Checkout</p>
+                           <div className="flex items-center gap-2">
+                              <h3 className="text-base sm:text-lg font-bold text-gray-900">Stripe</h3>
+                              <span className="px-2.5 py-1 text-[10px] font-extrabold uppercase bg-indigo-900 text-white rounded-md tracking-wider">Global Gateway</span>
+                           </div>
+                           <p className="text-xs font-semibold text-gray-700 mt-0.5">International Cards & Apple Pay / Google Pay</p>
                         </div>
                      </div>
-                     <button
-                        onClick={() => setSettings({ ...settings, stripeActive: !settings.stripeActive })}
-                        className={`w-10 h-5 rounded-full relative transition-colors inline-block ${settings.stripeActive ? 'bg-indigo-500' : 'bg-gray-200'}`}
-                     >
-                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.stripeActive ? 'right-1' : 'left-1'}`}></div>
-                     </button>
+                     <div className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-gray-800 sm:block hidden">{settings.stripeActive ? 'Enabled' : 'Disabled'}</span>
+                        <button
+                           type="button"
+                           onClick={() => setSettings({ ...settings, stripeActive: !settings.stripeActive })}
+                           className={`w-12 h-6 rounded-full relative transition-colors inline-block ${settings.stripeActive ? 'bg-indigo-600' : 'bg-gray-400'}`}
+                        >
+                           <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.stripeActive ? 'right-1' : 'left-1'}`}></div>
+                        </button>
+                     </div>
                   </div>
-                  {settings.stripeActive ? (
-                     <div className="space-y-3 pt-2">
-                        <div className="space-y-1">
-                           <label className="text-xs font-bold text-gray-900">Publishable Key</label>
-                           <input
-                              type="text"
-                              value={settings.stripeKey || ''}
-                              onChange={(e) => setSettings({ ...settings, stripeKey: e.target.value })}
-                              placeholder="pk_live_..."
-                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.stripeKey ? 'border-red-500' : 'border-transparent'}`}
-                           />
-                           {errors.stripeKey && <p className="text-xs font-bold text-red-500 mt-1">{errors.stripeKey}</p>}
+
+                  {settings.stripeActive && (
+                     <div className="space-y-6 pt-4 border-t border-indigo-200/60">
+                        {/* Active Mode Banner Switcher */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-3 sm:p-4 rounded-2xl border border-indigo-200 shadow-sm gap-3">
+                           <div>
+                              <p className="text-xs sm:text-sm font-bold text-gray-900">Active Environment Mode</p>
+                              <p className="text-[11px] font-bold text-gray-700">Toggle active Stripe API keys used for checkout.</p>
+                           </div>
+                           <div className="flex gap-1.5 bg-gray-200 p-1.5 rounded-xl border border-gray-300 shrink-0">
+                              <button
+                                 type="button"
+                                 onClick={() => setSettings({ ...settings, stripeEnv: 'test' })}
+                                 className={`px-4 py-2 text-xs font-extrabold rounded-lg transition-all ${
+                                    (settings.stripeEnv || 'live') === 'test'
+                                       ? 'bg-amber-600 text-white shadow-md'
+                                       : 'bg-white text-gray-900 hover:bg-gray-50 border border-gray-300'
+                                 }`}
+                              >
+                                 Test / Sandbox
+                              </button>
+                              <button
+                                 type="button"
+                                 onClick={() => setSettings({ ...settings, stripeEnv: 'live' })}
+                                 className={`px-4 py-2 text-xs font-extrabold rounded-lg transition-all ${
+                                    (settings.stripeEnv || 'live') === 'live'
+                                       ? 'bg-indigo-700 text-white shadow-md'
+                                       : 'bg-white text-gray-900 hover:bg-gray-50 border border-gray-300'
+                                 }`}
+                              >
+                                 Live / Production
+                              </button>
+                           </div>
                         </div>
-                        <div className="space-y-1">
-                           <label className="text-xs font-bold text-gray-900">Secret Key</label>
-                           <input
-                              type="password"
-                              value={settings.stripeSecret || ''}
-                              onChange={(e) => setSettings({ ...settings, stripeSecret: e.target.value })}
-                              placeholder="sk_live_..."
-                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.stripeSecret ? 'border-red-500' : 'border-transparent'}`}
-                           />
-                           {errors.stripeSecret && <p className="text-xs font-bold text-red-500 mt-1">{errors.stripeSecret}</p>}
-                        </div>
+
+                        {/* Dual Key Credentials Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                           {/* Test Credentials Block */}
+                           <div className={`p-5 rounded-2xl border space-y-4 transition-all ${ (settings.stripeEnv || 'live') === 'test' ? 'bg-amber-50/70 border-amber-300 shadow-sm' : 'bg-white border-gray-300' }`}>
+                              <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                                 <span className="text-xs font-extrabold text-amber-900 uppercase tracking-wider">Test Credentials</span>
+                                 {(settings.stripeEnv || 'live') === 'test' ? (
+                                    <span className="text-[10px] font-extrabold bg-amber-600 text-white px-2.5 py-0.5 rounded-full shadow-sm">ACTIVE</span>
+                                 ) : (
+                                    <span className="text-[10px] font-extrabold bg-gray-200 text-gray-800 px-2.5 py-0.5 rounded-full">INACTIVE</span>
+                                 )}
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-xs font-bold text-gray-900">Test Publishable Key</label>
+                                 <input
+                                    type="text"
+                                    value={settings.stripeTestPublicKey || (settings.stripeEnv === 'test' ? settings.stripeKey : '') || ''}
+                                    onChange={(e) => setSettings({ ...settings, stripeTestPublicKey: e.target.value })}
+                                    placeholder="pk_test_..."
+                                    className="w-full bg-white border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-400 outline-none"
+                                 />
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-xs font-bold text-gray-900">Test Secret Key</label>
+                                 <input
+                                    type="password"
+                                    value={settings.stripeTestSecretKey || (settings.stripeEnv === 'test' ? settings.stripeSecret : '') || ''}
+                                    onChange={(e) => setSettings({ ...settings, stripeTestSecretKey: e.target.value })}
+                                    placeholder="sk_test_..."
+                                    className="w-full bg-white border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-400 outline-none"
+                                 />
+                              </div>
+                           </div>
+
+                           {/* Live Credentials Block */}
+                           <div className={`p-5 rounded-2xl border space-y-4 transition-all ${ (settings.stripeEnv || 'live') === 'live' ? 'bg-indigo-50/70 border-indigo-300 shadow-sm' : 'bg-white border-gray-300' }`}>
+                              <div className="flex items-center justify-between pb-2 border-b border-gray-200">
+                                 <span className="text-xs font-extrabold text-indigo-950 uppercase tracking-wider">Live Credentials</span>
+                                 {(settings.stripeEnv || 'live') === 'live' ? (
+                                    <span className="text-[10px] font-extrabold bg-indigo-700 text-white px-2.5 py-0.5 rounded-full shadow-sm">ACTIVE</span>
+                                 ) : (
+                                    <span className="text-[10px] font-extrabold bg-gray-200 text-gray-800 px-2.5 py-0.5 rounded-full">INACTIVE</span>
+                                 )}
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-xs font-bold text-gray-900">Live Publishable Key</label>
+                                 <input
+                                    type="text"
+                                    value={settings.stripeKey || settings.stripeLivePublicKey || ''}
+                                    onChange={(e) => setSettings({ ...settings, stripeKey: e.target.value, stripeLivePublicKey: e.target.value })}
+                                    placeholder="pk_live_..."
+                                    className="w-full bg-white border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-indigo-400 outline-none"
+                                 />
+                              </div>
+                              <div className="space-y-1.5">
+                                 <label className="text-xs font-bold text-gray-900">Live Secret Key</label>
+                                 <input
+                                    type="password"
+                                    value={settings.stripeSecret || settings.stripeLiveSecretKey || ''}
+                                    onChange={(e) => setSettings({ ...settings, stripeSecret: e.target.value, stripeLiveSecretKey: e.target.value })}
+                                    placeholder="sk_live_..."
+                                    className="w-full bg-white border border-gray-300 rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-indigo-400 outline-none"
+                                 />
+                              </div>
+                           </div>
+                         </div>
+
+                         {(errors.stripeKey || errors.stripeSecret) && (
+                            <p className="text-xs font-bold text-red-600 bg-red-50 p-3 rounded-xl border border-red-200">{errors.stripeKey || errors.stripeSecret}</p>
+                         )}
                      </div>
-                  ) : (
-                     <span className="text-xs font-bold text-gray-400 italic block">Gateway Disabled</span>
                   )}
                </div>
 
-               {/* PayPal Mobile Card */}
-               <div className="p-4 sm:p-6 space-y-4">
-                  <div className="flex items-center justify-between gap-3">
-                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 border border-blue-100 shrink-0">
-                           <DollarSign className="w-5 h-5" />
+               {/* PayPal Card */}
+               <div className="bg-blue-50/30 border border-blue-200/80 rounded-2xl sm:rounded-3xl p-5 sm:p-7 space-y-6 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                     <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-blue-600 border border-blue-200 shadow-sm shrink-0">
+                           <DollarSign className="w-6 h-6" />
                         </div>
                         <div>
-                           <h3 className="text-sm font-bold text-gray-900">PayPal</h3>
-                           <p className="text-[11px] font-bold text-gray-500">Braintree/Legacy</p>
+                           <div className="flex items-center gap-2">
+                              <h3 className="text-base sm:text-lg font-bold text-gray-900">PayPal</h3>
+                              <span className="px-2 py-0.5 text-[10px] font-extrabold uppercase bg-blue-100 text-blue-900 rounded-md">Braintree/Legacy</span>
+                           </div>
+                           <p className="text-xs font-semibold text-gray-600 mt-0.5">PayPal Wallet & Express Checkout Integration</p>
                         </div>
                      </div>
-                     <button
-                        onClick={() => setSettings({ ...settings, paypalActive: !settings.paypalActive })}
-                        className={`w-10 h-5 rounded-full relative transition-colors inline-block ${settings.paypalActive ? 'bg-blue-500' : 'bg-gray-200'}`}
-                     >
-                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all ${settings.paypalActive ? 'right-1' : 'left-1'}`}></div>
-                     </button>
+                     <div className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-gray-700 sm:block hidden">{settings.paypalActive ? 'Enabled' : 'Disabled'}</span>
+                        <button
+                           type="button"
+                           onClick={() => setSettings({ ...settings, paypalActive: !settings.paypalActive })}
+                           className={`w-12 h-6 rounded-full relative transition-colors inline-block ${settings.paypalActive ? 'bg-blue-600' : 'bg-gray-300'}`}
+                        >
+                           <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.paypalActive ? 'right-1' : 'left-1'}`}></div>
+                        </button>
+                     </div>
                   </div>
-                  {settings.paypalActive ? (
-                     <div className="space-y-3 pt-2">
-                        <div className="space-y-1">
-                           <label className="text-xs font-bold text-gray-900">Client ID</label>
+
+                  {settings.paypalActive && (
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-blue-200/60">
+                        <div className="space-y-1.5">
+                           <label className="text-xs font-bold text-gray-900 tracking-wide">Client ID</label>
                            <input
                               type="text"
                               value={settings.paypalId || ''}
                               onChange={(e) => setSettings({ ...settings, paypalId: e.target.value })}
                               placeholder="AZ_..."
-                              className={`w-full bg-gray-50 border rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900 ${errors.paypalId ? 'border-red-500' : 'border-transparent'}`}
+                              className={`w-full bg-white border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-blue-300 outline-none transition-all ${errors.paypalId ? 'border-red-500' : 'border-gray-200'}`}
                            />
-                           {errors.paypalId && <p className="text-xs font-bold text-red-500 mt-1">{errors.paypalId}</p>}
+                           {errors.paypalId && <p className="text-xs font-bold text-red-600 mt-1">{errors.paypalId}</p>}
                         </div>
-                        <div className="space-y-1">
-                           <label className="text-xs font-bold text-gray-900">Environment</label>
+                        <div className="space-y-1.5">
+                           <label className="text-xs font-bold text-gray-900 tracking-wide">Environment</label>
                            <select
                               value={settings.paypalEnv || 'sandbox'}
                               onChange={(e) => setSettings({ ...settings, paypalEnv: e.target.value })}
-                              className="w-full bg-gray-50 border-none rounded-xl px-3.5 py-2.5 text-xs font-bold text-gray-900"
+                              className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-blue-300 outline-none transition-all"
                            >
                               <option value="sandbox" className="text-gray-900 bg-white">Sandbox (Testing)</option>
                               <option value="live" className="text-gray-900 bg-white">Live (Production)</option>
                            </select>
                         </div>
                      </div>
-                  ) : (
-                     <span className="text-xs font-bold text-gray-400 italic block">Gateway Disabled</span>
                   )}
                </div>
             </div>
@@ -714,11 +641,11 @@ export function SubscriptionsClient({
                <div className="hidden lg:block overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                      <thead>
-                        <tr className="bg-gray-50/50 border-b border-gray-100">
-                           <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Account Type</th>
-                           <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Plan Name</th>
-                           <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Charge Rate</th>
-                           <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Billing Interval</th>
+                        <tr className="bg-gray-100/80 border-b border-gray-200">
+                           <th className="px-6 py-4 text-xs font-extrabold text-gray-800 uppercase tracking-widest whitespace-nowrap">Account Type</th>
+                           <th className="px-6 py-4 text-xs font-extrabold text-gray-800 uppercase tracking-widest whitespace-nowrap">Plan Name</th>
+                           <th className="px-6 py-4 text-xs font-extrabold text-gray-800 uppercase tracking-widest whitespace-nowrap">Charge Rate</th>
+                           <th className="px-6 py-4 text-xs font-extrabold text-gray-800 uppercase tracking-widest whitespace-nowrap">Billing Interval</th>
                         </tr>
                      </thead>
                      <tbody className="divide-y divide-gray-100">
@@ -734,18 +661,18 @@ export function SubscriptionsClient({
                                        type="text"
                                        value={plan.name || `CenterKick ${role.id.charAt(0).toUpperCase() + role.id.slice(1)}`}
                                        onChange={(e) => updatePlan(role.id, 'name', e.target.value)}
-                                       className="w-full bg-transparent border-none text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-amber-200 rounded-lg px-3 py-2 transition-all placeholder:text-gray-300"
+                                       className="w-full bg-transparent border-none text-sm font-bold text-gray-900 focus:ring-2 focus:ring-amber-200 rounded-lg px-3 py-2 transition-all placeholder:text-gray-500"
                                        placeholder="PLAN NAME"
                                     />
                                  </td>
                                  <td className="px-6 py-5 min-w-[180px]">
-                                    <div className={`flex items-center gap-2 bg-gray-50 border rounded-xl px-4 py-2 focus-within:ring-2 focus-within:ring-amber-200 transition-all ${errors[`plan_amount_${role.id}`] ? 'border-red-500' : 'border-transparent'}`}>
-                                       <span className="text-sm font-bold text-gray-400 select-none">₦</span>
+                                    <div className={`flex items-center gap-2 bg-gray-50 border rounded-xl px-4 py-2 focus-within:ring-2 focus-within:ring-amber-200 transition-all ${errors[`plan_amount_${role.id}`] ? 'border-red-500' : 'border-gray-300'}`}>
+                                       <span className="text-sm font-extrabold text-gray-900 select-none">₦</span>
                                        <input
                                           type="text"
                                           value={plan.amount || '0.00'}
                                           onChange={(e) => updatePlan(role.id, 'amount', e.target.value)}
-                                          className="bg-transparent border-none text-sm font-bold text-gray-900 focus:ring-0 p-0 w-full"
+                                          className="bg-transparent border-none text-sm font-bold text-gray-900 focus:ring-0 p-0 w-full placeholder:text-gray-500"
                                           placeholder="0.00"
                                        />
                                     </div>
@@ -755,7 +682,7 @@ export function SubscriptionsClient({
                                     <select
                                        value={plan.frequency || 'Lifetime Access'}
                                        onChange={(e) => updatePlan(role.id, 'frequency', e.target.value)}
-                                       className="w-full bg-gray-50 border-none rounded-xl text-sm font-bold text-gray-900 px-4 py-2 focus:ring-2 focus:ring-amber-200 transition-all"
+                                       className="w-full bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-gray-900 px-4 py-2 focus:ring-2 focus:ring-amber-200 transition-all"
                                     >
                                        <option value="Lifetime Access">Lifetime Access</option>
                                        <option value="Monthly">Monthly Billing</option>
@@ -787,26 +714,26 @@ export function SubscriptionsClient({
 
                            <div className="space-y-3 pt-1">
                               <div className="space-y-1">
-                                 <label className="text-xs font-bold text-gray-400">Plan Name</label>
+                                 <label className="text-xs font-bold text-gray-800">Plan Name</label>
                                  <input
                                     type="text"
                                     value={plan.name || `CenterKick ${role.id.charAt(0).toUpperCase() + role.id.slice(1)}`}
                                     onChange={(e) => updatePlan(role.id, 'name', e.target.value)}
-                                    className="w-full bg-gray-50 border border-gray-100 text-xs font-bold text-gray-900 rounded-xl px-3.5 py-2.5 placeholder:text-gray-300"
+                                    className="w-full bg-gray-50 border border-gray-200 text-xs font-bold text-gray-900 rounded-xl px-3.5 py-2.5 placeholder:text-gray-500"
                                     placeholder="PLAN NAME"
                                  />
                               </div>
 
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                  <div className="space-y-1">
-                                    <label className="text-xs font-bold text-gray-400">Charge Rate</label>
-                                    <div className={`flex items-center gap-2 bg-gray-50 border rounded-xl px-3.5 py-2.5 ${errors[`plan_amount_${role.id}`] ? 'border-red-500' : 'border-gray-100'}`}>
-                                       <span className="text-xs font-bold text-gray-400 select-none">₦</span>
+                                    <label className="text-xs font-bold text-gray-800">Charge Rate</label>
+                                    <div className={`flex items-center gap-2 bg-gray-50 border rounded-xl px-3.5 py-2.5 ${errors[`plan_amount_${role.id}`] ? 'border-red-500' : 'border-gray-200'}`}>
+                                       <span className="text-xs font-extrabold text-gray-900 select-none">₦</span>
                                        <input
                                           type="text"
                                           value={plan.amount || '0.00'}
                                           onChange={(e) => updatePlan(role.id, 'amount', e.target.value)}
-                                          className="bg-transparent border-none text-xs font-bold text-gray-900 focus:ring-0 p-0 w-full"
+                                          className="bg-transparent border-none text-xs font-bold text-gray-900 focus:ring-0 p-0 w-full placeholder:text-gray-500"
                                           placeholder="0.00"
                                        />
                                     </div>
@@ -814,11 +741,11 @@ export function SubscriptionsClient({
                                  </div>
 
                                  <div className="space-y-1">
-                                    <label className="text-xs font-bold text-gray-400">Billing Interval</label>
+                                    <label className="text-xs font-bold text-gray-800">Billing Interval</label>
                                     <select
                                        value={plan.frequency || 'Lifetime Access'}
                                        onChange={(e) => updatePlan(role.id, 'frequency', e.target.value)}
-                                       className="w-full bg-gray-50 border border-gray-100 rounded-xl text-xs font-bold text-gray-900 px-3.5 py-2.5"
+                                       className="w-full bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 px-3.5 py-2.5"
                                     >
                                        <option value="Lifetime Access">Lifetime Access</option>
                                        <option value="Monthly">Monthly Billing</option>

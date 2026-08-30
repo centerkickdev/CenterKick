@@ -17,7 +17,10 @@ export async function POST(req: Request) {
         .eq('section', 'payment')
         .single();
         
-    const secret = settingsData?.content?.paystackSecret || process.env.PAYSTACK_SECRET_KEY;
+    const isPaystackLive = (settingsData?.content?.paystackEnv || 'live') === 'live';
+    const secret = isPaystackLive 
+      ? (settingsData?.content?.paystackSecret || settingsData?.content?.paystackLiveSecretKey || process.env.PAYSTACK_SECRET_KEY)
+      : (settingsData?.content?.paystackTestSecretKey || settingsData?.content?.paystackSecret || process.env.PAYSTACK_SECRET_KEY);
 
     if (!secret) {
       return NextResponse.json({ error: 'Webhook secret missing' }, { status: 500 });

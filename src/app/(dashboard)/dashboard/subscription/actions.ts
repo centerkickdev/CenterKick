@@ -156,6 +156,29 @@ export async function getEffectiveSubscriptionData() {
     profData.role = userData?.role || 'player';
   }
 
+  if (settings?.content) {
+    const paystackEnv = settings.content.paystackEnv || 'live';
+    const activePaystackPublicKey = paystackEnv === 'test' 
+      ? (settings.content.paystackTestPublicKey || settings.content.paystackPublicKey) 
+      : (settings.content.paystackPublicKey || settings.content.paystackLivePublicKey);
+      
+    const activePaystackSecret = paystackEnv === 'test' 
+      ? (settings.content.paystackTestSecretKey || settings.content.paystackSecret) 
+      : (settings.content.paystackSecret || settings.content.paystackLiveSecretKey);
+
+    const stripeEnv = settings.content.stripeEnv || 'live';
+    const activeStripePublicKey = stripeEnv === 'test'
+      ? (settings.content.stripeTestPublicKey || settings.content.stripeKey)
+      : (settings.content.stripeKey || settings.content.stripeLivePublicKey);
+
+    settings.content = {
+      ...settings.content,
+      paystackPublicKey: activePaystackPublicKey,
+      paystackSecret: activePaystackSecret,
+      stripeKey: activeStripePublicKey
+    };
+  }
+
   return {
     profData,
     settings: settings?.content || { paymentLink: 'https://paystack.com/pay/centerkick-pro' },
@@ -300,7 +323,10 @@ export async function verifyPaystackPayment(reference: string, amount: number, p
       .eq('section', 'payment')
       .single();
       
-  const secret = settingsData?.content?.paystackSecret || process.env.PAYSTACK_SECRET_KEY;
+  const paystackEnv = settingsData?.content?.paystackEnv || 'live';
+  const secret = paystackEnv === 'test'
+    ? (settingsData?.content?.paystackTestSecretKey || settingsData?.content?.paystackSecret || process.env.PAYSTACK_SECRET_KEY)
+    : (settingsData?.content?.paystackSecret || settingsData?.content?.paystackLiveSecretKey || process.env.PAYSTACK_SECRET_KEY);
   if (!secret) return { error: 'Payment gateway not configured' };
 
   try {
