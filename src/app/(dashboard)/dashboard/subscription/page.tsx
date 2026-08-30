@@ -1,6 +1,5 @@
 'use client';
 
-import Script from 'next/script';
 import { createClient } from '@/lib/supabase/client';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/context/ToastContext';
@@ -141,12 +140,30 @@ export default function SubscriptionPage() {
     setIsSubmitting(false);
   };
 
-  const handlePaystackCheckout = () => {
+  const handlePaystackCheckout = async () => {
     if (!profile || !profile.email || !paymentSettings?.paystackPublicKey) {
       showToast('Payment configuration missing.', 'error');
       return;
     }
-    const paystack = (window as any).PaystackPop;
+    let paystack = (window as any).PaystackPop;
+    if (!paystack) {
+      // Dynamic fallback script loader inside hidden form
+      await new Promise<void>((resolve) => {
+        let formContainer = document.getElementById('paystack-script-container');
+        if (!formContainer) {
+          formContainer = document.createElement('form');
+          formContainer.id = 'paystack-script-container';
+          (formContainer as HTMLElement).style.display = 'none';
+          document.body.appendChild(formContainer);
+        }
+        const script = document.createElement('script');
+        script.src = 'https://js.paystack.co/v1/inline.js';
+        script.onload = () => resolve();
+        formContainer.appendChild(script);
+      });
+      paystack = (window as any).PaystackPop;
+    }
+
     if (!paystack) {
       showToast('Payment gateway is loading. Please try again in a few seconds.', 'error');
       return;
@@ -241,7 +258,7 @@ export default function SubscriptionPage() {
 
   return (
     <>
-      <Script src="https://js.paystack.co/v1/inline.js" strategy="lazyOnload" />
+      <form id="paystack-script-container" style={{ display: 'none' }}></form>
       <div className="max-w-full max-w-[1000px] mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
           <div>
