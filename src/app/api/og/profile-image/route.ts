@@ -27,35 +27,18 @@ export async function GET(req: NextRequest) {
     const arrayBuffer = await response.arrayBuffer();
     const inputBuffer = Buffer.from(arrayBuffer);
 
-    // 2. Process with Sharp: 1200x630 PNG card with dark background (#0a0a0b)
+    // 2. Process with Sharp: Cover fit centered top (or center) transparent PNG
     const width = 1200;
     const height = 630;
 
-    // Resize input image to fit in a 480x480 box
-    const avatarResized = await sharp(inputBuffer)
+    // Resize input image to cover full 1200x630 top-centered without letterboxing or black background
+    const ogPngBuffer = await sharp(inputBuffer)
       .resize({
-        width: 480,
-        height: 480,
-        fit: 'contain',
-        background: { r: 10, g: 10, b: 11, alpha: 0 },
-      })
-      .toBuffer();
-
-    // Composite onto 1200x630 canvas
-    const ogPngBuffer = await sharp({
-      create: {
         width,
         height,
-        channels: 4,
-        background: { r: 10, g: 10, b: 11, alpha: 1 }, // #0a0a0b
-      },
-    })
-      .composite([
-        {
-          input: avatarResized,
-          gravity: 'center',
-        },
-      ])
+        fit: 'cover',
+        position: 'top',
+      })
       .png({ compressionLevel: 6 })
       .toBuffer();
 

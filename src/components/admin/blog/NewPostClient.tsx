@@ -79,7 +79,7 @@ const LinkPreviewExtension = Node.create({
         href: url,
         target: '_blank',
         rel: 'noopener noreferrer',
-        class: 'link-preview-card border border-slate-200/60 rounded-3xl p-6 bg-slate-50/50 hover:bg-slate-50 transition-all flex flex-col md:flex-row gap-6 items-center my-8 cursor-pointer shadow-sm hover:shadow-md max-w-2xl mx-auto no-underline',
+        class: 'link-preview-card border border-slate-200/80 rounded-2xl p-5 bg-white hover:bg-slate-50/80 transition-all flex flex-col sm:flex-row gap-5 items-center my-6 cursor-pointer shadow-sm hover:shadow-md max-w-2xl mx-auto no-underline text-left',
         'data-link-preview': url,
         'data-title': title,
         'data-description': description,
@@ -89,17 +89,17 @@ const LinkPreviewExtension = Node.create({
       },
       [
         'div',
-        { class: 'flex-1 min-w-0 space-y-2', style: 'text-align: left;' },
-        ['span', { class: 'text-xs font-bold  text-[#b50a0a] tracking-wide block', style: 'margin-bottom: 4px;' }, 'External Link'],
-        ['h4', { class: 'text-base font-bold text-slate-900  tracking-tight line-clamp-2 no-underline', style: 'margin: 0; color: #0f172a; text-decoration: none !important;' }, title],
-        ['p', { class: 'text-xs font-bold text-slate-500 line-clamp-2 leading-relaxed no-underline', style: 'margin: 4px 0 0 0; color: #64748b; text-decoration: none !important;' }, description],
-        ['span', { class: 'text-xs font-bold text-slate-400  tracking-wide block', style: 'margin-top: 4px; color: #94a3b8;' }, domain],
+        { class: 'flex-1 min-w-0 space-y-1.5', style: 'text-align: left;' },
+        ['span', { class: 'text-xs font-bold text-[#b50a0a] tracking-wide block uppercase', style: 'margin-bottom: 2px;' }, 'External Link'],
+        ['h4', { class: 'text-sm sm:text-base font-bold text-slate-900 tracking-tight line-clamp-2 no-underline', style: 'margin: 0; color: #0f172a; text-decoration: none !important;' }, title],
+        ['p', { class: 'text-xs font-medium text-slate-500 line-clamp-2 leading-relaxed no-underline', style: 'margin: 4px 0 0 0; color: #64748b; text-decoration: none !important;' }, description],
+        ['span', { class: 'text-[11px] font-bold text-slate-400 tracking-wide block', style: 'margin-top: 4px; color: #94a3b8;' }, domain],
       ],
       ...(image ? [
         [
           'div',
-          { class: 'w-full md:w-36 aspect-[4/3] md:aspect-square bg-slate-100 rounded-2xl overflow-hidden shrink-0 border border-slate-200/50' },
-          ['img', { src: image, class: 'w-full h-full object-cover', alt: 'Preview Thumbnail' }],
+          { class: 'w-full sm:w-28 sm:h-28 aspect-video sm:aspect-square bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-100', style: 'border-radius: 12px;' },
+          ['img', { src: image, class: 'w-full h-full object-cover object-top', alt: 'Preview Thumbnail', style: 'width: 100%; height: 100%; object-fit: cover; object-position: top;' }],
         ]
       ] : []),
     ];

@@ -32,6 +32,54 @@ export function NewsContentClient({ content }: { content: string }) {
                // If the anchor text is exactly the URL, it's likely a raw embed link
                const isRawLink = domNode.children && domNode.children.length === 1 && domNode.children[0].type === 'text' && (domNode.children[0] as any).data === url;
 
+               const isLinkPreview = Boolean(
+                  domNode.attribs['data-link-preview'] || 
+                  (domNode.attribs.class && domNode.attribs.class.includes('link-preview-card'))
+               );
+
+               if (isLinkPreview) {
+                  const title = domNode.attribs['data-title'] || domNode.attribs['data-domain'] || 'External Link';
+                  const description = domNode.attribs['data-description'] || '';
+                  const rawImage = domNode.attribs['data-image'] || '';
+                  const domain = domNode.attribs['data-domain'] || '';
+
+                  // If stored image is an OG proxy URL (/api/og/profile-image?url=...), extract the underlying source URL directly
+                  let image = rawImage;
+                  if (rawImage && rawImage.includes('url=')) {
+                     try {
+                        const queryPart = rawImage.split('?')[1] || '';
+                        const searchParams = new URLSearchParams(queryPart);
+                        const underlyingUrl = searchParams.get('url');
+                        if (underlyingUrl) {
+                           image = underlyingUrl;
+                        }
+                     } catch (e) {
+                        // Keep rawImage if parsing fails
+                     }
+                  }
+
+                  return (
+                     <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="not-prose link-preview-card border border-gray-200/80 rounded-2xl p-5 bg-white hover:bg-gray-50 transition-all flex flex-col sm:flex-row gap-5 items-center my-8 cursor-pointer shadow-sm hover:shadow-md max-w-2xl mx-auto no-underline text-left group"
+                     >
+                        <div className="flex-1 min-w-0 space-y-1.5 text-left">
+                           <span className="text-xs font-bold text-[#b50a0a] tracking-wide block uppercase">External Link</span>
+                           <h4 className="text-sm sm:text-base font-bold text-gray-900 tracking-tight line-clamp-2 leading-snug group-hover:text-[#b50a0a] transition-colors">{title}</h4>
+                           {description && <p className="text-xs font-medium text-gray-500 line-clamp-2 leading-relaxed">{description}</p>}
+                           <span className="text-[11px] font-bold text-gray-400 tracking-wide block pt-1">{domain}</span>
+                        </div>
+                        {image && (
+                           <div className="w-full sm:w-28 sm:h-28 aspect-video sm:aspect-square bg-gray-100 rounded-xl overflow-hidden shrink-0 border border-gray-100">
+                              <img src={image} className="w-full h-full object-cover object-top" alt="Preview Thumbnail" />
+                           </div>
+                        )}
+                     </a>
+                  );
+               }
+
                if (isRawLink || domNode.attribs['data-link-preview']) {
                   if (url.includes('twitter.com') || url.includes('x.com')) {
                      const match = url.match(/(?:twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/);
