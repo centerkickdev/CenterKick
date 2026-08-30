@@ -160,7 +160,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
 
   const executeVoucherCreation = async (paymentRef: string) => {
     setLoading(true);
-    showToast('Finalizing gift voucher issuance...', 'info');
+    showToast('Generating voucher code...', 'info');
 
     try {
       const res = await purchaseGiftVoucher({
