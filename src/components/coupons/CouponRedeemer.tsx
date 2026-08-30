@@ -116,7 +116,7 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
   return (
     <div className={`w-full ${className}`}>
       {/* Coupon Input Form */}
-      <form onSubmit={handleValidate} className="flex flex-col sm:flex-row gap-2">
+      <form onSubmit={handleValidate} className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <input
             type="text"
@@ -126,45 +126,48 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
               setCode(sanitized);
             }}
             placeholder="Enter Promo or Gift Code (e.g. CK-GIFT-8812)"
-            className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#a20000] font-mono uppercase tracking-wider text-sm"
+            className="w-full px-5 py-3.5 rounded-2xl bg-gray-900 border border-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#b50a0a] font-mono uppercase tracking-wider text-sm shadow-inner transition-all"
             disabled={isRedeeming}
           />
           {isValidating && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <RefreshCw className="w-4 h-4 text-red-400 animate-spin" />
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-xs font-semibold text-gray-400">
+              <RefreshCw className="w-4 h-4 text-[#b50a0a] animate-spin" />
             </div>
           )}
         </div>
         <button
           type="submit"
-          disabled={isValidating || isRedeeming || !validation?.valid}
-          className="px-6 py-3 rounded-xl bg-[#a20000] hover:bg-black text-white font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm shadow-md"
+          disabled={isValidating || isRedeeming || !code.trim()}
+          className="px-8 py-3.5 rounded-2xl bg-[#b50a0a] hover:bg-black text-white font-bold tracking-wide transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-xs uppercase shadow-lg hover:-translate-y-0.5 shrink-0"
         >
-          {isRedeeming ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Confirm & Claim'}
+          {isRedeeming ? (
+            <>
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span>Claiming...</span>
+            </>
+          ) : (
+            'Confirm & Claim'
+          )}
         </button>
       </form>
 
-      {/* Validation Success Badge */}
+      {/* Validation Success Badge - CenterKick Palette */}
       {validation?.valid && !validation.requires_resolution && (
-        <div className="mt-4 p-4 rounded-xl bg-slate-900 border border-emerald-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+        <div className="mt-4 p-4 sm:p-5 rounded-2xl bg-gray-900 border border-gray-800 flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-300 shadow-xl">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-[#b50a0a]/15 text-[#b50a0a] flex items-center justify-center shrink-0 border border-[#b50a0a]/20">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
             <div>
-              <p className="text-sm font-semibold text-emerald-300">{validation.coupon?.title}</p>
-              <p className="text-xs text-emerald-400/80">
-                ✓ 100% Covered • Tier: <span className="font-mono">{validation.coupon?.target_tier}</span> ({validation.coupon?.duration_months} Months)
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-bold text-white tracking-tight">{validation.coupon?.title}</p>
+                <span className="px-2.5 py-0.5 rounded-full bg-[#b50a0a]/20 text-red-400 text-[10px] font-extrabold uppercase tracking-wider border border-[#b50a0a]/30">Valid Voucher</span>
+              </div>
+              <p className="text-xs text-gray-300 font-medium mt-1">
+                ✓ 100% Covered • Tier: <span className="font-bold text-white">{validation.coupon?.target_tier}</span> ({validation.coupon?.duration_months} Months Membership)
               </p>
             </div>
           </div>
-          {userId && (
-            <button
-              onClick={() => handleRedeem('DEFAULT')}
-              disabled={isRedeeming}
-              className="px-4 py-2 rounded-lg bg-[#a20000] text-white text-xs font-bold hover:bg-black transition-all flex items-center gap-1 shrink-0"
-            >
-              {isRedeeming ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : 'Confirm & Claim'}
-            </button>
-          )}
         </div>
       )}
 
