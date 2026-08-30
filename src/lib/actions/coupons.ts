@@ -54,15 +54,31 @@ export async function validateCouponCode(
     return { valid: false, error: 'MAX_REDEMPTIONS_REACHED' };
   }
 
-  // Check Restricted User Email(s)
-  if (coupon.recipient_email && userId) {
-    const { data: redeemerProfile } = await supabase
+  // Fetch Redeemer Profile safely matching either profile.id OR profile.user_id
+  let redeemerProfile: any = null;
+  if (userId) {
+    const { data: pById } = await supabase
       .from('profiles')
-      .select('email')
+      .select('id, user_id, email, subscription_status, subscription_tier, valid_until')
       .eq('id', userId)
       .maybeSingle();
 
-    const redeemerEmail = redeemerProfile?.email?.toLowerCase().trim();
+    if (pById) {
+      redeemerProfile = pById;
+    } else {
+      const { data: pByUserId } = await supabase
+        .from('profiles')
+        .select('id, user_id, email, subscription_status, subscription_tier, valid_until')
+        .eq('user_id', userId)
+        .maybeSingle();
+      redeemerProfile = pByUserId;
+    }
+  }
+
+  // Check Restricted User Email(s)
+  if (coupon.recipient_email && userId) {
+    const { data: { user } } = await supabase.auth.getUser();
+    const redeemerEmail = (redeemerProfile?.email || user?.email || '').toLowerCase().trim();
     const restrictedEmails = coupon.recipient_email
       .split(',')
       .map((e: string) => e.toLowerCase().trim());
@@ -73,20 +89,13 @@ export async function validateCouponCode(
   }
 
   // 3. Block Redemption if User has Active Subscription
-  if (userId) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('subscription_status, subscription_tier, valid_until')
-      .eq('id', userId)
-      .maybeSingle();
-
+  if (redeemerProfile) {
     if (
-      profile &&
-      ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes(profile.subscription_status) &&
-      profile.valid_until &&
-      new Date(profile.valid_until) > new Date()
+      ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes(redeemerProfile.subscription_status) &&
+      redeemerProfile.valid_until &&
+      new Date(redeemerProfile.valid_until) > new Date()
     ) {
-      const formattedExpiry = new Date(profile.valid_until).toLocaleDateString('en-US', {
+      const formattedExpiry = new Date(redeemerProfile.valid_until).toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
@@ -96,8 +105,8 @@ export async function validateCouponCode(
         valid: false,
         error: 'ACTIVE_SUBSCRIPTION_BLOCKED',
         active_subscription: {
-          tier: profile.subscription_tier || 'FREE',
-          valid_until: profile.valid_until,
+          tier: redeemerProfile.subscription_tier || 'FREE',
+          valid_until: redeemerProfile.valid_until,
           formatted_expiry: formattedExpiry,
         },
       };
@@ -130,9 +139,21 @@ export async function redeemCouponCode(
   const supabase = await createClient();
   const cleanCode = code.trim().toUpperCase();
 
+  // Ensure p_user_id refers to profiles.id for foreign key constraints
+  let targetProfileId = userId;
+  const { data: prof } = await supabase
+    .from('profiles')
+    .select('id')
+    .or(`id.eq.${userId},user_id.eq.${userId}`)
+    .maybeSingle();
+
+  if (prof) {
+    targetProfileId = prof.id;
+  }
+
   const { data, error } = await supabase.rpc('redeem_coupon_code', {
     p_code: cleanCode,
-    p_user_id: userId,
+    p_user_id: targetProfileId,
     p_user_email: userEmail,
     p_resolution_mode: resolutionMode,
   });
