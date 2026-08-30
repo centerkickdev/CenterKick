@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import parse from 'html-react-parser';
+import { ImageLightbox } from '@/components/common/ImageLightbox';
 import { useToast } from '@/context/ToastContext';
 
 const formatAbsoluteUrl = (url: string) => {
@@ -26,7 +27,15 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
    const mergedLinks = { ...(profile.social_links || {}), ...(profile.official_links || {}) };
    const [activeTab, setActiveTab] = useState("Bio");
    const [showLicense, setShowLicense] = useState(false);
+   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
    const router = useRouter();
+
+   const hasMedia = Boolean(
+      (profile.video_links && profile.video_links.length > 0) ||
+      (profile.gallery_urls && profile.gallery_urls.length > 0)
+   );
+
+   const tabs = ["Bio", "Portfolio", ...(hasMedia ? ["Gallery"] : [])];
 
    const displayName = profile.full_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Anonymous Agent';
    const nameParts = displayName.split(' ');
@@ -122,6 +131,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                   </button>
                </div>
             </div>
+
             {/* Hero — mobile stacked, desktop split */}
             <div className="relative w-full bg-[#0a0a0b] overflow-hidden">
                {/* Background stadium image */}
@@ -219,13 +229,11 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                </div>
             </div>
 
-
-
             {/* Tabs Navigation */}
             <div className="z-40 bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-sm">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0">
                   <div className="flex items-center overflow-x-auto [&::-webkit-scrollbar]:hidden gap-1 sm:gap-0">
-                     {["Bio", "Portfolio"].map((tab) => (
+                     {tabs.map((tab) => (
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
@@ -408,6 +416,78 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                            )}
                         </div>
                      </div>
+                  </div>
+               )}
+
+               {activeTab === "Gallery" && hasMedia && (
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                     <div className="mb-12">
+                        <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
+                           Media Gallery
+                        </h2>
+                     </div>
+                     {/* Videos Section */}
+                     {profile.video_links && profile.video_links.length > 0 && (
+                        <div className="mb-12">
+                           <h3 className="text-sm font-bold text-gray-500 tracking-[0.2em] mb-6 uppercase">Featured Videos</h3>
+                           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              {profile.video_links.map((url: string, i: number) => {
+                                 let embedUrl = url;
+                                 if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                                    const ytIdMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+                                    if (ytIdMatch && ytIdMatch[1]) {
+                                       embedUrl = `https://www.youtube.com/embed/${ytIdMatch[1]}`;
+                                    }
+                                 } else if (url.includes('vimeo.com')) {
+                                    const vimIdMatch = url.match(/vimeo\.com\/(?:.*#|.*\/videos\/)?([0-9]+)/);
+                                    if (vimIdMatch && vimIdMatch[1]) {
+                                       embedUrl = `https://player.vimeo.com/video/${vimIdMatch[1]}`;
+                                    }
+                                 }
+
+                                 return (
+                                    <div key={i} className={`aspect-video bg-black rounded-3xl overflow-hidden shadow-lg border border-gray-100 ${i === 0 ? 'md:col-span-3' : 'md:col-span-1'}`}>
+                                       <iframe 
+                                          src={embedUrl}
+                                          className="w-full h-full"
+                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                          allowFullScreen
+                                          loading="lazy"
+                                       />
+                                    </div>
+                                 );
+                              })}
+                           </div>
+                        </div>
+                     )}
+
+                     {/* Photos Section */}
+                     {profile.gallery_urls && profile.gallery_urls.length > 0 && (
+                        <div>
+                           <h3 className="text-sm font-bold text-gray-500 tracking-[0.2em] mb-6 uppercase">Action Shots</h3>
+                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                              {profile.gallery_urls.map((media: any, i: number) => (
+                                 <div key={i} className="relative aspect-square rounded-3xl overflow-hidden group cursor-pointer" onClick={() => setSelectedImageIndex(i)}>
+                                    <Image
+                                       src={media.url || media}
+                                       alt={`Gallery image ${i + 1}`}
+                                       fill
+                                       className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                                 </div>
+                              ))}
+                           </div>
+                        </div>
+                     )}
+
+                     {selectedImageIndex !== null && profile.gallery_urls && (
+                        <ImageLightbox 
+                           images={profile.gallery_urls.map((m: any) => m.url || m)} 
+                           initialIndex={selectedImageIndex} 
+                           onClose={() => setSelectedImageIndex(null)} 
+                        />
+                     )}
                   </div>
                )}
             </div>
