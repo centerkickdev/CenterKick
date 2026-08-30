@@ -67,11 +67,19 @@ export async function requestProfileEdit(profileId: string, changes: Record<stri
     status: 'pending'
   }));
 
-  const { error: insertError } = await db
+  let { error: insertError } = await db
     .from('profile_edits')
     .insert(editsToInsert);
 
+  if (insertError && insertError.message.includes('requested_by')) {
+    // Retry without requested_by column if the schema cache doesn't have it yet
+    const fallbackEdits = editsToInsert.map(({ requested_by, ...rest }) => rest);
+    const { error: fallbackErr } = await db.from('profile_edits').insert(fallbackEdits);
+    insertError = fallbackErr;
+  }
+
   if (insertError) {
+    console.error('Error inserting profile edits:', insertError);
     return { error: insertError.message };
   }
 
