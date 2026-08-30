@@ -45,6 +45,8 @@ interface CMSPaymentSettings {
   accountNumber?: string;
   paystackActive?: boolean;
   paystackPublicKey?: string;
+  stripeActive?: boolean;
+  stripeKey?: string;
   plans?: any;
   legacyLinkActive?: boolean;
 }
@@ -344,22 +346,35 @@ export default function SubscriptionPage() {
                         ) : (
                           <>
                             {/* Route 1: Online Payment */}
-                            {(paymentSettings?.paystackActive || paymentSettings?.legacyLinkActive) && (
+                            {(paymentSettings?.paystackActive || paymentSettings?.stripeActive || paymentSettings?.legacyLinkActive) && (
                               <div className="space-y-6 bg-white p-6 rounded-[30px] border border-gray-100 shadow-sm flex flex-col items-start">
                                 <div>
                                   <span className="inline-block px-3 py-1 bg-gray-900 text-white text-xs font-bold tracking-widest rounded-full mb-3 uppercase">Route 1: Automated</span>
                                   <h3 className="text-lg font-bold text-gray-900">Instant Online Activation</h3>
                                   <p className="text-xs font-bold text-gray-500 tracking-wide mt-2">Pay securely online to activate your professional badge and unlock all features instantly.</p>
                                 </div>
-                                <div className="pt-2 w-full">
-                                  {paymentSettings?.paystackActive && paymentSettings?.paystackPublicKey ? (
+                                <div className="pt-2 w-full space-y-3">
+                                  {paymentSettings?.paystackActive && paymentSettings?.paystackPublicKey && (
                                     <button
                                       onClick={handlePaystackCheckout}
                                       className="flex items-center justify-center gap-3 w-full bg-gray-900 text-white px-8 py-4 rounded-2xl text-xs font-bold tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl hover:-translate-y-1 uppercase"
                                     >
-                                      Subscribe Now <ChevronRight className="w-4 h-4" />
+                                      Pay with Paystack <ChevronRight className="w-4 h-4" />
                                     </button>
-                                  ) : paymentSettings?.legacyLinkActive ? (
+                                  )}
+
+                                  {paymentSettings?.stripeActive && (
+                                    <a
+                                      href={paymentSettings?.paymentLink || '#'}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center justify-center gap-3 w-full bg-indigo-900 text-white px-8 py-4 rounded-2xl text-xs font-bold tracking-[0.2em] hover:bg-indigo-800 transition-all shadow-xl hover:-translate-y-1 uppercase"
+                                    >
+                                      Pay with Stripe <ChevronRight className="w-4 h-4" />
+                                    </a>
+                                  )}
+
+                                  {!paymentSettings?.paystackActive && !paymentSettings?.stripeActive && paymentSettings?.legacyLinkActive && (
                                     <a
                                       href={paymentSettings?.paymentLink || '#'}
                                       target="_blank"
@@ -368,7 +383,7 @@ export default function SubscriptionPage() {
                                     >
                                       Subscribe Now <ChevronRight className="w-4 h-4" />
                                     </a>
-                                  ) : null}
+                                  )}
                                 </div>
                               </div>
                             )}

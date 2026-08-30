@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
    CreditCard, ExternalLink, Shield, Save,
    Zap, DollarSign, UserCheck, Search, Users
@@ -16,7 +16,14 @@ export function SubscriptionsClient({
    const [settings, setSettings] = useState(initialSettings);
    const [isSaving, setIsSaving] = useState(false);
    const [errors, setErrors] = useState<{[key: string]: string}>({});
+   const [origin, setOrigin] = useState('');
    const { showToast } = useToast();
+
+   useEffect(() => {
+      if (typeof window !== 'undefined') {
+         setOrigin(window.location.origin);
+      }
+   }, []);
 
    const validate = () => {
       const errs: {[key: string]: string} = {};
@@ -426,7 +433,7 @@ export function SubscriptionsClient({
                         <div className="space-y-1.5">
                            <label className="text-xs font-bold text-gray-900 tracking-wide">Webhook Callback URL</label>
                            <div className="px-4 py-3 bg-white rounded-xl text-xs font-mono text-gray-800 font-bold break-all select-all border border-gray-200 shadow-sm">
-                              {typeof window !== 'undefined' ? `${window.location.origin}/api/webhooks/paystack` : '.../api/webhooks/paystack'}
+                              {origin ? `${origin}/api/webhooks/paystack` : '.../api/webhooks/paystack'}
                            </div>
                         </div>
                      </div>

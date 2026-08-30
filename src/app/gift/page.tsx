@@ -25,7 +25,13 @@ export default async function GiftPage() {
     .eq('section', 'payment')
     .single();
 
-  const systemPlans = paymentContent?.content?.plans || {};
+  const paymentSettings = paymentContent?.content || {};
+  const systemPlans = paymentSettings.plans || {};
+
+  const paystackEnv = paymentSettings.paystackEnv || 'live';
+  const paystackPublicKey = paystackEnv === 'test'
+    ? (paymentSettings.paystackTestPublicKey || paymentSettings.paystackPublicKey)
+    : (paymentSettings.paystackPublicKey || paymentSettings.paystackLivePublicKey);
 
   const { navContent, footerContent, siteSettings } = globalCms;
 
@@ -57,8 +63,8 @@ export default async function GiftPage() {
           </div>
         </div>
 
-        {/* Public Gift Purchase Form Component with system dynamic subscription plans */}
-        <PublicGiftPurchase systemPlans={systemPlans} />
+        {/* Public Gift Purchase Form Component with system dynamic subscription plans & payment settings */}
+        <PublicGiftPurchase systemPlans={systemPlans} paymentSettings={paymentSettings} />
       </main>
 
       {/* Official CenterKick Footer */}

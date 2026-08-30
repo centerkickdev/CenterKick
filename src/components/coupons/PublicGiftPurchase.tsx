@@ -13,10 +13,46 @@ interface RolePlan {
 
 interface PublicGiftPurchaseProps {
   systemPlans: Record<string, RolePlan>;
+  paymentSettings: any;
 }
 
-export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchaseProps) {
+export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }: PublicGiftPurchaseProps) {
   const { showToast } = useToast();
+
+  const paystackEnv = paymentSettings.paystackEnv || 'live';
+  const paystackPublicKey = paystackEnv === 'test'
+    ? (paymentSettings.paystackTestPublicKey || paymentSettings.paystackPublicKey)
+    : (paymentSettings.paystackPublicKey || paymentSettings.paystackLivePublicKey);
+
+  const stripeEnv = paymentSettings.stripeEnv || 'live';
+  const stripePublicKey = stripeEnv === 'test'
+    ? (paymentSettings.stripeTestPublicKey || paymentSettings.stripeKey)
+    : (paymentSettings.stripeKey || paymentSettings.stripeLivePublicKey);
+
+  const isPaystackActive = Boolean(paymentSettings.paystackActive && paystackPublicKey);
+  const isStripeActive = Boolean(paymentSettings.stripeActive && stripePublicKey);
+  const isLegacyLinkActive = Boolean(paymentSettings.legacyLinkActive && paymentSettings.paymentLink);
+
+  // Default active route selection (Automated gateways only for Instant Voucher issuance)
+  const [selectedGateway, setSelectedGateway] = useState<'PAYSTACK' | 'STRIPE' | 'LEGACY_LINK'>(() => {
+    if (isPaystackActive) return 'PAYSTACK';
+    if (isStripeActive) return 'STRIPE';
+    if (isLegacyLinkActive) return 'LEGACY_LINK';
+    return 'PAYSTACK';
+  });
+
+  const [bankRef, setBankRef] = useState('');
+  const [bankReceiptFile, setBankReceiptFile] = useState<File | null>(null);
+
+  // Load Paystack Inline script dynamically
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && !(window as any).PaystackPop) {
+      const script = document.createElement('script');
+      script.src = 'https://js.paystack.co/v1/inline.js';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
 
   // All candidate roles in CenterKick
   const allRoleOptions = [
@@ -123,6 +159,35 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
     return baseRate * cycles;
   };
 
+  const executeVoucherCreation = async (paymentRef: string) => {
+    setLoading(true);
+    showToast('Finalizing gift voucher issuance...', 'info');
+
+    try {
+      const res = await purchaseGiftVoucher({
+        buyerName,
+        buyerEmail,
+        recipientEmail: deliveryMode === 'EMAIL' ? recipientEmail : undefined,
+        giftMessage,
+        targetTier: selectedRole.toUpperCase(),
+        durationMonths: duration,
+        paymentReference: paymentRef,
+      });
+
+      if (res.success) {
+        setCompletedVoucher(res.voucher);
+        showToast('Gift voucher purchased and dispatched successfully!', 'success');
+      } else {
+        showToast('Failed to issue gift voucher after payment. Please contact support.', 'error');
+      }
+    } catch (err: any) {
+      console.error(err);
+      showToast(`Error: ${err.message || 'An unexpected error occurred'}`, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!buyerName || !buyerEmail) {
@@ -135,32 +200,75 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
       return;
     }
 
-    setLoading(true);
-    showToast('Processing gift voucher purchase...', 'info');
+    const totalAmount = calculateTotalPrice();
 
-    try {
-      const mockPaymentRef = `PAY-GIFT-${Date.now()}`;
-      const res = await purchaseGiftVoucher({
-        buyerName,
-        buyerEmail,
-        recipientEmail: deliveryMode === 'EMAIL' ? recipientEmail : undefined,
-        giftMessage,
-        targetTier: selectedRole.toUpperCase(),
-        durationMonths: duration,
-        paymentReference: mockPaymentRef,
-      });
+    // If total charge is zero (Free tier), issue voucher directly without payment
+    if (totalAmount === 0) {
+      await executeVoucherCreation(`FREE-GIFT-${Date.now()}`);
+      return;
+    }
 
-      if (res.success) {
-        setCompletedVoucher(res.voucher);
-        showToast('Gift voucher purchased successfully!', 'success');
-      } else {
-        showToast('Failed to create gift voucher. Please try again.', 'error');
+    // 1. Paystack Checkout Route
+    if (selectedGateway === 'PAYSTACK') {
+      if (!paystackPublicKey) {
+        showToast('Paystack gateway is not configured.', 'error');
+        return;
       }
-    } catch (err: any) {
-      console.error(err);
-      showToast(`Error: ${err.message || 'An unexpected error occurred'}`, 'error');
-    } finally {
-      setLoading(false);
+      const paystack = (window as any).PaystackPop;
+      if (!paystack) {
+        showToast('Paystack SDK loading. Please try again in a moment.', 'error');
+        return;
+      }
+
+      setLoading(true);
+      const ref = 'ck_gift_' + Math.floor(Math.random() * 1000000000 + 1);
+
+      const handler = paystack.setup({
+        key: paystackPublicKey,
+        email: buyerEmail,
+        amount: Math.round(totalAmount * 100), // Paystack expects kobo
+        currency: 'NGN',
+        ref,
+        metadata: {
+          custom_fields: [
+            { display_name: 'Buyer Name', variable_name: 'buyer_name', value: buyerName },
+            { display_name: 'Gift Tier', variable_name: 'gift_tier', value: selectedRole.toUpperCase() },
+            { display_name: 'Duration Months', variable_name: 'duration_months', value: duration },
+          ]
+        },
+        callback: function (response: any) {
+          executeVoucherCreation(response.reference || ref);
+        },
+        onClose: function () {
+          setLoading(false);
+          showToast('Payment cancelled. Gift voucher was not created.', 'error');
+        }
+      });
+      handler.openIframe();
+      return;
+    }
+
+    // 2. Stripe Checkout Route
+    if (selectedGateway === 'STRIPE') {
+      showToast('Redirecting to Stripe checkout...', 'info');
+      // For Stripe, we can redirect or trigger checkout; if redirect link present:
+      if (paymentSettings.paymentLink) {
+        window.location.href = paymentSettings.paymentLink;
+      } else {
+        showToast('Stripe gateway session initialization unavailable.', 'error');
+      }
+      return;
+    }
+
+    // 3. External Legacy Link Route
+    if (selectedGateway === 'LEGACY_LINK') {
+      if (!paymentSettings.paymentLink) {
+        showToast('External payment link not configured.', 'error');
+        return;
+      }
+      window.open(paymentSettings.paymentLink, '_blank');
+      showToast('Opened payment portal in new tab.', 'info');
+      return;
     }
   };
 
@@ -297,6 +405,57 @@ export default function PublicGiftPurchase({ systemPlans }: PublicGiftPurchasePr
               onChange={(e) => setGiftMessage(e.target.value)}
               className="w-full px-4 py-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#a20000] placeholder-gray-400"
             />
+          </div>
+
+          {/* Payment Method Selector (Step 4) */}
+          <div className="space-y-4">
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest">4. Select Payment Channel</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {isPaystackActive && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedGateway('PAYSTACK')}
+                  className={`p-4 rounded-2xl border text-xs font-bold text-left transition-all ${
+                    selectedGateway === 'PAYSTACK'
+                      ? 'bg-teal-50 border-teal-600 text-teal-900 shadow-sm'
+                      : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <p className="font-extrabold text-sm">Paystack</p>
+                  <p className="text-[11px] font-normal text-gray-500 mt-0.5">Card, USSD, Bank Transfer & Auto-Debit</p>
+                </button>
+              )}
+
+              {isStripeActive && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedGateway('STRIPE')}
+                  className={`p-4 rounded-2xl border text-xs font-bold text-left transition-all ${
+                    selectedGateway === 'STRIPE'
+                      ? 'bg-indigo-50 border-indigo-600 text-indigo-900 shadow-sm'
+                      : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <p className="font-extrabold text-sm">Stripe</p>
+                  <p className="text-[11px] font-normal text-gray-500 mt-0.5">International Cards, Apple Pay & Google Pay</p>
+                </button>
+              )}
+
+              {isLegacyLinkActive && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedGateway('LEGACY_LINK')}
+                  className={`p-4 rounded-2xl border text-xs font-bold text-left transition-all ${
+                    selectedGateway === 'LEGACY_LINK'
+                      ? 'bg-amber-50 border-amber-600 text-amber-900 shadow-sm'
+                      : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <p className="font-extrabold text-sm">External Checkout Portal</p>
+                  <p className="text-[11px] font-normal text-gray-500 mt-0.5">Custom Admin Payment Link</p>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Checkout Total & Submit */}
