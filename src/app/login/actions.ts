@@ -53,13 +53,14 @@ export async function login(prevState: any, formData: FormData) {
     .maybeSingle();
 
   const isPendingNewAccount = !profile || profile.status === 'pending';
+  const role = userRecord?.role || 'player';
+  const adminRoles = ['superadmin', 'admin', 'blogger', 'operations', 'finance'];
+  const isStaff = adminRoles.includes(role);
 
-  if (userRecord && !userRecord.is_active && !isPendingNewAccount) {
+  if (userRecord && userRecord.is_active === false && !isPendingNewAccount && !isStaff) {
     await supabase.auth.signOut();
     return { error: 'Your account is currently inactive. Please contact an administrator.' };
   }
-
-  const role = userRecord?.role || 'player';
   
   // Custom redirects based on role
   let redirectPath = '/dashboard';
