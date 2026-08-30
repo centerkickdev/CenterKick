@@ -64,6 +64,23 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
    const hasYellowCards = careerStats.some(s => Number(s.yellow_cards || 0) > 0);
    const hasRedCards = careerStats.some(s => Number(s.red_cards || 0) > 0);
 
+   const getYearFromVal = (val: any) => {
+      if (!val) return 0;
+      const str = String(val).trim();
+      const match4 = str.match(/\b(19|20)\d{2}\b/);
+      if (match4) return parseInt(match4[0], 10);
+      const match2 = str.match(/\b(\d{2})[/_-](\d{2})\b/);
+      if (match2) {
+         const yy = parseInt(match2[1], 10);
+         return (yy < 50 ? 2000 : 1900) + yy;
+      }
+      const num = parseInt(str, 10);
+      return isNaN(num) ? 0 : num;
+   };
+
+   const sortedCareerStats = [...(careerStats || [])].sort((a, b) => getYearFromVal(b.season) - getYearFromVal(a.season));
+   const sortedTransferHistory = [...(athlete?.transfer_history || [])].sort((a, b) => getYearFromVal(b.date) - getYearFromVal(a.date));
+
    const handleShareProfile = async () => {
       const currentUrl = window.location.href;
       const shareTitle = `${displayName} | CenterKick Profile`;
@@ -449,7 +466,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                      {/* Per Season Statistics */}
                      <div className="mb-8 pb-8 border-b border-gray-100">
                         <h3 className="text-xl sm:text-2xl font-bold text-gray-600 mb-6">Per Season Statistics</h3>
-                        {careerStats && careerStats.length > 0 ? (
+                        {sortedCareerStats && sortedCareerStats.length > 0 ? (
                            <div className="overflow-x-auto rounded-[2rem] border border-gray-100 shadow-sm bg-white">
                               <table className="w-full text-left border-collapse whitespace-nowrap min-w-max">
                                  <thead>
@@ -467,7 +484,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                                     </tr>
                                  </thead>
                                  <tbody className="text-xs sm:text-sm font-bold text-gray-700 divide-y divide-gray-50">
-                                    {careerStats.map((stat, i) => (
+                                    {sortedCareerStats.map((stat, i) => (
                                        <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle text-gray-400">{i + 1}</td>
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle">{stat.season}</td>
@@ -513,7 +530,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                      {/* Transfer History */}
                      <div>
                         <h3 className="text-xl sm:text-2xl font-bold text-gray-600 mb-6">Transfer History</h3>
-                        {athlete.transfer_history && Array.isArray(athlete.transfer_history) && athlete.transfer_history.length > 0 ? (
+                        {sortedTransferHistory && sortedTransferHistory.length > 0 ? (
                            <div className="overflow-x-auto rounded-[2rem] border border-gray-100 shadow-sm bg-white">
                               <table className="w-full text-left border-collapse whitespace-nowrap min-w-max">
                                  <thead>
@@ -527,7 +544,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                                     </tr>
                                  </thead>
                                  <tbody className="text-xs sm:text-sm font-bold text-gray-700 divide-y divide-gray-50">
-                                    {athlete.transfer_history.map((transfer: any, i: number) => (
+                                    {sortedTransferHistory.map((transfer: any, i: number) => (
                                        <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 text-center align-middle text-gray-400">{i + 1}</td>
                                           <td className="px-4 py-4 sm:px-6 sm:py-5 align-middle font-medium text-gray-500">
@@ -570,4 +587,3 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
       </div>
    );
 }
-

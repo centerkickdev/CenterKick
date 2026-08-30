@@ -129,38 +129,70 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
    athlete.current_club_logo = getClubLogo(athlete.current_club);
    athlete.country_flag = getCountryFlag(athlete.country);
 
-   // Enrich career stats (mapping 'club' to 'club_name' and 'apps' to 'appearances' for backward compatibility)
-   const careerStats = (athlete.career_stats || []).map((stat: any) => {
-      const clubName = stat.club_name || stat.club || '';
-      const rawLeague = stat.league_name || stat.league || '';
-      const resolvedLeague = leagues?.find(l => l.id === rawLeague || l.name === rawLeague)?.name || (rawLeague.startsWith('NEW:') ? rawLeague.replace('NEW:', '') : rawLeague);
+   // Helper to extract a numeric starting year from season string (e.g. "2024/25" -> 2024, "2016/17" -> 2016, "2023" -> 2023)
+   const getSeasonYear = (seasonStr: any) => {
+      if (!seasonStr) return 0;
+      const str = String(seasonStr).trim();
 
-      return {
-         ...stat,
-         club_name: clubName,
-         club: clubName,
-         appearances: stat.appearances ?? stat.apps ?? 0,
-         club_flag: getClubLogo(clubName),
-         league_name: resolvedLeague || null,
-      };
-   });
+      // First check if 4 digits exist (e.g. 2024/2025 or 2024/25 or 2024)
+      const match4 = str.match(/\b(19|20)\d{2}\b/);
+      if (match4) return parseInt(match4[0], 10);
 
-   // Enrich transfer history
-   if (athlete.transfer_history && Array.isArray(athlete.transfer_history)) {
-      athlete.transfer_history = athlete.transfer_history.map((t: any, index: number, arr: any[]) => {
-         const from_club = t.from_club || t.club || 'Unknown';
-         const nextTransferFrom = index < arr.length - 1 ? (arr[index + 1].from_club || arr[index + 1].club) : null;
-         const to_club = t.to_club || nextTransferFrom || athlete.current_club || 'Unknown';
+      // Check for two digit year format at start like "16/17" or "24/25"
+      const match2 = str.match(/\b(\d{2})[/_-](\d{2})\b/);
+      if (match2) {
+         const yy = parseInt(match2[1], 10);
+         return (yy < 50 ? 2000 : 1900) + yy;
+      }
+
+      const num = parseInt(str, 10);
+      return isNaN(num) ? 0 : num;
+   };
+
+   // Enrich career stats & sort descending (Newest to Oldest)
+   const careerStats = (athlete.career_stats || [])
+      .map((stat: any) => {
+         const clubName = stat.club_name || stat.club || '';
+         const rawLeague = stat.league_name || stat.league || '';
+         const resolvedLeague = leagues?.find(l => l.id === rawLeague || l.name === rawLeague)?.name || (rawLeague.startsWith('NEW:') ? rawLeague.replace('NEW:', '') : rawLeague);
 
          return {
-            ...t,
-            fee: t.transfer_fee || t.fee,
-            from_club,
-            to_club,
-            from_club_logo: getClubLogo(from_club),
-            to_club_logo: getClubLogo(to_club),
+            ...stat,
+            club_name: clubName,
+            club: clubName,
+            appearances: stat.appearances ?? stat.apps ?? 0,
+            club_flag: getClubLogo(clubName),
+            league_name: resolvedLeague || null,
          };
+      })
+      .sort((a: any, b: any) => {
+         const yearA = getSeasonYear(a.season);
+         const yearB = getSeasonYear(b.season);
+         return yearB - yearA;
       });
+
+   // Enrich transfer history & sort descending (Newest to Oldest)
+   if (athlete.transfer_history && Array.isArray(athlete.transfer_history)) {
+      athlete.transfer_history = athlete.transfer_history
+         .map((t: any, index: number, arr: any[]) => {
+            const from_club = t.from_club || t.club || 'Unknown';
+            const nextTransferFrom = index < arr.length - 1 ? (arr[index + 1].from_club || arr[index + 1].club) : null;
+            const to_club = t.to_club || nextTransferFrom || athlete.current_club || 'Unknown';
+
+            return {
+               ...t,
+               fee: t.transfer_fee || t.fee,
+               from_club,
+               to_club,
+               from_club_logo: getClubLogo(from_club),
+               to_club_logo: getClubLogo(to_club),
+            };
+         })
+         .sort((a: any, b: any) => {
+            const dateA = getSeasonYear(a.date) || (a.date && !isNaN(Date.parse(a.date)) ? new Date(a.date).getTime() : 0);
+            const dateB = getSeasonYear(b.date) || (b.date && !isNaN(Date.parse(b.date)) ? new Date(b.date).getTime() : 0);
+            return dateB - dateA;
+         });
    }
 
    // Fetch related news (blog posts)
