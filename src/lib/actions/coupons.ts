@@ -13,15 +13,15 @@ export async function validateCouponCode(
   userId?: string,
   userIp: string = '127.0.0.1'
 ): Promise<ValidationResult> {
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
   const cleanCode = code.trim().toUpperCase();
 
   if (!cleanCode) {
     return { valid: false, error: 'INVALID_CODE' };
   }
 
-  // 1. Fetch Coupon Record
-  const { data: coupon, error } = await supabase
+  // 1. Fetch Coupon Record using adminClient to bypass RLS policies on coupon_codes
+  const { data: coupon, error } = await adminClient
     .from('coupon_codes')
     .select('*')
     .ilike('code', cleanCode)
@@ -29,7 +29,7 @@ export async function validateCouponCode(
 
   if (error || !coupon) {
     // Log failed attempt for rate limiting / velocity tracking
-    await supabase.from('coupon_velocity_logs').insert({
+    await adminClient.from('coupon_velocity_logs').insert({
       ip_address: userIp,
       user_id: userId || null,
       attempted_code: cleanCode,
@@ -46,7 +46,7 @@ export async function validateCouponCode(
 
   if (coupon.expiry_date && new Date(coupon.expiry_date) < new Date()) {
     // Auto-expire
-    await supabase.from('coupon_codes').update({ status: 'EXPIRED' }).eq('id', coupon.id);
+    await adminClient.from('coupon_codes').update({ status: 'EXPIRED' }).eq('id', coupon.id);
     return { valid: false, error: 'CODE_EXPIRED' };
   }
 
@@ -57,18 +57,18 @@ export async function validateCouponCode(
   // Fetch Redeemer Profile safely matching either profile.id OR profile.user_id
   let redeemerProfile: any = null;
   if (userId) {
-    const { data: pById } = await supabase
+    const { data: pById } = await adminClient
       .from('profiles')
-      .select('id, user_id, email, subscription_status, subscription_tier, valid_until')
+      .select('id, user_id, email, is_subscribed')
       .eq('id', userId)
       .maybeSingle();
 
     if (pById) {
       redeemerProfile = pById;
     } else {
-      const { data: pByUserId } = await supabase
+      const { data: pByUserId } = await adminClient
         .from('profiles')
-        .select('id, user_id, email, subscription_status, subscription_tier, valid_until')
+        .select('id, user_id, email, is_subscribed')
         .eq('user_id', userId)
         .maybeSingle();
       redeemerProfile = pByUserId;
@@ -77,6 +77,7 @@ export async function validateCouponCode(
 
   // Check Restricted User Email(s)
   if (coupon.recipient_email && userId) {
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     const redeemerEmail = (redeemerProfile?.email || user?.email || '').toLowerCase().trim();
     const restrictedEmails = coupon.recipient_email
@@ -89,7 +90,7 @@ export async function validateCouponCode(
   }
 
   // 3. Block Redemption if User has Active Subscription
-  if (redeemerProfile) {
+  if (redeemerProfile && redeemerProfile.subscription_status) {
     if (
       ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes(redeemerProfile.subscription_status) &&
       redeemerProfile.valid_until &&
@@ -114,7 +115,7 @@ export async function validateCouponCode(
   }
 
   // Log successful validation attempt
-  await supabase.from('coupon_velocity_logs').insert({
+  await adminClient.from('coupon_velocity_logs').insert({
     ip_address: userIp,
     user_id: userId || null,
     attempted_code: cleanCode,
