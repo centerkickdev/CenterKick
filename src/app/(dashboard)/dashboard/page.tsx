@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { FlagIcon } from '@/components/common/FlagIcon';
 import { CopyableProfileLink } from '@/components/dashboard/CopyableProfileLink';
 import { isProfileComplete } from '@/lib/utils/profile';
+import { formatCurrencyAmount } from '@/lib/utils/currency';
 
 export default async function DashboardPage() {
   const session = await getEffectiveUserSession();
@@ -157,17 +158,15 @@ export default async function DashboardPage() {
   const coachTotalPoints = (coachWins * 3) + coachDraws;
   const coachWinRatio = coachTotalMatches > 0 ? Math.round((coachWins / coachTotalMatches) * 100) : 0;
 
-  const formatMarketValue = (val: any) => {
+  const formatMarketValue = (val: any, currency?: string) => {
     if (!val) return 'Pending';
-    const str = val.toString().trim();
-    const cleanStr = str.replace(/^[$\s₦]+/, '');
-    return `₦${cleanStr}`;
+    return formatCurrencyAmount(val, currency || 'EUR');
   };
 
   const baseStats = [
     { label: 'Public Profile Views', value: publicViews.toString(), icon: Eye, trend: 'All Time', color: 'text-blue-600', bg: 'bg-blue-50' },
     { label: 'Scouting Views', value: scoutingViews.toString(), icon: Target, trend: 'Verified Orgs', color: 'text-green-600', bg: 'bg-green-50' },
-    { label: 'Market Value', value: formatMarketValue(profile?.market_value), icon: TrendingUp, trend: 'Current', color: 'text-[#b50a0a]', bg: 'bg-red-50' },
+    { label: 'Market Value', value: formatMarketValue(profile?.market_value, profile?.market_value_currency), icon: TrendingUp, trend: 'Current', color: 'text-[#b50a0a]', bg: 'bg-red-50' },
   ];
 
   const playerStats = (role === 'player' || role === 'athlete') ? [
