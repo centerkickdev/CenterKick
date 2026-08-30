@@ -20,34 +20,54 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showResolutionModal, setShowResolutionModal] = useState(false);
 
+  // Debounced real-time validation preview (Checks code status without auto-submitting/redeeming)
+  React.useEffect(() => {
+    const cleanCode = code.trim().toUpperCase();
+    if (!cleanCode || cleanCode.length < 5) {
+      setValidation(null);
+      setErrorMsg(null);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsValidating(true);
+      setErrorMsg(null);
+      try {
+        const res = await validateCouponCode(cleanCode, userId);
+        if (!res.valid) {
+          setValidation(null);
+          if (res.error === 'ACTIVE_SUBSCRIPTION_BLOCKED' && res.active_subscription) {
+            setErrorMsg(
+              `You currently have an active ${res.active_subscription.tier} subscription that expires on ${res.active_subscription.formatted_expiry || 'the end of your billing cycle'}. You can redeem or stack this coupon code once your current running subscription ends.`
+            );
+          } else {
+            setErrorMsg(getHumanReadableError(res.error));
+          }
+        } else {
+          setValidation(res);
+          setErrorMsg(null);
+        }
+      } catch (err) {
+        setErrorMsg('Validation preview failed.');
+      } finally {
+        setIsValidating(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [code, userId]);
+
   const handleValidate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code.trim()) return;
 
-    setIsValidating(true);
-    setErrorMsg(null);
-    setValidation(null);
+    if (validation?.valid && validation.requires_resolution) {
+      setShowResolutionModal(true);
+      return;
+    }
 
-    try {
-      const res = await validateCouponCode(code, userId);
-      if (!res.valid) {
-        if (res.error === 'ACTIVE_SUBSCRIPTION_BLOCKED' && res.active_subscription) {
-          setErrorMsg(
-            `You currently have an active ${res.active_subscription.tier} subscription that expires on ${res.active_subscription.formatted_expiry || 'the end of your billing cycle'}. You can redeem or stack this coupon code once your current running subscription ends.`
-          );
-        } else {
-          setErrorMsg(getHumanReadableError(res.error));
-        }
-      } else {
-        setValidation(res);
-        if (res.requires_resolution) {
-          setShowResolutionModal(true);
-        }
-      }
-    } catch (err) {
-      setErrorMsg('Validation failed. Please try again.');
-    } finally {
-      setIsValidating(false);
+    if (validation?.valid && !validation.requires_resolution && userId) {
+      await handleRedeem('DEFAULT');
     }
   };
 
@@ -101,18 +121,26 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
           <input
             type="text"
             value={code}
-            onChange={(e) => setCode(e.target.value.toUpperCase())}
-            placeholder="Enter Promo or Gift Code (e.g. CK-ORG-8812)"
+            onChange={(e) => {
+              const sanitized = e.target.value.replace(/[^A-Za-z0-9-]/g, '').toUpperCase();
+              setCode(sanitized);
+            }}
+            placeholder="Enter Promo or Gift Code (e.g. CK-GIFT-8812)"
             className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono uppercase tracking-wider text-sm"
-            disabled={isValidating || isRedeeming}
+            disabled={isRedeeming}
           />
+          {isValidating && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <RefreshCw className="w-4 h-4 text-emerald-400 animate-spin" />
+            </div>
+          )}
         </div>
         <button
           type="submit"
-          disabled={isValidating || !code.trim()}
+          disabled={isValidating || isRedeeming || !validation?.valid}
           className="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
         >
-          {isValidating ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Apply Code'}
+          {isRedeeming ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Confirm & Claim'}
         </button>
       </form>
 

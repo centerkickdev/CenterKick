@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { purchaseGiftVoucher } from '@/lib/actions/coupons';
-import { Gift, CheckCircle, RefreshCw, Mail } from 'lucide-react';
+import { Gift, CheckCircle, RefreshCw, Mail, Copy, Check } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
 
 interface RolePlan {
@@ -41,8 +41,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
     return 'PAYSTACK';
   });
 
-  const [bankRef, setBankRef] = useState('');
-  const [bankReceiptFile, setBankReceiptFile] = useState<File | null>(null);
+  const [copiedCode, setCopiedCode] = useState(false);
 
   // Load Paystack Inline script dynamically
   React.useEffect(() => {
@@ -190,14 +189,31 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!buyerName || !buyerEmail) {
-      showToast('Please enter your name and email address.', 'error');
+    const cleanBuyerName = buyerName.trim();
+    const cleanBuyerEmail = buyerEmail.trim().toLowerCase();
+    const cleanRecipientEmail = recipientEmail.trim().toLowerCase();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!cleanBuyerName || !cleanBuyerEmail) {
+      showToast('Please enter your full name and a valid email address.', 'error');
       return;
     }
 
-    if (deliveryMode === 'EMAIL' && !recipientEmail) {
-      showToast("Please enter the recipient's email address.", 'error');
+    if (!emailRegex.test(cleanBuyerEmail)) {
+      showToast('Please enter a valid email address for yourself.', 'error');
       return;
+    }
+
+    if (deliveryMode === 'EMAIL') {
+      if (!cleanRecipientEmail) {
+        showToast("Please enter the recipient's email address.", 'error');
+        return;
+      }
+      if (!emailRegex.test(cleanRecipientEmail)) {
+        showToast("Please enter a valid recipient email address.", 'error');
+        return;
+      }
     }
 
     const totalAmount = calculateTotalPrice();
@@ -490,10 +506,26 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-gray-50 border border-gray-200 inline-block text-center my-2 shadow-inner">
+          <div className="p-6 rounded-3xl bg-gray-50 border border-gray-200 inline-block text-center my-2 shadow-inner relative group">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Voucher Claim Code</p>
-            <div className="font-mono text-3xl font-black text-[#a20000] tracking-widest">
-              {completedVoucher.code}
+            <div className="flex items-center justify-center gap-3">
+              <span className="font-mono text-3xl font-black text-[#a20000] tracking-widest">
+                {completedVoucher.code}
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(completedVoucher.code);
+                  setCopiedCode(true);
+                  showToast('Voucher code copied to clipboard!', 'success');
+                  setTimeout(() => setCopiedCode(false), 3000);
+                }}
+                className="p-2 rounded-xl bg-white border border-gray-200 text-gray-700 hover:border-[#a20000] hover:text-[#a20000] transition-all shadow-sm flex items-center gap-1 text-xs font-bold"
+                title="Copy Voucher Code"
+              >
+                {copiedCode ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                <span>{copiedCode ? 'Copied!' : 'Copy'}</span>
+              </button>
             </div>
           </div>
 

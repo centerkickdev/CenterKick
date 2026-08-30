@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { CouponCode, ValidationResult, ResolutionMode, generateCouponCodePrefix } from '@/types/coupons';
-import { sendGiftVoucherEmail } from '@/lib/resend';
+import { sendGiftVoucherEmail, sendGiftReceiptToBuyerEmail } from '@/lib/resend';
 
 /**
  * Validate a coupon code for redemption, checking rate limits and user eligibility
@@ -186,7 +186,7 @@ export async function purchaseGiftVoucher(params: {
     return { success: false, error: 'VOUCHER_CREATION_FAILED' };
   }
 
-  // Dispatch Email if recipient email provided
+  // Dispatch Email to recipient if provided
   if (params.recipientEmail) {
     try {
       await sendGiftVoucherEmail({
@@ -198,7 +198,24 @@ export async function purchaseGiftVoucher(params: {
         giftMessage: params.giftMessage,
       });
     } catch (e) {
-      console.error('Failed to send gift voucher email:', e);
+      console.error('Failed to send gift voucher email to recipient:', e);
+    }
+  }
+
+  // Dispatch Confirmation Receipt to Buyer
+  if (params.buyerEmail) {
+    try {
+      await sendGiftReceiptToBuyerEmail({
+        buyerEmail: params.buyerEmail,
+        buyerName: params.buyerName,
+        code,
+        targetTier: params.targetTier,
+        durationMonths: params.durationMonths,
+        recipientEmail: params.recipientEmail,
+        paymentReference: params.paymentReference,
+      });
+    } catch (e) {
+      console.error('Failed to send buyer gift receipt email:', e);
     }
   }
 

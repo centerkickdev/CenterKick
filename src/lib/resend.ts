@@ -221,10 +221,23 @@ export async function sendGiftVoucherEmail(params: {
                         ${params.code}
                     </div>
                 </div>
+
+                <!-- Guidance for New vs Existing Account Holders -->
+                <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 24px; font-size: 13px; color: #4b5563; line-height: 20px;">
+                    <p style="margin: 0 0 10px 0; font-weight: 700; color: #111827;">How to Claim Your Gift:</p>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;">
+                            <strong>Already have an account?</strong> Copy your code <strong>${params.code}</strong>, log in to CenterKick, and redeem it under <em>Dashboard &gt; Subscription &gt; Redeem Voucher</em>.
+                        </li>
+                        <li>
+                            <strong>New to CenterKick?</strong> Click the button below to register a new account with your gift code automatically applied.
+                        </li>
+                    </ul>
+                </div>
                 
                 <div style="text-align: center;">
                     <a href="${claimLink}" style="display: inline-block; padding: 16px 32px; background-color: #059669; color: #ffffff; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; transition: all 0.2s ease;">
-                        Claim Your Membership Now
+                        Register &amp; Claim Membership Now
                     </a>
                 </div>
             </div>
@@ -234,6 +247,57 @@ export async function sendGiftVoucherEmail(params: {
     return data;
   } catch (error) {
     console.error('Failed to send gift voucher email:', error);
+    throw error;
+  }
+}
+
+export async function sendGiftReceiptToBuyerEmail(params: {
+  buyerEmail: string;
+  buyerName: string;
+  code: string;
+  targetTier: string;
+  durationMonths: number;
+  recipientEmail?: string;
+  paymentReference: string;
+}) {
+  try {
+    const data = await resend.emails.send({
+      from: 'CenterKick Gifts <receipts@centerkick.com>',
+      to: [params.buyerEmail],
+      subject: `🧾 CenterKick Gift Voucher Purchase Confirmation (${params.code})`,
+      html: `
+        <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1f2937; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0;">Gift Purchase Confirmation</h1>
+                <p style="font-size: 14px; font-weight: 600; color: #a20000; margin-top: 4px;">Ref: ${params.paymentReference}</p>
+            </div>
+            
+            <div style="margin-bottom: 32px;">
+                <p style="font-size: 16px; line-height: 24px; color: #4b5563; margin-bottom: 24px;">
+                    Hello <strong>${params.buyerName}</strong>,<br/><br/>
+                    Thank you for sponsoring sports talent through CenterKick! Your gift voucher has been generated and activated.
+                </p>
+
+                <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                    <p style="font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 12px 0;">Order Summary</p>
+                    <p style="font-size: 14px; margin: 4px 0; color: #111827;"><strong>Gift Package:</strong> ${params.durationMonths}-Month ${params.targetTier} Membership</p>
+                    <p style="font-size: 14px; margin: 4px 0; color: #111827;"><strong>Gift Code:</strong> <span style="font-family: monospace; font-weight: 800; color: #a20000;">${params.code}</span></p>
+                    ${params.recipientEmail ? `<p style="font-size: 14px; margin: 4px 0; color: #111827;"><strong>Dispatched To:</strong> ${params.recipientEmail}</p>` : '<p style="font-size: 14px; margin: 4px 0; color: #111827;"><strong>Delivery Mode:</strong> Manual Copy</p>'}
+                </div>
+
+                <div style="background-color: #111827; border-radius: 16px; padding: 24px; text-align: center;">
+                    <p style="font-size: 12px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Voucher Claim Code</p>
+                    <div style="font-family: monospace; font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: 0.15em;">
+                        ${params.code}
+                    </div>
+                </div>
+            </div>
+        </div>
+      `,
+    });
+    return data;
+  } catch (error) {
+    console.error('Failed to send buyer gift receipt email:', error);
     throw error;
   }
 }
