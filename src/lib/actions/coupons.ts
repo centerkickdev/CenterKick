@@ -192,6 +192,7 @@ export async function redeemCouponCode(
       await adminClient
         .from('profiles')
         .update({
+          is_subscribed: true,
           subscription_status: 'SPONSORED',
           subscription_tier: coupon.target_tier,
           updated_at: new Date().toISOString(),

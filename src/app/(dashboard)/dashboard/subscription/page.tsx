@@ -225,7 +225,7 @@ export default function SubscriptionPage() {
     price: basePrice === 0 ? 'Free' : `₦${basePrice.toLocaleString()}`,
     usdEquivalent: basePrice === 0 ? 'Free' : `$${usdPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
     period: basePrice === 0 ? 'Forever' : durationMonths === 0 ? 'Lifetime Access' : `Per ${durationMonths === 1 ? 'Month' : durationMonths === 3 ? 'Quarter' : durationMonths === 6 ? 'Half-Year' : durationMonths === 12 ? 'Year' : durationMonths + ' Months'}`,
-    status: ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes((profile as any)?.subscription_status) || transactions.some(t => t.status === 'confirmed') ? 'Active' : (profile?.verification_requested ? 'Pending Approval' : 'Unverified'),
+    status: (profile as any)?.is_subscribed === true || ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes((profile as any)?.subscription_status) || transactions.some(t => t.status === 'confirmed') ? 'Active' : (profile?.verification_requested ? 'Pending Approval' : 'Unverified'),
     features: [
       "Verified Professional Badge",
       "Priority Search & Discovery Listing",
@@ -588,22 +588,22 @@ export default function SubscriptionPage() {
                           </div>
                         </div>
                         <div className="flex items-center gap-4 text-right justify-between md:justify-end">
-                          <div>
-                            <p className="text-lg font-bold text-gray-900">
-                              {tx.currency === 'USD' ? '$' : '₦'}{Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                          <div className="space-y-1">
+                            <p className="text-lg font-bold text-gray-900 leading-none">
+                              {tx.currency === 'USD' ? '$' : tx.currency === 'EUR' ? '€' : '₦'}{Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                             </p>
                             {(tx.metadata?.rejection_reason || tx.metadata?.reason) && (
-                              <p className="text-xs font-bold text-red-500 tracking-wide mt-1 max-w-xs md:ml-auto">
-                                Reason: {tx.metadata.rejection_reason || tx.metadata.reason}
+                              <p className={`text-xs font-bold tracking-tight inline-block px-2 py-0.5 rounded-md ${tx.status === 'failed' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-gray-100 text-gray-600'}`}>
+                                {tx.metadata.rejection_reason || tx.metadata.reason}
                               </p>
                             )}
                             {(tx.metadata?.approval_comment || tx.metadata?.comment) && (
-                              <p className="text-xs font-bold text-green-600 tracking-wide mt-1 max-w-xs md:ml-auto">
+                              <p className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-md border border-green-100 inline-block">
                                 Note: {tx.metadata.approval_comment || tx.metadata.comment}
                               </p>
                             )}
                           </div>
-                          <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 opacity-0 group-hover:opacity-100 group-hover:bg-red-50 group-hover:text-[#b50a0a] transition-all">
+                          <div className="w-9 h-9 rounded-full bg-gray-100 group-hover:bg-[#b50a0a] text-gray-500 group-hover:text-white flex items-center justify-center transition-all shadow-sm shrink-0">
                             <Eye className="w-4 h-4" />
                           </div>
                         </div>
@@ -626,19 +626,19 @@ export default function SubscriptionPage() {
               <div className="p-10 pb-10">
                 <div className="flex items-center gap-6 mb-10">
                   <div className="w-16 h-16 rounded-2xl bg-slate-900 text-[#b50a0a] flex items-center justify-center font-bold text-2xl shrink-0">
-                    {inspectTransaction.currency === 'USD' ? '$' : '₦'}
+                    {inspectTransaction.currency === 'USD' ? '$' : inspectTransaction.currency === 'EUR' ? '€' : '₦'}
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold tracking-tighter leading-none mb-2">Transaction Details</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 tracking-tighter leading-none mb-2">Transaction Details</h2>
                     <p className="text-xs font-bold text-[#b50a0a] tracking-[0.2em]">Reference: {inspectTransaction.reference}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 mb-8 text-left">
                   <div className="space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 tracking-wide"><CreditCard className="w-3.5 h-3.5" /> Amount</div>
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-gray-500 tracking-wide"><CreditCard className="w-3.5 h-3.5" /> Amount</div>
                     <p className="text-base font-bold text-slate-900">
-                      {inspectTransaction.currency === 'USD' ? '$' : '₦'}{Number(inspectTransaction.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })} {inspectTransaction.currency}
+                      {inspectTransaction.currency === 'USD' ? '$' : inspectTransaction.currency === 'EUR' ? '€' : '₦'}{Number(inspectTransaction.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </p>
                   </div>
                   <div className="space-y-1">

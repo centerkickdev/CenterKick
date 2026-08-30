@@ -140,16 +140,16 @@ export async function getEffectiveSubscriptionData() {
   if (!session) return { error: 'Unauthorized' };
 
   const activeUserId = session.effectiveUserId;
-  const db = session.isImpersonating ? createAdminClient() : await createClient();
+  const adminClient = createAdminClient();
 
   const [
     { data: profData },
     { data: userData },
     { data: settings }
   ] = await Promise.all([
-    db.from('profiles').select('*').eq('user_id', activeUserId).single(),
-    db.from('users').select('role').eq('id', activeUserId).single(),
-    db.from('site_content').select('content').eq('page', 'settings').eq('section', 'payment').single()
+    adminClient.from('profiles').select('*').eq('user_id', activeUserId).single(),
+    adminClient.from('users').select('role').eq('id', activeUserId).single(),
+    adminClient.from('site_content').select('content').eq('page', 'settings').eq('section', 'payment').single()
   ]);
 
   if (profData) {
@@ -206,18 +206,43 @@ export async function getUserTransactions() {
   }
 
   const adminClient = createAdminClient();
-  const { data: transactions, error } = await adminClient
-    .from('transactions')
-    .select('*')
-    .eq('user_id', profile.id)
-    .order('created_at', { ascending: false });
+  const [{ data: transactions, error }, { data: redemptions }] = await Promise.all([
+    adminClient
+      .from('transactions')
+      .select('*')
+      .eq('user_id', profile.id)
+      .order('created_at', { ascending: false }),
+    adminClient
+      .from('coupon_redemptions')
+      .select('*, coupon_codes(*)')
+      .or(`redeemer_id.eq.${activeUserId},redeemer_id.eq.${profile.id}`)
+      .order('redeemed_at', { ascending: false })
+  ]);
 
   if (error) {
     console.error('Error fetching user transactions:', error);
     return { error: error.message };
   }
 
-  return { transactions: transactions || [] };
+  const redemptionTxs = (redemptions || []).map((r: any) => ({
+    id: r.id,
+    reference: r.coupon_codes?.code || 'SPONSORED_VOUCHER',
+    amount: 0,
+    currency: 'NGN',
+    status: 'confirmed' as const,
+    method: 'gift_voucher',
+    created_at: r.redeemed_at,
+    metadata: {
+      description: `Claimed Voucher: ${r.coupon_codes?.title || 'Sponsored Upgrade'} (${r.new_tier || 'PLAYER'})`,
+      reason: `Tier unlocked: ${r.new_tier || 'PLAYER'}`
+    }
+  }));
+
+  const combined = [...(transactions || []), ...redemptionTxs].sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+
+  return { transactions: combined };
 }
 
 export async function getPricingPlan(role: string) {

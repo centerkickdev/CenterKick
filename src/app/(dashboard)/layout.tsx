@@ -47,7 +47,7 @@ export default async function DashboardLayout({
         .eq('user_id', activeUserId)
         .single();
       return data;
-    }, 1800),
+    }, 10),
     getCachedSettings().then(res => res || {})
   ]);
 
@@ -58,13 +58,20 @@ export default async function DashboardLayout({
     .eq('user_id', activeUserId)
     .eq('status', 'active');
     
-  // Fetch confirmed transactions as fallback using adminClient
-  const { data: confirmedTxs } = await adminClient
-    .from('transactions')
-    .select('id')
-    .eq('user_id', profile?.id)
-    .eq('status', 'confirmed')
-    .limit(1);
+  // Fetch confirmed transactions or coupon redemptions as fallback using adminClient
+  const [{ data: confirmedTxs }, { data: redemptions }] = await Promise.all([
+    adminClient
+      .from('transactions')
+      .select('id')
+      .eq('user_id', profile?.id)
+      .eq('status', 'confirmed')
+      .limit(1),
+    adminClient
+      .from('coupon_redemptions')
+      .select('id')
+      .or(`redeemer_id.eq.${activeUserId}${profile?.id ? `,redeemer_id.eq.${profile.id}` : ''}`)
+      .limit(1)
+  ]);
   
   const role = (userRecord as any)?.role || 'player';
   const status = (profile as any)?.status || 'pending';
@@ -73,7 +80,8 @@ export default async function DashboardLayout({
     (subscriptions && subscriptions.length > 0) || 
     ((profile as any)?.is_subscribed === true) ||
     ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes((profile as any)?.subscription_status) ||
-    (confirmedTxs && confirmedTxs.length > 0);
+    (confirmedTxs && confirmedTxs.length > 0) ||
+    (redemptions && redemptions.length > 0);
 
   // Fetch notifications
   const { data: notifications } = await adminClient
