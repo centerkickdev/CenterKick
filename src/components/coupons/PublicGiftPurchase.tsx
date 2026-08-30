@@ -94,6 +94,14 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
   const currentPlan = systemPlans[selectedRole] || { amount: '0', frequency: 'Yearly' };
   const baseRate = Number(currentPlan.amount || 0);
 
+  // Determine system duration months for the plan
+  let durationMonths = 12;
+  const freq = currentPlan.frequency;
+  if (freq === 'Monthly') durationMonths = 1;
+  else if (freq === 'Quarterly') durationMonths = 3;
+  else if (freq === 'Biannually' || freq === 'Biannual' || freq === 'Half-Year' || freq === 'Half-Yearly') durationMonths = 6;
+  else if (freq === 'Yearly' || freq === 'Annually' || freq === 'Annual') durationMonths = 12;
+
   const calculateTotalPrice = () => {
     return baseRate;
   };
@@ -109,7 +117,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
         recipientEmail: deliveryMode === 'EMAIL' ? recipientEmail : undefined,
         giftMessage,
         targetTier: selectedRole.toUpperCase(),
-        durationMonths: 12,
+        durationMonths,
         paymentReference: paymentRef,
       });
 
@@ -189,7 +197,7 @@ export default function PublicGiftPurchase({ systemPlans, paymentSettings = {} }
           custom_fields: [
             { display_name: 'Buyer Name', variable_name: 'buyer_name', value: buyerName },
             { display_name: 'Gift Tier', variable_name: 'gift_tier', value: selectedRole.toUpperCase() },
-            { display_name: 'Duration Months', variable_name: 'duration_months', value: 12 },
+            { display_name: 'Duration Months', variable_name: 'duration_months', value: durationMonths },
           ]
         },
         callback: function (response: any) {

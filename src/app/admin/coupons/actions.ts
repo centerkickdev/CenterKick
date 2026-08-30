@@ -125,6 +125,7 @@ export async function updateAdminCoupon(formData: {
   couponId: string;
   title: string;
   maxRedemptions: number;
+  durationMonths?: number;
   expiryDate?: string;
 }) {
   const supabase = createAdminClient();
@@ -148,15 +149,21 @@ export async function updateAdminCoupon(formData: {
     newStatus = 'AVAILABLE';
   }
 
+  const updateFields: any = {
+    title: formData.title,
+    max_redemptions: formData.maxRedemptions,
+    expiry_date: formData.expiryDate || null,
+    status: newStatus,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (formData.durationMonths) {
+    updateFields.duration_months = formData.durationMonths;
+  }
+
   const { data: updatedCoupon, error } = await supabase
     .from('coupon_codes')
-    .update({
-      title: formData.title,
-      max_redemptions: formData.maxRedemptions,
-      expiry_date: formData.expiryDate || null,
-      status: newStatus,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updateFields)
     .eq('id', formData.couponId)
     .select()
     .single();

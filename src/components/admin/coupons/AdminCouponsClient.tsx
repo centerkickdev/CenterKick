@@ -98,6 +98,7 @@ export default function AdminCouponsClient({
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [editMaxRedemptions, setEditMaxRedemptions] = useState(100);
+  const [editDurationMonths, setEditDurationMonths] = useState(12);
   const [editExpiryDate, setEditExpiryDate] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
@@ -105,6 +106,7 @@ export default function AdminCouponsClient({
     setEditingCoupon(coupon);
     setEditTitle(coupon.title);
     setEditMaxRedemptions(coupon.max_redemptions);
+    setEditDurationMonths(coupon.duration_months || 12);
     setEditExpiryDate(coupon.created_at ? new Date().toISOString().split('T')[0] : '');
   };
 
@@ -118,6 +120,7 @@ export default function AdminCouponsClient({
         couponId: editingCoupon.id,
         title: editTitle,
         maxRedemptions: editMaxRedemptions,
+        durationMonths: editDurationMonths,
         expiryDate: editExpiryDate || undefined,
       });
 
@@ -811,6 +814,19 @@ export default function AdminCouponsClient({
                 <p className="text-[11px] text-gray-400 font-normal mt-1">
                   Current claimed redemptions: <span className="font-bold text-gray-800">{editingCoupon.redemption_count}</span>
                 </p>
+              </div>
+
+              <div>
+                <label className="block text-gray-700 mb-1">Access Duration (Months)</label>
+                <input
+                  type="number"
+                  required
+                  min={1}
+                  max={60}
+                  value={editDurationMonths}
+                  onChange={(e) => setEditDurationMonths(Number(e.target.value))}
+                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-bold"
+                />
               </div>
 
               <div>
