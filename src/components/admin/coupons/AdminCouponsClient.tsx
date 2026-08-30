@@ -16,6 +16,7 @@ import {
   Gift,
   Lock,
   Edit3,
+  Eye,
   X
 } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
@@ -88,6 +89,10 @@ export default function AdminCouponsClient({
   // Audience Scope State (ANYONE vs SPECIFIC_USERS)
   const [audienceScope, setAudienceScope] = useState<'ANYONE' | 'SPECIFIC_USERS'>('ANYONE');
   const [targetEmails, setTargetEmails] = useState('');
+
+  // Details & Revoke Confirm Modal State
+  const [viewingCoupon, setViewingCoupon] = useState<Coupon | null>(null);
+  const [confirmRevokeTarget, setConfirmRevokeTarget] = useState<Coupon | null>(null);
 
   // Edit / Extend Modal State
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
@@ -343,103 +348,128 @@ export default function AdminCouponsClient({
           </div>
 
           {/* Coupons Table */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto min-w-full">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 font-bold uppercase tracking-wider">
-                    <th className="py-4 px-6">Code & Title</th>
-                    <th className="py-4 px-6">Type & Discount</th>
-                    <th className="py-4 px-6">Target Tier</th>
-                    <th className="py-4 px-6">Redemptions</th>
-                    <th className="py-4 px-6">Status</th>
-                    <th className="py-4 px-6 text-right">Actions</th>
+                  <tr className="bg-gray-50/80 border-b border-gray-100 text-gray-500 font-bold uppercase tracking-wider">
+                    <th className="py-4 px-5">Code & Campaign</th>
+                    <th className="py-4 px-5">Discount & Tier</th>
+                    <th className="py-4 px-5 text-center">Redemptions</th>
+                    <th className="py-4 px-5 text-center">Status</th>
+                    <th className="py-4 px-5 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {filteredCoupons.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-12 text-center text-gray-400 font-semibold">
+                      <td colSpan={5} className="py-12 text-center text-gray-400 font-semibold">
                         No coupons found matching your query.
                       </td>
                     </tr>
                   ) : (
-                    filteredCoupons.map((c) => (
-                      <tr key={c.id} className="hover:bg-gray-50/50 transition-colors">
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-3">
-                            <span className="font-mono font-black text-sm text-gray-900 bg-slate-100 border border-slate-200 px-3 py-1 rounded-lg">
-                              {c.code}
-                            </span>
-                            {c.is_gift && (
-                              <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 font-bold text-[10px]">
-                                GIFT
+                    filteredCoupons.map((c) => {
+                      const recipientList = c.recipient_email
+                        ? c.recipient_email.split(',').map((e) => e.trim()).filter(Boolean)
+                        : [];
+
+                      return (
+                        <tr key={c.id} className="hover:bg-gray-50/60 transition-colors">
+                          <td className="py-4 px-5">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-mono font-bold text-xs text-gray-900 bg-gray-100 border border-gray-200 px-2.5 py-1 rounded-md shrink-0 select-all">
+                                {c.code}
                               </span>
+                              {c.is_gift && (
+                                <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200/60 font-black text-[9px] uppercase tracking-wider shrink-0">
+                                  GIFT
+                                </span>
+                              )}
+                            </div>
+                            {!c.title.toLowerCase().startsWith('gift voucher for') && (
+                              <p className="text-gray-600 font-semibold mt-1 line-clamp-1">{c.title}</p>
                             )}
-                          </div>
-                          <p className="text-gray-500 font-medium mt-1">{c.title}</p>
-                        </td>
+                          </td>
 
-                        <td className="py-4 px-6 font-semibold text-gray-800">
-                          {c.coupon_type === 'FULL_COVER'
-                            ? '100% Full Cover'
-                            : c.coupon_type === 'PERCENTAGE'
-                            ? `${c.discount_value}% Off`
-                            : `₦${c.discount_value.toLocaleString()} Off`}
-                          <span className="block text-[11px] text-gray-400 font-normal">
-                            Duration: {c.duration_months} Months
-                          </span>
-                        </td>
-
-                        <td className="py-4 px-6 font-bold uppercase tracking-wider text-gray-700">
-                          {c.target_tier}
-                          {c.recipient_email && (
-                            <span className="block font-normal text-[10px] text-emerald-700 normal-case mt-0.5 truncate max-w-[150px]">
-                              Restricted: {c.recipient_email}
+                          <td className="py-4 px-5">
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-gray-900">
+                                {c.coupon_type === 'FULL_COVER'
+                                  ? '100% Cover'
+                                  : c.coupon_type === 'PERCENTAGE'
+                                  ? `${c.discount_value}% Off`
+                                  : `₦${c.discount_value.toLocaleString()} Off`}
+                              </span>
+                              <span className="font-black uppercase tracking-wider text-gray-700 text-[10px] bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
+                                {c.target_tier}
+                              </span>
+                            </div>
+                            <span className="text-[11px] text-gray-400 font-medium mt-0.5 block">
+                              {c.duration_months} Months Access
+                              {recipientList.length > 0 && (
+                                <span className="text-emerald-700 font-bold ml-1.5">
+                                  • {recipientList.length} Restricted {recipientList.length === 1 ? 'User' : 'Users'}
+                                </span>
+                              )}
                             </span>
-                          )}
-                        </td>
+                          </td>
 
-                        <td className="py-4 px-6 font-bold text-gray-800">
-                          {c.redemption_count} / {c.max_redemptions}
-                        </td>
+                          <td className="py-4 px-5 text-center font-bold text-gray-900">
+                            <span className="bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-lg font-mono">
+                              {c.redemption_count} / {c.max_redemptions}
+                            </span>
+                          </td>
 
-                        <td className="py-4 px-6">
-                          <span
-                            className={`px-3 py-1 rounded-full font-bold text-[11px] ${
-                              c.status === 'AVAILABLE'
-                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                : c.status === 'REDEEMED'
-                                ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                                : 'bg-rose-50 text-rose-700 border border-rose-200'
-                            }`}
-                          >
-                            {c.status}
-                          </span>
-                        </td>
-
-                        <td className="py-4 px-6 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={() => openEditModal(c)}
-                              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-800 text-slate-700 hover:text-white transition-all flex items-center gap-1"
-                            >
-                              <Edit3 className="w-3.5 h-3.5" /> Edit & Extend
-                            </button>
-                            <button
-                              onClick={() => handleToggleStatus(c.id, c.status)}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          <td className="py-4 px-5 text-center">
+                            <span
+                              className={`px-3 py-1 rounded-full font-extrabold text-[10px] uppercase tracking-wider inline-block ${
                                 c.status === 'AVAILABLE'
-                                  ? 'bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white'
-                                  : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white'
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : c.status === 'REDEEMED'
+                                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                  : 'bg-rose-50 text-rose-700 border border-rose-200'
                               }`}
                             >
-                              {c.status === 'AVAILABLE' ? 'Revoke' : 'Enable'}
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                              {c.status}
+                            </span>
+                          </td>
+
+                          <td className="py-4 px-5 text-right">
+                            <div className="flex items-center justify-end gap-1.5 shrink-0">
+                              <button
+                                onClick={() => setViewingCoupon(c)}
+                                title="View Details & Restricted Recipients"
+                                className="p-2 rounded-xl bg-gray-100 hover:bg-slate-900 text-gray-700 hover:text-white transition-all flex items-center justify-center shadow-sm"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => openEditModal(c)}
+                                className="px-3 py-1.5 rounded-xl text-xs font-bold bg-gray-100 hover:bg-slate-900 text-gray-700 hover:text-white transition-all flex items-center gap-1.5 shrink-0 shadow-sm"
+                              >
+                                <Edit3 className="w-3.5 h-3.5" /> Edit
+                              </button>
+                              <button
+                                onClick={() => {
+                                  if (c.status === 'AVAILABLE') {
+                                    setConfirmRevokeTarget(c);
+                                  } else {
+                                    handleToggleStatus(c.id, c.status);
+                                  }
+                                }}
+                                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 shadow-sm ${
+                                  c.status === 'AVAILABLE'
+                                    ? 'bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white border border-rose-200/60'
+                                    : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white border border-emerald-200/60'
+                                }`}
+                              >
+                                {c.status === 'AVAILABLE' ? 'Revoke' : 'Enable'}
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
@@ -812,6 +842,182 @@ export default function AdminCouponsClient({
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* View Coupon Details Modal */}
+      {viewingCoupon && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-lg w-full rounded-3xl shadow-2xl p-6 sm:p-8 relative animate-in zoom-in duration-300">
+            <button
+              onClick={() => setViewingCoupon(null)}
+              className="absolute top-6 right-6 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-400 hover:text-gray-900 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-[#a20000]/10 text-[#a20000] flex items-center justify-center shrink-0">
+                <Ticket className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-extrabold text-gray-900 tracking-tight">{viewingCoupon.title}</h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="font-mono font-bold text-xs bg-slate-100 border border-slate-200 text-gray-900 px-2.5 py-0.5 rounded select-all">
+                    {viewingCoupon.code}
+                  </span>
+                  {viewingCoupon.is_gift && (
+                    <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-bold text-[10px]">
+                      GIFT VOUCHER
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="grid grid-cols-2 gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                <div>
+                  <p className="text-gray-400 font-bold uppercase text-[10px] tracking-wider">Discount Type</p>
+                  <p className="font-extrabold text-gray-900 text-sm mt-0.5">
+                    {viewingCoupon.coupon_type === 'FULL_COVER'
+                      ? '100% Full Cover'
+                      : viewingCoupon.coupon_type === 'PERCENTAGE'
+                      ? `${viewingCoupon.discount_value}% Off`
+                      : `₦${viewingCoupon.discount_value.toLocaleString()} Off`}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-400 font-bold uppercase text-[10px] tracking-wider">Target Tier</p>
+                  <p className="font-extrabold text-gray-900 text-sm mt-0.5 uppercase">{viewingCoupon.target_tier}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 font-bold uppercase text-[10px] tracking-wider">Access Duration</p>
+                  <p className="font-bold text-gray-800 text-xs mt-0.5">{viewingCoupon.duration_months} Months</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 font-bold uppercase text-[10px] tracking-wider">Redemptions Used</p>
+                  <p className="font-mono font-bold text-gray-900 text-xs mt-0.5">
+                    {viewingCoupon.redemption_count} / {viewingCoupon.max_redemptions}
+                  </p>
+                </div>
+              </div>
+
+              {/* Recipient Email Restrictions */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-gray-700 font-bold flex items-center gap-1.5">
+                    <Users className="w-4 h-4 text-[#a20000]" /> Restricted Recipient Email(s)
+                  </p>
+                  {viewingCoupon.recipient_email && (
+                    <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-extrabold">
+                      {viewingCoupon.recipient_email.split(',').filter(Boolean).length} Authorized {viewingCoupon.recipient_email.split(',').filter(Boolean).length === 1 ? 'Email' : 'Emails'}
+                    </span>
+                  )}
+                </div>
+
+                {viewingCoupon.recipient_email ? (
+                  <div className="max-h-48 overflow-y-auto p-3 bg-gray-50 rounded-2xl border border-gray-200 space-y-1.5 font-mono text-xs shadow-inner">
+                    {viewingCoupon.recipient_email.split(',').map((email, idx) => {
+                      const cleanEmail = email.trim();
+                      if (!cleanEmail) return null;
+                      return (
+                        <div key={idx} className="flex items-center justify-between py-2 px-3 rounded-xl bg-white border border-gray-200 shadow-sm">
+                          <div className="flex items-center gap-2.5 overflow-hidden">
+                            <span className="w-2 h-2 rounded-full bg-[#b50a0a] shrink-0" />
+                            <span className="truncate text-gray-900 font-bold select-all text-xs">{cleanEmail}</span>
+                          </div>
+                          <span className="text-[10px] text-gray-400 font-sans font-extrabold uppercase tracking-wider shrink-0 ml-2">
+                            Recipient #{idx + 1}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="p-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-gray-500 font-medium">
+                    Unrestricted — Code can be redeemed by any user under the target tier.
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons in Details Modal */}
+              <div className="pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const c = viewingCoupon;
+                    setViewingCoupon(null);
+                    openEditModal(c);
+                  }}
+                  className="w-1/2 py-3 rounded-xl bg-gray-100 text-gray-800 font-bold hover:bg-slate-900 hover:text-white transition-colors flex items-center justify-center gap-2"
+                >
+                  <Edit3 className="w-4 h-4" /> Edit Campaign
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewingCoupon(null)}
+                  className="w-1/2 py-3 rounded-xl bg-[#a20000] hover:bg-black text-white font-bold transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirm Revoke Action Modal */}
+      {confirmRevokeTarget && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-md w-full rounded-3xl shadow-2xl p-6 sm:p-8 relative animate-in zoom-in duration-300">
+            <button
+              onClick={() => setConfirmRevokeTarget(null)}
+              className="absolute top-6 right-6 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-400 hover:text-gray-900 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3.5 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0 border border-rose-200">
+                <ShieldAlert className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-black text-gray-900">Revoke Coupon Code?</h3>
+                <p className="text-xs text-gray-500 font-medium">This will immediately block future redemptions.</p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-100 mb-6">
+              <p className="text-xs text-rose-950 font-bold">
+                Are you sure you want to revoke code <span className="font-mono bg-rose-200/60 px-1.5 py-0.5 rounded text-rose-900">{confirmRevokeTarget.code}</span>?
+              </p>
+              <p className="text-[11px] text-rose-800/80 mt-1 font-medium">
+                Users will no longer be able to claim this promo code or gift voucher.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setConfirmRevokeTarget(null)}
+                className="w-1/2 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold hover:bg-gray-200 transition-colors text-xs"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  const target = confirmRevokeTarget;
+                  setConfirmRevokeTarget(null);
+                  await handleToggleStatus(target.id, target.status);
+                }}
+                className="w-1/2 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold transition-all text-xs shadow-md"
+              >
+                Yes, Revoke Code
+              </button>
+            </div>
           </div>
         </div>
       )}
