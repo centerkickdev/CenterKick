@@ -905,11 +905,11 @@ export default function ProfileEditor() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2">
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">First Name</label>
-                    <input disabled={!isEditing} name="first_name" type="text" pattern="[A-Za-z']+" title="Only letters and single quotes allowed" defaultValue={profile?.first_name} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                    <input disabled={!isEditing} name="first_name" type="text" pattern="[a-zA-Z0-9'\+\-\s]+" title="Letters, numbers, spaces, and symbols ' + - are allowed" defaultValue={profile?.first_name} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Last Name</label>
-                    <input disabled={!isEditing} name="last_name" type="text" pattern="[A-Za-z']+" title="Only letters and single quotes allowed" defaultValue={profile?.last_name} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                    <input disabled={!isEditing} name="last_name" type="text" pattern="[a-zA-Z0-9'\+\-\s]+" title="Letters, numbers, spaces, and symbols ' + - are allowed" defaultValue={profile?.last_name} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
                   </div>
                 </div>
 
