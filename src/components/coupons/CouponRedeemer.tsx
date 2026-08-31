@@ -139,6 +139,8 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
         return 'This coupon has been revoked.';
       case 'RESTRICTED_RECIPIENT_ONLY':
         return 'This voucher code is restricted exclusively to a specific account email.';
+      case 'FREE_TIER_NO_REDEEM':
+        return 'This account tier is currently free under system configuration. Promo codes cannot be applied to free tiers.';
       default:
         return 'Unable to process coupon code. Please try again.';
     }

@@ -61,7 +61,7 @@ export async function validateCouponCode(
   if (userId) {
     const { data: pById } = await adminClient
       .from('profiles')
-      .select('id, user_id, email, is_subscribed')
+      .select('id, user_id, email, is_subscribed, subscription_status, subscription_tier, valid_until')
       .eq('id', userId)
       .maybeSingle();
 
@@ -70,7 +70,7 @@ export async function validateCouponCode(
     } else {
       const { data: pByUserId } = await adminClient
         .from('profiles')
-        .select('id, user_id, email, is_subscribed')
+        .select('id, user_id, email, is_subscribed, subscription_status, subscription_tier, valid_until')
         .eq('user_id', userId)
         .maybeSingle();
       redeemerProfile = pByUserId;
@@ -91,7 +91,23 @@ export async function validateCouponCode(
     }
   }
 
-  // 3. Block Redemption if User has Active Subscription
+  // 3. Block Redemption if Target Tier is configured as FREE in system settings
+  const { data: settings } = await adminClient
+    .from('site_content')
+    .select('content')
+    .eq('page', 'settings')
+    .eq('section', 'payment')
+    .single();
+
+  const couponTierKey = (coupon.target_tier || 'PLAYER').toLowerCase();
+  const configuredPlan = settings?.content?.plans?.[couponTierKey];
+  const configuredAmount = configuredPlan?.amount ? Number(configuredPlan.amount) : 0;
+
+  if (configuredPlan && configuredAmount === 0) {
+    return { valid: false, error: 'FREE_TIER_NO_REDEEM' };
+  }
+
+  // 4. Block Redemption if User has Active Subscription
   if (redeemerProfile && redeemerProfile.subscription_status) {
     if (
       ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes(redeemerProfile.subscription_status) &&
