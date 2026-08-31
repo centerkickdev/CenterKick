@@ -44,6 +44,7 @@ interface CMSPaymentSettings {
   accountName?: string;
   accountNumber?: string;
   paystackActive?: boolean;
+  paystackEnv?: string;
   paystackPublicKey?: string;
   stripeActive?: boolean;
   stripeKey?: string;
@@ -146,7 +147,10 @@ export default function SubscriptionPage() {
   const userRole = profile?.role || 'player';
   const rolePlan = (paymentSettings as any)?.plans?.[userRole];
   const basePrice = rolePlan?.amount ? Number(rolePlan.amount) : 0;
-  const paystackPlanCode = rolePlan?.paystackPlanCode || null;
+  const paystackEnv = paymentSettings?.paystackEnv || 'live';
+  const paystackPlanCode = paystackEnv === 'test'
+    ? (rolePlan?.paystackTestPlanCode || rolePlan?.paystackPlanCode || null)
+    : (rolePlan?.paystackLivePlanCode || rolePlan?.paystackPlanCode || null);
 
   // Calculate Discounted Net Payable Price if a partial coupon is applied
   let discountAmount = 0;
