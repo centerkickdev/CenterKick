@@ -39,6 +39,7 @@ interface UserProfile {
 
 interface CMSPaymentSettings {
   paymentLink: string;
+  bankActive?: boolean;
   bankName?: string;
   accountName?: string;
   accountNumber?: string;
@@ -445,7 +446,7 @@ export default function SubscriptionPage() {
                             )}
 
                             {/* Route 2: Manual Payment */}
-                            {paymentSettings?.bankName && (
+                            {paymentSettings?.bankActive !== false && paymentSettings?.bankName && (
                               <div className="space-y-6 bg-white p-6 rounded-[30px] border border-gray-100 shadow-sm flex flex-col h-full">
                                 <div>
                                   <span className="inline-block px-3 py-1 bg-gray-900 text-white text-xs font-bold tracking-widest rounded-full mb-3 uppercase">Route 2: Manual</span>

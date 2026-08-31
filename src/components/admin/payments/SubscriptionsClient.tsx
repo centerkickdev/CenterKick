@@ -255,47 +255,61 @@ export function SubscriptionsClient({
                         <div>
                            <div className="flex items-center gap-2">
                               <h3 className="text-base sm:text-lg font-bold text-gray-900">Bank Settlement</h3>
-                              <span className="px-2 py-0.5 text-[10px] font-extrabold uppercase bg-amber-200 text-amber-900 rounded-md">Always Active</span>
+                              <span className={`px-2 py-0.5 text-[10px] font-extrabold uppercase rounded-md ${settings.bankActive !== false ? 'bg-amber-200 text-amber-900' : 'bg-gray-200 text-gray-700'}`}>
+                                 {settings.bankActive !== false ? 'Active' : 'Disabled'}
+                              </span>
                            </div>
                            <p className="text-xs font-semibold text-gray-600 mt-0.5">Manual Direct Bank Transfer Details</p>
                         </div>
                      </div>
+                     <div className="flex items-center gap-3">
+                        <span className="text-xs font-bold text-gray-700 sm:block hidden">{settings.bankActive !== false ? 'Enabled' : 'Disabled'}</span>
+                        <button
+                           type="button"
+                           onClick={() => setSettings({ ...settings, bankActive: settings.bankActive === false ? true : false })}
+                           className={`w-12 h-6 rounded-full relative transition-colors inline-block ${settings.bankActive !== false ? 'bg-amber-600' : 'bg-gray-300'}`}
+                        >
+                           <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.bankActive !== false ? 'right-1' : 'left-1'}`}></div>
+                        </button>
+                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-amber-200/60">
-                     <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-gray-900 tracking-wide">Institution / Bank Name</label>
-                        <input
-                           type="text"
-                           value={settings.bankName || ''}
-                           onChange={(e) => setSettings({ ...settings, bankName: e.target.value })}
-                           placeholder="e.g. Zenith Bank"
-                           className={`w-full bg-white border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-300 outline-none transition-all ${errors.bankName ? 'border-red-500' : 'border-gray-200'}`}
-                        />
-                        {errors.bankName && <p className="text-xs font-bold text-red-600 mt-1">{errors.bankName}</p>}
+                  {settings.bankActive !== false && (
+                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-amber-200/60">
+                        <div className="space-y-1.5">
+                           <label className="text-xs font-bold text-gray-900 tracking-wide">Institution / Bank Name</label>
+                           <input
+                              type="text"
+                              value={settings.bankName || ''}
+                              onChange={(e) => setSettings({ ...settings, bankName: e.target.value })}
+                              placeholder="e.g. Zenith Bank"
+                              className={`w-full bg-white border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-300 outline-none transition-all ${errors.bankName ? 'border-red-500' : 'border-gray-200'}`}
+                           />
+                           {errors.bankName && <p className="text-xs font-bold text-red-600 mt-1">{errors.bankName}</p>}
+                        </div>
+                        <div className="space-y-1.5">
+                           <label className="text-xs font-bold text-gray-900 tracking-wide">Account Name</label>
+                           <input
+                              type="text"
+                              value={settings.accountName || ''}
+                              onChange={(e) => setSettings({ ...settings, accountName: e.target.value })}
+                              placeholder="e.g. CenterKick Sports Ltd"
+                              className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-300 outline-none transition-all"
+                           />
+                        </div>
+                        <div className="space-y-1.5">
+                           <label className="text-xs font-bold text-gray-900 tracking-wide">Account Number</label>
+                           <input
+                              type="text"
+                              value={settings.accountNumber || ''}
+                              onChange={(e) => setSettings({ ...settings, accountNumber: e.target.value })}
+                              placeholder="e.g. 1012345678"
+                              className={`w-full bg-white border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-300 outline-none transition-all ${errors.accountNumber ? 'border-red-500' : 'border-gray-200'}`}
+                           />
+                           {errors.accountNumber && <p className="text-xs font-bold text-red-600 mt-1">{errors.accountNumber}</p>}
+                        </div>
                      </div>
-                     <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-gray-900 tracking-wide">Account Name</label>
-                        <input
-                           type="text"
-                           value={settings.accountName || ''}
-                           onChange={(e) => setSettings({ ...settings, accountName: e.target.value })}
-                           placeholder="e.g. CenterKick Sports Ltd"
-                           className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-300 outline-none transition-all"
-                        />
-                     </div>
-                     <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-gray-900 tracking-wide">Account Number</label>
-                        <input
-                           type="text"
-                           value={settings.accountNumber || ''}
-                           onChange={(e) => setSettings({ ...settings, accountNumber: e.target.value })}
-                           placeholder="e.g. 1012345678"
-                           className={`w-full bg-white border rounded-xl px-4 py-3 text-xs font-bold text-gray-900 shadow-sm focus:ring-2 focus:ring-amber-300 outline-none transition-all ${errors.accountNumber ? 'border-red-500' : 'border-gray-200'}`}
-                        />
-                        {errors.accountNumber && <p className="text-xs font-bold text-red-600 mt-1">{errors.accountNumber}</p>}
-                     </div>
-                  </div>
+                  )}
                </div>
 
                {/* Paystack Card */}
