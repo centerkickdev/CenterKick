@@ -530,7 +530,7 @@ export default function SubscriptionPage() {
                 </div>
 
                 <CouponRedeemer
-                  userId={profile?.id}
+                  userId={profile?.user_id || profile?.id}
                   userEmail={profile?.email}
                   onSuccess={(res) => {
                     showToast('Voucher redeemed successfully! Reloading subscription data...', 'success');

@@ -61,7 +61,7 @@ export async function validateCouponCode(
   if (userId) {
     const { data: pById } = await adminClient
       .from('profiles')
-      .select('id, user_id, email, is_subscribed, subscription_status, subscription_tier, valid_until')
+      .select('id, user_id, email, role, is_subscribed, subscription_status, subscription_tier, valid_until')
       .eq('id', userId)
       .maybeSingle();
 
@@ -70,18 +70,29 @@ export async function validateCouponCode(
     } else {
       const { data: pByUserId } = await adminClient
         .from('profiles')
-        .select('id, user_id, email, is_subscribed, subscription_status, subscription_tier, valid_until')
+        .select('id, user_id, email, role, is_subscribed, subscription_status, subscription_tier, valid_until')
         .eq('user_id', userId)
         .maybeSingle();
       redeemerProfile = pByUserId;
     }
   }
 
+  // Fallback: If no userId provided, resolve current logged in auth user
+  const supabase = await createClient();
+  const { data: { user: authUser } } = await supabase.auth.getUser();
+
+  if (!redeemerProfile && authUser) {
+    const { data: pByAuth } = await adminClient
+      .from('profiles')
+      .select('id, user_id, email, role, is_subscribed, subscription_status, subscription_tier, valid_until')
+      .or(`id.eq.${authUser.id},user_id.eq.${authUser.id}`)
+      .maybeSingle();
+    if (pByAuth) redeemerProfile = pByAuth;
+  }
+
   // Check Restricted User Email(s)
-  if (coupon.recipient_email && userId) {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    const redeemerEmail = (redeemerProfile?.email || user?.email || '').toLowerCase().trim();
+  if (coupon.recipient_email) {
+    const redeemerEmail = (redeemerProfile?.email || authUser?.email || '').toLowerCase().trim();
     const restrictedEmails = coupon.recipient_email
       .split(',')
       .map((e: string) => e.toLowerCase().trim());
@@ -91,11 +102,17 @@ export async function validateCouponCode(
     }
   }
 
-  // Fetch Redeemer User Role & Profile
+  // Resolve Redeemer Role (Check profiles, users table, or auth metadata)
   let redeemerRole = (redeemerProfile?.role || '').toLowerCase();
-  if (!redeemerRole && userId) {
-    const { data: u } = await adminClient.from('users').select('role').eq('id', userId).single();
-    if (u) redeemerRole = (u.role || '').toLowerCase();
+  const effectiveUserId = redeemerProfile?.user_id || redeemerProfile?.id || userId || authUser?.id;
+
+  if (!redeemerRole && effectiveUserId) {
+    const { data: u } = await adminClient.from('users').select('role').eq('id', effectiveUserId).maybeSingle();
+    if (u?.role) redeemerRole = u.role.toLowerCase();
+  }
+
+  if (!redeemerRole && authUser?.user_metadata?.role) {
+    redeemerRole = authUser.user_metadata.role.toLowerCase();
   }
 
   // 3. Fetch payment settings to check configured amounts
@@ -108,31 +125,40 @@ export async function validateCouponCode(
 
   const plans = settings?.content?.plans || {};
 
-  // Check if the redeemer's user account role itself is configured as FREE (amount == 0)
+  // Check if the redeemer's user account role is explicitly configured as FREE (amount == 0) in payment settings
   if (redeemerRole && plans[redeemerRole]) {
-    const redeemerRoleAmount = plans[redeemerRole]?.amount ? Number(plans[redeemerRole].amount) : 0;
-    if (redeemerRoleAmount === 0) {
+    const redeemerRoleAmount = plans[redeemerRole]?.amount !== undefined ? Number(plans[redeemerRole].amount) : null;
+    if (redeemerRoleAmount !== null && redeemerRoleAmount === 0) {
       return { valid: false, error: 'FREE_TIER_NO_REDEEM' };
     }
   }
 
-  // Check if the coupon's target tier is configured as FREE (amount == 0)
+  // Check if the coupon's target tier is explicitly configured as FREE (amount == 0)
   const couponTierKey = (coupon.target_tier || 'PLAYER').toLowerCase();
   if (couponTierKey !== 'all' && plans[couponTierKey]) {
-    const couponTierAmount = plans[couponTierKey]?.amount ? Number(plans[couponTierKey].amount) : 0;
-    if (couponTierAmount === 0) {
+    const couponTierAmount = plans[couponTierKey]?.amount !== undefined ? Number(plans[couponTierKey].amount) : null;
+    if (couponTierAmount !== null && couponTierAmount === 0) {
       return { valid: false, error: 'FREE_TIER_NO_REDEEM' };
     }
   }
 
   // 5. Block Redemption if this specific user account has ALREADY redeemed this coupon code
-  if (redeemerProfile?.id) {
-    const { data: priorRedemption } = await adminClient
+  const targetCheckId = redeemerProfile?.id || redeemerProfile?.user_id || userId || authUser?.id;
+  const targetCheckEmail = (redeemerProfile?.email || authUser?.email || '').toLowerCase().trim();
+
+  if (targetCheckId || targetCheckEmail) {
+    let query = adminClient
       .from('coupon_redemptions')
       .select('id')
-      .eq('coupon_code_id', coupon.id)
-      .eq('redeemer_id', redeemerProfile.id)
-      .maybeSingle();
+      .eq('coupon_code_id', coupon.id);
+
+    const conditions: string[] = [];
+    if (redeemerProfile?.id) conditions.push(`redeemer_id.eq.${redeemerProfile.id}`);
+    if (redeemerProfile?.user_id) conditions.push(`redeemer_id.eq.${redeemerProfile.user_id}`);
+    if (userId) conditions.push(`redeemer_id.eq.${userId}`);
+    if (targetCheckEmail) conditions.push(`redeemer_email.eq.${targetCheckEmail}`);
+
+    const { data: priorRedemption } = await query.or(conditions.join(',')).maybeSingle();
 
     if (priorRedemption) {
       return { valid: false, error: 'ALREADY_REDEEMED_BY_USER' };
@@ -189,6 +215,12 @@ export async function redeemCouponCode(
 ) {
   const adminClient = createAdminClient();
   const cleanCode = code.trim().toUpperCase();
+
+  // Re-run validation to enforce security rules at execution level
+  const valResult = await validateCouponCode(cleanCode, userId);
+  if (!valResult.valid) {
+    return { success: false, error: valResult.error };
+  }
 
   // Ensure p_user_id refers to profiles.id for foreign key constraints
   let targetProfileId = userId;
