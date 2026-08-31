@@ -213,3 +213,23 @@ export async function getCouponSecurityLogs() {
     velocityLogs: velocityLogs || [],
   };
 }
+
+/**
+ * Fetch profile ID by email for administrative deep-linking
+ */
+export async function getUserByEmail(email: string) {
+  const supabase = createAdminClient();
+  const cleanEmail = email.trim().toLowerCase();
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('id, email, user_id')
+    .ilike('email', cleanEmail)
+    .maybeSingle();
+
+  if (profile) {
+    return { success: true, userId: profile.user_id || profile.id };
+  }
+
+  return { success: false, error: 'USER_NOT_FOUND' };
+}

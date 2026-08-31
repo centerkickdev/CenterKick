@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { createAdminCoupon, toggleCouponStatus, updateAdminCoupon } from '@/app/admin/coupons/actions';
+import { createAdminCoupon, toggleCouponStatus, updateAdminCoupon, getUserByEmail } from '@/app/admin/coupons/actions';
 import {
   Ticket,
   Plus,
@@ -17,8 +17,10 @@ import {
   Lock,
   Edit3,
   Eye,
+  ExternalLink,
   X
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useToast } from '@/context/ToastContext';
 
 interface Coupon {
@@ -67,12 +69,14 @@ export default function AdminCouponsClient({
   velocityLogs: VelocityLog[];
   systemPlans?: Record<string, any>;
 }) {
+  const router = useRouter();
   const [coupons, setCoupons] = useState<Coupon[]>(initialCoupons);
   const [activeTab, setActiveTab] = useState<'MANAGEMENT' | 'SECURITY_LOGS'>('MANAGEMENT');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('ALL');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [navigatingEmail, setNavigatingEmail] = useState<string | null>(null);
   const { showToast } = useToast();
 
   // Create Form State
@@ -935,17 +939,38 @@ export default function AdminCouponsClient({
 
                 {viewingCoupon.recipient_email ? (
                   <div className="max-h-48 overflow-y-auto p-3 bg-gray-50 rounded-2xl border border-gray-200 space-y-1.5 font-mono text-xs shadow-inner">
-                    {viewingCoupon.recipient_email.split(',').map((email, idx) => {
+                    {viewingCoupon.recipient_email.split(',').map((email: string, idx: number) => {
                       const cleanEmail = email.trim();
                       if (!cleanEmail) return null;
                       return (
-                        <div key={idx} className="flex items-center justify-between py-2 px-3 rounded-xl bg-white border border-gray-200 shadow-sm">
+                        <div
+                          key={idx}
+                          onClick={async () => {
+                            setNavigatingEmail(cleanEmail);
+                            const res = await getUserByEmail(cleanEmail);
+                            if (res.success && res.userId) {
+                              router.push(`/admin/users/${res.userId}`);
+                            } else {
+                              showToast(`No registered account found for ${cleanEmail}`, 'error');
+                              setNavigatingEmail(null);
+                            }
+                          }}
+                          className="flex items-center justify-between py-2 px-3 rounded-xl bg-white border border-gray-200 shadow-sm hover:border-[#a20000] hover:bg-rose-50/50 cursor-pointer transition-all group"
+                          title="Click to view user account profile in Admin Dashboard"
+                        >
                           <div className="flex items-center gap-2.5 overflow-hidden">
                             <span className="w-2 h-2 rounded-full bg-[#b50a0a] shrink-0" />
-                            <span className="truncate text-gray-900 font-bold select-all text-xs">{cleanEmail}</span>
+                            <span className="truncate text-gray-900 font-bold group-hover:text-[#a20000] group-hover:underline text-xs">
+                              {cleanEmail}
+                            </span>
+                            {navigatingEmail === cleanEmail ? (
+                              <RefreshCw className="w-3 h-3 text-[#a20000] animate-spin shrink-0" />
+                            ) : (
+                              <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-[#a20000] shrink-0" />
+                            )}
                           </div>
-                          <span className="text-[10px] text-gray-400 font-sans font-extrabold uppercase tracking-wider shrink-0 ml-2">
-                            Recipient #{idx + 1}
+                          <span className="text-[10px] text-gray-400 font-sans font-extrabold uppercase tracking-wider shrink-0 ml-2 group-hover:text-[#a20000]">
+                            View Profile →
                           </span>
                         </div>
                       );
