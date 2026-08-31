@@ -61,7 +61,7 @@ export async function validateCouponCode(
   if (userId) {
     const { data: pById } = await adminClient
       .from('profiles')
-      .select('id, user_id, email, role, is_subscribed, subscription_status, subscription_tier, valid_until')
+      .select('id, user_id, email, role, status, is_subscribed, subscription_status, subscription_tier, valid_until')
       .eq('id', userId)
       .maybeSingle();
 
@@ -70,7 +70,7 @@ export async function validateCouponCode(
     } else {
       const { data: pByUserId } = await adminClient
         .from('profiles')
-        .select('id, user_id, email, role, is_subscribed, subscription_status, subscription_tier, valid_until')
+        .select('id, user_id, email, role, status, is_subscribed, subscription_status, subscription_tier, valid_until')
         .eq('user_id', userId)
         .maybeSingle();
       redeemerProfile = pByUserId;
@@ -84,7 +84,7 @@ export async function validateCouponCode(
   if (!redeemerProfile && authUser) {
     const { data: pByAuth } = await adminClient
       .from('profiles')
-      .select('id, user_id, email, role, is_subscribed, subscription_status, subscription_tier, valid_until')
+      .select('id, user_id, email, role, status, is_subscribed, subscription_status, subscription_tier, valid_until')
       .or(`id.eq.${authUser.id},user_id.eq.${authUser.id}`)
       .maybeSingle();
     if (pByAuth) redeemerProfile = pByAuth;
@@ -173,13 +173,14 @@ export async function validateCouponCode(
     // Check if subscription expiration date exists and is in the future
     const hasValidFutureExpiry = redeemerProfile.valid_until ? new Date(redeemerProfile.valid_until) > new Date() : false;
 
-    // Check if user has any confirmed subscription transactions
+    // Check if user has any confirmed subscription transactions matching profile.id OR profile.user_id OR userId
     let hasConfirmedTx = false;
-    if (targetCheckId) {
+    const txCheckIds = Array.from(new Set([redeemerProfile?.id, redeemerProfile?.user_id, userId, authUser?.id].filter(Boolean)));
+    if (txCheckIds.length > 0) {
       const { data: tx } = await adminClient
         .from('transactions')
         .select('id')
-        .eq('user_id', targetCheckId)
+        .in('user_id', txCheckIds)
         .eq('status', 'confirmed')
         .limit(1)
         .maybeSingle();

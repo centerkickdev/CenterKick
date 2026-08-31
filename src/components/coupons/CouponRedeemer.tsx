@@ -63,50 +63,45 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPa
     const cleanCode = code.trim().toUpperCase();
     if (!cleanCode) return;
 
-    let currentVal = validation;
-    if (!currentVal || currentVal.coupon?.code !== cleanCode) {
-      setIsValidating(true);
-      setErrorMsg(null);
-      try {
-        const res = await validateCouponCode(cleanCode, userId);
-        if (!res.valid) {
-          setValidation(null);
-          if (res.error === 'ACTIVE_SUBSCRIPTION_BLOCKED' && res.active_subscription) {
-            setErrorMsg(
-              `You currently have an active ${res.active_subscription.tier} subscription that expires on ${res.active_subscription.formatted_expiry || 'the end of your billing cycle'}. You can redeem or stack this coupon code once your current running subscription ends.`
-            );
-          } else {
-            setErrorMsg(getHumanReadableError(res.error));
-          }
-          setIsValidating(false);
+    setIsValidating(true);
+    setErrorMsg(null);
+    try {
+      const res = await validateCouponCode(cleanCode, userId);
+      if (!res.valid) {
+        setValidation(null);
+        if (res.error === 'ACTIVE_SUBSCRIPTION_BLOCKED' && res.active_subscription) {
+          setErrorMsg(
+            `You currently have an active ${res.active_subscription.tier} subscription${res.active_subscription.formatted_expiry ? ` that expires on ${res.active_subscription.formatted_expiry}` : ''}. Active subscribers cannot redeem additional voucher codes.`
+          );
+        } else {
+          setErrorMsg(getHumanReadableError(res.error));
+        }
+        setIsValidating(false);
+        return;
+      }
+      
+      setValidation(res);
+
+      if (res.coupon) {
+        const isPartial = res.coupon.coupon_type === 'PERCENTAGE' || res.coupon.coupon_type === 'FIXED_AMOUNT';
+        if (isPartial && onApplyPartialDiscount) {
+          onApplyPartialDiscount(res.coupon);
           return;
         }
-        currentVal = res;
-        setValidation(res);
-      } catch (err) {
-        setErrorMsg('Validation preview failed.');
-        setIsValidating(false);
-        return;
-      } finally {
-        setIsValidating(false);
-      }
-    }
 
-    if (currentVal?.valid && currentVal.coupon) {
-      const isPartial = currentVal.coupon.coupon_type === 'PERCENTAGE' || currentVal.coupon.coupon_type === 'FIXED_AMOUNT';
-      if (isPartial && onApplyPartialDiscount) {
-        onApplyPartialDiscount(currentVal.coupon);
-        return;
-      }
+        if (res.requires_resolution) {
+          setShowResolutionModal(true);
+          return;
+        }
 
-      if (currentVal.requires_resolution) {
-        setShowResolutionModal(true);
-        return;
+        if (userId) {
+          await handleRedeem('DEFAULT', res.coupon.code);
+        }
       }
-
-      if (userId) {
-        await handleRedeem('DEFAULT', currentVal.coupon.code);
-      }
+    } catch (err) {
+      setErrorMsg('Validation preview failed.');
+    } finally {
+      setIsValidating(false);
     }
   };
 
@@ -152,6 +147,8 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPa
         return 'Your account tier cannot redeem coupon codes.';
       case 'ALREADY_REDEEMED_BY_USER':
         return 'Your account has already redeemed this specific coupon code.';
+      case 'ACTIVE_SUBSCRIPTION_BLOCKED':
+        return 'Your account currently has an active subscription and cannot redeem voucher codes at this time.';
       default:
         return 'Unable to process coupon code. Please try again.';
     }
