@@ -197,7 +197,11 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
                 <span className="px-2.5 py-0.5 rounded-full bg-[#b50a0a]/20 text-red-400 text-[10px] font-extrabold uppercase tracking-wider border border-[#b50a0a]/30">Valid Voucher</span>
               </div>
               <p className="text-xs text-gray-300 font-medium mt-1">
-                ✓ 100% Covered • Tier: <span className="font-bold text-white">{validation.coupon?.target_tier}</span> ({validation.coupon?.duration_months} Months Membership)
+                ✓ {validation.coupon?.coupon_type === 'PERCENTAGE'
+                  ? `${validation.coupon.discount_value}% Off`
+                  : validation.coupon?.coupon_type === 'FIXED_AMOUNT'
+                  ? `₦${validation.coupon.discount_value?.toLocaleString()} Off`
+                  : '100% Covered'} • Tier: <span className="font-bold text-white">{validation.coupon?.target_tier}</span> ({validation.coupon?.duration_months} Months Membership)
               </p>
             </div>
           </div>
