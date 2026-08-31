@@ -140,12 +140,33 @@ export default function SubscriptionPage() {
     setIsSubmitting(false);
   };
 
+  const [appliedCoupon, setAppliedCoupon] = useState<any | null>(null);
+
+  const userRole = profile?.role || 'player';
+  const rolePlan = (paymentSettings as any)?.plans?.[userRole];
+  const basePrice = rolePlan?.amount ? Number(rolePlan.amount) : 0;
+  const paystackPlanCode = rolePlan?.paystackPlanCode || null;
+
+  // Calculate Discounted Net Payable Price if a partial coupon is applied
+  let discountAmount = 0;
+  if (appliedCoupon) {
+    if (appliedCoupon.coupon_type === 'PERCENTAGE' && appliedCoupon.discount_value) {
+      discountAmount = (basePrice * Number(appliedCoupon.discount_value)) / 100;
+    } else if (appliedCoupon.coupon_type === 'FIXED_AMOUNT' && appliedCoupon.discount_value) {
+      discountAmount = Number(appliedCoupon.discount_value);
+    }
+  }
+
+  const netPayablePrice = Math.max(0, basePrice - discountAmount);
+
   const handlePaystackCheckout = async () => {
     if (!profile || !profile.email || !paymentSettings?.paystackPublicKey) {
-      showToast('Payment configuration missing.', 'error');
+      showToast('Payment system unavailable or missing credentials.', 'error');
       return;
     }
+
     let paystack = (window as any).PaystackPop;
+
     if (!paystack) {
       // Dynamic fallback script loader inside hidden form
       await new Promise<void>((resolve) => {
@@ -169,16 +190,23 @@ export default function SubscriptionPage() {
       return;
     }
 
+    const finalAmountInKobo = Math.round(netPayablePrice * 100);
+
     const config: any = {
       key: paymentSettings.paystackPublicKey,
       email: profile.email,
-      amount: basePrice * 100, // Paystack amount is in kobo
+      amount: finalAmountInKobo,
       currency: 'NGN',
       ref: 'ck_' + Math.floor((Math.random() * 1000000000) + 1),
       callback: function (response: any) {
         const processPayment = async () => {
           setIsSubmitting(true);
-          const verifyRes = await verifyPaystackPayment(response.reference, basePrice, paystackPlanCode || undefined);
+          const verifyRes = await verifyPaystackPayment(
+            response.reference,
+            netPayablePrice,
+            paystackPlanCode || undefined,
+            appliedCoupon?.code || undefined
+          );
           if (verifyRes.success) {
             setShowSuccessModal(true);
             setTimeout(() => {
@@ -196,7 +224,7 @@ export default function SubscriptionPage() {
       }
     };
 
-    if (paystackPlanCode) {
+    if (paystackPlanCode && !appliedCoupon) {
       config.plan = paystackPlanCode;
     }
 
@@ -204,18 +232,11 @@ export default function SubscriptionPage() {
     handler.openIframe();
   };
 
-  const userRole = profile?.role || 'player';
-  const rolePlan = (paymentSettings as any)?.plans?.[userRole];
-
-  const basePrice = rolePlan?.amount ? Number(rolePlan.amount) : 0;
-
   let durationMonths = 12; // default
   if (rolePlan?.frequency === 'Monthly') durationMonths = 1;
   else if (rolePlan?.frequency === 'Quarterly') durationMonths = 3;
   else if (rolePlan?.frequency === 'Biannually') durationMonths = 6;
   else if (rolePlan?.frequency === 'Lifetime Access') durationMonths = 0; // 0 means lifetime
-
-  const paystackPlanCode = rolePlan?.paystackPlanCode || null;
 
   const planName = rolePlan?.name || `${userRole.charAt(0).toUpperCase() + userRole.slice(1)}`;
   const usdPrice = basePrice / 1500;
@@ -370,13 +391,32 @@ export default function SubscriptionPage() {
                                   <h3 className="text-lg font-bold text-gray-900">Instant Online Activation</h3>
                                   <p className="text-xs font-bold text-gray-500 tracking-wide mt-2">Pay securely online to activate your professional badge and unlock all features instantly.</p>
                                 </div>
-                                <div className="pt-2 w-full space-y-3">
+                                  {appliedCoupon && (
+                                    <div className="p-4 rounded-2xl bg-gray-900 text-white flex items-center justify-between gap-3 w-full border border-gray-800 animate-in fade-in">
+                                      <div>
+                                        <div className="flex items-center gap-2">
+                                          <span className="text-xs font-extrabold uppercase tracking-wider text-red-400">Voucher Applied:</span>
+                                          <span className="text-xs font-bold font-mono text-white">{appliedCoupon.code}</span>
+                                        </div>
+                                        <p className="text-[11px] text-gray-400 mt-0.5">
+                                          Original: <span className="line-through">₦{basePrice.toLocaleString()}</span> • Discount: <span className="text-emerald-400 font-bold">-₦{discountAmount.toLocaleString()}</span>
+                                        </p>
+                                      </div>
+                                      <button
+                                        onClick={() => setAppliedCoupon(null)}
+                                        className="text-xs text-gray-400 hover:text-white underline font-semibold"
+                                      >
+                                        Remove
+                                      </button>
+                                    </div>
+                                  )}
+
                                   {paymentSettings?.paystackActive && paymentSettings?.paystackPublicKey && (
                                     <button
                                       onClick={handlePaystackCheckout}
                                       className="flex items-center justify-center gap-3 w-full bg-gray-900 text-white px-8 py-4 rounded-2xl text-xs font-bold tracking-[0.2em] hover:bg-[#b50a0a] transition-all shadow-xl hover:-translate-y-1 uppercase"
                                     >
-                                      Pay with Paystack <ChevronRight className="w-4 h-4" />
+                                      Pay ₦{netPayablePrice.toLocaleString()} with Paystack <ChevronRight className="w-4 h-4" />
                                     </button>
                                   )}
 
@@ -401,7 +441,6 @@ export default function SubscriptionPage() {
                                       Subscribe Now <ChevronRight className="w-4 h-4" />
                                     </a>
                                   )}
-                                </div>
                               </div>
                             )}
 
@@ -535,6 +574,11 @@ export default function SubscriptionPage() {
                   onSuccess={(res) => {
                     showToast('Voucher redeemed successfully! Reloading subscription data...', 'success');
                     setTimeout(() => window.location.reload(), 2000);
+                  }}
+                  onApplyPartialDiscount={(coupon) => {
+                    setAppliedCoupon(coupon);
+                    showToast(`Applied ${coupon.code}! Redirecting to checkout summary...`, 'success');
+                    setActiveTab('My Plan');
                   }}
                 />
               </div>

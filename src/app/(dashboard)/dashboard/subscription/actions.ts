@@ -312,7 +312,7 @@ export async function activateFreeSubscription() {
   return { success: true };
 }
 
-export async function verifyPaystackPayment(reference: string, amount: number, planCode?: string) {
+export async function verifyPaystackPayment(reference: string, amount: number, planCode?: string, couponCode?: string) {
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
@@ -328,7 +328,7 @@ export async function verifyPaystackPayment(reference: string, amount: number, p
 
   const { data: profile, error: profileFetchError } = await supabase
     .from('profiles')
-    .select('id')
+    .select('id, email')
     .eq('user_id', user.id)
     .single();
 
@@ -374,13 +374,14 @@ export async function verifyPaystackPayment(reference: string, amount: number, p
         method: 'paystack_integration',
         metadata: {
           type: 'subscription',
-          description: `Paystack Payment for ${userRole}`,
-          paystack_plan: planCode || data.data.plan
+          description: `Paystack Payment for ${userRole}${couponCode ? ` (Discount Coupon: ${couponCode})` : ''}`,
+          paystack_plan: planCode || data.data.plan,
+          applied_coupon: couponCode || null
         }
       });
       
       if (insertError) {
-        // If it's a unique constraint violation, it means the webhook already successfully inserted the transaction just milliseconds before this ran. This is a massive success, not an error!
+        // If it's a unique constraint violation, it means the webhook already successfully inserted the transaction just milliseconds before this ran.
         if (insertError.code === '23505' || insertError.message?.includes('duplicate key') || insertError.message?.includes('transactions_reference_key')) {
            // We can safely ignore this and proceed.
         } else {
@@ -389,12 +390,42 @@ export async function verifyPaystackPayment(reference: string, amount: number, p
         }
       }
       
-      // Update profile status
+      // Update profile status & entitlement
       await adminClient.from('profiles').update({
         verification_requested: false,
         status: 'active',
+        is_subscribed: true,
+        subscription_status: 'ACTIVE',
         updated_at: new Date().toISOString()
       }).eq('user_id', user.id);
+
+      // If a discount coupon code was applied, log its redemption & increment count
+      if (couponCode) {
+        const { data: coupon } = await adminClient
+          .from('coupon_codes')
+          .select('*')
+          .ilike('code', couponCode.trim())
+          .maybeSingle();
+
+        if (coupon) {
+          const newCount = (coupon.redemption_count || 0) + 1;
+          const newStatus = newCount >= coupon.max_redemptions ? 'REDEEMED' : 'AVAILABLE';
+          await adminClient.from('coupon_codes').update({
+            redemption_count: newCount,
+            status: newStatus
+          }).eq('id', coupon.id);
+
+          await adminClient.from('coupon_redemptions').insert({
+            coupon_code_id: coupon.id,
+            redeemer_id: profile.id,
+            redeemer_email: profile.email || user.email,
+            resolution_mode: 'DEFAULT',
+            previous_tier: 'FREE',
+            new_tier: coupon.target_tier || userRole.toUpperCase(),
+            redeemed_at: new Date().toISOString()
+          });
+        }
+      }
       
       revalidatePath('/dashboard/subscription');
       return { success: true };

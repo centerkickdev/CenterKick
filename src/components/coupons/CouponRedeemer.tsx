@@ -9,10 +9,11 @@ interface CouponRedeemerProps {
   userId?: string;
   userEmail?: string;
   onSuccess?: (result: any) => void;
+  onApplyPartialDiscount?: (coupon: CouponCode) => void;
   className?: string;
 }
 
-export default function CouponRedeemer({ userId, userEmail, onSuccess, className = '' }: CouponRedeemerProps) {
+export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPartialDiscount, className = '' }: CouponRedeemerProps) {
   const [code, setCode] = useState('');
   const [isValidating, setIsValidating] = useState(false);
   const [isRedeeming, setIsRedeeming] = useState(false);
@@ -91,13 +92,21 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
       }
     }
 
-    if (currentVal?.valid && currentVal.requires_resolution) {
-      setShowResolutionModal(true);
-      return;
-    }
+    if (currentVal?.valid && currentVal.coupon) {
+      const isPartial = currentVal.coupon.coupon_type === 'PERCENTAGE' || currentVal.coupon.coupon_type === 'FIXED_AMOUNT';
+      if (isPartial && onApplyPartialDiscount) {
+        onApplyPartialDiscount(currentVal.coupon);
+        return;
+      }
 
-    if (currentVal?.valid && !currentVal.requires_resolution && userId) {
-      await handleRedeem('DEFAULT', currentVal.coupon?.code);
+      if (currentVal.requires_resolution) {
+        setShowResolutionModal(true);
+        return;
+      }
+
+      if (userId) {
+        await handleRedeem('DEFAULT', currentVal.coupon.code);
+      }
     }
   };
 
@@ -178,8 +187,10 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
           {isRedeeming ? (
             <>
               <RefreshCw className="w-4 h-4 animate-spin" />
-              <span>Claiming...</span>
+              <span>Processing...</span>
             </>
+          ) : validation?.coupon?.coupon_type === 'PERCENTAGE' || validation?.coupon?.coupon_type === 'FIXED_AMOUNT' ? (
+            'Apply & Checkout'
           ) : (
             'Claim'
           )}
