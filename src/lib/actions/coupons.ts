@@ -166,24 +166,43 @@ export async function validateCouponCode(
   }
 
   // 6. Block Redemption if User has Active Subscription
-  if (redeemerProfile && redeemerProfile.subscription_status) {
-    if (
-      ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes(redeemerProfile.subscription_status) &&
-      redeemerProfile.valid_until &&
-      new Date(redeemerProfile.valid_until) > new Date()
-    ) {
-      const formattedExpiry = new Date(redeemerProfile.valid_until).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      });
+  if (redeemerProfile) {
+    const isSubscribedFlag = Boolean(redeemerProfile.is_subscribed);
+    const hasActiveStatus = redeemerProfile.status === 'active' || ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes(redeemerProfile.subscription_status || '');
+    
+    // Check if subscription expiration date exists and is in the future
+    const hasValidFutureExpiry = redeemerProfile.valid_until ? new Date(redeemerProfile.valid_until) > new Date() : false;
+
+    // Check if user has any confirmed subscription transactions
+    let hasConfirmedTx = false;
+    if (targetCheckId) {
+      const { data: tx } = await adminClient
+        .from('transactions')
+        .select('id')
+        .eq('user_id', targetCheckId)
+        .eq('status', 'confirmed')
+        .limit(1)
+        .maybeSingle();
+      if (tx) hasConfirmedTx = true;
+    }
+
+    const isActiveSubscriber = isSubscribedFlag || (hasActiveStatus && (hasValidFutureExpiry || !redeemerProfile.valid_until)) || hasConfirmedTx;
+
+    if (isActiveSubscriber) {
+      const formattedExpiry = redeemerProfile.valid_until
+        ? new Date(redeemerProfile.valid_until).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })
+        : undefined;
 
       return {
         valid: false,
         error: 'ACTIVE_SUBSCRIPTION_BLOCKED',
         active_subscription: {
-          tier: redeemerProfile.subscription_tier || 'FREE',
-          valid_until: redeemerProfile.valid_until,
+          tier: redeemerProfile.subscription_tier || redeemerRole?.toUpperCase() || 'ACTIVE',
+          valid_until: redeemerProfile.valid_until || null,
           formatted_expiry: formattedExpiry,
         },
       };
