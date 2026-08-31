@@ -91,7 +91,14 @@ export async function validateCouponCode(
     }
   }
 
-  // 3. Block Redemption if Target Tier is configured as FREE in system settings
+  // Fetch Redeemer User Role & Profile
+  let redeemerRole = (redeemerProfile?.role || '').toLowerCase();
+  if (!redeemerRole && userId) {
+    const { data: u } = await adminClient.from('users').select('role').eq('id', userId).single();
+    if (u) redeemerRole = (u.role || '').toLowerCase();
+  }
+
+  // 3. Fetch payment settings to check configured amounts
   const { data: settings } = await adminClient
     .from('site_content')
     .select('content')
@@ -99,15 +106,40 @@ export async function validateCouponCode(
     .eq('section', 'payment')
     .single();
 
-  const couponTierKey = (coupon.target_tier || 'PLAYER').toLowerCase();
-  const configuredPlan = settings?.content?.plans?.[couponTierKey];
-  const configuredAmount = configuredPlan?.amount ? Number(configuredPlan.amount) : 0;
+  const plans = settings?.content?.plans || {};
 
-  if (configuredPlan && configuredAmount === 0) {
-    return { valid: false, error: 'FREE_TIER_NO_REDEEM' };
+  // Check if the redeemer's user account role itself is configured as FREE (amount == 0)
+  if (redeemerRole && plans[redeemerRole]) {
+    const redeemerRoleAmount = plans[redeemerRole]?.amount ? Number(plans[redeemerRole].amount) : 0;
+    if (redeemerRoleAmount === 0) {
+      return { valid: false, error: 'FREE_TIER_NO_REDEEM' };
+    }
   }
 
-  // 4. Block Redemption if User has Active Subscription
+  // Check if the coupon's target tier is configured as FREE (amount == 0)
+  const couponTierKey = (coupon.target_tier || 'PLAYER').toLowerCase();
+  if (couponTierKey !== 'all' && plans[couponTierKey]) {
+    const couponTierAmount = plans[couponTierKey]?.amount ? Number(plans[couponTierKey].amount) : 0;
+    if (couponTierAmount === 0) {
+      return { valid: false, error: 'FREE_TIER_NO_REDEEM' };
+    }
+  }
+
+  // 5. Block Redemption if this specific user account has ALREADY redeemed this coupon code
+  if (redeemerProfile?.id) {
+    const { data: priorRedemption } = await adminClient
+      .from('coupon_redemptions')
+      .select('id')
+      .eq('coupon_code_id', coupon.id)
+      .eq('redeemer_id', redeemerProfile.id)
+      .maybeSingle();
+
+    if (priorRedemption) {
+      return { valid: false, error: 'ALREADY_REDEEMED_BY_USER' };
+    }
+  }
+
+  // 6. Block Redemption if User has Active Subscription
   if (redeemerProfile && redeemerProfile.subscription_status) {
     if (
       ['ACTIVE', 'SPONSORED', 'GIFT_COVERED'].includes(redeemerProfile.subscription_status) &&

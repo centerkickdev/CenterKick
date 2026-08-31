@@ -140,7 +140,9 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
       case 'RESTRICTED_RECIPIENT_ONLY':
         return 'This voucher code is restricted exclusively to a specific account email.';
       case 'FREE_TIER_NO_REDEEM':
-        return 'This account tier is currently free under system configuration. Promo codes cannot be applied to free tiers.';
+        return 'Account tiers that are configured as free in system settings cannot redeem coupon codes.';
+      case 'ALREADY_REDEEMED_BY_USER':
+        return 'Your account has already redeemed this specific coupon code.';
       default:
         return 'Unable to process coupon code. Please try again.';
     }
