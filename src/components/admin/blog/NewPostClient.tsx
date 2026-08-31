@@ -213,7 +213,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl focus:outline-none min-h-[600px] max-w-none px-4 sm:px-0 selection:bg-[#b50a0a]/10 text-black prose-headings:text-black prose-p:text-black prose-strong:text-black prose-blockquote:text-black prose-li:text-black',
+        class: 'prose prose-base md:prose-lg focus:outline-none min-h-[500px] max-w-none selection:bg-[#b50a0a]/10 text-gray-900 prose-headings:font-bold prose-headings:tracking-tighter prose-headings:text-gray-900 prose-p:text-gray-800 prose-p:leading-relaxed prose-strong:text-gray-900 prose-blockquote:text-gray-800 prose-blockquote:border-[#b50a0a] prose-li:text-gray-800',
       },
     },
   });
@@ -418,7 +418,7 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
     if (!editor) return null;
 
     return (
-      <div className="flex flex-wrap items-center gap-1 p-2 mb-8 bg-white/80 backdrop-blur-xl sticky top-4 z-40 border-b border-gray-100/50">
+      <div className="flex flex-wrap items-center gap-1.5 p-2 mb-6 bg-white/90 backdrop-blur-xl sticky top-16 sm:top-20 z-30 border border-gray-200/80 rounded-2xl shadow-lg transition-all">
         <div className="flex items-center gap-0.5 bg-gray-50/50 p-1 rounded-xl border border-gray-100/50">
           <button
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -640,11 +640,11 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
           <div className="p-4 sm:p-8 md:p-12 space-y-8 sm:space-y-12">
              <div className="space-y-6 sm:space-y-8">
                 <div className="space-y-2 group">
-                   <label className="text-xs font-bold text-black tracking-wide ml-1 opacity-100">Title</label>
+                   <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 ml-1">Title</label>
                    <textarea 
                       rows={1}
                       placeholder="The Title of Your Story..." 
-                      className="w-full bg-transparent border-none p-0 text-xl sm:text-3xl font-bold text-black placeholder:text-gray-200 focus:ring-0 leading-tight transition-all resize-none min-h-[1em] overflow-hidden"
+                      className="w-full bg-transparent border-none p-0 text-2xl sm:text-4xl font-extrabold tracking-tight text-gray-900 placeholder:text-gray-300 focus:ring-0 leading-tight transition-all resize-none min-h-[1em] overflow-hidden"
                       value={formData.title}
                       onChange={(e) => {
                         setFormData({ ...formData, title: e.target.value });
@@ -653,9 +653,9 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
                       }}
                    />
                 </div>
- 
+
                 <div className="space-y-2">
-                   <label className="text-xs font-bold text-black tracking-wide ml-1">Slug</label>
+                   <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 ml-1">Slug</label>
                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 text-xs font-bold text-gray-900 bg-gray-50 p-3 sm:px-4 sm:py-3 rounded-2xl border border-gray-100 w-full max-w-2xl group focus-within:border-black/10 transition-all">
                       <div className="flex items-center gap-1.5 shrink-0 opacity-60">
                         <LinkIcon className="w-3.5 h-3.5 text-gray-400" />
@@ -681,13 +681,13 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
              </div>
 
              <div className="space-y-2">
-                <label className="text-xs font-bold text-black tracking-wide ml-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 ml-1">
                   {isHighlight ? 'External Link (YouTube, etc.)' : 'Excerpt'} <span className="text-[#b50a0a] ml-0.5">*</span>
                 </label>
                 <textarea 
                    rows={isHighlight ? 1 : 3} 
                    placeholder={isHighlight ? "https://www.youtube.com/watch?v=..." : "Short summary for the index page..."}
-                   className="w-full bg-gray-50 border border-gray-100 rounded-2xl p-5 text-xs font-bold focus:ring-4 focus:ring-black/5 transition-all text-black placeholder:text-gray-300 resize-none shadow-sm"
+                   className="w-full bg-gray-50/80 border border-gray-100 rounded-2xl p-4 sm:p-5 text-sm sm:text-base font-normal text-gray-800 focus:ring-4 focus:ring-black/5 transition-all placeholder:text-gray-300 resize-none shadow-sm leading-relaxed"
                    value={formData.excerpt}
                    onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                 />
@@ -696,40 +696,120 @@ export default function NewPostClient({ categories, tags, post }: NewPostClientP
              <div className="w-full h-px bg-gray-100/50"></div>
 
              {!isHighlight && (
-               <div className="space-y-8">
+               <div className="space-y-6">
                   <div className="flex items-center justify-between ml-1 leading-none">
-                     <label className="text-xs font-bold text-black tracking-wide">Body Content</label>
+                     <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">Body Content</label>
                   </div>
                   <MenuBar />
                 <div className="relative editor-content-area">
                   {editor && (
-                    <BubbleMenu 
-                      editor={editor} 
-                      shouldShow={({ editor }) => editor.isActive('image')}
-                    >
-                      <div className="flex items-center bg-white shadow-2xl border border-gray-100 rounded-2xl p-1.5 gap-1.5 animate-in zoom-in-95 duration-200">
-                        <button 
-                          onClick={() => {
-                            setGalleryUsage('editor');
-                            setIsGalleryOpen(true);
-                          }}
-                          className="px-3 py-2 hover:bg-gray-50 rounded-xl text-black flex items-center gap-2 text-xs font-bold tracking-wide transition-all shrink-0"
-                        >
-                          <ImageIcon className="w-3.5 h-3.5 text-[#b50a0a]" />
-                          Replace
-                        </button>
-                        <div className="w-px h-4 bg-gray-100 self-center shrink-0"></div>
-                        <ImageCaptionInput editor={editor} />
-                        <div className="w-px h-4 bg-gray-100 self-center shrink-0"></div>
-                        <button 
-                          onClick={() => editor?.chain().focus().deleteSelection().run()}
-                          className="px-3 py-2 hover:bg-red-50 rounded-xl text-red-600 flex items-center gap-2 text-xs font-bold tracking-wide transition-all shrink-0"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          Delete
-                        </button>
-                      </div>
-                    </BubbleMenu>
+                    <>
+                      {/* Image Context Menu */}
+                      <BubbleMenu 
+                        editor={editor} 
+                        shouldShow={({ editor }) => editor.isActive('image')}
+                      >
+                        <div className="flex items-center bg-white shadow-2xl border border-gray-100 rounded-2xl p-1.5 gap-1.5 animate-in zoom-in-95 duration-200">
+                          <button 
+                            onClick={() => {
+                              setGalleryUsage('editor');
+                              setIsGalleryOpen(true);
+                            }}
+                            className="px-3 py-2 hover:bg-gray-50 rounded-xl text-black flex items-center gap-2 text-xs font-bold tracking-wide transition-all shrink-0"
+                          >
+                            <ImageIcon className="w-3.5 h-3.5 text-[#b50a0a]" />
+                            Replace
+                          </button>
+                          <div className="w-px h-4 bg-gray-100 self-center shrink-0"></div>
+                          <ImageCaptionInput editor={editor} />
+                          <div className="w-px h-4 bg-gray-100 self-center shrink-0"></div>
+                          <button 
+                            onClick={() => editor?.chain().focus().deleteSelection().run()}
+                            className="px-3 py-2 hover:bg-red-50 rounded-xl text-red-600 flex items-center gap-2 text-xs font-bold tracking-wide transition-all shrink-0"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            Delete
+                          </button>
+                        </div>
+                      </BubbleMenu>
+
+                      {/* Text Selection Floating Formatting Toolbar */}
+                      <BubbleMenu 
+                        editor={editor} 
+                        shouldShow={({ editor, view, state, from, to }) => {
+                          return !editor.isActive('image') && from !== to;
+                        }}
+                      >
+                        <div className="flex items-center bg-gray-900 text-white shadow-2xl rounded-2xl p-1.5 gap-1 animate-in zoom-in-95 duration-200 border border-gray-800">
+                          <button
+                            onClick={() => editor.chain().focus().toggleBold().run()}
+                            className={`p-1.5 rounded-lg transition-all ${editor.isActive('bold') ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-gray-300'}`}
+                          >
+                            <Bold className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => editor.chain().focus().toggleItalic().run()}
+                            className={`p-1.5 rounded-lg transition-all ${editor.isActive('italic') ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-gray-300'}`}
+                          >
+                            <Italic className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => editor.chain().focus().toggleUnderline().run()}
+                            className={`p-1.5 rounded-lg transition-all ${editor.isActive('underline') ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-gray-300'}`}
+                          >
+                            <UnderlineIcon className="w-3.5 h-3.5" />
+                          </button>
+                          <div className="w-px h-3.5 bg-gray-700 mx-0.5"></div>
+                          <button
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                            className={`px-2 py-1 text-xs font-bold rounded-lg transition-all ${editor.isActive('heading', { level: 2 }) ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-gray-300'}`}
+                          >
+                            H2
+                          </button>
+                          <button
+                            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                            className={`px-2 py-1 text-xs font-bold rounded-lg transition-all ${editor.isActive('heading', { level: 3 }) ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-gray-300'}`}
+                          >
+                            H3
+                          </button>
+                          <div className="w-px h-3.5 bg-gray-700 mx-0.5"></div>
+                          <button
+                            onClick={() => {
+                              const url = window.prompt('URL');
+                              if (url) editor.chain().focus().setLink({ href: url }).run();
+                            }}
+                            className={`p-1.5 rounded-lg transition-all ${editor.isActive('link') ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-gray-300'}`}
+                          >
+                            <LinkIcon className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                            className={`p-1.5 rounded-lg transition-all ${editor.isActive('blockquote') ? 'bg-white/20 text-white' : 'hover:bg-white/10 text-gray-300'}`}
+                            title="Blockquote"
+                          >
+                            <Quote className="w-3.5 h-3.5" />
+                          </button>
+                          <div className="w-px h-3.5 bg-gray-700 mx-0.5"></div>
+                          <button
+                            onClick={insertLinkPreview}
+                            className="p-1.5 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all"
+                            title="Insert Link Preview Card"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setGalleryUsage('editor');
+                              setIsGalleryOpen(true);
+                            }}
+                            className="p-1.5 rounded-lg hover:bg-white/10 text-gray-300 hover:text-white transition-all"
+                            title="Select Image from Gallery"
+                          >
+                            <ImageIcon className="w-3.5 h-3.5 text-red-400" />
+                          </button>
+                        </div>
+                      </BubbleMenu>
+                    </>
                   )}
                   <EditorContent editor={editor} />
                 </div>
