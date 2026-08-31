@@ -195,6 +195,7 @@ export async function redeemCouponCode(
           is_subscribed: true,
           subscription_status: 'SPONSORED',
           subscription_tier: coupon.target_tier,
+          valid_until: newExpiryDate,
           updated_at: new Date().toISOString(),
         })
         .eq('id', targetProfileId);
