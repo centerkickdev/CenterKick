@@ -140,7 +140,7 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
       case 'RESTRICTED_RECIPIENT_ONLY':
         return 'This voucher code is restricted exclusively to a specific account email.';
       case 'FREE_TIER_NO_REDEEM':
-        return 'Account tiers that are configured as free in system settings cannot redeem coupon codes.';
+        return 'Your account tier cannot redeem coupon codes.';
       case 'ALREADY_REDEEMED_BY_USER':
         return 'Your account has already redeemed this specific coupon code.';
       default:
@@ -172,8 +172,8 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, className
         </div>
         <button
           type="submit"
-          disabled={isValidating || isRedeeming || !code.trim()}
-          className="px-8 py-3.5 rounded-2xl bg-[#b50a0a] hover:bg-black text-white font-bold tracking-wide transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-xs uppercase shadow-lg hover:-translate-y-0.5 shrink-0"
+          disabled={isValidating || isRedeeming || !code.trim() || Boolean(errorMsg)}
+          className="px-8 py-3.5 rounded-2xl bg-[#b50a0a] hover:bg-black text-white font-bold tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2 text-xs uppercase shadow-lg hover:-translate-y-0.5 shrink-0"
         >
           {isRedeeming ? (
             <>
