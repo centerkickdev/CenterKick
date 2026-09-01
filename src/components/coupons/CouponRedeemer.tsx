@@ -8,12 +8,14 @@ import { CheckCircle2, AlertCircle, RefreshCw, ArrowUpRight, Clock, X } from 'lu
 interface CouponRedeemerProps {
   userId?: string;
   userEmail?: string;
+  isSubscribed?: boolean;
+  subscriptionTier?: string;
   onSuccess?: (result: any) => void;
   onApplyPartialDiscount?: (coupon: CouponCode) => void;
   className?: string;
 }
 
-export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPartialDiscount, className = '' }: CouponRedeemerProps) {
+export default function CouponRedeemer({ userId, userEmail, isSubscribed, subscriptionTier, onSuccess, onApplyPartialDiscount, className = '' }: CouponRedeemerProps) {
   const [code, setCode] = useState('');
   const [isValidating, setIsValidating] = useState(false);
   const [isRedeeming, setIsRedeeming] = useState(false);
@@ -21,12 +23,19 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPa
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showResolutionModal, setShowResolutionModal] = useState(false);
 
+  // Initial check on mount: If user already has an active subscription, display proactive warning
+  React.useEffect(() => {
+    if (isSubscribed) {
+      setErrorMsg(`Your account currently has an active ${subscriptionTier || 'professional'} subscription. Active subscribers cannot redeem voucher codes.`);
+    }
+  }, [isSubscribed, subscriptionTier]);
+
   // Debounced real-time validation preview (Checks code status without auto-submitting/redeeming)
   React.useEffect(() => {
     const cleanCode = code.trim().toUpperCase();
     if (!cleanCode || cleanCode.length < 5) {
       setValidation(null);
-      setErrorMsg(null);
+      if (!isSubscribed) setErrorMsg(null);
       return;
     }
 
@@ -39,7 +48,7 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPa
           setValidation(null);
           if (res.error === 'ACTIVE_SUBSCRIPTION_BLOCKED' && res.active_subscription) {
             setErrorMsg(
-              `You currently have an active ${res.active_subscription.tier} subscription that expires on ${res.active_subscription.formatted_expiry || 'the end of your billing cycle'}. You can redeem or stack this coupon code once your current running subscription ends.`
+              `You currently have an active ${res.active_subscription.tier} subscription${res.active_subscription.formatted_expiry ? ` that expires on ${res.active_subscription.formatted_expiry}` : ''}. Active subscribers cannot redeem voucher codes.`
             );
           } else {
             setErrorMsg(getHumanReadableError(res.error));
@@ -56,10 +65,15 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPa
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [code, userId]);
+  }, [code, userId, isSubscribed]);
 
   const handleValidate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubscribed) {
+      setErrorMsg(`Your account currently has an active subscription and cannot redeem voucher codes.`);
+      return;
+    }
+
     const cleanCode = code.trim().toUpperCase();
     if (!cleanCode) return;
 
@@ -71,7 +85,7 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPa
         setValidation(null);
         if (res.error === 'ACTIVE_SUBSCRIPTION_BLOCKED' && res.active_subscription) {
           setErrorMsg(
-            `You currently have an active ${res.active_subscription.tier} subscription${res.active_subscription.formatted_expiry ? ` that expires on ${res.active_subscription.formatted_expiry}` : ''}. Active subscribers cannot redeem additional voucher codes.`
+            `You currently have an active ${res.active_subscription.tier} subscription${res.active_subscription.formatted_expiry ? ` that expires on ${res.active_subscription.formatted_expiry}` : ''}. Active subscribers cannot redeem voucher codes.`
           );
         } else {
           setErrorMsg(getHumanReadableError(res.error));
@@ -154,6 +168,15 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPa
     }
   };
 
+  const isClaimDisabled = Boolean(
+    isSubscribed ||
+    isValidating ||
+    isRedeeming ||
+    !code.trim() ||
+    Boolean(errorMsg) ||
+    (code.trim().length >= 5 && validation && !validation.valid)
+  );
+
   return (
     <div className={`w-full ${className}`}>
       {/* Coupon Input Form */}
@@ -167,8 +190,8 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPa
               setCode(sanitized);
             }}
             placeholder="Enter Promo or Gift Code (e.g. CK-GIFT-8812)"
-            className="w-full px-5 py-3.5 rounded-2xl bg-gray-900 border border-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#b50a0a] font-mono uppercase tracking-wider text-sm shadow-inner transition-all"
-            disabled={isRedeeming}
+            className="w-full px-5 py-3.5 rounded-2xl bg-gray-900 border border-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#b50a0a] font-mono uppercase tracking-wider text-sm shadow-inner transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled={isRedeeming || Boolean(isSubscribed)}
           />
           {isValidating && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 text-xs font-semibold text-gray-400">
@@ -178,8 +201,8 @@ export default function CouponRedeemer({ userId, userEmail, onSuccess, onApplyPa
         </div>
         <button
           type="submit"
-          disabled={isValidating || isRedeeming || !code.trim() || Boolean(errorMsg)}
-          className="px-8 py-3.5 rounded-2xl bg-[#b50a0a] hover:bg-black text-white font-bold tracking-wide transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex items-center justify-center gap-2 text-xs uppercase shadow-lg hover:-translate-y-0.5 shrink-0"
+          disabled={isClaimDisabled}
+          className="px-8 py-3.5 rounded-2xl bg-[#b50a0a] hover:bg-black text-white font-bold tracking-wide transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:bg-gray-800 disabled:text-gray-500 flex items-center justify-center gap-2 text-xs uppercase shadow-lg hover:-translate-y-0.5 shrink-0"
         >
           {isRedeeming ? (
             <>

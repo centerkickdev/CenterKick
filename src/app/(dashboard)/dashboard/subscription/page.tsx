@@ -576,6 +576,8 @@ export default function SubscriptionPage() {
                 <CouponRedeemer
                   userId={profile?.user_id || profile?.id}
                   userEmail={profile?.email}
+                  isSubscribed={plan.status === 'Active'}
+                  subscriptionTier={plan.name}
                   onSuccess={(res) => {
                     showToast('Voucher redeemed successfully! Reloading subscription data...', 'success');
                     setTimeout(() => window.location.reload(), 2000);
