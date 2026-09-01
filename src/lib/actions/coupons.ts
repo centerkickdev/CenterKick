@@ -147,7 +147,7 @@ export async function validateCouponCode(
   const targetCheckEmail = (redeemerProfile?.email || authUser?.email || '').toLowerCase().trim();
 
   if (targetCheckId || targetCheckEmail) {
-    let query = adminClient
+    const query = adminClient
       .from('coupon_redemptions')
       .select('id')
       .eq('coupon_code_id', coupon.id);

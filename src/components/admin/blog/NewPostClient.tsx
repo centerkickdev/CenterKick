@@ -40,7 +40,7 @@ const formatDatetimeLocal = (dateString?: string) => {
 const LinkPreviewExtension = Node.create({
   name: 'linkPreview',
   group: 'block',
-  content: 'inline*',
+  atom: true,      // leaf node — no inner content, no paragraph wrapping
   defining: true,
   
   addAttributes() {
@@ -88,18 +88,16 @@ const LinkPreviewExtension = Node.create({
         style: 'text-decoration: none !important; display: flex;',
       },
       [
-        'div',
-        { class: 'flex-1 min-w-0 space-y-1.5', style: 'text-align: left;' },
-        ['span', { class: 'text-xs font-bold text-[#b50a0a] tracking-wide block uppercase', style: 'margin-bottom: 2px;' }, 'External Link'],
-        ['h4', { class: 'text-sm sm:text-base font-bold text-slate-900 tracking-tight line-clamp-2 no-underline', style: 'margin: 0; color: #0f172a; text-decoration: none !important;' }, title],
-        ['p', { class: 'text-xs font-medium text-slate-500 line-clamp-2 leading-relaxed no-underline', style: 'margin: 4px 0 0 0; color: #64748b; text-decoration: none !important;' }, description],
-        ['span', { class: 'text-[11px] font-bold text-slate-400 tracking-wide block', style: 'margin-top: 4px; color: #94a3b8;' }, domain],
+        'span',
+        { class: 'flex-1 min-w-0 space-y-1.5', style: 'text-align: left; display: block;' },
+        ['span', { class: 'text-sm sm:text-base font-bold text-slate-900 tracking-tight line-clamp-2 no-underline', style: 'margin: 0; color: #0f172a; text-decoration: none !important; display: block;' }, title],
+        ['span', { class: 'text-xs font-medium text-slate-500 line-clamp-2 leading-relaxed no-underline', style: 'margin: 4px 0 0 0; color: #64748b; text-decoration: none !important; display: block;' }, description],
       ],
       ...(image ? [
         [
-          'div',
-          { class: 'w-full sm:w-28 sm:h-28 aspect-video sm:aspect-square bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-100', style: 'border-radius: 12px;' },
-          ['img', { src: image, class: 'w-full h-full object-cover object-top', alt: 'Preview Thumbnail', style: 'width: 100%; height: 100%; object-fit: cover; object-position: top;' }],
+          'span',
+          { class: 'w-24 h-24 sm:w-28 sm:h-28 aspect-square bg-slate-100 rounded-xl overflow-hidden shrink-0 border border-slate-100', style: 'border-radius: 12px; display: block; width: 112px; height: 112px;' },
+          ['img', { src: image, class: 'w-full h-full object-cover object-top', alt: '', style: 'width: 100%; height: 100%; object-fit: cover !important; object-position: top center !important;' }],
         ]
       ] : []),
     ];
