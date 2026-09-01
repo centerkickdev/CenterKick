@@ -451,11 +451,23 @@ export async function purchaseOrgSponsorshipPackage(params: {
 }) {
   const adminClient = createAdminClient();
 
+  // Resolve valid profiles.id UUID for foreign key constraints
+  let targetOrgProfileId = params.orgId;
+  const { data: orgProf } = await adminClient
+    .from('profiles')
+    .select('id')
+    .or(`id.eq.${params.orgId},user_id.eq.${params.orgId}`)
+    .maybeSingle();
+
+  if (orgProf) {
+    targetOrgProfileId = orgProf.id;
+  }
+
   // 1. Create Package Record
   const { data: pkg, error: pkgErr } = await adminClient
     .from('org_sponsorship_packages')
     .insert({
-      org_id: params.orgId,
+      org_id: targetOrgProfileId,
       title: params.title,
       plan_tier: params.planTier,
       total_seats: params.totalSeats,
@@ -469,7 +481,7 @@ export async function purchaseOrgSponsorshipPackage(params: {
 
   if (pkgErr || !pkg) {
     console.error('Package purchase error:', pkgErr);
-    return { success: false, error: 'PACKAGE_CREATION_FAILED' };
+    return { success: false, error: pkgErr?.message || 'PACKAGE_CREATION_FAILED' };
   }
 
   // 2. Generate Seat Codes
@@ -485,7 +497,7 @@ export async function purchaseOrgSponsorshipPackage(params: {
       max_redemptions: 1,
       status: 'AVAILABLE' as const,
       package_id: pkg.id,
-      buyer_id: params.orgId,
+      buyer_id: targetOrgProfileId,
       is_gift: false,
     });
   }
@@ -494,17 +506,21 @@ export async function purchaseOrgSponsorshipPackage(params: {
 
   if (codeErr) {
     console.error('Error generating seat codes:', codeErr);
-    return { success: false, error: 'SEAT_CODES_GENERATION_FAILED' };
+    return { success: false, error: codeErr.message || 'SEAT_CODES_GENERATION_FAILED' };
   }
 
-  // Audit Log
-  await adminClient.from('coupon_audit_logs').insert({
-    actor_id: params.orgId,
-    action: 'CREATED',
-    target_id: pkg.id,
-    target_type: 'PACKAGE',
-    metadata: { seats: params.totalSeats, tier: params.planTier },
-  });
+  // Audit Log (safely attempt audit log without blocking transaction)
+  try {
+    await adminClient.from('coupon_audit_logs').insert({
+      actor_id: targetOrgProfileId,
+      action: 'CREATED',
+      target_id: pkg.id,
+      target_type: 'PACKAGE',
+      metadata: { seats: params.totalSeats, tier: params.planTier },
+    });
+  } catch (auditErr) {
+    console.warn('Non-fatal audit log warning:', auditErr);
+  }
 
   return { success: true, package: pkg };
 }

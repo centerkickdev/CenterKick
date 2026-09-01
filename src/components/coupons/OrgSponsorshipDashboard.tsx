@@ -117,7 +117,7 @@ export default function OrgSponsorshipDashboard({
         showToast('Sponsorship codes generated and activated successfully!', 'success');
         setTimeout(() => window.location.reload(), 1200);
       } else {
-        showToast('Could not activate sponsorship codes. Contact support.', 'error');
+        showToast(`Could not activate sponsorship codes: ${res.error || 'Contact support.'}`, 'error');
       }
     } catch (err: any) {
       console.error(err);
