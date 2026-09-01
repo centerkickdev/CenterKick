@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { CouponCode, ValidationResult, ResolutionMode, generateCouponCodePrefix } from '@/types/coupons';
-import { sendGiftVoucherEmail, sendGiftReceiptToBuyerEmail } from '@/lib/resend';
+import { sendGiftVoucherEmail, sendGiftReceiptToBuyerEmail, sendOrgSponsorshipPurchaseConfirmationEmail } from '@/lib/resend';
 import { redis } from '@/lib/redis';
 import { revalidatePath } from 'next/cache';
 
@@ -442,6 +442,7 @@ export async function purchaseGiftVoucher(params: {
  */
 export async function purchaseOrgSponsorshipPackage(params: {
   orgId: string;
+  userEmail?: string;
   title: string;
   planTier: string;
   totalSeats: number;
@@ -453,14 +454,19 @@ export async function purchaseOrgSponsorshipPackage(params: {
 
   // Resolve valid profiles.id UUID for foreign key constraints
   let targetOrgProfileId = params.orgId;
+  let targetOrgEmail = params.userEmail || '';
+  let targetOrgName = 'Organization';
+
   const { data: orgProf } = await adminClient
     .from('profiles')
-    .select('id')
+    .select('id, email, first_name, last_name')
     .or(`id.eq.${params.orgId},user_id.eq.${params.orgId}`)
     .maybeSingle();
 
   if (orgProf) {
     targetOrgProfileId = orgProf.id;
+    if (!targetOrgEmail && orgProf.email) targetOrgEmail = orgProf.email;
+    if (orgProf.first_name) targetOrgName = `${orgProf.first_name} ${orgProf.last_name || ''}`.trim();
   }
 
   // 1. Create Package Record
@@ -486,9 +492,12 @@ export async function purchaseOrgSponsorshipPackage(params: {
 
   // 2. Generate Seat Codes
   const codesToInsert = [];
+  const generatedCodes: string[] = [];
   for (let i = 0; i < params.totalSeats; i++) {
+    const generatedCode = generateCouponCodePrefix('ORG');
+    generatedCodes.push(generatedCode);
     codesToInsert.push({
-      code: generateCouponCodePrefix('ORG'),
+      code: generatedCode,
       title: `${params.title} - Seat ${i + 1}`,
       coupon_type: 'FULL_COVER' as const,
       discount_value: 100.00,
@@ -509,6 +518,22 @@ export async function purchaseOrgSponsorshipPackage(params: {
     return { success: false, error: codeErr.message || 'SEAT_CODES_GENERATION_FAILED' };
   }
 
+  // Dispatch Confirmation Email Receipt to Organization Account
+  if (targetOrgEmail) {
+    try {
+      await sendOrgSponsorshipPurchaseConfirmationEmail({
+        orgEmail: targetOrgEmail,
+        orgName: targetOrgName,
+        planTier: params.planTier,
+        totalSeats: params.totalSeats,
+        paymentReference: params.paymentReference,
+        codes: generatedCodes,
+      });
+    } catch (emailErr) {
+      console.error('Failed to send org sponsorship receipt email:', emailErr);
+    }
+  }
+
   // Audit Log (safely attempt audit log without blocking transaction)
   try {
     await adminClient.from('coupon_audit_logs').insert({
@@ -521,6 +546,8 @@ export async function purchaseOrgSponsorshipPackage(params: {
   } catch (auditErr) {
     console.warn('Non-fatal audit log warning:', auditErr);
   }
+
+  revalidatePath('/dashboard/sponsorships');
 
   return { success: true, package: pkg };
 }

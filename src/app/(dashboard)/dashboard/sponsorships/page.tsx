@@ -3,12 +3,15 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import OrgSponsorshipDashboard from '@/components/coupons/OrgSponsorshipDashboard';
 
+import { createAdminClient } from '@/lib/supabase/admin';
+
 export const metadata = {
   title: 'Organization Sponsorship Hub | CenterKick',
 };
 
 export default async function OrgSponsorshipsPage() {
   const supabase = await createClient();
+  const adminClient = createAdminClient();
   const { data: { user }, error } = await supabase.auth.getUser();
 
   if (error || !user) {
@@ -22,18 +25,44 @@ export default async function OrgSponsorshipsPage() {
     .eq('user_id', user.id)
     .single();
 
-  // Fetch existing packages & codes issued by this Organization
-  const { data: packages } = await supabase
+  // Find all possible profile/user IDs associated with this user session (by auth user.id, profile.id, or email)
+  const { data: userProfiles } = await adminClient
+    .from('profiles')
+    .select('id, user_id, email')
+    .or(`user_id.eq.${user.id},id.eq.${user.id}${user.email ? `,email.ilike.${user.email}` : ''}`);
+
+  const profileIdsSet = new Set<string>([user.id]);
+  if (profile) {
+    if (profile.id) profileIdsSet.add(profile.id);
+    if (profile.user_id) profileIdsSet.add(profile.user_id);
+  }
+  if (userProfiles && userProfiles.length > 0) {
+    userProfiles.forEach((p) => {
+      if (p.id) profileIdsSet.add(p.id);
+      if (p.user_id) profileIdsSet.add(p.user_id);
+    });
+  }
+
+  const profileIds = Array.from(profileIdsSet);
+
+  // 1. Fetch existing packages purchased by this account or associated IDs
+  const { data: packages } = await adminClient
     .from('org_sponsorship_packages')
     .select('*')
-    .eq('org_id', profile?.id || user.id)
+    .or(`org_id.in.(${profileIds.join(',')})`)
     .order('created_at', { ascending: false });
 
-  const { data: codes } = await supabase
-    .from('coupon_codes')
-    .select('*')
-    .eq('buyer_id', profile?.id || user.id)
-    .order('created_at', { ascending: false });
+  const myPackageIds = (packages || []).map((p) => p.id);
+
+  // 2. Fetch codes belonging to these packages OR purchased by this buyer_id
+  let codesQuery = adminClient.from('coupon_codes').select('*');
+  if (myPackageIds.length > 0) {
+    codesQuery = codesQuery.or(`package_id.in.(${myPackageIds.join(',')}),buyer_id.in.(${profileIds.join(',')})`);
+  } else {
+    codesQuery = codesQuery.in('buyer_id', profileIds);
+  }
+
+  const { data: codes } = await codesQuery.order('created_at', { ascending: false });
 
   // Fetch Payment Settings & System Plans from CMS site_content (same query as /gift)
   const { data: paymentContent } = await supabase

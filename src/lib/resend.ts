@@ -342,9 +342,62 @@ export async function sendOrgSponsorshipInviteEmail(params: {
         </div>
       `,
     });
-    return data;
   } catch (error) {
     console.error('Failed to send org sponsorship invite email:', error);
+    throw error;
+  }
+}
+
+export async function sendOrgSponsorshipPurchaseConfirmationEmail(params: {
+  orgEmail: string;
+  orgName: string;
+  planTier: string;
+  totalSeats: number;
+  paymentReference: string;
+  codes: string[];
+}) {
+  try {
+    const data = await resend.emails.send({
+      from: 'CenterKick Sponsorships <sponsorships@centerkick.com>',
+      to: [params.orgEmail],
+      subject: `🧾 CenterKick Sponsorship Package Confirmation (${params.totalSeats} ${params.planTier} Seats)`,
+      html: `
+        <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px; color: #1f2937; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px;">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <h1 style="font-size: 24px; font-weight: 800; color: #111827; margin: 0;">Sponsorship Package Purchase Confirmation</h1>
+                <p style="font-size: 14px; font-weight: 600; color: #a20000; margin-top: 4px;">Ref: ${params.paymentReference}</p>
+            </div>
+            
+            <div style="margin-bottom: 32px;">
+                <p style="font-size: 16px; line-height: 24px; color: #4b5563; margin-bottom: 24px;">
+                    Hello <strong>${params.orgName}</strong>,<br/><br/>
+                    Thank you for purchasing sponsorship seats on CenterKick! Your sponsorship codes have been generated and are now active.
+                </p>
+
+                <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                    <p style="font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 12px 0;">Package Summary</p>
+                    <p style="font-size: 14px; margin: 4px 0; color: #111827;"><strong>Target Tier:</strong> ${params.planTier}</p>
+                    <p style="font-size: 14px; margin: 4px 0; color: #111827;"><strong>Total Seats:</strong> ${params.totalSeats}</p>
+                    <p style="font-size: 14px; margin: 4px 0; color: #111827;"><strong>Payment Reference:</strong> ${params.paymentReference}</p>
+                </div>
+
+                <div style="background-color: #111827; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+                    <p style="font-size: 12px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; text-align: center;">Generated Voucher Codes</p>
+                    <div style="font-family: monospace; font-size: 16px; font-weight: 800; color: #ffffff; line-height: 28px; text-align: center;">
+                        ${params.codes.join('<br/>')}
+                    </div>
+                </div>
+
+                <p style="font-size: 13px; color: #6b7280; text-align: center;">
+                    You can manage and send these codes anytime from your <strong>CenterKick Dashboard &gt; Sponsorships</strong> portal.
+                </p>
+            </div>
+        </div>
+      `,
+    });
+    return data;
+  } catch (error) {
+    console.error('Failed to send org sponsorship purchase confirmation email:', error);
     throw error;
   }
 }

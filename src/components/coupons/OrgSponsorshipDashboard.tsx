@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { purchaseOrgSponsorshipPackage } from '@/lib/actions/coupons';
 import { sendOrgSponsorshipInviteEmail } from '@/lib/resend';
-import { Users, RefreshCw, Mail, Download, Search, ChevronLeft, ChevronRight, Award, Plus, CreditCard } from 'lucide-react';
+import { Users, RefreshCw, Mail, Download, Search, ChevronLeft, ChevronRight, Award, Plus, CreditCard, History } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
 
 interface OrgSponsorshipDashboardProps {
@@ -49,7 +49,7 @@ export default function OrgSponsorshipDashboard({
   const [codeCount, setCodeCount] = useState(10);
   const [selectedRole, setSelectedRole] = useState(activeRoleOptions[0]?.key || 'player');
   const [purchasing, setPurchasing] = useState(false);
-  const [activeTab, setActiveTab] = useState<'ROSTER' | 'PACKAGES'>('ROSTER');
+  const [activeTab, setActiveTab] = useState<'ROSTER' | 'PACKAGES' | 'HISTORY'>('ROSTER');
 
   // Search & Pagination State for Codes Table
   const [searchQuery, setSearchQuery] = useState('');
@@ -105,6 +105,7 @@ export default function OrgSponsorshipDashboard({
     try {
       const res = await purchaseOrgSponsorshipPackage({
         orgId,
+        userEmail,
         title: `${orgName} ${codeCount}-Code Sponsorship Package`,
         planTier: selectedRole.toUpperCase(),
         totalSeats: codeCount,
@@ -258,8 +259,16 @@ export default function OrgSponsorshipDashboard({
     window.URL.revokeObjectURL(url);
   };
 
-  const totalCodesAll = existingPackages.reduce((acc, p) => acc + (p.total_seats || p.total_codes || 0), 0);
-  const claimedCodesAll = existingPackages.reduce((acc, p) => acc + (p.claimed_seats || p.claimed_codes || 0), 0);
+  const totalCodesAll = useMemo(() => {
+    const pkgTotal = existingPackages.reduce((acc, p) => acc + (p.total_seats || p.total_codes || 0), 0);
+    return pkgTotal > 0 ? pkgTotal : existingCodes.length;
+  }, [existingPackages, existingCodes]);
+
+  const claimedCodesAll = useMemo(() => {
+    const pkgClaimed = existingPackages.reduce((acc, p) => acc + (p.claimed_seats || p.claimed_codes || 0), 0);
+    const codeClaimed = existingCodes.filter((c) => c.status === 'REDEEMED' || c.redemption_count > 0).length;
+    return pkgClaimed > 0 ? pkgClaimed : codeClaimed;
+  }, [existingPackages, existingCodes]);
 
   // Filtered & Paginated Codes
   const filteredCodes = useMemo(() => {
@@ -282,17 +291,12 @@ export default function OrgSponsorshipDashboard({
 
   return (
     <div className="w-full space-y-6 text-gray-900">
-      {/* Top Banner Header */}
+      {/* Top Banner Header */} 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-red-50 text-[#b50a0a] border border-red-100 text-xs font-bold uppercase tracking-wider">
-              Organization Sponsorship
-            </span>
-          </div>
           <h1 className="text-2xl sm:text-3xl font-black text-gray-900 mt-2 tracking-tight flex items-center gap-3">
             <Award className="w-7 h-7 text-[#b50a0a]" />
-            {orgName}
+            Buy Codes
           </h1>
           <p className="text-sm font-medium text-gray-500 mt-1">Manage and assign sponsored membership codes for your members.</p>
         </div>
@@ -325,7 +329,7 @@ export default function OrgSponsorshipDashboard({
           }`}
         >
           <Users className="w-4 h-4" />
-          Sponsorship Codes & Invites
+          Sponsorship Codes
         </button>
         <button
           onClick={() => setActiveTab('PACKAGES')}
@@ -336,142 +340,114 @@ export default function OrgSponsorshipDashboard({
           }`}
         >
           <Plus className="w-4 h-4 text-[#b50a0a]" />
-          Buy Extra Sponsorship Codes
+          Buy Codes
+        </button>
+        <button
+          onClick={() => setActiveTab('HISTORY')}
+          className={`flex-1 sm:flex-initial px-6 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+            activeTab === 'HISTORY'
+              ? 'bg-gray-900 text-white shadow-md'
+              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+          }`}
+        >
+          <History className="w-4 h-4 text-emerald-500" />
+          Purchase History ({existingPackages.length})
         </button>
       </div>
 
       {/* Tab 1: Codes & Invites */}
       {activeTab === 'ROSTER' && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Table Container Card */}
-          <div className="lg:col-span-2 bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between">
-            <div>
-              {/* Header & Search */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div>
-                  <h3 className="text-base font-black text-gray-900 flex items-center gap-2">
-                    Active Membership Codes
-                  </h3>
-                  <p className="text-xs font-medium text-gray-500 mt-0.5">{filteredCodes.length} code(s) available</p>
-                </div>
-
-                <div className="relative w-full sm:w-64">
-                  <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => {
-                      setSearchQuery(e.target.value);
-                      setCurrentPage(1);
-                    }}
-                    placeholder="Search code or email..."
-                    className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#b50a0a] transition-all"
-                  />
-                </div>
+        <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            {/* Header & Search */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h3 className="text-base font-black text-gray-900 flex items-center gap-2">
+                  Active Membership Codes
+                </h3>
+                <p className="text-xs font-medium text-gray-500 mt-0.5">{filteredCodes.length} code(s) available</p>
               </div>
 
-              {/* Table */}
-              <div className="overflow-x-auto rounded-2xl border border-gray-100">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50/50">
-                      <th className="p-3.5 text-xs font-bold text-gray-500 uppercase tracking-wider">Voucher Code</th>
-                      <th className="p-3.5 text-xs font-bold text-gray-500 uppercase tracking-wider">Tier</th>
-                      <th className="p-3.5 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                      <th className="p-3.5 text-xs font-bold text-gray-500 uppercase tracking-wider">Assigned To</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100">
-                    {paginatedCodes.length > 0 ? (
-                      paginatedCodes.map((c) => (
-                        <tr key={c.id} className="hover:bg-gray-50/50 transition-colors">
-                          <td className="p-3.5 font-mono font-bold text-[#b50a0a] text-xs">{c.code}</td>
-                          <td className="p-3.5 text-xs font-bold text-gray-900">{c.target_tier}</td>
-                          <td className="p-3.5">
-                            <span
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                                c.status === 'AVAILABLE'
-                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                  : 'bg-gray-100 text-gray-500 border border-gray-200'
-                              }`}
-                            >
-                              {c.status === 'AVAILABLE' ? 'Unclaimed' : 'Claimed'}
-                            </span>
-                          </td>
-                          <td className="p-3.5 text-xs font-medium text-gray-500">{c.recipient_email || 'Unassigned'}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan={4} className="p-8 text-center text-xs font-bold text-gray-400">
-                          {searchQuery ? 'No codes match your search query.' : 'No sponsorship codes found. Click "Buy Extra Sponsorship Codes" to generate codes.'}
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="pt-4 mt-6 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-gray-500">
-                <span>Page {currentPage} of {totalPages}</span>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                    disabled={currentPage === 1}
-                    className="p-2 rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                    disabled={currentPage === totalPages}
-                    className="p-2 rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Send Invites Card */}
-          <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm flex flex-col justify-between space-y-4">
-            <div>
-              <h3 className="text-base font-black text-gray-900 flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#b50a0a]" /> Send Access Invites
-              </h3>
-              <p className="text-xs font-medium text-gray-500 mt-1">
-                Enter recipient emails below (one per line or separated by commas). Recipients will receive a claim email.
-              </p>
-
-              <form onSubmit={handleSendInvites} className="mt-4 space-y-4">
-                <textarea
-                  rows={6}
-                  required
-                  value={inviteEmails}
-                  onChange={(e) => setInviteEmails(e.target.value)}
-                  placeholder="user1@example.com&#10;user2@example.com"
-                  className="w-full p-3.5 rounded-2xl bg-gray-50 border border-gray-200 text-gray-900 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#b50a0a] placeholder-gray-400"
+              <div className="relative w-full sm:w-64">
+                <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  placeholder="Search code or email..."
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#b50a0a] transition-all"
                 />
-
-                <button
-                  type="submit"
-                  disabled={sendingInvites || !inviteEmails.trim()}
-                  className="w-full py-3.5 rounded-xl bg-[#b50a0a] hover:bg-black text-white font-bold text-xs transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-md"
-                >
-                  {sendingInvites ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Send Invitations'}
-                </button>
-              </form>
+              </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-gray-50 border border-gray-100 text-[11px] font-medium text-gray-500">
-              <span className="font-bold text-gray-800 block mb-0.5">Note:</span>
-              Invitations automatically assign your available unclaimed codes.
+            {/* Table */}
+            <div className="overflow-x-auto rounded-2xl border border-gray-100">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-gray-100 bg-gray-50/50">
+                    <th className="p-3.5 text-xs font-bold text-gray-500 uppercase tracking-wider">Voucher Code</th>
+                    <th className="p-3.5 text-xs font-bold text-gray-500 uppercase tracking-wider">Tier</th>
+                    <th className="p-3.5 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="p-3.5 text-xs font-bold text-gray-500 uppercase tracking-wider">Assigned To</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {paginatedCodes.length > 0 ? (
+                    paginatedCodes.map((c) => (
+                      <tr key={c.id} className="hover:bg-gray-50/50 transition-colors">
+                        <td className="p-3.5 font-mono font-bold text-[#b50a0a] text-xs">{c.code}</td>
+                        <td className="p-3.5 text-xs font-bold text-gray-900">{c.target_tier}</td>
+                        <td className="p-3.5">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                              c.status === 'AVAILABLE'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-gray-100 text-gray-500 border border-gray-200'
+                            }`}
+                          >
+                            {c.status === 'AVAILABLE' ? 'Unclaimed' : 'Claimed'}
+                          </span>
+                        </td>
+                        <td className="p-3.5 text-xs font-medium text-gray-500">{c.recipient_email || 'Unassigned'}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={4} className="p-8 text-center text-xs font-bold text-gray-400">
+                        {searchQuery ? 'No codes match your search query.' : 'No sponsorship codes found. Click "Buy Extra Sponsorship Codes" to generate codes.'}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="pt-4 mt-6 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-gray-500">
+              <span>Page {currentPage} of {totalPages}</span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="p-2 rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="p-2 rounded-xl bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -571,6 +547,69 @@ export default function OrgSponsorshipDashboard({
               {purchasing ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Pay & Activate Codes'}
             </button>
           </form>
+        </div>
+      )}
+
+      {/* Tab 3: Purchase History */}
+      {activeTab === 'HISTORY' && (
+        <div className="bg-white rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100 pb-6">
+            <div>
+              <h3 className="text-xl font-black text-gray-900 flex items-center gap-2">
+                <History className="w-5 h-5 text-emerald-600" /> Sponsorship Purchase History
+              </h3>
+              <p className="text-xs font-medium text-gray-500 mt-1">Audit log of all bulk membership voucher packages purchased by your account.</p>
+            </div>
+            <span className="px-3.5 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
+              {existingPackages.length} Package{existingPackages.length !== 1 ? 's' : ''} Purchased
+            </span>
+          </div>
+
+          <div className="overflow-x-auto rounded-2xl border border-gray-100">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-gray-100 bg-gray-50/50">
+                  <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Package Title</th>
+                  <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Tier</th>
+                  <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Seats</th>
+                  <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Unit Price</th>
+                  <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Ref / Date</th>
+                  <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {existingPackages.length > 0 ? (
+                  existingPackages.map((pkg) => (
+                    <tr key={pkg.id} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="p-4 font-bold text-gray-900 text-xs sm:text-sm">{pkg.title}</td>
+                      <td className="p-4 text-xs font-extrabold text-[#b50a0a]">{pkg.plan_tier}</td>
+                      <td className="p-4 text-xs font-bold text-gray-800">{pkg.total_seats || pkg.total_codes} Seats</td>
+                      <td className="p-4 text-xs font-bold text-gray-900">
+                        ₦{Number(pkg.unit_price || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      </td>
+                      <td className="p-4 text-xs">
+                        <p className="font-mono font-bold text-gray-700">{pkg.payment_reference || 'N/A'}</p>
+                        <p className="text-[10px] text-gray-400 font-medium mt-0.5">
+                          {pkg.created_at ? new Date(pkg.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Recently'}
+                        </p>
+                      </td>
+                      <td className="p-4">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          {pkg.status || 'ACTIVE'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="p-8 text-center text-xs font-bold text-gray-400">
+                      No sponsorship package purchase history found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
