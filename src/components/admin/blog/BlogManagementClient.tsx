@@ -47,20 +47,20 @@ export default function BlogManagementClient({
 
   return (
     <>
-      <div className="flex flex-wrap gap-2.5">
+      <div className="grid grid-cols-3 sm:flex sm:flex-wrap gap-2 sm:gap-2.5 w-full lg:w-auto">
         {[
           { icon: Folder, label: 'Categories', tab: 'categories' as const },
           { icon: Tag, label: 'Tags', tab: 'tags' as const },
-          { icon: ImageIcon, label: 'Media Assets', tab: 'assets' as const, href: '/admin/blog/media' },
+          { icon: ImageIcon, label: 'Media', tab: 'assets' as const, href: '/admin/blog/media' },
         ].map((item, i) => {
           const content = (
-            <div className="flex items-center gap-2.5">
-              <div className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
- i === 2 ? 'bg-[#b50a0a]/5 text-[#b50a0a]' : 'bg-slate-50 text-slate-400 group-hover:bg-slate-900 group-hover:text-white'
- }`}>
+            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-2 text-center sm:text-left">
+              <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center transition-colors shrink-0 ${
+                i === 2 ? 'bg-[#b50a0a]/10 text-[#b50a0a]' : 'bg-slate-100 text-slate-500 group-hover:bg-slate-900 group-hover:text-white'
+              }`}>
                 <item.icon className="w-3.5 h-3.5" />
               </div>
-              <span className="text-xs font-bold tracking-wide text-slate-600 group-hover:text-slate-900 transition-colors">{item.label}</span>
+              <span className="text-[10px] sm:text-xs font-bold tracking-wide text-slate-700 group-hover:text-slate-900 transition-colors truncate max-w-full">{item.label}</span>
             </div>
           );
 
@@ -69,7 +69,7 @@ export default function BlogManagementClient({
               <Link 
                 key={i}
                 href={item.href}
-                className="group relative bg-white border border-slate-100 px-5 py-2.5 rounded-xl transition-all duration-300 hover:border-slate-300 hover:shadow-sm"
+                className="group relative bg-slate-50/80 border border-slate-200/80 px-2 sm:px-4 py-2 sm:py-2.5 rounded-xl transition-all duration-300 hover:border-slate-300 hover:bg-white hover:shadow-sm flex items-center justify-center"
               >
                 {content}
               </Link>
@@ -80,7 +80,7 @@ export default function BlogManagementClient({
             <button 
               key={i}
               onClick={() => handleOpenPanel(item.tab)}
-              className="group relative bg-white border border-slate-100 px-5 py-2.5 rounded-xl transition-all duration-300 hover:border-slate-300 hover:shadow-sm"
+              className="group relative bg-slate-50/80 border border-slate-200/80 px-2 sm:px-4 py-2 sm:py-2.5 rounded-xl transition-all duration-300 hover:border-slate-300 hover:bg-white hover:shadow-sm flex items-center justify-center"
             >
               {content}
             </button>

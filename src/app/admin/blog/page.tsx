@@ -42,45 +42,35 @@ export default async function BlogDashboard({
 
   return (
     <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-500">
-      <div className="relative overflow-hidden bg-white rounded-3xl md:rounded-[3rem] p-5 sm:p-8 md:p-12 border border-slate-100 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] group">
-        <div className="absolute top-0 right-0 w-full max-w-[400px] h-[400px] bg-[#b50a0a]/5 rounded-full blur-[100px] -mr-32 -mt-32 transition-all duration-1000 group-hover:bg-[#b50a0a]/10"></div>
-        
-        <div className="relative space-y-6 sm:space-y-10">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 md:p-4">
-            <div className="space-y-3">
-              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 bg-slate-50 rounded-full border border-slate-100">
-                <span className="w-1.5 h-1.5 bg-[#b50a0a] rounded-full"></span>
-                <span className="text-[10px] sm:text-xs font-bold tracking-[0.2em] text-slate-400">Content Management</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black tracking-tighter leading-none text-slate-900">
-                Blog <span className="text-[#b50a0a]">&</span> <br className="hidden sm:block" />News Room
-              </h1>
-            </div>
-
-            <div className="max-w-xs">
-                <p className="text-slate-400 text-xs font-bold tracking-[0.15em] leading-relaxed border-l border-slate-200 pl-4 py-1">
-                  Professional football insights and platform updates managed through a unified control center.
-                </p>
-            </div>
+      <div className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-100 shadow-sm space-y-3.5 sm:space-y-0 sm:flex sm:flex-col lg:flex-row items-stretch sm:items-start lg:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#b50a0a]/10 text-[#b50a0a] flex items-center justify-center shrink-0">
+            <Newspaper className="w-5 h-5 text-[#b50a0a]" />
           </div>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-6 sm:pt-10 border-t border-slate-50">
-            <div className="flex-1 flex flex-wrap gap-2.5">
-              <BlogManagementClient 
-                categories={categories || []} 
-                tags={tags || []} 
-                assets={assets || []} 
-              />
-            </div>
-            
-            <Link 
-              href="/admin/blog/new"
-              className="group/btn relative bg-slate-900 text-white px-6 sm:px-10 py-4 sm:py-5 rounded-2xl font-bold text-xs tracking-[0.15em] transition-all duration-500 flex items-center justify-center gap-3 hover:bg-[#b50a0a] hover:shadow-xl hover:shadow-red-900/20 active:scale-95 overflow-hidden shrink-0"
-            >
-              <PlusCircle className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-500 group-hover/btn:rotate-90" />
-              <span>Write New Article</span>
-            </Link>
+          <div>
+            <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-slate-900 leading-snug">
+              Blog & News Room
+            </h1>
+            <p className="text-[11px] sm:text-xs font-bold text-slate-400 tracking-wide mt-0.5">
+              Manage news, editorials & media assets
+            </p>
           </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto justify-between lg:justify-end pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+          <BlogManagementClient 
+            categories={categories || []} 
+            tags={tags || []} 
+            assets={assets || []} 
+          />
+          
+          <Link 
+            href="/admin/blog/new"
+            className="group/btn bg-slate-900 text-white px-5 py-3 sm:py-2.5 rounded-xl font-bold text-xs tracking-wide transition-all flex items-center justify-center gap-2 hover:bg-[#b50a0a] hover:shadow-md active:scale-95 shrink-0 w-full sm:w-auto"
+          >
+            <PlusCircle className="w-4 h-4 transition-transform duration-300 group-hover/btn:rotate-90" />
+            <span>Write New Article</span>
+          </Link>
         </div>
       </div>
 
