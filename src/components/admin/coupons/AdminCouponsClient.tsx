@@ -18,7 +18,9 @@ import {
   Edit3,
   Eye,
   ExternalLink,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/context/ToastContext';
@@ -77,6 +79,8 @@ export default function AdminCouponsClient({
   const [activeTab, setActiveTab] = useState<'MANAGEMENT' | 'SECURITY_LOGS'>('MANAGEMENT');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('ALL');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [navigatingEmail, setNavigatingEmail] = useState<string | null>(null);
@@ -234,6 +238,13 @@ export default function AdminCouponsClient({
     return matchesSearch;
   });
 
+  const totalItems = filteredCoupons.length;
+  const totalPages = Math.ceil(totalItems / pageSize) || 1;
+  const safeCurrentPage = Math.min(Math.max(currentPage, 1), totalPages);
+  const startIndex = (safeCurrentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalItems);
+  const paginatedCoupons = filteredCoupons.slice(startIndex, endIndex);
+
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title) {
@@ -368,7 +379,10 @@ export default function AdminCouponsClient({
                 type="text"
                 placeholder="Search code or campaign title..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-semibold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#a20000]"
               />
             </div>
@@ -377,7 +391,10 @@ export default function AdminCouponsClient({
               <Filter className="w-4 h-4 text-gray-400" />
               <select
                 value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
+                onChange={(e) => {
+                  setFilterType(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#a20000]"
               >
                 <option value="ALL">All Types</option>
@@ -403,14 +420,14 @@ export default function AdminCouponsClient({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {filteredCoupons.length === 0 ? (
+                  {paginatedCoupons.length === 0 ? (
                     <tr>
                       <td colSpan={5} className="py-12 text-center text-gray-400 font-semibold">
                         No coupons found matching your query.
                       </td>
                     </tr>
                   ) : (
-                    filteredCoupons.map((c) => {
+                    paginatedCoupons.map((c) => {
                       const recipientList = c.recipient_email
                         ? c.recipient_email.split(',').map((e) => e.trim()).filter(Boolean)
                         : [];
@@ -516,6 +533,94 @@ export default function AdminCouponsClient({
                 </tbody>
               </table>
             </div>
+
+            {/* Pagination Controls */}
+            {totalItems > 0 && (
+              <div className="px-6 py-4 bg-gray-50/70 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-gray-600">
+                <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                  <span>
+                    Showing <span className="font-bold text-gray-900">{startIndex + 1}</span> to{' '}
+                    <span className="font-bold text-gray-900">{endIndex}</span> of{' '}
+                    <span className="font-bold text-gray-900">{totalItems}</span> coupons
+                  </span>
+
+                  <div className="flex items-center gap-1.5 ml-2">
+                    <span className="text-gray-400 font-normal hidden sm:inline">Per page:</span>
+                    <select
+                      value={pageSize}
+                      onChange={(e) => {
+                        setPageSize(Number(e.target.value));
+                        setCurrentPage(1);
+                      }}
+                      className="px-2 py-1 rounded-lg bg-white border border-gray-200 text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#a20000]"
+                    >
+                      <option value={10}>10</option>
+                      <option value={20}>20</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={safeCurrentPage === 1}
+                    className="p-2 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm flex items-center justify-center"
+                    title="Previous Page"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+
+                  {/* Page Numbers */}
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter((page) => {
+                        return (
+                          page === 1 ||
+                          page === totalPages ||
+                          Math.abs(page - safeCurrentPage) <= 1
+                        );
+                      })
+                      .reduce<(number | string)[]>((acc, page, idx, array) => {
+                        if (idx > 0 && page - (array[idx - 1] as number) > 1) {
+                          acc.push('...');
+                        }
+                        acc.push(page);
+                        return acc;
+                      }, [])
+                      .map((item, idx) =>
+                        typeof item === 'number' ? (
+                          <button
+                            key={item}
+                            onClick={() => setCurrentPage(item)}
+                            className={`min-w-[32px] h-8 px-2.5 rounded-xl text-xs font-bold transition-all ${
+                              safeCurrentPage === item
+                                ? 'bg-[#a20000] text-white shadow-sm'
+                                : 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-100'
+                            }`}
+                          >
+                            {item}
+                          </button>
+                        ) : (
+                          <span key={`ellipsis-${idx}`} className="px-1 text-gray-400 font-bold select-none">
+                            ...
+                          </span>
+                        )
+                      )}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={safeCurrentPage === totalPages}
+                    className="p-2 rounded-xl bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm flex items-center justify-center"
+                    title="Next Page"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
