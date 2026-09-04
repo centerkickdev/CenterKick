@@ -63,12 +63,15 @@ export default function AdminCouponsClient({
   auditLogs,
   velocityLogs,
   systemPlans = {},
+  userRole = 'admin',
 }: {
   initialCoupons: Coupon[];
   auditLogs: AuditLog[];
   velocityLogs: VelocityLog[];
   systemPlans?: Record<string, any>;
+  userRole?: string;
 }) {
+  const isSuperAdmin = userRole === 'superadmin';
   const router = useRouter();
   const [coupons, setCoupons] = useState<Coupon[]>(initialCoupons);
   const [activeTab, setActiveTab] = useState<'MANAGEMENT' | 'SECURITY_LOGS'>('MANAGEMENT');
@@ -79,13 +82,37 @@ export default function AdminCouponsClient({
   const [navigatingEmail, setNavigatingEmail] = useState<string | null>(null);
   const { showToast } = useToast();
 
+  // Helper to get local YYYY-MM-DD today date string
+  const getTodayDateString = () => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const todayDateStr = getTodayDateString();
+
+  // Helper to determine default duration months from plan frequency config
+  const getTierDefaultDuration = (tierKey: string): number => {
+    if (tierKey === 'ALL' || !systemPlans) return 12;
+    const planConfig = systemPlans[tierKey.toLowerCase()];
+    if (!planConfig) return 12;
+    const freq = planConfig.frequency;
+    if (freq === 'Monthly') return 1;
+    if (freq === 'Quarterly') return 3;
+    if (freq === 'Biannually' || freq === 'Biannual' || freq === 'Half-Year' || freq === 'Half-Yearly') return 6;
+    if (freq === 'Yearly' || freq === 'Annually' || freq === 'Annual') return 12;
+    return 12;
+  };
+
   // Create Form State
   const [code, setCode] = useState('');
   const [title, setTitle] = useState('');
   const [couponType, setCouponType] = useState<'FULL_COVER' | 'PERCENTAGE' | 'FLAT'>('FULL_COVER');
   const [discountValue, setDiscountValue] = useState(100);
-  const [durationMonths, setDurationMonths] = useState(12);
   const [targetTier, setTargetTier] = useState('ALL');
+  const [durationMonths, setDurationMonths] = useState(() => getTierDefaultDuration('ALL'));
   const [maxRedemptions, setMaxRedemptions] = useState(100);
   const [expiryDate, setExpiryDate] = useState('');
   const [autoSwitchNotice, setAutoSwitchNotice] = useState<string | null>(null);
@@ -111,7 +138,7 @@ export default function AdminCouponsClient({
     setEditTitle(coupon.title);
     setEditMaxRedemptions(coupon.max_redemptions);
     setEditDurationMonths(coupon.duration_months || 12);
-    setEditExpiryDate(coupon.created_at ? new Date().toISOString().split('T')[0] : '');
+    setEditExpiryDate(coupon.created_at ? todayDateStr : '');
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
@@ -149,13 +176,21 @@ export default function AdminCouponsClient({
   const targetTierRate = activePlanConfig ? Number(activePlanConfig.amount || 0) : 0;
   const maxAllowedFlatDiscount = targetTierRate > 0 ? targetTierRate * 0.8 : 0;
 
+  // Flat rate exceeds plan amount validation check
+  const isFlatExceeded = couponType === 'FLAT' && targetTierRate > 0 && discountValue > targetTierRate;
+
+  // Expiration date past check
+  const isExpiryPast = expiryDate !== '' && expiryDate < todayDateStr;
+
   // Validation flag checking all fields are filled
   const isFormValid =
     title.trim() !== '' &&
     durationMonths > 0 &&
     maxRedemptions > 0 &&
     expiryDate !== '' &&
+    !isExpiryPast &&
     (couponType === 'FULL_COVER' || discountValue > 0) &&
+    !isFlatExceeded &&
     (audienceScope === 'ANYONE' || targetEmails.trim() !== '');
 
   // Handle Discount Value change with 80% threshold guard
@@ -542,19 +577,21 @@ export default function AdminCouponsClient({
       {/* Create Coupon Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white max-w-lg w-full rounded-3xl shadow-2xl p-6 sm:p-8 relative animate-in zoom-in duration-300">
+          <div className="bg-white max-w-xl w-full rounded-3xl shadow-2xl p-6 sm:p-8 relative animate-in zoom-in duration-300 max-h-[90vh] flex flex-col">
             <button
               onClick={() => setShowCreateModal(false)}
-              className="absolute top-6 right-6 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-400 hover:text-gray-900 transition-colors"
+              className="absolute top-6 right-6 p-1.5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-400 hover:text-gray-900 transition-colors z-10"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-xl font-extrabold text-gray-900 mb-6 flex items-center gap-2">
-              <Ticket className="w-6 h-6 text-[#a20000]" /> Create Promotional Coupon
-            </h3>
+            <div className="shrink-0 mb-4 pr-8">
+              <h3 className="text-xl font-extrabold text-gray-900 flex items-center gap-2">
+                <Ticket className="w-6 h-6 text-[#a20000]" /> Create Promotional Coupon
+              </h3>
+            </div>
 
-            <form onSubmit={handleCreateSubmit} className="space-y-4 text-xs font-semibold">
+            <form onSubmit={handleCreateSubmit} className="space-y-4 text-xs font-semibold overflow-y-auto pr-1 flex-1">
               <div>
                 <label className="block text-gray-700 mb-1">Campaign Title</label>
                 <input
@@ -652,8 +689,11 @@ export default function AdminCouponsClient({
                   <select
                     value={targetTier}
                     onChange={(e) => {
-                      setTargetTier(e.target.value);
+                      const selected = e.target.value;
+                      setTargetTier(selected);
                       setAutoSwitchNotice(null);
+                      // Auto pick validity timeline duration from selected tier config
+                      setDurationMonths(getTierDefaultDuration(selected));
                     }}
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900"
                   >
@@ -693,16 +733,25 @@ export default function AdminCouponsClient({
                       max={couponType === 'PERCENTAGE' ? 100 : undefined}
                       value={discountValue}
                       onChange={(e) => handleDiscountValueChange(Number(e.target.value))}
-                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-bold"
+                      className={`w-full px-4 py-3 rounded-xl bg-gray-50 border focus:outline-none focus:ring-2 text-gray-900 font-bold ${
+                        isFlatExceeded ? 'border-rose-300 focus:ring-rose-500' : 'border-gray-200 focus:ring-[#a20000]'
+                      }`}
                     />
                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
                       {couponType === 'PERCENTAGE' ? '%' : '₦'}
                     </span>
                   </div>
                   {couponType === 'FLAT' && targetTierRate > 0 && (
-                    <p className="text-[11px] text-gray-400 mt-1">
-                      Max allowed flat discount (80% limit): <span className="font-bold text-gray-700">₦{maxAllowedFlatDiscount.toLocaleString()}</span>
-                    </p>
+                    <div className="mt-1 space-y-1">
+                      <p className="text-[11px] text-gray-400">
+                        Max allowed flat discount (80% limit): <span className="font-bold text-gray-700">₦{maxAllowedFlatDiscount.toLocaleString()}</span>
+                      </p>
+                      {discountValue > targetTierRate && (
+                        <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1">
+                          <span>⚠️</span> Flat discount amount (₦{discountValue.toLocaleString()}) cannot exceed plan amount (₦{targetTierRate.toLocaleString()}).
+                        </p>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
@@ -715,44 +764,65 @@ export default function AdminCouponsClient({
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-4">
+              {/* Access Duration, Max Redemptions, and Expiration Date in Same 3-Column Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-gray-700 mb-1">Access Duration (Months)</label>
+                  <label className="block text-gray-700 mb-1 flex items-center justify-between">
+                    <span>Duration (Months)</span>
+                    {!isSuperAdmin && <span className="text-[10px] text-gray-400 font-normal">🔒 Locked</span>}
+                  </label>
                   <input
                     type="number"
                     min={1}
                     max={36}
+                    disabled={!isSuperAdmin}
                     value={durationMonths}
                     onChange={(e) => setDurationMonths(Number(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900"
+                    className={`w-full px-3 py-2.5 rounded-xl border text-gray-900 font-bold transition-all ${
+                      !isSuperAdmin
+                        ? 'bg-gray-100/90 text-gray-500 border-gray-200 cursor-not-allowed select-none'
+                        : 'bg-gray-50 border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000]'
+                    }`}
                   />
+                  {!isSuperAdmin && (
+                    <p className="text-[10px] text-gray-400 mt-1 font-normal">
+                      Auto-set by tier timeline
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 mb-1">Max Redemptions Limit</label>
+                  <label className="block text-gray-700 mb-1">Max Redemptions</label>
                   <input
                     type="number"
                     min={1}
                     value={maxRedemptions}
                     onChange={(e) => setMaxRedemptions(Number(e.target.value))}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900"
+                    className="w-full px-3 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-bold"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-gray-700 mb-1">Expiration Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={expiryDate}
+                    min={todayDateStr}
+                    onChange={(e) => setExpiryDate(e.target.value)}
+                    className={`w-full px-3 py-2.5 rounded-xl bg-gray-50 border focus:outline-none focus:ring-2 text-gray-900 font-medium ${
+                      isExpiryPast ? 'border-rose-300 focus:ring-rose-500' : 'border-gray-200 focus:ring-[#a20000]'
+                    }`}
+                  />
+                  {isExpiryPast && (
+                    <p className="text-[10px] font-bold text-rose-600 mt-1">
+                      ⚠️ Date cannot be in the past.
+                    </p>
+                  )}
                 </div>
               </div>
 
-              <div>
-                <label className="block text-gray-700 mb-1">Expiration Date</label>
-                <input
-                  type="date"
-                  required
-                  value={expiryDate}
-                  min={new Date().toISOString().split('T')[0]}
-                  onChange={(e) => setExpiryDate(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-medium"
-                />
-              </div>
-
-              <div className="pt-4 flex gap-3">
+              <div className="pt-4 flex gap-3 sticky bottom-0 bg-white pb-1">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
@@ -821,15 +891,23 @@ export default function AdminCouponsClient({
               </div>
 
               <div>
-                <label className="block text-gray-700 mb-1">Access Duration (Months)</label>
+                <label className="block text-gray-700 mb-1 flex items-center justify-between">
+                  <span>Access Duration (Months)</span>
+                  {!isSuperAdmin && <span className="text-[10px] text-gray-400 font-normal">🔒 Super-Admin Only</span>}
+                </label>
                 <input
                   type="number"
                   required
                   min={1}
                   max={60}
+                  disabled={!isSuperAdmin}
                   value={editDurationMonths}
                   onChange={(e) => setEditDurationMonths(Number(e.target.value))}
-                  className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-bold"
+                  className={`w-full px-4 py-3 rounded-xl border text-gray-900 font-bold ${
+                    !isSuperAdmin
+                      ? 'bg-gray-100 text-gray-500 border-gray-200 cursor-not-allowed select-none'
+                      : 'bg-gray-50 border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000]'
+                  }`}
                 />
               </div>
 
@@ -839,7 +917,7 @@ export default function AdminCouponsClient({
                   type="date"
                   required
                   value={editExpiryDate}
-                  min={new Date().toISOString().split('T')[0]}
+                  min={todayDateStr}
                   onChange={(e) => setEditExpiryDate(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#a20000] text-gray-900 font-medium"
                 />
