@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { sendOtpEmail } from '@/lib/resend';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { cookies } from 'next/headers';
+import { IMPERSONATION_COOKIE } from '@/lib/auth/impersonation';
 
 export async function login(prevState: any, formData: FormData) {
   const supabase = await createClient();
@@ -282,6 +284,8 @@ export async function verifyOtp(email: string, token: string) {
 export async function signout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+  const cookieStore = await cookies();
+  cookieStore.delete(IMPERSONATION_COOKIE);
   revalidatePath('/', 'layout');
   redirect('/');
 }

@@ -91,7 +91,15 @@ export function DashboardHeader({ role, email, sidebarLogoUrl, brandName, notifi
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 overflow-y-auto" onClick={() => setIsOpen(false)}>
+          <div 
+            className="flex-1 overflow-y-auto" 
+            onClick={(e) => {
+              const target = e.target as HTMLElement;
+              if (target.closest('a')) {
+                setIsOpen(false);
+              }
+            }}
+          >
             <DashboardSidebarNav role={role} />
           </div>
 

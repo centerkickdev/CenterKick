@@ -70,7 +70,15 @@ export function AdminMobileNav({ role, adminLogoUrl }: { role: string; adminLogo
             </div>
 
             {/* Sidebar list items */}
-            <div className="flex-1 overflow-y-auto flex flex-col min-h-0" onClick={() => setIsOpen(false)}>
+            <div 
+              className="flex-1 overflow-y-auto flex flex-col min-h-0" 
+              onClick={(e) => {
+                const target = e.target as HTMLElement;
+                if (target.closest('a')) {
+                  setIsOpen(false);
+                }
+              }}
+            >
               <AdminSidebar role={role} />
             </div>
           </aside>
