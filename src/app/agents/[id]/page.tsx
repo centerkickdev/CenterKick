@@ -5,7 +5,7 @@ import AgentDetailsClient from './AgentDetailsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 function stripHtml(html: string): string {
    if (!html) return '';
@@ -73,7 +73,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function AgentPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = await params;
-   const supabaseUser = await createClient();
    const supabaseAdmin = createAdminClient();
 
    // Enforce slug-based access only. UUID access is forbidden.
@@ -88,41 +87,45 @@ export default async function AgentPage({ params }: { params: Promise<{ id: stri
       .eq('slug', id)
       .single();
 
-   // Fetch managed clients (Players & Coaches)
-   const { data: managedClients } = await supabaseAdmin
-      .from('profiles')
-      .select('*, users!profiles_user_id_fkey!inner(role)')
-      .eq('agent_id', profile?.user_id || '');
-
    if (error || !profile) {
       if (error) console.error('Agent fetch database error:', error.message);
       notFound();
    }
 
-   // Only show active profiles to public, or let admins/owners see pending
-   const { data: { user } } = await supabaseUser.auth.getUser();
-   const isOwner = user?.id === profile.user_id;
+   // Fetch managed clients (Players & Coaches)
+   const { data: managedClients } = await supabaseAdmin
+      .from('profiles')
+      .select('*, users!profiles_user_id_fkey!inner(role)')
+      .eq('agent_id', profile.user_id || '');
 
-   if (profile.status !== 'active' && !isOwner) {
-      const { data: currentUser } = await supabaseAdmin
-         .from('users')
-         .select('role')
-         .eq('id', user?.id || '')
-         .single();
-      
-      if (currentUser?.role !== 'superadmin') {
-         notFound();
+   // Only perform dynamic auth checks if the profile is NOT active or NOT complete
+   const isStandardPublic = profile.status === 'active' && isProfileComplete(profile);
+   if (!isStandardPublic) {
+      const supabaseUser = await createClient();
+      const { data: { user } } = await supabaseUser.auth.getUser();
+      const isOwner = user?.id === profile.user_id;
+
+      if (profile.status !== 'active' && !isOwner) {
+         const { data: currentUser } = await supabaseAdmin
+            .from('users')
+            .select('role')
+            .eq('id', user?.id || '')
+            .single();
+         
+         if (currentUser?.role !== 'superadmin') {
+            notFound();
+         }
       }
-   }
 
-   if (!isProfileComplete(profile) && !isOwner) {
-      const { data: currentUser } = await supabaseAdmin
-         .from('users')
-         .select('role')
-         .eq('id', user?.id || '')
-         .single();
-      if (currentUser?.role !== 'superadmin') {
-         notFound();
+      if (!isProfileComplete(profile) && !isOwner) {
+         const { data: currentUser } = await supabaseAdmin
+            .from('users')
+            .select('role')
+            .eq('id', user?.id || '')
+            .single();
+         if (currentUser?.role !== 'superadmin') {
+            notFound();
+         }
       }
    }
 

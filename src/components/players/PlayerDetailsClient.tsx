@@ -6,9 +6,10 @@ import parse from 'html-react-parser';
 import { ImageLightbox } from '@/components/common/ImageLightbox';
 import { Facebook, Instagram, Twitter, ChevronLeft, MapPin, Trophy, X, Globe, Linkedin, Share2, Youtube } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/context/ToastContext";
+import { trackProfileView } from '@/app/actions/tracking';
 
 import { formatCurrencyAmount } from '@/lib/utils/currency';
 
@@ -50,6 +51,13 @@ const formatFee = (val: string | number | null | undefined) => {
 
 export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: PlayerDetailsClientProps) {
    const { showToast } = useToast();
+
+   useEffect(() => {
+      if (athlete?.id) {
+         trackProfileView(athlete.id).catch(() => {});
+      }
+   }, [athlete?.id]);
+
    const mergedLinks = { ...(athlete.social_links || {}), ...(athlete.official_links || {}) };
    const [activeTab, setActiveTab] = useState("Profile");
    const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);

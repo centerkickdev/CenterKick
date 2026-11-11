@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400;
 
 export async function GET(req: NextRequest) {
   try {
@@ -12,8 +12,9 @@ export async function GET(req: NextRequest) {
       return new NextResponse('Missing image URL parameter', { status: 400 });
     }
 
-    // 1. Fetch source image from remote location (Supabase CDN, etc.)
+    // 1. Fetch source image from remote location with 5s timeout
     const response = await fetch(imageUrl, {
+      signal: AbortSignal.timeout(5000),
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; CenterKick-OG-Proxy/1.0)',
       },

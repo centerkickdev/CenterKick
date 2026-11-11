@@ -22,8 +22,9 @@ export async function GET(request: Request) {
       }
     }
 
-    // Fetch the target HTML content with a standard user-agent
+    // Fetch the target HTML content with a standard user-agent and 4-second timeout to prevent lambda hangs
     const response = await fetch(fetchUrl, {
+      signal: AbortSignal.timeout(4000),
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
       },

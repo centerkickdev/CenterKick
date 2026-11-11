@@ -1,10 +1,12 @@
 import { PlayerDetailsClient } from '@/components/players/PlayerDetailsClient';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
-import { trackProfileView } from '@/app/actions/tracking';
 import { createClient } from '@/lib/supabase/server';
 import { isProfileComplete } from '@/lib/utils/profile';
+import { getCachedData } from '@/lib/redis';
 import type { Metadata } from 'next';
+
+export const revalidate = 120;
 
 interface AthletePageProps {
   params: Promise<{ id: string }>;
@@ -104,25 +106,35 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
       return notFound();
    }
 
-   const supabaseUser = await createClient();
-   const { data: { user } } = await supabaseUser.auth.getUser();
-   const isOwner = user?.id === athlete.user_id;
-
-   if (!isProfileComplete(athlete) && !isOwner) {
-      return notFound();
+   // Lazy auth check only if profile is not complete
+   if (!isProfileComplete(athlete)) {
+      const supabaseUser = await createClient();
+      const { data: { user } } = await supabaseUser.auth.getUser();
+      if (user?.id !== athlete.user_id) {
+         return notFound();
+      }
    }
 
-   // Fetch reference data for enrichment
-   const [{ data: clubs }, { data: leagues }, { data: countries }] = await Promise.all([
-      supabaseAdmin.from('clubs').select('*'),
-      supabaseAdmin.from('leagues').select('*'),
-      supabaseAdmin.from('countries').select('*')
+   // Fetch reference data with Redis / in-memory cache to prevent database hammering
+   const [clubs, leagues, countries] = await Promise.all([
+      getCachedData('ref:clubs', async () => {
+         const { data } = await supabaseAdmin.from('clubs').select('id, name, logo_url');
+         return data || [];
+      }, 3600),
+      getCachedData('ref:leagues', async () => {
+         const { data } = await supabaseAdmin.from('leagues').select('id, name');
+         return data || [];
+      }, 3600),
+      getCachedData('ref:countries', async () => {
+         const { data } = await supabaseAdmin.from('countries').select('id, name, flag_url');
+         return data || [];
+      }, 3600)
    ]);
 
    // Helpers
-   const getClubLogo = (clubName: string) => clubs?.find(c => c.name === clubName)?.logo_url || null;
-   const getLeagueName = (leagueId: string) => leagues?.find(l => l.id === leagueId)?.name || leagueId;
-   const getCountryFlag = (countryName: string) => countries?.find(c => c.name === countryName)?.flag_url || null;
+   const getClubLogo = (clubName: string) => clubs?.find((c: any) => c.name === clubName)?.logo_url || null;
+   const getLeagueName = (leagueId: string) => leagues?.find((l: any) => l.id === leagueId)?.name || leagueId;
+   const getCountryFlag = (countryName: string) => countries?.find((c: any) => c.name === countryName)?.flag_url || null;
 
    // Enrich athlete data
    athlete.league_name = getLeagueName(athlete.league);
@@ -219,9 +231,6 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
          news = relatedNews;
       }
    }
-
-   // Track profile view asynchronously without blocking page load
-   trackProfileView(athlete.id);
 
    return <PlayerDetailsClient athlete={athlete} careerStats={careerStats} news={news} />;
 }

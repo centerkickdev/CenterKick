@@ -31,12 +31,13 @@ export async function GET(req: NextRequest) {
   // Validate Secret Header or Search Param
   const authHeader = req.headers.get('authorization');
   const querySecret = searchParams.get('secret');
-  const expectedSecret = process.env.CRON_SECRET || 'centerkick_cron_secret';
+  const expectedSecret = process.env.CRON_SECRET;
 
   const isAuthorized =
-    (authHeader && authHeader === `Bearer ${expectedSecret}`) ||
-    querySecret === expectedSecret ||
-    process.env.NODE_ENV === 'development';
+    process.env.NODE_ENV === 'development' ||
+    (Boolean(expectedSecret) &&
+      ((authHeader && authHeader === `Bearer ${expectedSecret}`) ||
+        querySecret === expectedSecret));
 
   if (!isAuthorized) {
     return NextResponse.json({ error: 'Unauthorized cron request' }, { status: 401 });

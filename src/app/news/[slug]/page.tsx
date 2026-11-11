@@ -1,6 +1,7 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
 import { Calendar as CalendarIcon, User, Tag, Share2, ArrowLeft, ChevronRight, Newspaper, Clock } from "lucide-react";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -18,12 +19,13 @@ export async function generateMetadata(
    parent: ResolvingMetadata
 ): Promise<Metadata> {
    const { slug } = await params;
-   const supabase = await createClient();
+   const supabase = createAdminClient();
    const { data: post } = await supabase
       .from('cms_posts')
-      .select('*')
+      .select('meta_title, title, meta_description, excerpt, og_image_url, cover_image_url, published_at, created_at')
       .eq('slug', slug)
-      .single();
+      .limit(1)
+      .maybeSingle();
 
    if (!post) return { title: 'Post Not Found' };
 
@@ -48,15 +50,21 @@ export async function generateMetadata(
 
 export default async function PostPage({ params }: Props) {
    const { slug } = await params;
-   const supabase = await createClient();
+   const supabase = createAdminClient();
 
-   const { data: post } = await supabase
-      .from('cms_posts')
-      .select('*, author:users(email), category:blog_categories(name), post_tags(tag:blog_tags(name))')
-      .eq('slug', slug)
-      .single();
+   const [globalCms, { data: post }] = await Promise.all([
+      getGlobalCMSData(),
+      supabase
+         .from('cms_posts')
+         .select('*, author:users(email), category:blog_categories(name), post_tags(tag:blog_tags(name))')
+         .eq('slug', slug)
+         .limit(1)
+         .maybeSingle()
+   ]);
 
    if (!post) notFound();
+
+   const { navContent, footerContent, siteSettings } = globalCms;
 
    // Fetch related posts (same category)
    const { data: relatedPosts } = await supabase
@@ -83,7 +91,7 @@ export default async function PostPage({ params }: Props) {
 
    return (
       <div className="min-h-screen bg-white">
-         <Navbar />
+         <Navbar content={navContent} settings={siteSettings} />
          <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -206,7 +214,7 @@ export default async function PostPage({ params }: Props) {
                )}
             </article>
          </main>
-         <Footer />
+         <Footer content={footerContent} settings={siteSettings} />
       </div>
    );
 }

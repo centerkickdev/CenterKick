@@ -5,7 +5,7 @@ import OrgDetailsClient from './OrgDetailsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 function stripHtml(html: string): string {
    if (!html) return '';
@@ -74,7 +74,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function OrgPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = await params;
-   const supabaseUser = await createClient();
    const supabaseAdmin = createAdminClient();
 
    // Enforce slug-based access only. UUID access is forbidden.
@@ -94,31 +93,35 @@ export default async function OrgPage({ params }: { params: Promise<{ id: string
       notFound();
    }
 
-   // Only show active profiles to public, or let admins/owners see pending
-   const { data: { user } } = await supabaseUser.auth.getUser();
-   const isOwner = user?.id === profile.user_id;
-   const isAdmin = (profile.users as any)?.role === 'superadmin';
+   // Only perform dynamic auth checks if the profile is NOT active or NOT complete
+   const isStandardPublic = profile.status === 'active' && isProfileComplete(profile);
+   if (!isStandardPublic) {
+      const supabaseUser = await createClient();
+      const { data: { user } } = await supabaseUser.auth.getUser();
+      const isOwner = user?.id === profile.user_id;
+      const isAdmin = (profile.users as any)?.role === 'superadmin';
 
-   if (profile.status !== 'active' && !isOwner && !isAdmin) {
-      const { data: currentUser } = await supabaseAdmin
-         .from('users')
-         .select('role')
-         .eq('id', user?.id || '')
-         .single();
-      
-      if (currentUser?.role !== 'superadmin') {
-         notFound();
+      if (profile.status !== 'active' && !isOwner && !isAdmin) {
+         const { data: currentUser } = await supabaseAdmin
+            .from('users')
+            .select('role')
+            .eq('id', user?.id || '')
+            .single();
+         
+         if (currentUser?.role !== 'superadmin') {
+            notFound();
+         }
       }
-   }
 
-   if (!isProfileComplete(profile) && !isOwner && !(profile.users as any)?.role?.includes('admin')) {
-      const { data: currentUser } = await supabaseAdmin
-         .from('users')
-         .select('role')
-         .eq('id', user?.id || '')
-         .single();
-      if (currentUser?.role !== 'superadmin') {
-         notFound();
+      if (!isProfileComplete(profile) && !isOwner && !(profile.users as any)?.role?.includes('admin')) {
+         const { data: currentUser } = await supabaseAdmin
+            .from('users')
+            .select('role')
+            .eq('id', user?.id || '')
+            .single();
+         if (currentUser?.role !== 'superadmin') {
+            notFound();
+         }
       }
    }
 
@@ -127,8 +130,6 @@ export default async function OrgPage({ params }: { params: Promise<{ id: string
       .select('id, first_name, last_name, role, slug, avatar_url, position, market_value, country')
       .eq('organization_id', profile.user_id)
       .eq('status', 'active');
-
-
 
    return <OrgDetailsClient profile={profile} members={members || []} />;
 }

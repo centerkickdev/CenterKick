@@ -3,8 +3,10 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import CoachDetailsClient from './CoachDetailsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
-import { trackProfileView } from '@/app/actions/tracking';
+import { getCachedData } from '@/lib/redis';
 import type { Metadata } from 'next';
+
+export const revalidate = 120;
 
 function stripHtml(html: string): string {
    if (!html) return '';
@@ -72,7 +74,6 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 }
 export default async function CoachPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = await params;
-   const supabaseUser = await createClient();
    const supabaseAdmin = createAdminClient();
 
    // Enforce slug-based access only. UUID access is forbidden.
@@ -92,35 +93,41 @@ export default async function CoachPage({ params }: { params: Promise<{ id: stri
       notFound();
    }
 
-   const { data: leagues } = await supabaseAdmin.from('leagues').select('*');
-   const getLeagueName = (leagueId: string) => leagues?.find(l => l.id === leagueId)?.name || leagueId;
+   // Cached leagues reference fetch
+   const leagues = await getCachedData('ref:leagues', async () => {
+      const { data } = await supabaseAdmin.from('leagues').select('id, name');
+      return data || [];
+   }, 3600);
+
+   const getLeagueName = (leagueId: string) => leagues?.find((l: any) => l.id === leagueId)?.name || leagueId;
    if (profile.league) {
       profile.league_name = getLeagueName(profile.league);
    }
 
-   // Only show active profiles to public, or let admins/owners see pending
-   const { data: { user } } = await supabaseUser.auth.getUser();
-   const isOwner = user?.id === profile.user_id;
-   const isAdmin = (profile.users as any)?.role === 'superadmin';
+   // Only perform dynamic auth checks if the profile is NOT active or NOT complete
+   const isStandardPublic = profile.status === 'active' && isProfileComplete(profile);
+   if (!isStandardPublic) {
+      const supabaseUser = await createClient();
+      const { data: { user } } = await supabaseUser.auth.getUser();
+      const isOwner = user?.id === profile.user_id;
+      const isAdmin = (profile.users as any)?.role === 'superadmin';
 
-   if (profile.status !== 'active' && !isOwner && !isAdmin) {
-      // Check if current user is admin correctly
-      const { data: currentUser } = await supabaseAdmin
-         .from('users')
-         .select('role')
-         .eq('id', user?.id || '')
-         .single();
+      if (profile.status !== 'active' && !isOwner && !isAdmin) {
+         const { data: currentUser } = await supabaseAdmin
+            .from('users')
+            .select('role')
+            .eq('id', user?.id || '')
+            .single();
 
-      if (currentUser?.role !== 'superadmin') {
+         if (currentUser?.role !== 'superadmin') {
+            notFound();
+         }
+      }
+
+      if (!isProfileComplete(profile) && !isOwner && !(profile.users as any)?.role?.includes('admin')) {
          notFound();
       }
    }
-
-   if (!isProfileComplete(profile) && !isOwner && !(profile.users as any)?.role?.includes('admin')) {
-      notFound();
-   }
-
-   await trackProfileView(profile.id);
 
    return <CoachDetailsClient profile={profile} />;
 }

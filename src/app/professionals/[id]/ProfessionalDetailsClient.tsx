@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Trophy, Briefcase, GraduationCap, ArrowRight, Share2, Mail, ChevronLeft, MapPin, Facebook, Instagram, X, Send, Globe, Linkedin, Youtube, Phone } from "lucide-react";
@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import parse from 'html-react-parser';
 import { ImageLightbox } from '@/components/common/ImageLightbox';
 import { useToast } from '@/context/ToastContext';
+import { trackProfileView } from '@/app/actions/tracking';
 
 const formatAbsoluteUrl = (url: string) => {
    if (!url) return '';
@@ -21,6 +22,13 @@ interface ProfessionalDetailsClientProps {
 
 export default function ProfessionalDetailsClient({ profile }: ProfessionalDetailsClientProps) {
    const { showToast } = useToast();
+
+   useEffect(() => {
+      if (profile?.id) {
+         trackProfileView(profile.id).catch(() => {});
+      }
+   }, [profile?.id]);
+
    const mergedLinks = { ...(profile.social_links || {}), ...(profile.official_links || {}) };
    const [activeTab, setActiveTab] = useState("Profile");
    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
