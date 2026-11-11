@@ -7,22 +7,26 @@ import { Analytics } from '@vercel/analytics/next';
 const inter = Inter({ subsets: ["latin"] });
 
 import { createClient } from '@/lib/supabase/server';
+import { getCachedData } from '@/lib/redis';
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const { createClient: createSupabaseClient } = await import('@supabase/supabase-js');
-    const supabase = createSupabaseClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-    const { data } = await supabase
-      .from('site_content')
-      .select('content')
-      .eq('page', 'settings')
-      .eq('section', 'system')
-      .single();
+    const settings = await getCachedData('site_system_settings_metadata', async () => {
+      const { createClient: createSupabaseClient } = await import('@supabase/supabase-js');
+      const supabase = createSupabaseClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      const { data } = await supabase
+        .from('site_content')
+        .select('content')
+        .eq('page', 'settings')
+        .eq('section', 'system')
+        .single();
 
-    const settings = data?.content || {};
+      return data?.content || {};
+    }, 3600);
+
     
     const resolveUrl = (url: string) => {
       if (!url) return '';

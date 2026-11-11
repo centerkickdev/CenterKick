@@ -1,9 +1,10 @@
-import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import ProfessionalsClient from './ProfessionalsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
+import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
+import { getCachedData } from '@/lib/redis';
 
 export const metadata = {
   title: 'Sports Professionals | CenterKick',
@@ -11,28 +12,32 @@ export const metadata = {
 };
 
 export default async function ProfessionalsPage() {
-  const supabase = await createClient();
   const adminSupabase = createAdminClient();
-  const { data: professionals, error } = await adminSupabase
-     .from('profiles')
-     .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, profession_title, profession_category, country, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
-     .eq('users.role', 'professional')
-     .order('created_at', { ascending: false });
 
-  const filteredProfessionals = (professionals || []).filter(pro => {
-     const userObj = pro.users as any;
-     const userRole = userObj?.role;
-     if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
+  const [{ navContent, footerContent, siteSettings }, filteredProfessionals] = await Promise.all([
+     getGlobalCMSData(),
+     getCachedData('directory_professionals_list_v2', async () => {
+        const { data: professionals, error } = await adminSupabase
+           .from('profiles')
+           .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, profession_title, profession_category, country, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
+           .eq('users.role', 'professional')
+           .eq('status', 'active')
+           .order('created_at', { ascending: false });
 
-     const isComplete = isProfileComplete(pro);
-     return isComplete;
-  });
+        if (error) console.error('[ProfessionalsPage] fetch error:', error.message);
 
-  if (error) console.error('[ProfessionalsPage] fetch error:', error.message);
+        return (professionals || []).filter(pro => {
+           const userObj = pro.users as any;
+           const userRole = userObj?.role;
+           if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
+           return isProfileComplete(pro);
+        });
+     }, 300)
+  ]);
 
   return (
      <div className="min-h-screen bg-white">
-        <Navbar />
+        <Navbar content={navContent} settings={siteSettings} />
         <main className="pt-[72px] lg:pt-[76px]">
            <div className="bg-gradient-to-br from-gray-900 to-black py-12 sm:py-20 px-4">
               <div className="max-w-[1200px] mx-auto px-4 lg:px-0 text-center sm:text-left">
@@ -47,7 +52,7 @@ export default async function ProfessionalsPage() {
            </div>
            <ProfessionalsClient professionals={filteredProfessionals || []} />
         </main>
-        <Footer />
+        <Footer content={footerContent} settings={siteSettings} />
      </div>
   );
 }

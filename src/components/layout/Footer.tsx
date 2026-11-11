@@ -27,6 +27,18 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
    useEffect(() => {
       const fetchData = async () => {
          if (!settings && !content) {
+            if (typeof window !== 'undefined') {
+               const cachedSettings = sessionStorage.getItem('ck_site_settings');
+               const cachedFooter = sessionStorage.getItem('ck_footer_content');
+               if (cachedSettings && cachedFooter) {
+                  try {
+                     setSiteSettings(JSON.parse(cachedSettings));
+                     setFooterContent(JSON.parse(cachedFooter));
+                     return;
+                  } catch (_) {}
+               }
+            }
+
             const { data } = await supabase
                .from('site_content')
                .select('page, section, content')
@@ -34,7 +46,12 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
 
             if (data) {
                const sysSettings = data.find((d: any) => d.page === 'settings' && d.section === 'system')?.content;
-               if (sysSettings) setSiteSettings(sysSettings);
+               if (sysSettings) {
+                  setSiteSettings(sysSettings);
+                  if (typeof window !== 'undefined') {
+                     try { sessionStorage.setItem('ck_site_settings', JSON.stringify(sysSettings)); } catch (_) {}
+                  }
+               }
 
                // Combine footer sections
                const fContent: any = {};
@@ -42,6 +59,9 @@ export function Footer({ content, settings }: { content?: any; settings?: any })
                   fContent[d.section] = d.content;
                });
                setFooterContent(fContent);
+               if (typeof window !== 'undefined') {
+                  try { sessionStorage.setItem('ck_footer_content', JSON.stringify(fContent)); } catch (_) {}
+               }
             }
          } else {
             if (settings) setSiteSettings(settings);

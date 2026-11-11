@@ -7,6 +7,10 @@ import { isProfileComplete } from '@/lib/utils/profile';
 
 // Recompilation trigger - v3
 
+// Common projection to avoid selecting heavy unneeded columns (bio, large documents, notes, etc.)
+const HOME_PROFILE_FIELDS = 'id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, position, current_position, country, agency_name, profession_title, status, role, users:users!profiles_user_id_fkey!inner(role)';
+const HOME_POST_FIELDS = 'id, title, slug, type, cover_image_url, excerpt, published_at, category:blog_categories(name), post_tags(tag:blog_tags(name))';
+
 export default async function Home() {
    const supabase = await createClient();
    const adminSupabase = createAdminClient();
@@ -22,20 +26,20 @@ export default async function Home() {
       highlightPosts
    ] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('home_site_content', async () => {
+      getCachedData('home_site_content_v2', async () => {
          const { data } = await supabase
             .from('site_content')
-            .select('*')
+            .select('section, content')
             .eq('page', '/');
          return data || [];
       }, 1800),
-      getCachedData('home_latest_news_16', async () => {
+      getCachedData('home_latest_news_16_v2', async () => {
          const { data } = await supabase
             .from('cms_posts')
-            .select('*, author:users(email), category:blog_categories(name), post_tags(tag:blog_tags(name))')
+            .select(`${HOME_POST_FIELDS}, author:users(email)`)
             .eq('is_draft', false)
             .order('published_at', { ascending: false })
-            .limit(50);
+            .limit(30);
             
          const filtered = (data || []).filter(post => {
             const catName = (post.category as any)?.name?.toLowerCase() || '';
@@ -46,27 +50,30 @@ export default async function Home() {
          
          return filtered.slice(0, 16);
       }, 300),
-      getCachedData('home_players_list_v3', async () => {
+      getCachedData('home_players_list_v4', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
-            .select('*, users:users!profiles_user_id_fkey!inner(role)')
+            .select(HOME_PROFILE_FIELDS)
             .eq('users.role', 'player')
-            .eq('status', 'active');
+            .eq('status', 'active')
+            .order('created_at', { ascending: false })
+            .limit(40);
          if (error) console.error('home_players_list error:', error);
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
             return isProfileComplete(p);
          });
-         console.log('Fetched players from DB count:', filtered.length);
          return filtered;
       }, 600),
-      getCachedData('home_coaches_list_v3', async () => {
+      getCachedData('home_coaches_list_v4', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
-            .select('*, users:users!profiles_user_id_fkey!inner(role)')
+            .select(HOME_PROFILE_FIELDS)
             .eq('users.role', 'coach')
-            .eq('status', 'active');
+            .eq('status', 'active')
+            .order('created_at', { ascending: false })
+            .limit(40);
          if (error) console.error('home_coaches_list error:', error);
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
@@ -75,12 +82,14 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_agents_scouts_list_v3', async () => {
+      getCachedData('home_agents_scouts_list_v4', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
-            .select('*, users:users!profiles_user_id_fkey!inner(role)')
+            .select(HOME_PROFILE_FIELDS)
             .in('users.role', ['agent', 'scout'])
-            .eq('status', 'active');
+            .eq('status', 'active')
+            .order('created_at', { ascending: false })
+            .limit(40);
          if (error) console.error('home_agents_scouts_list error:', error);
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
@@ -89,12 +98,14 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_organizations_list_v3', async () => {
+      getCachedData('home_organizations_list_v4', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
-            .select('*, users:users!profiles_user_id_fkey!inner(role)')
+            .select(HOME_PROFILE_FIELDS)
             .eq('users.role', 'organization')
-            .eq('status', 'active');
+            .eq('status', 'active')
+            .order('created_at', { ascending: false })
+            .limit(40);
          if (error) console.error('home_organizations_list error:', error);
          const filtered = (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
@@ -103,13 +114,13 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_highlight_posts_v5', async () => {
+      getCachedData('home_highlight_posts_v6', async () => {
          const { data, error } = await supabase
             .from('cms_posts')
-            .select('*, category:blog_categories(name), post_tags(tag:blog_tags(name))')
+            .select(HOME_POST_FIELDS)
             .eq('is_draft', false)
             .order('published_at', { ascending: false })
-            .limit(100);
+            .limit(30);
 
          if (error) {
             console.error('Highlights query error:', error);
@@ -166,12 +177,12 @@ export default async function Home() {
 
    return (
       <HomeClient 
-        latestNews={latestNews}
+        latestNews={latestNews as any}
         players={selectedPlayers}
         coaches={selectedCoaches}
         agentsScouts={selectedAgentsScouts}
         organizations={selectedOrganizations}
-        highlights={highlightPosts}
+        highlights={highlightPosts as any}
         siteContent={Object.fromEntries((siteContentData as { section: string; content: unknown }[] | null)?.map((c) => [c.section, c.content]) || [])}
         navContent={navContent}
         footerContent={footerContent}

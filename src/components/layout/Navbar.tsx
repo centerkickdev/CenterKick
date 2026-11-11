@@ -82,13 +82,29 @@ export function Navbar({ content, settings }: { content?: Record<string, unknown
          setSiteSettings(settings);
          return;
        }
+       if (typeof window !== 'undefined') {
+         const cached = sessionStorage.getItem('ck_site_settings');
+         if (cached) {
+           try {
+             setSiteSettings(JSON.parse(cached));
+             return;
+           } catch (_) {}
+         }
+       }
        const { data } = await supabase
          .from('site_content')
          .select('content')
          .eq('page', 'settings')
          .eq('section', 'system')
          .single();
-       if (data?.content) setSiteSettings(data.content);
+       if (data?.content) {
+         setSiteSettings(data.content);
+         if (typeof window !== 'undefined') {
+           try {
+             sessionStorage.setItem('ck_site_settings', JSON.stringify(data.content));
+           } catch (_) {}
+         }
+       }
     };
     getSettings();
 

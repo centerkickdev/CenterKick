@@ -1,33 +1,38 @@
-import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import OrganizationsClient from './OrganizationsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
+import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
+import { getCachedData } from '@/lib/redis';
 
 export default async function OrganizationsPage() {
-   const supabase = await createClient();
    const adminSupabase = createAdminClient();
-   const { data: organizations, error } = await adminSupabase
-      .from('profiles')
-      .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, country, bio, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
-      .eq('users.role', 'organization')
-      .order('created_at', { ascending: false });
 
-   const filteredOrganizations = (organizations || []).filter(org => {
-      const userObj = org.users as any;
-      const userRole = userObj?.role;
-      if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
+   const [{ navContent, footerContent, siteSettings }, filteredOrganizations] = await Promise.all([
+      getGlobalCMSData(),
+      getCachedData('directory_organizations_list_v2', async () => {
+         const { data: organizations, error } = await adminSupabase
+            .from('profiles')
+            .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, country, bio, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
+            .eq('users.role', 'organization')
+            .eq('status', 'active')
+            .order('created_at', { ascending: false });
 
-      const isComplete = isProfileComplete(org);
-      return isComplete;
-   });
+         if (error) console.error('[OrganizationsPage] fetch error:', error.message);
 
-   if (error) console.error('[OrganizationsPage] fetch error:', error.message);
+         return (organizations || []).filter(org => {
+            const userObj = org.users as any;
+            const userRole = userObj?.role;
+            if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
+            return isProfileComplete(org);
+         });
+      }, 300)
+   ]);
 
    return (
       <div className="min-h-screen bg-white">
-         <Navbar />
+         <Navbar content={navContent} settings={siteSettings} />
          <main className="pt-[72px] lg:pt-[76px]">
             <div className="bg-gradient-to-br from-gray-900 to-black py-12 sm:py-20 px-4">
                <div className="max-w-[1200px] mx-auto px-4 lg:px-0 text-center sm:text-left">
@@ -42,7 +47,7 @@ export default async function OrganizationsPage() {
             </div>
             <OrganizationsClient organizations={filteredOrganizations || []} />
          </main>
-         <Footer />
+         <Footer content={footerContent} settings={siteSettings} />
       </div>
    );
 }
