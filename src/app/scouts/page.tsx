@@ -6,6 +6,8 @@ import { isProfileComplete } from '@/lib/utils/profile';
 import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
 import { getCachedData } from '@/lib/redis';
 
+export const revalidate = 120;
+
 export default async function ScoutsPage() {
    const adminSupabase = createAdminClient();
 

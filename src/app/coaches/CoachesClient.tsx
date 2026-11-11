@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { DirectoryFilterBar } from '@/components/common/DirectoryFilterBar';
+import { getOptimizedImageUrl } from '@/lib/utils/image';
 
 export default function CoachesClient({ coaches }: { coaches: any[] }) {
    const [searchQuery, setSearchQuery] = useState('');
@@ -46,7 +47,7 @@ export default function CoachesClient({ coaches }: { coaches: any[] }) {
                   return (
                      <Link href={`/coaches/${coach.slug}`} key={coach.id}
                         className="group relative h-[280px] sm:h-[360px] rounded-2xl overflow-hidden bg-gray-900 block shadow-md hover:shadow-xl transition-all duration-300">
-                        <img src={coach.avatar_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=60&w=400&auto=format&fit=crop"}
+                        <img src={getOptimizedImageUrl(coach.avatar_url, { width: 400, height: 500 }) || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=60&w=400&auto=format&fit=crop"}
                            alt={name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90" loading="lazy" decoding="async" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-4">

@@ -30,12 +30,19 @@ interface CacheEntry<T> {
 
 const l1Cache = new Map<string, CacheEntry<any>>();
 
+// Single-Flight Request Deduplication map to prevent cache stampedes / thundering herds
+const inFlightRequests = new Map<string, Promise<any>>();
+
 // Standard default TTL for L1 cache is 15 seconds to keep data reasonably fresh while completely neutralizing page latency
 const L1_DEFAULT_TTL = 15;
 
 /**
  * Cache helper to simplify the "Try Cache -> Fetch -> Save Cache" pattern.
- * Optimized with L1 (In-Memory) and L2 (Upstash Redis) caching, and async non-blocking L2 updates.
+ * Optimized with:
+ * - L1 In-Memory Caching (0ms latency)
+ * - L2 Upstash Redis Caching (cross-lambda distributed cache)
+ * - Single-Flight In-Flight Request Deduplication (prevents cache stampede)
+ * - Async non-blocking L2 updates
  */
 export async function getCachedData<T>(
   key: string, 
@@ -69,26 +76,40 @@ export async function getCachedData<T>(
     }
   }
 
-  // 3. Fallback to Database Fetcher (Cache Miss)
-  const data = await fetcher();
-
-  if (data !== undefined && data !== null) {
-    // Save to L1 Cache
-    const l1Ttl = Math.min(ttl, L1_DEFAULT_TTL);
-    l1Cache.set(key, {
-      value: data,
-      expiresAt: now + l1Ttl * 1000
-    });
-
-    // Save to L2 Redis Cache asynchronously (non-blocking)
-    if (isRedisConfigured) {
-      redis.set(key, data, { ex: ttl }).catch(err => 
-        console.error(`[Redis L2 Error] Error setting ${key}:`, err)
-      );
-    }
+  // 3. Single-Flight Request Deduplication (prevent stampede)
+  if (inFlightRequests.has(key)) {
+    return inFlightRequests.get(key) as Promise<T>;
   }
 
-  return data;
+  // 4. Fallback to Database Fetcher (Cache Miss) with single-flight protection
+  const fetchPromise = (async () => {
+    try {
+      const data = await fetcher();
+
+      if (data !== undefined && data !== null) {
+        // Save to L1 Cache
+        const l1Ttl = Math.min(ttl, L1_DEFAULT_TTL);
+        l1Cache.set(key, {
+          value: data,
+          expiresAt: Date.now() + l1Ttl * 1000
+        });
+
+        // Save to L2 Redis Cache asynchronously (non-blocking)
+        if (isRedisConfigured) {
+          redis.set(key, data, { ex: ttl }).catch(err => 
+            console.error(`[Redis L2 Error] Error setting ${key}:`, err)
+          );
+        }
+      }
+
+      return data;
+    } finally {
+      inFlightRequests.delete(key);
+    }
+  })();
+
+  inFlightRequests.set(key, fetchPromise);
+  return fetchPromise;
 }
 
 // Intercept and wrap redis.del to automatically clear the local L1 Cache as well

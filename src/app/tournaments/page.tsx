@@ -1,11 +1,13 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { Trophy, Calendar, Users, ArrowRight } from "lucide-react";
 import Link from 'next/link';
 
+export const revalidate = 300;
+
 export default async function TournamentsPage() {
-  const supabase = await createClient();
+  const supabase = createAdminClient();
   
   const { data: tournaments } = await supabase
     .from('tournaments')

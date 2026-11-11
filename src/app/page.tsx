@@ -1,18 +1,17 @@
 import { HomeClient } from '@/components/home/HomeClientNew';
-import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
 import { getCachedData } from '@/lib/redis';
 import { isProfileComplete } from '@/lib/utils/profile';
 
-// Recompilation trigger - v3
+// Enable Incremental Static Regeneration (ISR) at Edge CDN
+export const revalidate = 120;
 
 // Common projection to avoid selecting heavy unneeded columns (bio, large documents, notes, etc.)
 const HOME_PROFILE_FIELDS = 'id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, position, current_position, country, agency_name, profession_title, status, role, users:users!profiles_user_id_fkey!inner(role)';
 const HOME_POST_FIELDS = 'id, title, slug, type, cover_image_url, excerpt, published_at, category:blog_categories(name), post_tags(tag:blog_tags(name))';
 
 export default async function Home() {
-   const supabase = await createClient();
    const adminSupabase = createAdminClient();
    // Fetch everything in parallel
    const [
@@ -27,14 +26,14 @@ export default async function Home() {
    ] = await Promise.all([
       getGlobalCMSData(),
       getCachedData('home_site_content_v2', async () => {
-         const { data } = await supabase
+         const { data } = await adminSupabase
             .from('site_content')
             .select('section, content')
             .eq('page', '/');
          return data || [];
       }, 1800),
       getCachedData('home_latest_news_16_v2', async () => {
-         const { data } = await supabase
+         const { data } = await adminSupabase
             .from('cms_posts')
             .select(`${HOME_POST_FIELDS}, author:users(email)`)
             .eq('is_draft', false)
@@ -115,7 +114,7 @@ export default async function Home() {
          return filtered;
       }, 600),
       getCachedData('home_highlight_posts_v6', async () => {
-         const { data, error } = await supabase
+         const { data, error } = await adminSupabase
             .from('cms_posts')
             .select(HOME_POST_FIELDS)
             .eq('is_draft', false)

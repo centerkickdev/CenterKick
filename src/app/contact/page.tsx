@@ -1,10 +1,12 @@
 import { ContactClient } from '@/components/contact/ContactClient';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { getCachedData } from '@/lib/redis';
 import { getGlobalCMSData } from '@/lib/cms';
 
+export const revalidate = 300;
+
 export default async function ContactPage() {
-   const supabase = await createClient();
+   const adminSupabase = createAdminClient();
    // Fetch everything in parallel
    const [
       { navContent, footerContent, siteSettings },
@@ -13,7 +15,7 @@ export default async function ContactPage() {
    ] = await Promise.all([
       getGlobalCMSData(),
       getCachedData('contact_layout', async () => {
-         const { data: pageData } = await supabase
+         const { data: pageData } = await adminSupabase
             .from('site_pages')
             .select('*')
             .eq('slug', '/contact')
@@ -21,7 +23,7 @@ export default async function ContactPage() {
          return pageData?.layout || ["header", "info", "form", "faqs"];
       }, 3600),
       getCachedData('contact_site_content', async () => {
-         const { data } = await supabase
+         const { data } = await adminSupabase
             .from('site_content')
             .select('*')
             .eq('page', '/contact');

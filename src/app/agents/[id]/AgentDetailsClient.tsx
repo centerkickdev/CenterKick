@@ -484,6 +484,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                                        src={media.url || media}
                                        alt={`Gallery image ${i + 1}`}
                                        fill
+                                       sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 250px"
                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />

@@ -56,7 +56,7 @@ function ImageUpload({ label, value, onUpload, path }: { label: string, value: s
         <div className={`w-full bg-gray-50 border-2 border-dashed border-gray-200 rounded-2xl p-6 transition-all flex flex-col items-center justify-center gap-3 ${isUploading ? 'opacity-50' : 'hover:border-gray-300 hover:bg-gray-100/50'}`}>
           {value ? (
             <div className="relative w-full aspect-video md:aspect-auto md:h-24 flex items-center justify-center bg-white rounded-xl overflow-hidden border border-gray-100">
-               <Image src={currentUrl} alt={label} fill className="h-full object-contain p-2" />
+               <Image src={currentUrl} alt={label} fill sizes="(max-width: 768px) 100vw, 300px" className="h-full object-contain p-2" />
                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <Upload className="w-5 h-5 text-white" />
                </div>

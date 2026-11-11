@@ -89,7 +89,7 @@ export default function NewTournamentPage() {
               <div className="flex items-center gap-6">
                 <div className="w-24 h-24 rounded-2xl bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden shrink-0 relative group cursor-pointer hover:border-[#b50a0a] transition-colors">
                   {logoPreview ? (
-                    <Image src={logoPreview} alt="Logo Preview" fill className="object-contain p-2" />
+                    <Image src={logoPreview} alt="Logo Preview" fill sizes="96px" className="object-contain p-2" />
                   ) : (
                     <ImageIcon className="w-8 h-8 text-gray-300 group-hover:text-[#b50a0a] transition-colors" />
                   )}

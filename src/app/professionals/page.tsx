@@ -6,6 +6,8 @@ import { isProfileComplete } from '@/lib/utils/profile';
 import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
 import { getCachedData } from '@/lib/redis';
 
+export const revalidate = 120;
+
 export const metadata = {
   title: 'Sports Professionals | CenterKick',
   description: 'Discover sports medicine doctors, analysts, referees, media staff, and other football industry professionals on CenterKick.',

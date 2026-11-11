@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { DirectoryFilterBar } from '@/components/common/DirectoryFilterBar';
+import { getOptimizedImageUrl } from '@/lib/utils/image';
 
 export default function ScoutsClient({ scouts }: { scouts: any[] }) {
    const [searchQuery, setSearchQuery] = useState('');
@@ -46,7 +47,7 @@ export default function ScoutsClient({ scouts }: { scouts: any[] }) {
                   return (
                      <Link href={`/scouts/${scout.slug}`} key={scout.id}
                         className="group relative h-[260px] sm:h-[340px] rounded-2xl overflow-hidden bg-gray-900 block shadow-md hover:shadow-xl transition-all duration-300">
-                        <img src={scout.avatar_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=60&w=400&auto=format&fit=crop"}
+                        <img src={getOptimizedImageUrl(scout.avatar_url, { width: 400, height: 500 }) || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=60&w=400&auto=format&fit=crop"}
                            alt={name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90" loading="lazy" decoding="async" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                         <div className="absolute bottom-0 left-0 right-0 p-4">

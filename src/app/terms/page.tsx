@@ -3,6 +3,8 @@ import { Footer } from "@/components/layout/Footer";
 import { FileText, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
+export const revalidate = 86400;
+
 export default function TermsOfServicePage() {
    return (
       <div className="min-h-screen bg-white">

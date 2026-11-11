@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react";
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { DirectoryFilterBar } from '@/components/common/DirectoryFilterBar';
+import { getOptimizedImageUrl } from '@/lib/utils/image';
 
 interface PlayersClientProps {
    players: any[];
@@ -60,7 +61,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                         className="relative aspect-[4/5] rounded-2xl overflow-hidden group bg-gray-900 block shadow-md hover:shadow-xl transition-all duration-300"
                      >
                         <img
-                           src={athlete.avatar_url || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=60&w=400&auto=format&fit=crop"}
+                           src={getOptimizedImageUrl(athlete.avatar_url, { width: 400, height: 500 }) || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=60&w=400&auto=format&fit=crop"}
                            alt={name}
                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
                            loading="lazy"

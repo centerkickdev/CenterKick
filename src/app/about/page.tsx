@@ -1,10 +1,12 @@
 import { AboutClient } from '@/components/about/AboutClient';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
 import { getCachedData } from '@/lib/redis';
 
+export const revalidate = 300;
+
 export default async function AboutUsPage() {
-   const supabase = await createClient();
+   const adminSupabase = createAdminClient();
 
    // Fetch everything in parallel with caching
    const [
@@ -14,7 +16,7 @@ export default async function AboutUsPage() {
    ] = await Promise.all([
       getGlobalCMSData(),
       getCachedData('about_layout', async () => {
-         const { data: pageData } = await supabase
+         const { data: pageData } = await adminSupabase
             .from('site_pages')
             .select('*')
             .eq('slug', '/about')
@@ -22,7 +24,7 @@ export default async function AboutUsPage() {
          return pageData?.layout || ["hero", "intro", "mission-vision", "philosophy", "services"];
       }, 3600),
       getCachedData('about_site_content', async () => {
-         const { data: siteContentData } = await supabase
+         const { data: siteContentData } = await adminSupabase
             .from('site_content')
             .select('*')
             .eq('page', '/about');

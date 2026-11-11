@@ -21,6 +21,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { useState, useEffect, useRef } from 'react';
 import { DateDisplay } from '@/components/common/DateDisplay';
+import { getOptimizedImageUrl } from '@/lib/utils/image';
 
 interface Post {
   id: string;
@@ -290,10 +291,10 @@ export function HomeClient({
                     {/* Image Area */}
                     <div className="relative w-full aspect-[16/9] overflow-hidden bg-black shrink-0">
                       <Image
-                        src={news.cover_image_url || IMG_NEWS_DEFAULT}
+                        src={getOptimizedImageUrl(news.cover_image_url, { width: 500, height: 280 }) || IMG_NEWS_DEFAULT}
                         alt={news.title}
                         fill
-                        sizes="(max-width:640px) 50vw, 256px"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     </div>
@@ -340,10 +341,10 @@ export function HomeClient({
               <Link href={`/players/${player.slug}`} className="group relative block aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-black shadow-lg border border-gray-100">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
                 <Image
-                  src={player.avatar_url || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop"}
+                  src={getOptimizedImageUrl(player.avatar_url, { width: 400, height: 500 }) || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop"}
                   alt={getDisplayName(player)}
                   fill
-                  sizes="(max-width:640px) 50vw, (max-width:1024px) 50vw, 256px"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 250px"
                   className="object-cover transition-all duration-700 group-hover:scale-105 opacity-90"
                 />
 
@@ -427,10 +428,10 @@ export function HomeClient({
                 <Link href={`/coaches/${coach.slug}`} className="group relative block aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-white shadow-lg border border-gray-100 hover:border-[#b50a0a]/30 transition-colors">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
                   <Image
-                    src={coach.avatar_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=600&auto=format&fit=crop"}
+                    src={getOptimizedImageUrl(coach.avatar_url, { width: 400, height: 500 }) || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=600&auto=format&fit=crop"}
                     alt={getDisplayName(coach)}
                     fill
-                    sizes="(max-width:640px) 50vw, (max-width:1024px) 50vw, 256px"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 250px"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
 
@@ -515,10 +516,10 @@ export function HomeClient({
                 <div>
                   <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl overflow-hidden mx-auto mb-2 sm:mb-4 border border-gray-100 shrink-0">
                     <Image
-                      src={agent.avatar_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"}
+                      src={getOptimizedImageUrl(agent.avatar_url, { width: 160, height: 160 }) || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=600&auto=format&fit=crop"}
                       alt={getDisplayName(agent)}
                       fill
-                      sizes="(max-width:640px) 60px, 80px"
+                      sizes="(max-width: 640px) 56px, 80px"
                       className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                     />
                   </div>
@@ -705,10 +706,10 @@ export function HomeClient({
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-10" />
                 <Image
-                  src={post.cover_image_url || IMG_NEWS_DEFAULT}
+                  src={getOptimizedImageUrl(post.cover_image_url, { width: 640, height: 360 }) || IMG_NEWS_DEFAULT}
                   alt={post.title}
                   fill
-                  sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 20vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
                   className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80"
                 />
 

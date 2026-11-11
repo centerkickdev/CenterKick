@@ -93,7 +93,7 @@ export default function AdminUserProfileClient({
             <div className="flex items-center gap-4 sm:gap-5 min-w-0">
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-900 flex items-center justify-center text-white overflow-hidden shadow-sm border border-slate-100 relative shrink-0">
                 {profile.avatar_url ? (
-                  <Image src={profile.avatar_url} alt="Avatar" fill className="w-full h-full object-cover" />
+                  <Image src={profile.avatar_url} alt="Avatar" fill sizes="96px" className="w-full h-full object-cover" />
                 ) : (
                   <User className="w-6 h-6 text-slate-300" />
                 )}
@@ -284,7 +284,7 @@ export default function AdminUserProfileClient({
                 <Link key={client.id} href={`/admin/users/${client.slug || client.id}`} className="group bg-slate-50 border border-slate-100 p-4 rounded-2xl flex items-center gap-4 hover:border-slate-300 transition-all">
                   <div className="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-white overflow-hidden relative shadow-sm">
                     {client.avatar_url ? (
-                      <Image src={client.avatar_url} alt="" fill className="object-cover" />
+                      <Image src={client.avatar_url} alt="" fill sizes="40px" className="object-cover" />
                     ) : (
                       <User className="w-5 h-5" />
                     )}
@@ -335,7 +335,7 @@ export default function AdminUserProfileClient({
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
                   {profile.gallery_urls.map((url: string, i: number) => (
                     <a key={i} href={url} target="_blank" rel="noreferrer" className="aspect-square rounded-xl overflow-hidden relative block hover:opacity-80 transition-opacity bg-slate-100 border border-slate-200">
-                      <Image src={url} alt="Gallery image" fill className="object-cover" />
+                      <Image src={url} alt="Gallery image" fill sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 200px" className="object-cover" />
                     </a>
                   ))}
                 </div>

@@ -1,8 +1,10 @@
 import React from 'react';
+import Link from 'next/link';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { getCachedData } from '@/lib/redis';
 import { getLiveUsdNgnRate, convertNgnToUsd } from '@/lib/utils/currencyRate';
 import {
   User,
@@ -17,7 +19,8 @@ import {
   Briefcase,
   Sparkles
 } from 'lucide-react';
-import Link from 'next/link';
+
+export const revalidate = 300;
 
 export const metadata = {
   title: 'Membership Pricing & Plans | CenterKick',
@@ -25,21 +28,22 @@ export const metadata = {
 };
 
 export default async function PricingPage() {
-  const [globalCms, supabase, usdNgnRate] = await Promise.all([
+  const adminSupabase = createAdminClient();
+
+  const [globalCms, usdNgnRate, paymentSettings] = await Promise.all([
     getGlobalCMSData(),
-    createClient(),
     getLiveUsdNgnRate(),
+    getCachedData('pricing_payment_settings', async () => {
+      const { data: paymentContent } = await adminSupabase
+        .from('site_content')
+        .select('content')
+        .eq('page', 'settings')
+        .eq('section', 'payment')
+        .single();
+      return paymentContent?.content || {};
+    }, 1800),
   ]);
 
-  // Fetch dynamic payment and plan settings from site_content
-  const { data: paymentContent } = await supabase
-    .from('site_content')
-    .select('content')
-    .eq('page', 'settings')
-    .eq('section', 'payment')
-    .single();
-
-  const paymentSettings = paymentContent?.content || {};
   const systemPlans = paymentSettings.plans || {};
 
   const { navContent, footerContent, siteSettings } = globalCms;

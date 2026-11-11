@@ -1,10 +1,12 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import BlogFeedClient from "@/components/news/BlogFeedClient";
 import { getCachedData } from '@/lib/redis';
 import { getGlobalCMSData } from '@/lib/cms';
 
+export const revalidate = 120;
+
 export default async function NewsPage() {
-   const supabase = await createClient();
+   const supabase = createAdminClient();
    // Fetch everything in parallel
    const [
       { navContent, footerContent, siteSettings },

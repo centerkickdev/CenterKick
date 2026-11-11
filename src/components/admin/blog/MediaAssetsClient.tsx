@@ -109,6 +109,7 @@ export default function MediaAssetsClient({ assets: initialAssets }: MediaPagePr
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
                 alt={asset.filename} 
                 fill
+                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 220px"
               />
               
               <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-4 p-6 backdrop-blur-[2px]">

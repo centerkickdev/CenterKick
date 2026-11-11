@@ -417,7 +417,7 @@ export default function FootballDataManagement() {
                           <div className="flex justify-center">
                             {item.logo_url ? (
                                <div className="relative w-8 h-8">
-                                 <Image src={item.logo_url} alt={item.name} fill className="object-contain" />
+                                 <Image src={item.logo_url} alt={item.name} fill sizes="32px" className="object-contain" />
                                </div>
                             ) : (
                                <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 text-slate-300">

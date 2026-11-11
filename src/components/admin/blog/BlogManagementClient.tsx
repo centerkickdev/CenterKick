@@ -307,6 +307,7 @@ export default function BlogManagementClient({
                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                                  alt={asset.filename} 
                                  fill
+                                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 250px"
                               />
                               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3 p-4">
                                  <button 

@@ -7,6 +7,8 @@ import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
 import { NewsContentClient } from './NewsContentClient';
 
+export const revalidate = 300;
+
 interface Props {
    params: Promise<{ slug: string }>;
 }

@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { DirectoryFilterBar } from '@/components/common/DirectoryFilterBar';
+import { getOptimizedImageUrl } from '@/lib/utils/image';
 
 export default function AgentsClient({ agents }: { agents: any[] }) {
    const [searchQuery, setSearchQuery] = useState('');
@@ -49,7 +50,7 @@ export default function AgentsClient({ agents }: { agents: any[] }) {
                      <Link href={`/agents/${agent.slug}`} key={agent.id}
                         className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 block">
                         <div className="relative h-40 sm:h-52 overflow-hidden bg-gray-100">
-                           <img src={agent.avatar_url || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=60&w=400&auto=format&fit=crop"}
+                           <img src={getOptimizedImageUrl(agent.avatar_url, { width: 400, height: 500 }) || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=60&w=400&auto=format&fit=crop"}
                               alt={name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500" loading="lazy" decoding="async" />
                         </div>
                         <div className="p-4">
