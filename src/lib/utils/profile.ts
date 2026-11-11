@@ -23,7 +23,6 @@ export function isProfileComplete(profile: any): boolean {
       Boolean(profile.first_name),
       Boolean(profile.last_name),
       Boolean(profile.gallery_urls && profile.gallery_urls.length >= 2),
-      Boolean(profile.video_links && profile.video_links.length >= 1)
     ];
     return checks.filter(Boolean).length === checks.length;
   }

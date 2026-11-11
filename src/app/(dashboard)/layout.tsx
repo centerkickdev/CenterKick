@@ -108,7 +108,6 @@ export default async function DashboardLayout({
     Boolean(p.cover_url),
     ...(isPlayer ? [
       Boolean(p.gallery_urls?.length >= 2),
-      Boolean(p.video_links?.length >= 1)
     ] : []),
     Boolean(p.first_name),
     Boolean(p.last_name)

@@ -28,7 +28,6 @@ export function ProfileCompletenessWidget({ role, formData }: ProfileCompletenes
     { id: 'last_name', label: 'Last Name', completed: Boolean(formData.last_name) },
     ...(isPlayer ? [
       { id: 'gallery', label: 'Portfolio Images (2+)', completed: Boolean(formData.gallery_urls && formData.gallery_urls.length >= 2) },
-      { id: 'video', label: 'Portfolio Videos (1+)', completed: Boolean(formData.video_links && formData.video_links.length >= 1) },
     ] : []),
   ];
 

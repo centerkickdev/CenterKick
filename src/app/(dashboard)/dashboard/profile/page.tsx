@@ -953,7 +953,6 @@ export default function ProfileEditor() {
     Boolean(profile?.cover_url),
     ...(isPlayer ? [
       Boolean(profile?.gallery_urls?.length >= 2),
-      Boolean(profile?.video_links?.length >= 1)
     ] : []),
     Boolean(profile?.first_name),
     Boolean(profile?.last_name)
@@ -1772,7 +1771,7 @@ export default function ProfileEditor() {
                 <div className="space-y-3 pt-6 border-t border-gray-50">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-bold text-gray-900 tracking-wide">My YouTube Channel</label>
-                    <span className="text-[10px] font-medium text-gray-500">Optional</span>
+                    <span className="text-xs font-medium text-gray-500">Optional</span>
                   </div>
                   <input
                     disabled={!isEditing}
@@ -1793,7 +1792,10 @@ export default function ProfileEditor() {
                 {/* Embedded Videos */}
                 <div className="space-y-6 pt-10 border-t border-gray-50">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold text-gray-900 tracking-wide">Video Highlights</h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-gray-900 tracking-wide">Video Highlights</h4>
+                      <span className="text-xs font-medium text-gray-500">Optional</span>
+                    </div>
                     <span className="text-xs font-bold bg-gray-900 text-white px-2.5 py-1 rounded-lg">{videoLinks.length} / 6 Videos</span>
                   </div>
 
