@@ -1,30 +1,16 @@
 /**
  * Utility for image optimization and thumbnail resolution.
- * Transforms Supabase Storage and external URLs into lightweight, properly-sized WebP thumbnails.
+ * Keeps standard public storage URLs safe and intact while optimizing external CDNs (like Unsplash).
  */
 export function getOptimizedImageUrl(
   url: string | null | undefined,
-  options: { width?: number; height?: number; quality?: number; resize?: 'cover' | 'contain' } = {}
+  options: { width?: number; height?: number; quality?: number } = {}
 ): string {
   if (!url) return '';
-  const { width = 400, height = 400, quality = 80, resize = 'cover' } = options;
+  const { width = 400, quality = 80 } = options;
 
   try {
-    // 1. Supabase Storage: Use render endpoint for dynamic resizing/optimization
-    if (url.includes('/storage/v1/object/public/')) {
-      const transformedUrl = url.replace(
-        '/storage/v1/object/public/',
-        '/storage/v1/render/image/public/'
-      );
-      const urlObj = new URL(transformedUrl);
-      urlObj.searchParams.set('width', width.toString());
-      if (height) urlObj.searchParams.set('height', height.toString());
-      urlObj.searchParams.set('quality', quality.toString());
-      urlObj.searchParams.set('resize', resize);
-      return urlObj.toString();
-    }
-
-    // 2. Unsplash CDN images: apply width and quality
+    // 1. Unsplash CDN images: apply width and quality params
     if (url.includes('images.unsplash.com')) {
       const urlObj = new URL(url);
       urlObj.searchParams.set('w', width.toString());
@@ -32,10 +18,13 @@ export function getOptimizedImageUrl(
       urlObj.searchParams.set('auto', 'format');
       return urlObj.toString();
     }
+
+    // 2. Supabase Storage: Preserve exact /storage/v1/object/public/ path
+    // Next.js <Image /> handles device-size resizing, AVIF/WebP conversion, and caching
+    return url;
   } catch (_) {
     return url;
   }
-
-  return url;
 }
+
 
