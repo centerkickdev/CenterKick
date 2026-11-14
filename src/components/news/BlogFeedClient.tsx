@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Search, Calendar as CalendarIcon, Newspaper, Star, ArrowRight, Tag as TagIcon, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { DateDisplay } from '@/components/common/DateDisplay';
+import { SkeletonImage } from '@/components/common/SkeletonImage';
 import Link from 'next/link';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -115,7 +116,14 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                    <Link href={`/news/${post.slug}`} key={post.id} className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full">
                       <div className="h-64 overflow-hidden relative">
                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors z-10" />
-                         <img src={post.cover_image_url || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                         <SkeletonImage
+                            src={post.cover_image_url || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'}
+                            alt={post.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            name={post.title}
+                            role="News"
+                            variant="light"
+                         />
                          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold tracking-wide text-gray-900 z-20">
                             {post.category?.name || 'News'}
                          </div>
@@ -200,7 +208,14 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                         <Link href={`/news/${post.slug}`} key={post.id} className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden hover:shadow-lg transition-all group flex flex-col h-full">
                            <div className="h-44 overflow-hidden relative">
                               <div className="absolute inset-0 bg-black/10 group-hover:opacity-0 transition-opacity z-10" />
-                              <img src={post.cover_image_url || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                              <SkeletonImage
+                                 src={post.cover_image_url || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'}
+                                 alt={post.title}
+                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 name={post.title}
+                                 role="News"
+                                 variant="light"
+                              />
                            </div>
                            <div className="p-6 flex flex-col flex-1 justify-between">
                               <h3 className="font-bold text-gray-900 text-sm leading-snug mb-4 group-hover:text-[#b50a0a] transition-colors line-clamp-2 tracking-tighter">{post.title}</h3>

@@ -9,6 +9,7 @@ import parse from 'html-react-parser';
 import { ImageLightbox } from '@/components/common/ImageLightbox';
 import { useToast } from '@/context/ToastContext';
 import { trackProfileView } from '@/app/actions/tracking';
+import { SkeletonImage } from '@/components/common/SkeletonImage';
 
 const formatAbsoluteUrl = (url: string) => {
    if (!url) return '';
@@ -145,12 +146,15 @@ export default function ProfessionalDetailsClient({ profile }: ProfessionalDetai
 
                {/* Mobile: stacked layout */}
                <div className="relative z-10 flex flex-col md:hidden items-center pt-10 pb-0 px-6 text-white text-center">
-                  <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-[#b50a0a] shadow-2xl mb-6 shrink-0">
-                     <img
-                        src={profile.avatar_url || "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=400&auto=format&fit=crop"}
+                  <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-[#b50a0a] shadow-2xl mb-6 shrink-0 aspect-square">
+                     <SkeletonImage
+                        src={profile.avatar_url}
                         alt={displayName}
-                        className="w-full h-full object-cover object-top"
-                        loading="lazy"
+                        name={displayName}
+                        role={professionTitle}
+                        variant="dark"
+                        className="object-cover object-top"
+                        containerClassName="w-full h-full"
                      />
                   </div>
                   <span className="text-[#ff4d4d] text-xs font-bold tracking-[0.2em] uppercase mb-2">{professionTitle}</span>
@@ -188,11 +192,15 @@ export default function ProfessionalDetailsClient({ profile }: ProfessionalDetai
                   <div className="w-[40%] h-full relative flex items-center justify-center">
                      <div className="absolute w-[300px] h-[300px] lg:w-[360px] lg:h-[360px] bg-[#b50a0a]/20 blur-[100px] rounded-full" />
                      <div className="w-[300px] h-[300px] lg:w-[360px] lg:h-[360px] rounded-full border-[6px] border-[#b50a0a] shadow-2xl overflow-hidden relative z-10 shrink-0 aspect-square">
-                        <img
-                           src={profile.avatar_url || "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=600&auto=format&fit=crop"}
+                        <SkeletonImage
+                           src={profile.avatar_url}
                            alt={displayName}
-                           className="w-full h-full object-cover object-top"
+                           name={displayName}
+                           role={professionTitle}
+                           variant="dark"
                            loading="eager"
+                           className="w-full h-full object-cover object-top"
+                           containerClassName="w-full h-full"
                         />
                      </div>
                   </div>
@@ -463,8 +471,13 @@ export default function ProfessionalDetailsClient({ profile }: ProfessionalDetai
                            <h3 className="text-sm font-bold text-gray-500 tracking-[0.2em] mb-6 uppercase">Photos</h3>
                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                               {profile.gallery_urls.map((media: any, i: number) => (
-                                 <div key={i} className="relative aspect-square rounded-3xl overflow-hidden group cursor-pointer" onClick={() => setSelectedImageIndex(i)}>
-                                    <img src={media.url || media} alt="Gallery" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                 <div key={i} className="relative aspect-square rounded-3xl overflow-hidden group cursor-pointer bg-gray-100" onClick={() => setSelectedImageIndex(i)}>
+                                    <SkeletonImage
+                                       src={media.url || media}
+                                       alt={`Gallery photo ${i + 1}`}
+                                       variant="light"
+                                       className="group-hover:scale-110 transition-transform duration-700"
+                                    />
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500"></div>
                                  </div>
                               ))}

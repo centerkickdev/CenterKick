@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Metadata, ResolvingMetadata } from 'next';
 import { NewsContentClient } from './NewsContentClient';
+import { SkeletonImage } from '@/components/common/SkeletonImage';
 
 export const revalidate = 300;
 
@@ -156,10 +157,13 @@ export default async function PostPage({ params }: Props) {
                {post.cover_image_url && (
                   <div className="mb-16 -mx-4 lg:-mx-12">
                      <div className="aspect-[21/9] rounded-none lg:rounded-[3rem] overflow-hidden shadow-2xl shadow-red-900/10">
-                        <img
+                        <SkeletonImage
                            src={post.cover_image_url}
                            alt={post.title}
                            className="w-full h-full object-cover"
+                           name={post.title}
+                           role="News"
+                           variant="light"
                         />
                      </div>
                   </div>
@@ -195,10 +199,13 @@ export default async function PostPage({ params }: Props) {
                         {relatedPosts.map((related) => (
                            <Link href={`/news/${related.slug}`} key={related.id} className="group space-y-4">
                               <div className="aspect-video rounded-2xl overflow-hidden border border-gray-100 bg-gray-50">
-                                 <img
+                                 <SkeletonImage
                                     src={related.cover_image_url || 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800'}
                                     alt={related.title}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    name={related.title}
+                                    role="News"
+                                    variant="light"
                                  />
                               </div>
                               <h4 className="text-base font-bold text-gray-900 tracking-tighter group-hover:text-[#b50a0a] transition-colors leading-tight line-clamp-2">

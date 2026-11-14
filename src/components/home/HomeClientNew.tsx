@@ -22,6 +22,7 @@ import { Footer } from '@/components/layout/Footer';
 import { useState, useEffect, useRef } from 'react';
 import { DateDisplay } from '@/components/common/DateDisplay';
 import { getOptimizedImageUrl } from '@/lib/utils/image';
+import { SkeletonImage } from '@/components/common/SkeletonImage';
 
 interface Post {
   id: string;
@@ -289,19 +290,21 @@ export function HomeClient({
                     className="group flex flex-col bg-white rounded-2xl sm:rounded-[1.8rem] overflow-hidden border border-gray-100 shadow-md hover:shadow-lg transition-all duration-300 h-full"
                   >
                     {/* Image Area */}
-                    <div className="relative w-full aspect-[16/9] overflow-hidden bg-black shrink-0">
-                      <Image
+                    <div className="relative w-full aspect-[16/9] overflow-hidden bg-gray-950 shrink-0">
+                      <SkeletonImage
                         src={getOptimizedImageUrl(news.cover_image_url, { width: 500, height: 280 }) || IMG_NEWS_DEFAULT}
                         alt={news.title}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 320px"
+                        name={news.title}
+                        role="News"
+                        variant="dark"
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        containerClassName="absolute inset-0"
                       />
                     </div>
                     {/* Text Area */}
                     <div className="p-3.5 sm:p-5 text-left flex-1 flex flex-col justify-between">
                       <div>
-                        <DateDisplay date={news.published_at} className="text-gray-400 text-[10px] sm:text-xs font-bold tracking-wide mb-1 sm:mb-2 block" />
+                        <DateDisplay date={news.published_at} className="text-gray-400 text-xs font-bold tracking-wide mb-1 sm:mb-2 block" />
                         <h5 className="text-xs sm:text-base font-bold text-gray-900 leading-tight sm:leading-snug line-clamp-4 group-hover:text-[#b50a0a] transition-colors">
                           {news.title}
                         </h5>
@@ -337,33 +340,38 @@ export function HomeClient({
           <ProfileCarousel
             items={playersData}
             mobileLimit={6}
-            renderItem={(player) => (
-              <Link href={`/players/${player.slug}`} className="group relative block aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-black shadow-lg border border-gray-100">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-                <Image
-                  src={getOptimizedImageUrl(player.avatar_url, { width: 400, height: 500 }) || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop"}
-                  alt={getDisplayName(player)}
-                  fill
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 250px"
-                  className="object-cover transition-all duration-700 group-hover:scale-105 opacity-90"
-                />
+            renderItem={(player) => {
+              const displayName = getDisplayName(player);
+              return (
+                <Link href={`/players/${player.slug}`} className="group relative block aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-gray-950 shadow-lg border border-gray-100">
+                  <SkeletonImage
+                    src={getOptimizedImageUrl(player.avatar_url, { width: 400, height: 500 })}
+                    alt={displayName}
+                    name={displayName}
+                    role={player.position || 'Footballer'}
+                    variant="dark"
+                    className="object-cover transition-all duration-700 group-hover:scale-105 opacity-90"
+                    containerClassName="absolute inset-0"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pointer-events-none" />
 
-                <div className="absolute bottom-0 inset-x-0 p-2.5 sm:p-3.5 z-20 flex flex-col justify-end items-center text-center gap-0.5 sm:gap-1 backdrop-blur-[3px] bg-black/30 rounded-b-2xl sm:rounded-b-3xl">
-                  <div>
-                    <span className="inline-flex items-center justify-center bg-white text-[#b50a0a] text-[9px] sm:text-xs font-black tracking-wider px-2.5 py-0.5 rounded-full shadow-sm border-0 max-w-full truncate">
-                      {player.position || 'Footballer'}
-                    </span>
+                  <div className="absolute bottom-0 inset-x-0 p-2.5 sm:p-3.5 z-20 flex flex-col justify-end items-center text-center gap-0.5 sm:gap-1 backdrop-blur-[3px] bg-black/30 rounded-b-2xl sm:rounded-b-3xl pointer-events-none">
+                    <div>
+                      <span className="inline-flex items-center justify-center bg-white text-[#b50a0a] text-xs font-black tracking-wider px-2.5 py-0.5 rounded-full shadow-sm border-0 max-w-full truncate">
+                        {player.position || 'Footballer'}
+                      </span>
+                    </div>
+                    <h3 className="text-xs sm:text-base font-bold text-white leading-tight tracking-tight group-hover:text-red-400 transition-colors line-clamp-1 w-full text-center">
+                      {displayName}
+                    </h3>
+                    <div className="flex items-center justify-center gap-1 text-white/90 text-xs font-semibold tracking-wide truncate w-full">
+                      <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#ff4d4d] shrink-0" />
+                      <span className="truncate">{player.country || 'Global'}</span>
+                    </div>
                   </div>
-                  <h3 className="text-xs sm:text-base font-bold text-white leading-tight tracking-tight group-hover:text-red-400 transition-colors line-clamp-1 w-full text-center">
-                    {getDisplayName(player)}
-                  </h3>
-                  <div className="flex items-center justify-center gap-1 text-white/90 text-[9px] sm:text-xs font-semibold tracking-wide truncate w-full">
-                    <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#ff4d4d] shrink-0" />
-                    <span className="truncate">{player.country || 'Global'}</span>
-                  </div>
-                </div>
-              </Link>
-            )}
+                </Link>
+              );
+            }}
           />
 
           {/* Player Full-Width CTA Sub-section */}
@@ -424,29 +432,32 @@ export function HomeClient({
             renderItem={(coach) => {
               const coachPos = (Array.isArray(coach.current_position) ? coach.current_position[0] : coach.current_position) || coach.position;
               const hasValidPos = coachPos && !['player', 'coach'].includes(String(coachPos).toLowerCase().trim());
+              const displayName = getDisplayName(coach);
               return (
-                <Link href={`/coaches/${coach.slug}`} className="group relative block aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-white shadow-lg border border-gray-100 hover:border-[#b50a0a]/30 transition-colors">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
-                  <Image
-                    src={getOptimizedImageUrl(coach.avatar_url, { width: 400, height: 500 }) || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=600&auto=format&fit=crop"}
-                    alt={getDisplayName(coach)}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 250px"
+                <Link href={`/coaches/${coach.slug}`} className="group relative block aspect-[4/5] rounded-2xl sm:rounded-3xl overflow-hidden bg-gray-950 shadow-lg border border-gray-100 hover:border-[#b50a0a]/30 transition-colors">
+                  <SkeletonImage
+                    src={getOptimizedImageUrl(coach.avatar_url, { width: 400, height: 500 })}
+                    alt={displayName}
+                    name={displayName}
+                    role={hasValidPos ? coachPos : 'Coach'}
+                    variant="dark"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    containerClassName="absolute inset-0"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pointer-events-none" />
 
-                  <div className="absolute bottom-0 inset-x-0 p-2.5 sm:p-3.5 z-20 flex flex-col justify-end items-center text-center gap-0.5 sm:gap-1 backdrop-blur-[3px] bg-black/30 rounded-b-2xl sm:rounded-b-3xl">
+                  <div className="absolute bottom-0 inset-x-0 p-2.5 sm:p-3.5 z-20 flex flex-col justify-end items-center text-center gap-0.5 sm:gap-1 backdrop-blur-[3px] bg-black/30 rounded-b-2xl sm:rounded-b-3xl pointer-events-none">
                     {hasValidPos && (
                       <div>
-                        <span className="inline-flex items-center justify-center bg-white text-[#b50a0a] text-[9px] sm:text-xs font-black tracking-wider px-2.5 py-0.5 rounded-full shadow-sm border-0 max-w-full truncate">
+                        <span className="inline-flex items-center justify-center bg-white text-[#b50a0a] text-xs font-black tracking-wider px-2.5 py-0.5 rounded-full shadow-sm border-0 max-w-full truncate">
                           {coachPos}
                         </span>
                       </div>
                     )}
                     <h3 className="text-xs sm:text-base font-bold text-white leading-tight tracking-tight group-hover:text-red-400 transition-colors line-clamp-1 w-full text-center">
-                      {getDisplayName(coach)}
+                      {displayName}
                     </h3>
-                    <div className="flex items-center justify-center gap-1 text-white/90 text-[9px] sm:text-xs font-semibold tracking-wide truncate w-full">
+                    <div className="flex items-center justify-center gap-1 text-white/90 text-xs font-semibold tracking-wide truncate w-full">
                       <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#ff4d4d] shrink-0" />
                       <span className="truncate">{coach.country || 'Global'}</span>
                     </div>

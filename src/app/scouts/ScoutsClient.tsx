@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import { DirectoryFilterBar } from '@/components/common/DirectoryFilterBar';
 import { getOptimizedImageUrl } from '@/lib/utils/image';
+import { SkeletonImage } from '@/components/common/SkeletonImage';
 
 export default function ScoutsClient({ scouts }: { scouts: any[] }) {
    const [searchQuery, setSearchQuery] = useState('');
@@ -46,11 +47,18 @@ export default function ScoutsClient({ scouts }: { scouts: any[] }) {
                   const name = scout.full_name || `${scout.first_name || ''} ${scout.last_name || ''}`.trim() || 'Scout';
                   return (
                      <Link href={`/scouts/${scout.slug}`} key={scout.id}
-                        className="group relative h-[260px] sm:h-[340px] rounded-2xl overflow-hidden bg-gray-900 block shadow-md hover:shadow-xl transition-all duration-300">
-                        <img src={getOptimizedImageUrl(scout.avatar_url, { width: 400, height: 500 }) || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=60&w=400&auto=format&fit=crop"}
-                           alt={name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90" loading="lazy" decoding="async" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                        className="group relative h-[260px] sm:h-[340px] rounded-2xl overflow-hidden bg-gray-950 block shadow-md hover:shadow-xl transition-all duration-300">
+                        <SkeletonImage
+                           src={getOptimizedImageUrl(scout.avatar_url, { width: 400, height: 500 })}
+                           alt={name}
+                           name={name}
+                           role={scout.agency_name || 'Scout'}
+                           variant="dark"
+                           className="group-hover:scale-105 transition-transform duration-500"
+                           containerClassName="absolute inset-0"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 pointer-events-none">
                            <span className="text-[#ff4d4d] text-xs font-bold tracking-wide block mb-0.5">{scout.country || 'Global'}</span>
                            <h3 className="text-white font-bold text-base leading-tight tracking-tight line-clamp-2">{name}</h3>
                         </div>

@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/context/ToastContext";
 import { trackProfileView } from '@/app/actions/tracking';
+import { SkeletonImage } from '@/components/common/SkeletonImage';
 
 import { formatCurrencyAmount } from '@/lib/utils/currency';
 
@@ -196,12 +197,15 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
 
                {/* Mobile: stacked layout */}
                <div className="relative z-10 flex flex-col md:hidden items-center pt-10 pb-0 px-6 text-white text-center">
-                  <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-[#b50a0a] shadow-2xl mb-6 shrink-0">
-                     <img
-                        src={athlete.avatar_url || "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=400&auto=format&fit=crop"}
+                  <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-[#b50a0a] shadow-2xl mb-6 shrink-0 aspect-square">
+                     <SkeletonImage
+                        src={athlete.avatar_url}
                         alt={displayName}
-                        className="w-full h-full object-cover object-top"
-                        loading="lazy"
+                        name={displayName}
+                        role={profilePosition}
+                        variant="dark"
+                        className="object-cover object-top"
+                        containerClassName="w-full h-full"
                      />
                   </div>
                   <span className="text-[#ff4d4d] font-bold tracking-[0.3em] mb-2 text-xs uppercase">{profilePosition}</span>
@@ -272,11 +276,15 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                   <div className="w-[40%] h-full relative flex items-center justify-center">
                      <div className="absolute w-[300px] h-[300px] lg:w-[360px] lg:h-[360px] bg-[#b50a0a]/20 blur-[100px] rounded-full" />
                      <div className="w-[300px] h-[300px] lg:w-[360px] lg:h-[360px] rounded-full border-[6px] border-[#b50a0a] shadow-2xl overflow-hidden relative z-10 shrink-0 aspect-square">
-                        <img
-                           src={athlete.avatar_url || "https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?q=80&w=600&auto=format&fit=crop"}
+                        <SkeletonImage
+                           src={athlete.avatar_url}
                            alt={displayName}
-                           className="w-full h-full object-cover object-top"
+                           name={displayName}
+                           role={profilePosition}
+                           variant="dark"
                            loading="eager"
+                           className="object-cover object-top"
+                           containerClassName="w-full h-full"
                         />
                      </div>
                   </div>
@@ -482,8 +490,13 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                            <h3 className="text-sm font-bold text-gray-500 tracking-[0.2em] mb-6 uppercase">Action Shots</h3>
                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                               {athlete.gallery_urls.map((url: string, i: number) => (
-                                 <div key={i} onClick={() => setSelectedImageIndex(i)} className="aspect-square bg-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 group cursor-pointer">
-                                    <img src={url} alt="Action shot" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                                 <div key={i} onClick={() => setSelectedImageIndex(i)} className="aspect-square bg-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-gray-100 group cursor-pointer relative">
+                                    <SkeletonImage
+                                       src={url}
+                                       alt={`Action shot ${i + 1}`}
+                                       variant="light"
+                                       className="group-hover:scale-105 transition-transform duration-700"
+                                    />
                                  </div>
                               ))}
                            </div>

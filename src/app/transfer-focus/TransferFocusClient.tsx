@@ -3,6 +3,7 @@
 import { Search, SlidersHorizontal, ChevronLeft, ChevronRight, User } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect, useMemo } from "react";
+import { SkeletonImage } from '@/components/common/SkeletonImage';
 
 export interface Profile {
    id: string;
@@ -316,10 +317,13 @@ export default function TransferFocusClient({ profiles, newsPosts }: TransferFoc
                                           <td className="px-8 py-4.5 border-r border-gray-100">
                                              <div className="flex items-center gap-4">
                                                 <div className="relative w-10 h-10 rounded-full overflow-hidden border border-emerald-500/20 shadow-sm shrink-0">
-                                                   <img 
-                                                      src={profile.avatar_url || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=150"} 
-                                                      alt={name} 
-                                                      className="w-full h-full object-cover" 
+                                                   <SkeletonImage
+                                                      src={profile.avatar_url}
+                                                      alt={name}
+                                                      name={name}
+                                                      role={profile.position || 'Player'}
+                                                      variant="light"
+                                                      className="w-full h-full object-cover"
                                                    />
                                                 </div>
                                                 <Link href={`/${roleSlug}/${profile.slug}`} className="font-bold text-xs text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer">
@@ -342,10 +346,13 @@ export default function TransferFocusClient({ profiles, newsPosts }: TransferFoc
                                           <td className="px-8 py-4.5 border-r border-gray-100">
                                              <div className="flex items-center gap-4">
                                                 <div className="relative w-10 h-10 rounded-full overflow-hidden border border-emerald-500/20 shadow-sm shrink-0">
-                                                   <img 
-                                                      src={profile.avatar_url || "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=150"} 
-                                                      alt={name} 
-                                                      className="w-full h-full object-cover" 
+                                                   <SkeletonImage
+                                                      src={profile.avatar_url}
+                                                      alt={name}
+                                                      name={name}
+                                                      role={profile.position || 'Player'}
+                                                      variant="light"
+                                                      className="w-full h-full object-cover"
                                                    />
                                                 </div>
                                                 <Link href={`/${roleSlug}/${profile.slug}`} className="font-bold text-xs text-gray-900 hover:text-[#b50a0a] transition-colors cursor-pointer">
@@ -382,9 +389,12 @@ export default function TransferFocusClient({ profiles, newsPosts }: TransferFoc
                                                    <td className="px-8 py-4.5 border-r border-gray-100">
                                                       <div className="flex items-center gap-4">
                                                          <div className="relative w-10 h-10 rounded-full overflow-hidden border border-amber-500/20 shadow-sm shrink-0">
-                                                            <img 
-                                                               src={profile.avatar_url || "https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=150"} 
+                                                            <SkeletonImage 
+                                                               src={profile.avatar_url} 
                                                                alt={name} 
+                                                               name={name}
+                                                               role="Coach"
+                                                               variant="light"
                                                                className="w-full h-full object-cover" 
                                                             />
                                                          </div>
@@ -461,8 +471,16 @@ export default function TransferFocusClient({ profiles, newsPosts }: TransferFoc
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {newsPosts.map((news) => (
                      <Link href={`/news/${news.slug}`} key={`news-${news.id}`} className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 group cursor-pointer hover:shadow-xl transition-all block">
-                        <div className="h-[200px] overflow-hidden relative">
-                           <img src={news.cover_image_url || 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=600'} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <div className="h-[200px] overflow-hidden relative bg-gray-100">
+                           <SkeletonImage
+                              src={news.cover_image_url || 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=600'}
+                              alt={news.title}
+                              name={news.title}
+                              role="Transfer"
+                              variant="light"
+                              className="group-hover:scale-105 transition-transform duration-500"
+                              containerClassName="w-full h-full"
+                           />
                         </div>
                         <div className="p-6 relative">
                            <div className="absolute top-0 left-6 w-[30px] h-[3px] bg-[#b50a0a]"></div>
