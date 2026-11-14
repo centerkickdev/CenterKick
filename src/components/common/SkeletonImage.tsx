@@ -24,10 +24,10 @@ export interface SkeletonImageProps {
 
 /**
  * High-performance, subtle skeleton image loader.
- * - Keeps a subtle, muted shimmer overlay visible until the image is 100% loaded and decoded in background.
- * - Eliminates progressive-render artifacts, top-to-bottom scan lines, and abrupt pop-in.
- * - Detects cached images immediately to prevent jarring skeleton flashes.
- * - Gracefully falls back to SilhouetteInitialsFallback on error or missing src.
+ * - Displays a visible, elegant silhouette skeleton while the image is loading.
+ * - Instantly displays cached images without flashing a skeleton.
+ * - Automatically falls back to SilhouetteInitialsFallback if the image fails or times out.
+ * - Seamlessly crossfades the real image once decoded.
  */
 export function SkeletonImage({
   src,
@@ -59,72 +59,55 @@ export function SkeletonImage({
   useEffect(() => {
     if (!src) {
       setIsLoaded(false);
+      setHasError(true);
       setIsShimmerVisible(false);
       return;
     }
 
     setHasError(false);
 
-    // Fast-path for already-cached images in browser memory
-    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
-      setIsLoaded(true);
-      setIsShimmerVisible(false);
-      return;
+    // Fast-path: check if image is already cached and loaded by the browser
+    if (imgRef.current && imgRef.current.complete) {
+      if (imgRef.current.naturalWidth > 0) {
+        setIsLoaded(true);
+        setIsShimmerVisible(false);
+        return;
+      } else {
+        setHasError(true);
+        setIsShimmerVisible(false);
+        return;
+      }
     }
 
     setIsLoaded(false);
     setIsShimmerVisible(true);
 
-    let isMounted = true;
-    const preloader = new Image();
-    preloader.src = src;
-
-    const handleSuccess = async () => {
-      if (!isMounted) return;
-
-      // Decode the image off-thread to ensure all pixels are rasterized before reveal
-      try {
-        if ('decode' in preloader) {
-          await preloader.decode();
-        }
-      } catch {
-        // Safe fallback: decode promise rejection still allows image presentation
+    // Safety timeout: if image stalls or network hangs for > 7s, gracefully show fallback
+    const timeoutId = setTimeout(() => {
+      if (!imgRef.current?.complete) {
+        setHasError(true);
+        setIsShimmerVisible(false);
       }
+    }, 7000);
 
-      if (!isMounted) return;
-      setIsLoaded(true);
-      if (onLoad) onLoad();
+    return () => clearTimeout(timeoutId);
+  }, [src]);
 
-      // Smoothly hide shimmer overlay after the crossfade transition
-      setTimeout(() => {
-        if (isMounted) {
-          setIsShimmerVisible(false);
-        }
-      }, 300);
-    };
-
-    const handleError = () => {
-      if (!isMounted) return;
-      setHasError(true);
+  const handleLoad = () => {
+    setIsLoaded(true);
+    setTimeout(() => {
       setIsShimmerVisible(false);
-      if (onError) onError();
-    };
+    }, 200);
+    if (onLoad) onLoad();
+  };
 
-    if (preloader.complete && preloader.naturalWidth > 0) {
-      handleSuccess();
-    } else {
-      preloader.onload = handleSuccess;
-      preloader.onerror = handleError;
-    }
+  const handleError = () => {
+    setHasError(true);
+    setIsShimmerVisible(false);
+    if (onError) onError();
+  };
 
-    return () => {
-      isMounted = false;
-      preloader.onload = null;
-      preloader.onerror = null;
-    };
-  }, [src, onLoad, onError]);
-
-  // Clean fallback when image fails to load or is not provided
+  // Graceful fallback on missing src or load error
   if (!src || hasError) {
     return (
       <div className={`relative w-full h-full ${aspectRatio || ''} ${containerClassName}`}>
@@ -143,25 +126,39 @@ export function SkeletonImage({
       className={`relative w-full h-full overflow-hidden ${aspectRatio || ''} ${containerClassName}`}
       onClick={onClick}
     >
-      {/* Subtle, muted shimmer overlay: stays on top until background decode is 100% complete */}
+      {/* Skeleton loading overlay: visible, subtle shimmer with silhouette outline */}
       {isShimmerVisible && (
         <div
-          className={`absolute inset-0 z-10 pointer-events-none transition-opacity duration-300 ease-out ${
+          className={`absolute inset-0 z-10 pointer-events-none flex flex-col items-center justify-center transition-opacity duration-300 ease-out ${
             isLoaded ? 'opacity-0' : 'opacity-100'
-          } ${isDark ? 'bg-zinc-900' : 'bg-gray-100'}`}
+          } ${isDark ? 'bg-zinc-800' : 'bg-gray-200'}`}
           aria-hidden="true"
         >
+          {/* Subtle silhouette silhouette outline inside skeleton */}
+          <svg
+            className={`w-2/5 h-2/5 transition-opacity duration-300 ${
+              isDark ? 'text-zinc-700/80 fill-current' : 'text-gray-300 fill-current'
+            }`}
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="12" cy="7" r="4.25" />
+            <path d="M12 12.5c-4.5 0-8 2.5-8.5 6.5-.2 1.5.8 2.5 2.2 2.5h12.6c1.4 0 2.4-1 2.2-2.5-.5-4-4-6.5-8.5-6.5z" />
+          </svg>
+
+          {/* Animated pulse wave */}
           <div
-            className={`w-full h-full animate-pulse ${
+            className={`absolute inset-0 animate-pulse ${
               isDark
-                ? 'bg-gradient-to-r from-transparent via-zinc-800/40 to-transparent'
-                : 'bg-gradient-to-r from-transparent via-gray-200/50 to-transparent'
+                ? 'bg-gradient-to-r from-transparent via-zinc-700/50 to-transparent'
+                : 'bg-gradient-to-r from-transparent via-white/50 to-transparent'
             }`}
           />
         </div>
       )}
 
-      {/* Actual image: stays completely hidden (opacity-0) until decoded in background, then seamlessly reveals */}
+      {/* Actual image: smoothly crossfades once loaded and decoded */}
       <img
         ref={imgRef}
         src={src}
@@ -170,14 +167,11 @@ export function SkeletonImage({
         decoding={decoding}
         fetchPriority={effectiveFetchPriority}
         sizes={sizes}
+        onLoad={handleLoad}
+        onError={handleError}
         className={`w-full h-full object-cover transition-opacity duration-300 ease-out ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         } ${className}`}
-        onError={() => {
-          setHasError(true);
-          setIsShimmerVisible(false);
-          if (onError) onError();
-        }}
       />
     </div>
   );

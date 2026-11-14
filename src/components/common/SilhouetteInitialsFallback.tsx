@@ -31,24 +31,24 @@ export function SilhouetteInitialsFallback({
     <div
       className={`relative w-full h-full flex flex-col items-center justify-center overflow-hidden select-none ${
         isDark
-          ? 'bg-gradient-to-b from-gray-900 via-gray-950 to-black text-gray-400'
+          ? 'bg-gradient-to-b from-zinc-900 via-zinc-950 to-black text-gray-300'
           : 'bg-gradient-to-b from-gray-100 via-gray-200 to-gray-300 text-gray-500'
       } ${className}`}
       aria-label={name ? `${name} placeholder` : 'Profile placeholder'}
     >
       {/* Background stylized field/radial accent */}
       <div
-        className={`absolute inset-0 opacity-40 ${
+        className={`absolute inset-0 opacity-50 ${
           isDark
-            ? 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-800 via-transparent to-transparent'
+            ? 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-800/80 via-transparent to-transparent'
             : 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent'
         }`}
       />
 
-      {/* Elegant Athlete Silhouette SVG */}
+      {/* Elegant Athlete Silhouette SVG with strong contrast */}
       <svg
         className={`w-3/5 h-3/5 transition-transform duration-500 group-hover:scale-105 ${
-          isDark ? 'text-gray-800/80 fill-current' : 'text-gray-400/80 fill-current'
+          isDark ? 'text-zinc-700/90 fill-current' : 'text-gray-400/80 fill-current'
         }`}
         viewBox="0 0 24 24"
         fill="currentColor"
@@ -65,8 +65,8 @@ export function SilhouetteInitialsFallback({
         <div
           className={`flex items-center justify-center w-12 h-12 rounded-full border shadow-lg backdrop-blur-md transition-all duration-300 group-hover:scale-110 ${
             isDark
-              ? 'bg-black/70 border-[#b50a0a]/50 text-white shadow-black/80'
-              : 'bg-white/80 border-[#b50a0a]/40 text-gray-900 shadow-gray-400/50'
+              ? 'bg-black/85 border-[#b50a0a]/70 text-white shadow-black/80'
+              : 'bg-white/90 border-[#b50a0a]/50 text-gray-900 shadow-gray-400/50'
           }`}
         >
           <span className="text-sm font-bold tracking-wider">{initials}</span>

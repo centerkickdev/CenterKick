@@ -13,7 +13,7 @@ export default async function PlayersPage() {
 
    const [{ navContent, footerContent, siteSettings }, filteredPlayers] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('directory_players_list_v3', async () => {
+      getCachedData('directory_players_list_v4', async () => {
          const { data: players, error } = await adminSupabase
             .from('profiles')
             .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, position, country, status, role, users:users!profiles_user_id_fkey!inner(role)')

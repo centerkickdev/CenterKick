@@ -22,12 +22,15 @@ export function isProfileComplete(profile: any): boolean {
 
   if (!hasName) return false;
 
+  // Profile picture is mandatory across all user account types to be listed live
+  const hasAvatar = Boolean(profile.avatar_url || profile.logo_url);
+  if (!hasAvatar) return false;
+
   if (role === 'player' || role === 'athlete') {
-    // Players must have a first name, last name, and an avatar or gallery
     return Boolean(
       profile.first_name &&
       profile.last_name &&
-      (profile.avatar_url || (profile.gallery_urls && profile.gallery_urls.length > 0))
+      profile.avatar_url
     );
   }
 

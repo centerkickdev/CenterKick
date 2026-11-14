@@ -13,7 +13,7 @@ export default async function AgentsPage() {
 
    const [{ navContent, footerContent, siteSettings }, filteredAgents] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('directory_agents_list_v3', async () => {
+      getCachedData('directory_agents_list_v4', async () => {
          const { data: agents, error } = await adminSupabase
             .from('profiles')
             .select('id, slug, first_name, last_name, avatar_url, cover_url, agency_name, country, status, role, users:users!profiles_user_id_fkey!inner(role)')
