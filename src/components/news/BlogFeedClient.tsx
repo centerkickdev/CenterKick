@@ -112,7 +112,7 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                 <h2 className="text-xl font-bold text-gray-900 tracking-tight">Featured Stories</h2>
              </div>
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:p-8">
-                {latestPosts.map((post) => (
+                {latestPosts.map((post, idx) => (
                    <Link href={`/news/${post.slug}`} key={post.id} className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full">
                       <div className="h-64 overflow-hidden relative">
                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors z-10" />
@@ -123,6 +123,8 @@ export default function BlogFeedClient({ layout, siteContent, initialPosts, cate
                             name={post.title}
                             role="News"
                             variant="light"
+                            priority={idx < 3}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                          />
                          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold tracking-wide text-gray-900 z-20">
                             {post.category?.name || 'News'}

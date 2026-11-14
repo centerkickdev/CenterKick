@@ -164,6 +164,8 @@ export default async function PostPage({ params }: Props) {
                            name={post.title}
                            role="News"
                            variant="light"
+                           priority={true}
+                           sizes="(max-width: 1200px) 100vw, 1200px"
                         />
                      </div>
                   </div>

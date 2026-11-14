@@ -160,6 +160,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                         name={displayName}
                         role={profile.position || 'Coach'}
                         variant="dark"
+                        priority={true}
                         className="object-cover object-top"
                         containerClassName="w-full h-full"
                      />
@@ -206,7 +207,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                            name={displayName}
                            role={profile.position || 'Coach'}
                            variant="dark"
-                           loading="eager"
+                           priority={true}
                            className="object-cover object-top"
                            containerClassName="w-full h-full"
                         />

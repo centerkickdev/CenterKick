@@ -323,6 +323,7 @@ export default function TransferFocusClient({ profiles, newsPosts }: TransferFoc
                                                       name={name}
                                                       role={profile.position || 'Player'}
                                                       variant="light"
+                                                      sizes="40px"
                                                       className="w-full h-full object-cover"
                                                    />
                                                 </div>
@@ -352,6 +353,7 @@ export default function TransferFocusClient({ profiles, newsPosts }: TransferFoc
                                                       name={name}
                                                       role={profile.position || 'Player'}
                                                       variant="light"
+                                                      sizes="40px"
                                                       className="w-full h-full object-cover"
                                                    />
                                                 </div>
@@ -395,6 +397,7 @@ export default function TransferFocusClient({ profiles, newsPosts }: TransferFoc
                                                                name={name}
                                                                role="Coach"
                                                                variant="light"
+                                                               sizes="40px"
                                                                className="w-full h-full object-cover" 
                                                             />
                                                          </div>

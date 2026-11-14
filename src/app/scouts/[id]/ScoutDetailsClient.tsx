@@ -139,6 +139,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                         name={displayName}
                         role={agencyName || 'Scout'}
                         variant="dark"
+                        priority={true}
                         className="object-cover object-top"
                         containerClassName="w-full h-full"
                      />
@@ -167,7 +168,7 @@ export default function ScoutDetailsClient({ profile }: ScoutDetailsClientProps)
                            name={displayName}
                            role={agencyName || 'Scout'}
                            variant="dark"
-                           loading="eager"
+                           priority={true}
                            className="w-full h-full object-cover object-top"
                            containerClassName="w-full h-full"
                         />

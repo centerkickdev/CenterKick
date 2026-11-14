@@ -153,6 +153,7 @@ export default function ProfessionalDetailsClient({ profile }: ProfessionalDetai
                         name={displayName}
                         role={professionTitle}
                         variant="dark"
+                        priority={true}
                         className="object-cover object-top"
                         containerClassName="w-full h-full"
                      />
@@ -198,7 +199,7 @@ export default function ProfessionalDetailsClient({ profile }: ProfessionalDetai
                            name={displayName}
                            role={professionTitle}
                            variant="dark"
-                           loading="eager"
+                           priority={true}
                            className="w-full h-full object-cover object-top"
                            containerClassName="w-full h-full"
                         />

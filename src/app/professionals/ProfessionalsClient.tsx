@@ -44,7 +44,7 @@ export default function ProfessionalsClient({ professionals }: { professionals: 
             </div>
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-               {filtered.map(pro => {
+               {filtered.map((pro, index) => {
                   const name = pro.full_name || `${pro.first_name || ''} ${pro.last_name || ''}`.trim() || 'Professional';
                   return (
                      <Link href={`/professionals/${pro.slug}`} key={pro.id}
@@ -55,6 +55,8 @@ export default function ProfessionalsClient({ professionals }: { professionals: 
                            name={name}
                            role={pro.profession_title || pro.profession_category || 'Professional'}
                            variant="dark"
+                           priority={index < 4}
+                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                            className="group-hover:scale-105 transition-transform duration-500 opacity-90"
                            containerClassName="absolute inset-0"
                         />

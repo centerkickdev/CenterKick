@@ -204,6 +204,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                         name={displayName}
                         role={profilePosition}
                         variant="dark"
+                        priority={true}
                         className="object-cover object-top"
                         containerClassName="w-full h-full"
                      />
@@ -282,7 +283,7 @@ export function PlayerDetailsClient({ athlete, careerStats = [], news = [] }: Pl
                            name={displayName}
                            role={profilePosition}
                            variant="dark"
-                           loading="eager"
+                           priority={true}
                            className="object-cover object-top"
                            containerClassName="w-full h-full"
                         />

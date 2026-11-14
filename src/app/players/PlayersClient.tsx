@@ -53,7 +53,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
             </div>
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-               {filtered.map(athlete => {
+               {filtered.map((athlete, index) => {
                   const name = athlete.full_name || `${athlete.first_name || ''} ${athlete.last_name || ''}`.trim() || 'Athlete';
                   return (
                      <Link
@@ -67,6 +67,8 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                            name={name}
                            role={athlete.position || 'Player'}
                            variant="dark"
+                           priority={index < 5}
+                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                            className="group-hover:scale-105 transition-transform duration-500"
                            containerClassName="absolute inset-0"
                         />

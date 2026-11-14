@@ -43,7 +43,7 @@ export default function CoachesClient({ coaches }: { coaches: any[] }) {
             </div>
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-               {filtered.map(coach => {
+               {filtered.map((coach, index) => {
                   const name = coach.full_name || `${coach.first_name || ''} ${coach.last_name || ''}`.trim() || 'Coach';
                   return (
                      <Link href={`/coaches/${coach.slug}`} key={coach.id}
@@ -54,6 +54,8 @@ export default function CoachesClient({ coaches }: { coaches: any[] }) {
                            name={name}
                            role={coach.position || 'Coach'}
                            variant="dark"
+                           priority={index < 4}
+                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                            className="group-hover:scale-105 transition-transform duration-500"
                            containerClassName="absolute inset-0"
                         />

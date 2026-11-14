@@ -43,7 +43,7 @@ export default function ScoutsClient({ scouts }: { scouts: any[] }) {
             </div>
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-               {filtered.map(scout => {
+               {filtered.map((scout, index) => {
                   const name = scout.full_name || `${scout.first_name || ''} ${scout.last_name || ''}`.trim() || 'Scout';
                   return (
                      <Link href={`/scouts/${scout.slug}`} key={scout.id}
@@ -54,6 +54,8 @@ export default function ScoutsClient({ scouts }: { scouts: any[] }) {
                            name={name}
                            role={scout.agency_name || 'Scout'}
                            variant="dark"
+                           priority={index < 4}
+                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                            className="group-hover:scale-105 transition-transform duration-500"
                            containerClassName="absolute inset-0"
                         />

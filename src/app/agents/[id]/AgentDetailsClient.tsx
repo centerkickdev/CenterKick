@@ -156,6 +156,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                         name={displayName}
                         role={profileAgency || 'Agent'}
                         variant="dark"
+                        priority={true}
                         className="object-cover object-top"
                         containerClassName="w-full h-full"
                      />
@@ -184,7 +185,7 @@ export default function AgentDetailsClient({ profile, managedClients }: AgentDet
                            name={displayName}
                            role={profileAgency || 'Agent'}
                            variant="dark"
-                           loading="eager"
+                           priority={true}
                            className="w-full h-full object-cover object-top"
                            containerClassName="w-full h-full"
                         />

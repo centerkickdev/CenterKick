@@ -45,7 +45,7 @@ export default function AgentsClient({ agents }: { agents: any[] }) {
             </div>
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-               {filtered.map(agent => {
+               {filtered.map((agent, index) => {
                   const name = agent.full_name || `${agent.first_name || ''} ${agent.last_name || ''}`.trim() || 'Agent';
                   return (
                      <Link href={`/agents/${agent.slug}`} key={agent.id}
@@ -57,6 +57,8 @@ export default function AgentsClient({ agents }: { agents: any[] }) {
                               name={name}
                               role={agent.agency_name || 'Agent'}
                               variant="light"
+                              priority={index < 4}
+                              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                               className="grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                            />
                         </div>

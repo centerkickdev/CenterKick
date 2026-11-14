@@ -297,6 +297,7 @@ export function HomeClient({
                         name={news.title}
                         role="News"
                         variant="dark"
+                        sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 380px"
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                         containerClassName="absolute inset-0"
                       />
@@ -350,6 +351,7 @@ export function HomeClient({
                     name={displayName}
                     role={player.position || 'Footballer'}
                     variant="dark"
+                    sizes="(max-width: 640px) 70vw, 240px"
                     className="object-cover transition-all duration-700 group-hover:scale-105 opacity-90"
                     containerClassName="absolute inset-0"
                   />
@@ -441,6 +443,7 @@ export function HomeClient({
                     name={displayName}
                     role={hasValidPos ? coachPos : 'Coach'}
                     variant="dark"
+                    sizes="(max-width: 640px) 70vw, 240px"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     containerClassName="absolute inset-0"
                   />
