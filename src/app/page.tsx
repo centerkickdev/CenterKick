@@ -22,6 +22,7 @@ export default async function Home() {
       coachesList,
       agentsScoutsList,
       organizationsList,
+      professionalsList,
       highlightPosts
    ] = await Promise.all([
       getGlobalCMSData(),
@@ -113,6 +114,22 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
+      getCachedData('home_professionals_list_v4', async () => {
+         const { data, error } = await adminSupabase
+            .from('profiles')
+            .select(HOME_PROFILE_FIELDS)
+            .eq('users.role', 'professional')
+            .eq('status', 'active')
+            .order('created_at', { ascending: false })
+            .limit(40);
+         if (error) console.error('home_professionals_list error:', error);
+         const filtered = (data || []).filter(p => {
+            const userRole = (p.users as any)?.role;
+            if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
+            return isProfileComplete(p);
+         });
+         return filtered;
+      }, 600),
       getCachedData('home_highlight_posts_v6', async () => {
          const { data, error } = await adminSupabase
             .from('cms_posts')
@@ -173,6 +190,7 @@ export default async function Home() {
    const selectedCoaches = cycleProfiles(coachesList, 10);
    const selectedAgentsScouts = cycleProfiles(agentsScoutsList, 10);
    const selectedOrganizations = cycleProfiles(organizationsList, 10);
+   const selectedProfessionals = cycleProfiles(professionalsList, 10);
 
    return (
       <HomeClient 
@@ -181,6 +199,7 @@ export default async function Home() {
         coaches={selectedCoaches}
         agentsScouts={selectedAgentsScouts}
         organizations={selectedOrganizations}
+        professionals={selectedProfessionals}
         highlights={highlightPosts as any}
         siteContent={Object.fromEntries((siteContentData as { section: string; content: unknown }[] | null)?.map((c) => [c.section, c.content]) || [])}
         navContent={navContent}

@@ -15,7 +15,8 @@ import {
   ShieldCheck,
   Building,
   Trophy,
-  Users
+  Users,
+  Briefcase
 } from 'lucide-react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -42,6 +43,7 @@ interface HomeClientProps {
   coaches: any[];
   agentsScouts: any[];
   organizations: any[];
+  professionals?: any[];
   highlights: Post[];
   siteContent: Record<string, any>;
   navContent?: Record<string, any>;
@@ -143,6 +145,7 @@ export function HomeClient({
   coaches,
   agentsScouts,
   organizations,
+  professionals = [],
   highlights,
   siteContent: _siteContent,
   navContent,
@@ -155,6 +158,7 @@ export function HomeClient({
   const coachesData = coaches;
   const agentsData = agentsScouts;
   const organizationsData = organizations;
+  const professionalsData = professionals;
 
   // News components separation
   const mainNews = latestNews[0] || null;
@@ -691,7 +695,77 @@ export function HomeClient({
         </section>
 
 
-        {/* ==================== F. HIGHLIGHTS VIDEO SECTION ==================== */}
+        {/* ==================== F. SPORTS PROFESSIONALS SECTION ==================== */}
+        <section className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-28">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xs font-bold tracking-[0.25em] text-[#b50a0a]">Industry Specialists</span>
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 tracking-tighter">
+                Sports <span className="text-[#b50a0a] font-bold">Professionals</span>
+              </h2>
+            </div>
+            <Link
+              href="/professionals"
+              className="group/link inline-flex items-center gap-2 text-sm font-bold text-[#b50a0a] tracking-wide hover:text-black transition-colors"
+            >
+              View More <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
+            </Link>
+          </div>
+
+          <ProfileCarousel
+            items={professionalsData}
+            mobileLimit={4}
+            renderItem={(pro) => {
+              const displayName = getDisplayName(pro);
+              const proTitle = pro.profession_title || pro.profession_category || 'Sports Specialist';
+              return (
+                <div className="group bg-white border border-gray-100 rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-md hover:shadow-xl hover:border-red-500/10 transition-all duration-500 h-full flex flex-col justify-between">
+                  <div>
+                    <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden mx-auto mb-2 sm:mb-4 border-2 border-red-100 group-hover:scale-105 transition-transform shrink-0 relative bg-gray-950">
+                      <SkeletonImage
+                        src={getOptimizedImageUrl(pro.avatar_url, { width: 300, height: 300 })}
+                        alt={displayName}
+                        name={displayName}
+                        role={proTitle}
+                        variant="dark"
+                        className="w-full h-full object-cover"
+                        containerClassName="w-full h-full"
+                      />
+                    </div>
+
+                    <div className="text-center mb-2 sm:mb-4">
+                      <span className="inline-block bg-red-50 text-[#b50a0a] text-xs font-bold px-2.5 py-0.5 rounded-full mb-1 max-w-full truncate">
+                        {proTitle}
+                      </span>
+                      <h3 className="text-sm sm:text-base font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-[#b50a0a] transition-colors">
+                        {displayName}
+                      </h3>
+                      <span className="text-gray-400 text-xs font-bold tracking-wide block mt-0.5 truncate">
+                        {pro.country || 'Global'}
+                      </span>
+                    </div>
+
+                    <p className="text-gray-500 text-xs sm:text-sm text-center font-medium leading-normal line-clamp-2 sm:line-clamp-3 mb-3 sm:mb-6">
+                      {(pro.bio || `${displayName} is an experienced football industry professional offering specialized support services.`).replace(/<[^>]+>/g, '')}
+                    </p>
+                  </div>
+
+                  <Link href={`/professionals/${pro.slug}`} className="w-full block">
+                    <div className="w-full bg-gray-50 hover:bg-[#b50a0a] text-gray-700 hover:text-white border border-gray-100 hover:border-[#b50a0a] text-xs font-bold tracking-wide py-2 sm:py-3 px-2 sm:px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 whitespace-nowrap overflow-hidden">
+                      <span>View Profile</span>
+                      <ArrowRight className="w-3 h-3 shrink-0" />
+                    </div>
+                  </Link>
+                </div>
+              );
+            }}
+          />
+        </section>
+
+
+        {/* ==================== G. HIGHLIGHTS VIDEO SECTION ==================== */}
         <section className="max-w-[1200px] mx-auto px-4 lg:px-0 mb-28">
           <div className="flex items-center gap-3 mb-2">
             <span className="w-8 h-[2px] bg-[#b50a0a]"></span>

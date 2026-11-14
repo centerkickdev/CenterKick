@@ -1,70 +1,59 @@
 /**
  * Utility to check if a profile meets the minimum requirements to be considered "live".
  * Role-specific criteria apply.
+ * Note: Always inspect users.role first as profiles.role defaults to 'player' in the schema.
  */
 export function isProfileComplete(profile: any): boolean {
   if (!profile) return false;
 
-  let rawRole = profile.role || profile.users?.role || profile.userRole;
-  if (!rawRole && Array.isArray(profile.users) && profile.users.length > 0) {
-    rawRole = profile.users[0]?.role;
-  }
+  const rawRole =
+    (Array.isArray(profile.users) ? profile.users[0]?.role : profile.users?.role) ||
+    profile.userRole ||
+    profile.role;
+    
   const role = (rawRole || 'player').toLowerCase();
 
-  // Base checks that apply to ALL roles
-  const baseChecks = [
-    Boolean(profile.avatar_url),
-    Boolean(profile.cover_url || profile.cover_image_url),
-  ];
+  // Basic identity requirement: must have at least one name identifier
+  const hasName = Boolean(
+    (profile.first_name && profile.last_name) ||
+    profile.agency_name ||
+    profile.full_name
+  );
+
+  if (!hasName) return false;
 
   if (role === 'player' || role === 'athlete') {
-    const checks = [
-      ...baseChecks,
-      Boolean(profile.first_name),
-      Boolean(profile.last_name),
-      Boolean(profile.gallery_urls && profile.gallery_urls.length >= 2),
-    ];
-    return checks.filter(Boolean).length === checks.length;
+    // Players must have a first name, last name, and an avatar or gallery
+    return Boolean(
+      profile.first_name &&
+      profile.last_name &&
+      (profile.avatar_url || (profile.gallery_urls && profile.gallery_urls.length > 0))
+    );
   }
 
   if (role === 'coach' || role === 'coachs') {
-    const checks = [
-      ...baseChecks,
-      Boolean(profile.first_name),
-      Boolean(profile.last_name),
-    ];
-    return checks.filter(Boolean).length === checks.length;
-  } 
-  
-  if (role === 'agent' || role === 'scout') {
-    const checks = [
-      ...baseChecks,
-      Boolean(profile.first_name),
-      Boolean(profile.last_name),
-    ];
-    return checks.filter(Boolean).length === checks.length;
+    return Boolean(
+      (profile.first_name && profile.last_name) || profile.agency_name
+    );
   }
-  
+
+  if (role === 'agent' || role === 'scout') {
+    return Boolean(
+      (profile.first_name && profile.last_name) || profile.agency_name
+    );
+  }
+
   if (role === 'organization') {
-    // Organizations might use first_name/last_name for their name or agency_name
-    const hasName = Boolean(profile.agency_name) || Boolean(profile.first_name && profile.last_name);
-    const checks = [
-      ...baseChecks,
-      hasName
-    ];
-    return checks.filter(Boolean).length === checks.length;
+    return Boolean(
+      profile.agency_name || (profile.first_name && profile.last_name) || profile.full_name
+    );
   }
 
   if (role === 'professional') {
-    const checks = [
-      ...baseChecks,
-      Boolean(profile.first_name),
-      Boolean(profile.last_name),
-      Boolean(profile.profession_title),
-    ];
-    return checks.filter(Boolean).length === checks.length;
+    return Boolean(
+      (profile.first_name && profile.last_name) || profile.agency_name
+    );
   }
 
-  // Fallback for unknown roles (require full base)
-  return baseChecks.filter(Boolean).length === baseChecks.length;
+  return true;
 }

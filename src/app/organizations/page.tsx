@@ -13,7 +13,7 @@ export default async function OrganizationsPage() {
 
    const [{ navContent, footerContent, siteSettings }, filteredOrganizations] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('directory_organizations_list_v2', async () => {
+      getCachedData('directory_organizations_list_v3', async () => {
          const { data: organizations, error } = await adminSupabase
             .from('profiles')
             .select('id, slug, first_name, last_name, avatar_url, cover_url, agency_name, country, status, role, users:users!profiles_user_id_fkey!inner(role)')
