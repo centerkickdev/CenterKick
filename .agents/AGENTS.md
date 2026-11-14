@@ -33,5 +33,33 @@ Every action that requires user feedback (e.g., success, error, warnings, valida
 # CenterKick Database Rules
 
 ## Transactions Table
-In CenterKick, the \	ransactions\ table stores the \profile.id\ in its \user_id\ column. Always extract the correct \profile.id\ for each user and then query the \	ransactions\ table using those exact profile IDs.
+In CenterKick, the `transactions` table stores the `profile.id` in its `user_id` column. Always extract the correct `profile.id` for each user and then query the `transactions` table using those exact profile IDs.
+
+# CenterKick Performance, Compute & Resource Optimization Rules
+
+## Strict Development & Deployment Guardrails
+To prevent platform downtime, database connection exhaustion, and excess compute consumption across Supabase and Vercel free-tier limits, all application code and deployments MUST strictly adhere to the following rules:
+
+1. **Zero Unbounded Database Queries**:
+   - Never execute unbounded `select('*')` on growing tables (`profiles`, `users`, `site_content`, `cms_posts`). Always explicitly project only required columns.
+   - Always enforce `.limit()` caps on directory, listing, and search queries.
+   - Ensure all frequently filtered columns (`status`, `user_id`, `role`, `slug`) possess covering database indexes.
+
+2. **Middleware & Proxy Execution Guardrails**:
+   - NEVER execute database queries in Next.js middleware / proxy handlers on public routes.
+   - Restrict role, participant, and subscription database checks strictly to protected `/dashboard` and `/admin` routes.
+   - Short-circuit immediately for anonymous traffic (no Supabase auth cookies present) in <1ms without calling Supabase Auth API or PostgreSQL.
+
+3. **Caching & Single-Flight Deduplication**:
+   - Static reference tables (`clubs`, `leagues`, `countries`, global site settings) MUST be cached via `getCachedData` (L1 in-memory + L2 Upstash Redis with single-flight stampede protection) with appropriate TTLs (e.g., 3600s).
+   - Public directory, marketing, and detail pages MUST export `revalidate` (ISR) instead of `force-dynamic` or un-cached SSR whenever user session cookies are not required for the initial render.
+   - Do not call dynamic `cookies()` or dynamic `createClient()` during SSR of public pages. Active/complete profiles must be servable directly from Vercel Edge CDN.
+
+4. **Serverless Timeouts & Resource Protection**:
+   - Every outbound network `fetch()` inside serverless API routes or server actions MUST include an explicit timeout signal (`AbortSignal.timeout(...)`) to prevent hanging executions and runaway Vercel CPU time burns.
+   - Diagnostic and testing endpoints must be completely disabled (return 404) in production.
+   - Cron endpoints must strictly enforce secret verification (`CRON_SECRET`) and reject unauthorized crawlers in production.
+
+5. **Security & Speed Balance**:
+   - Optimizations must never bypass authorization or data integrity. Use `createAdminClient()` strictly for public read-only ISR pre-renders; protected mutations and user-scoped data must always verify authentication and RLS.
 
