@@ -14,7 +14,7 @@ export default async function TransferFocusPage() {
 
    const [{ navContent, footerContent, siteSettings }, { profiles, newsPosts }] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('transfer_focus_data_v2', async () => {
+      getCachedData('transfer_focus_data_v3', async () => {
          let pList: any[] = [];
          let nList: any[] = [];
 

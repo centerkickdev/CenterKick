@@ -6,6 +6,9 @@
 export function isProfileComplete(profile: any): boolean {
   if (!profile) return false;
 
+  // Non-active profiles (pending, suspended, rejected) must never appear publicly
+  if (profile.status && profile.status !== 'active') return false;
+
   const rawRole =
     (Array.isArray(profile.users) ? profile.users[0]?.role : profile.users?.role) ||
     profile.userRole ||
