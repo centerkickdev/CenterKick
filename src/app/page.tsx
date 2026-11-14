@@ -130,13 +130,27 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_highlight_posts_v6', async () => {
-         const { data, error } = await adminSupabase
+      getCachedData('home_highlight_posts_v7', async () => {
+         const { data: catData } = await adminSupabase
+            .from('blog_categories')
+            .select('id')
+            .ilike('name', '%highlight%');
+         const highlightCatIds = catData?.map(c => c.id) || [];
+
+         let query = adminSupabase
             .from('cms_posts')
             .select(HOME_POST_FIELDS)
-            .eq('is_draft', false)
+            .eq('is_draft', false);
+
+         if (highlightCatIds.length > 0) {
+            query = query.or(`category_id.in.(${highlightCatIds.join(',')}),type.eq.highlight,excerpt.ilike.%youtube%`);
+         } else {
+            query = query.or('type.eq.highlight,excerpt.ilike.%youtube%');
+         }
+
+         const { data, error } = await query
             .order('published_at', { ascending: false })
-            .limit(30);
+            .limit(10);
 
          if (error) {
             console.error('Highlights query error:', error);
@@ -146,7 +160,7 @@ export default async function Home() {
          const filtered = (data || []).filter(post => {
             const catName = (post.category as any)?.name?.toLowerCase() || '';
             const tags = (post.post_tags as any[])?.map(pt => pt.tag?.name?.toLowerCase()) || [];
-            const isHighlight = catName.includes('highlight') || tags.some((t: string) => t?.includes('highlight'));
+            const isHighlight = catName.includes('highlight') || tags.some((t: string) => t?.includes('highlight')) || post.type === 'highlight';
             const hasVideoLink = post.excerpt?.startsWith('http') || post.excerpt?.includes('youtube.com');
             return isHighlight && hasVideoLink;
          });
