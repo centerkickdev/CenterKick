@@ -3,7 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import PlayersClient from './PlayersClient';
 import { isProfileComplete } from '@/lib/utils/profile';
-import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
+import { getGlobalCMSData } from '@/lib/cms';
 import { getCachedData } from '@/lib/redis';
 
 export const revalidate = 120;
@@ -16,10 +16,11 @@ export default async function PlayersPage() {
       getCachedData('directory_players_list_v2', async () => {
          const { data: players, error } = await adminSupabase
             .from('profiles')
-            .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, position, country, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
+            .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, position, country, status, role, users:users!profiles_user_id_fkey!inner(role)')
             .eq('users.role', 'player')
             .eq('status', 'active')
-            .order('created_at', { ascending: false });
+            .order('created_at', { ascending: false })
+            .limit(100);
 
          if (error) console.error('[PlayersPage] fetch error:', error.message);
 

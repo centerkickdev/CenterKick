@@ -20,7 +20,7 @@ export default async function NewsPage() {
       getCachedData('news_layout', async () => {
          const { data: pageData } = await supabase
             .from('site_pages')
-            .select('*')
+            .select('layout')
             .eq('slug', '/news')
             .single();
          return pageData?.layout || ["header", "featured", "feed"];
@@ -28,7 +28,7 @@ export default async function NewsPage() {
       getCachedData('news_site_content', async () => {
          const { data } = await supabase
             .from('site_content')
-            .select('*')
+            .select('section, content')
             .eq('page', '/news');
          return Object.fromEntries(data?.map(c => [c.section, c.content]) || []);
       }, 1800),
@@ -37,7 +37,8 @@ export default async function NewsPage() {
             .from('cms_posts')
             .select('id, title, slug, excerpt, cover_image_url, published_at, category_id, is_draft, category:blog_categories(name), post_tags(tag_id, tag:blog_tags(name))')
             .eq('is_draft', false)
-            .order('published_at', { ascending: false });
+            .order('published_at', { ascending: false })
+            .limit(60);
             
          const filtered = (data || []).filter(post => {
             const catName = (post.category as any)?.name?.toLowerCase() || '';

@@ -2,9 +2,12 @@ import React from 'react';
 import PublicGiftPurchase from '@/components/coupons/PublicGiftPurchase';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
-import { createClient } from '@/lib/supabase/server';
+import { getGlobalCMSData } from '@/lib/cms';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { getCachedData } from '@/lib/redis';
 import { Gift, ShieldCheck, Zap } from 'lucide-react';
+
+export const revalidate = 300;
 
 export const metadata = {
   title: 'Gift a Membership | CenterKick',
@@ -12,20 +15,20 @@ export const metadata = {
 };
 
 export default async function GiftPage() {
-  const [globalCms, supabase] = await Promise.all([
+  const adminSupabase = createAdminClient();
+
+  const [globalCms, paymentSettings] = await Promise.all([
     getGlobalCMSData(),
-    createClient(),
+    getCachedData('gift_payment_settings', async () => {
+      const { data: paymentContent } = await adminSupabase
+        .from('site_content')
+        .select('content')
+        .eq('page', 'settings')
+        .eq('section', 'payment')
+        .single();
+      return paymentContent?.content || {};
+    }, 1800),
   ]);
-
-  // Fetch real payment and subscription registry plans from site_content
-  const { data: paymentContent } = await supabase
-    .from('site_content')
-    .select('content')
-    .eq('page', 'settings')
-    .eq('section', 'payment')
-    .single();
-
-  const paymentSettings = paymentContent?.content || {};
   const systemPlans = paymentSettings.plans || {};
 
   const paystackEnv = paymentSettings.paystackEnv || 'live';

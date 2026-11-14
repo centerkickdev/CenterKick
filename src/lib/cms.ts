@@ -1,12 +1,13 @@
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { getCachedData } from './redis';
 
 /**
  * Fetches site settings (logos, titles, etc) with Redis caching.
+ * Uses createAdminClient to ensure public ISR compatibility without cookie evaluation.
  */
 export async function getCachedSettings() {
   return getCachedData('site_settings', async () => {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     const { data } = await supabase
       .from('site_content')
       .select('content')
@@ -21,14 +22,15 @@ export async function getCachedSettings() {
 /**
  * Fetches global CMS data (Navbar, Footer, and Settings) in a single cached call.
  * This is the most efficient way to fetch branding for any page.
+ * Uses createAdminClient to prevent Next.js from bailing out of ISR / Edge CDN caching.
  */
 export async function getGlobalCMSData() {
   return getCachedData('global_cms_data_v2', async () => {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
     
     const { data: globalData } = await supabase
       .from('site_content')
-      .select('*')
+      .select('page, section, content')
       .in('page', ['navbar', 'footer', 'settings']);
 
     const navContent = globalData?.find(c => c.page === 'navbar' && c.section === 'navbar')?.content || null;
@@ -52,4 +54,3 @@ export async function invalidateNewsCaches() {
     redis.del('blog_tags'),
   ]);
 }
-

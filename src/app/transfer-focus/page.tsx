@@ -3,7 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import TransferFocusClient from "./TransferFocusClient";
 import { isProfileComplete } from "@/lib/utils/profile";
-import { getGlobalCMSData } from "@/app/admin/manage-ui/actions";
+import { getGlobalCMSData } from "@/lib/cms";
 import { getCachedData } from "@/lib/redis";
 
 export const revalidate = 60; // Revalidate every 60 seconds
@@ -25,7 +25,8 @@ export default async function TransferFocusPage() {
                   .select('id, slug, first_name, last_name, role, position, agency_name, current_club, country, date_of_birth, avatar_url, cover_url, gallery_urls, video_links, contract_expiry, tactics, formation, license, managerial_history, users:users!profiles_user_id_fkey!inner(role)')
                   .in('users.role', ['player', 'coach'])
                   .eq('status', 'active')
-                  .order('created_at', { ascending: false }),
+                  .order('created_at', { ascending: false })
+                  .limit(100),
 
                adminSupabase
                   .from('cms_posts')

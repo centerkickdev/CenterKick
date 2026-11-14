@@ -1,7 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin';
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
+import { getGlobalCMSData } from '@/lib/cms';
 import { Calendar as CalendarIcon, User, Tag, Share2, ArrowLeft, ChevronRight, Newspaper, Clock } from "lucide-react";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -70,7 +70,7 @@ export default async function PostPage({ params }: Props) {
    // Fetch related posts (same category)
    const { data: relatedPosts } = await supabase
       .from('cms_posts')
-      .select('*, category:blog_categories(name)')
+      .select('id, slug, title, cover_image_url, published_at, created_at, category:blog_categories(name)')
       .eq('category_id', post.category_id)
       .eq('is_draft', false)
       .neq('id', post.id)

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
+import { getGlobalCMSData } from '@/lib/cms';
 import { getEarnMembershipPageData } from './actions';
 import EarnMembershipClient from '@/components/earn/EarnMembershipClient';
 

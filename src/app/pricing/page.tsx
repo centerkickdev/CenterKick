@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
+import { getGlobalCMSData } from '@/lib/cms';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getCachedData } from '@/lib/redis';
 import { getLiveUsdNgnRate, convertNgnToUsd } from '@/lib/utils/currencyRate';

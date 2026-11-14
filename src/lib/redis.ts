@@ -57,10 +57,11 @@ export async function getCachedData<T>(
     return l1Entry.value as T;
   }
 
-  // 2. Try L2 Redis Cache (HTTP/TCP)
+  // 2. Try L2 Redis Cache (HTTP/TCP) with 1.2s timeout safety to prevent hanging requests
   if (isRedisConfigured) {
     try {
-      const cached = await redis.get(key);
+      const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1200));
+      const cached = await Promise.race([redis.get(key), timeoutPromise]);
       if (cached) {
         // Store in L1 for subsequent requests
         const l1Ttl = Math.min(ttl, L1_DEFAULT_TTL);

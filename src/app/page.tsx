@@ -1,6 +1,6 @@
 import { HomeClient } from '@/components/home/HomeClientNew';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
+import { getGlobalCMSData } from '@/lib/cms';
 import { getCachedData } from '@/lib/redis';
 import { isProfileComplete } from '@/lib/utils/profile';
 

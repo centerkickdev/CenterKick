@@ -1,6 +1,6 @@
 import { AboutClient } from '@/components/about/AboutClient';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
+import { getGlobalCMSData } from '@/lib/cms';
 import { getCachedData } from '@/lib/redis';
 
 export const revalidate = 300;
@@ -18,7 +18,7 @@ export default async function AboutUsPage() {
       getCachedData('about_layout', async () => {
          const { data: pageData } = await adminSupabase
             .from('site_pages')
-            .select('*')
+            .select('layout')
             .eq('slug', '/about')
             .single();
          return pageData?.layout || ["hero", "intro", "mission-vision", "philosophy", "services"];
@@ -26,7 +26,7 @@ export default async function AboutUsPage() {
       getCachedData('about_site_content', async () => {
          const { data: siteContentData } = await adminSupabase
             .from('site_content')
-            .select('*')
+            .select('section, content')
             .eq('page', '/about');
          return Object.fromEntries(siteContentData?.map(c => [c.section, c.content]) || []);
       }, 1800)

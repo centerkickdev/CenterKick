@@ -73,23 +73,9 @@ export async function updateSectionContent(page: string, section: string, conten
  */
 /**
  * Fetches global CMS data (Navbar, Footer, etc.)
+ * Uses createAdminClient via @/lib/cms to protect ISR and avoid dynamic cookie bailing.
  */
-export async function getGlobalCMSData() {
-  return getCachedData('global_cms_data_v2', async () => {
-    const supabase = await createClient();
-    
-    const { data: globalData } = await supabase
-      .from('site_content')
-      .select('*')
-      .in('page', ['navbar', 'footer', 'settings']);
-
-    const navContent = globalData?.find(c => c.page === 'navbar' && c.section === 'navbar')?.content || null;
-    const footerContent = globalData?.find(c => c.page === 'footer' && c.section === 'footer')?.content || null;
-    const siteSettings = globalData?.find(c => c.page === 'settings' && c.section === 'system')?.content || null;
-
-    return { navContent, footerContent, siteSettings };
-  }, 3600); // Cache for 1 hour
-}
+export { getGlobalCMSData } from '@/lib/cms';
 /**
  * Seeds initial site pages if they don't exist
  */

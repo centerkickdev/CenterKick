@@ -6,7 +6,6 @@ import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({ subsets: ["latin"] });
 
-import { createClient } from '@/lib/supabase/server';
 import { getCachedData } from '@/lib/redis';
 
 export async function generateMetadata(): Promise<Metadata> {

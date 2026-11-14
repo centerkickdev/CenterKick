@@ -3,7 +3,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import OrganizationsClient from './OrganizationsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
-import { getGlobalCMSData } from '@/app/admin/manage-ui/actions';
+import { getGlobalCMSData } from '@/lib/cms';
 import { getCachedData } from '@/lib/redis';
 
 export const revalidate = 120;
@@ -16,10 +16,11 @@ export default async function OrganizationsPage() {
       getCachedData('directory_organizations_list_v2', async () => {
          const { data: organizations, error } = await adminSupabase
             .from('profiles')
-            .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, agency_name, country, bio, status, role, users:users!profiles_user_id_fkey!inner(role, subscriptions(status))')
+            .select('id, slug, first_name, last_name, avatar_url, cover_url, agency_name, country, status, role, users:users!profiles_user_id_fkey!inner(role)')
             .eq('users.role', 'organization')
             .eq('status', 'active')
-            .order('created_at', { ascending: false });
+            .order('created_at', { ascending: false })
+            .limit(100);
 
          if (error) console.error('[OrganizationsPage] fetch error:', error.message);
 
