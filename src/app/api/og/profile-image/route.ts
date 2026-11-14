@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sharp from 'sharp';
 
-export const revalidate = 86400;
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {

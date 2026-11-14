@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { getCachedData, redis } from '@/lib/redis';
+import { getGlobalCMSData as fetchGlobalCMSData } from '@/lib/cms';
 
 /**
  * Updates the order of sections for a specific page
@@ -75,7 +76,9 @@ export async function updateSectionContent(page: string, section: string, conten
  * Fetches global CMS data (Navbar, Footer, etc.)
  * Uses createAdminClient via @/lib/cms to protect ISR and avoid dynamic cookie bailing.
  */
-export { getGlobalCMSData } from '@/lib/cms';
+export async function getGlobalCMSData() {
+  return fetchGlobalCMSData();
+}
 /**
  * Seeds initial site pages if they don't exist
  */

@@ -95,11 +95,13 @@ export async function getCachedData<T>(
           expiresAt: Date.now() + l1Ttl * 1000
         });
 
-        // Save to L2 Redis Cache asynchronously (non-blocking)
-        if (isRedisConfigured) {
-          redis.set(key, data, { ex: ttl }).catch(err => 
-            console.error(`[Redis L2 Error] Error setting ${key}:`, err)
-          );
+        // Save to L2 Redis Cache asynchronously (non-blocking at runtime, bypassed during build-time static prerendering)
+        if (isRedisConfigured && process.env.NEXT_PHASE !== 'phase-production-build') {
+          redis.set(key, data, { ex: ttl }).catch(err => {
+            if (err?.digest !== 'DYNAMIC_SERVER_USAGE') {
+              console.error(`[Redis L2 Error] Error setting ${key}:`, err);
+            }
+          });
         }
       }
 
