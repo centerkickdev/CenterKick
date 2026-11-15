@@ -18,10 +18,10 @@ export default async function ProfessionalsPage() {
 
   const [{ navContent, footerContent, siteSettings }, filteredProfessionals] = await Promise.all([
      getGlobalCMSData(),
-     getCachedData('directory_professionals_list_v4', async () => {
+     getCachedData('directory_professionals_list_v5', async () => {
         const { data: professionals, error } = await adminSupabase
            .from('profiles')
-           .select('id, slug, first_name, last_name, avatar_url, cover_url, profession_title, profession_category, country, status, role, users:users!profiles_user_id_fkey!inner(role)')
+           .select('id, slug, first_name, last_name, avatar_url, cover_url, profession_title, profession_category, country, contact_email, status, role, users:users!profiles_user_id_fkey!inner(role)')
            .eq('users.role', 'professional')
            .eq('status', 'active')
            .order('created_at', { ascending: false })

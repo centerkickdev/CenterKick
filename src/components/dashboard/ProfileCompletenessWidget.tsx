@@ -27,6 +27,10 @@ interface ProfileCompletenessWidgetProps {
     year_established?: string | number;
     contact_email?: string;
     bio?: string;
+    height_cm?: string | number;
+    position?: string;
+    foot?: string;
+    profession_category?: string;
   };
 }
 
@@ -73,6 +77,10 @@ export function ProfileCompletenessWidget({ role, formData }: ProfileCompletenes
   const bioClean = formData.bio ? String(formData.bio).replace(/<[^>]*>?/gm, '').trim() : '';
   const hasOrgBio = Boolean(bioClean.length >= 10);
 
+  const height = Number(formData.height_cm);
+  const hasHeight = Boolean(formData.height_cm && !isNaN(height) && height >= 100 && height <= 230);
+  const hasFoot = Boolean(formData.foot && ['Right', 'Left', 'Both'].includes(formData.foot));
+
   const checks = isCoach ? [
     { id: 'names', label: 'First & Last Name', completed: Boolean(formData.first_name && formData.last_name) },
     { id: 'age', label: 'Age (18+)', completed: hasValidAge },
@@ -84,6 +92,16 @@ export function ProfileCompletenessWidget({ role, formData }: ProfileCompletenes
     { id: 'contract_expiry', label: isFreeAgent ? 'Contract Expiry (Bypassed: Free Agent)' : 'Contract Expiry Date', completed: hasValidContract },
     { id: 'languages', label: 'Languages Spoken (1+)', completed: Boolean(Array.isArray(formData.languages_spoken) && formData.languages_spoken.length > 0) },
     { id: 'position', label: 'Current Position', completed: Boolean(Array.isArray(formData.current_position) ? formData.current_position.length > 0 : formData.current_position) },
+  ] : isPlayer ? [
+    { id: 'names', label: 'First & Last Name', completed: Boolean(formData.first_name && formData.last_name) },
+    { id: 'avatar', label: 'Profile Picture', completed: Boolean(formData.avatar_url) },
+    { id: 'gallery', label: 'Portfolio Images (2+)', completed: Boolean(formData.gallery_urls && formData.gallery_urls.length >= 2) },
+    { id: 'height', label: 'Height (100–230 cm)', completed: hasHeight },
+    { id: 'position', label: 'Primary Position', completed: Boolean(formData.position && String(formData.position).trim()) },
+    { id: 'club_status', label: 'Current Club or Free Agent', completed: hasClubStatus },
+    { id: 'contract_expiry', label: isFreeAgent ? 'Contract Expiry (Bypassed: Free Agent)' : 'Contract Expiry Date', completed: hasValidContract },
+    { id: 'country', label: 'Country of Origin', completed: Boolean(formData.country && String(formData.country).trim()) },
+    { id: 'foot', label: 'Main Foot (Right/Left/Both)', completed: hasFoot },
   ] : isOrganization ? [
     { id: 'name', label: 'Organization / Club Name', completed: hasOrgName },
     { id: 'type', label: 'Organization Type', completed: hasOrgType },
@@ -92,14 +110,21 @@ export function ProfileCompletenessWidget({ role, formData }: ProfileCompletenes
     { id: 'logo', label: 'Organization Logo', completed: hasOrgLogo },
     { id: 'contact', label: 'Official Contact Email', completed: hasOrgContact },
     { id: 'bio', label: 'Organization Bio (About Us)', completed: hasOrgBio },
+  ] : (role === 'agent' || role === 'scout') ? [
+    { id: 'names', label: role === 'agent' ? 'Name or Agency Name' : 'First & Last Name', completed: Boolean((formData.first_name && formData.last_name) || formData.agency_name) },
+    { id: 'avatar', label: 'Profile Picture', completed: Boolean(formData.avatar_url) },
+    { id: 'country', label: 'Country / Base Country', completed: Boolean(formData.country && String(formData.country).trim()) },
+    { id: 'contact', label: 'Official Contact Email', completed: Boolean(formData.contact_email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(formData.contact_email).trim())) },
+  ] : role === 'professional' ? [
+    { id: 'names', label: 'First & Last Name', completed: Boolean(formData.first_name && formData.last_name) },
+    { id: 'avatar', label: 'Profile Picture', completed: Boolean(formData.avatar_url) },
+    { id: 'category', label: 'Profession Category', completed: Boolean(formData.profession_category && String(formData.profession_category).trim()) },
+    { id: 'country', label: 'Country of Origin', completed: Boolean(formData.country && String(formData.country).trim()) },
+    { id: 'contact', label: 'Official Contact Email', completed: Boolean(formData.contact_email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(formData.contact_email).trim())) },
   ] : [
     { id: 'avatar', label: 'Profile Picture', completed: Boolean(formData.avatar_url) },
-    { id: 'cover', label: 'Cover Image', completed: Boolean(formData.cover_url) },
     { id: 'first_name', label: 'First Name', completed: Boolean(formData.first_name) },
     { id: 'last_name', label: 'Last Name', completed: Boolean(formData.last_name) },
-    ...(isPlayer ? [
-      { id: 'gallery', label: 'Portfolio Images (2+)', completed: Boolean(formData.gallery_urls && formData.gallery_urls.length >= 2) },
-    ] : []),
   ];
 
   const completedCount = checks.filter(c => c.completed).length;

@@ -30,10 +30,28 @@ export function isProfileComplete(profile: any): boolean {
   if (!hasAvatar) return false;
 
   if (role === 'player' || role === 'athlete') {
+    const hasPlayerName = Boolean(profile.first_name && profile.last_name);
+    const hasAvatar = Boolean(profile.avatar_url);
+    const hasGallery = Array.isArray(profile.gallery_urls) && profile.gallery_urls.length >= 2;
+    const height = Number(profile.height_cm);
+    const hasHeight = Boolean(profile.height_cm && !isNaN(height) && height >= 100 && height <= 230);
+    const hasPosition = Boolean(profile.position && String(profile.position).trim());
+    const isFreeAgent = Boolean(profile.is_free_agent || profile.current_club === 'Free Agent');
+    const hasClub = isFreeAgent || Boolean(profile.current_club && String(profile.current_club).trim());
+    const hasContract = isFreeAgent || Boolean(profile.current_club && profile.contract_expiry);
+    const hasCountry = Boolean(profile.country && String(profile.country).trim());
+    const hasFoot = Boolean(profile.foot && ['Right', 'Left', 'Both'].includes(profile.foot));
+
     return Boolean(
-      profile.first_name &&
-      profile.last_name &&
-      profile.avatar_url
+      hasPlayerName &&
+      hasAvatar &&
+      hasGallery &&
+      hasHeight &&
+      hasPosition &&
+      hasClub &&
+      hasContract &&
+      hasCountry &&
+      hasFoot
     );
   }
 
@@ -78,9 +96,13 @@ export function isProfileComplete(profile: any): boolean {
   }
 
   if (role === 'agent' || role === 'scout') {
-    return Boolean(
+    const hasName = Boolean(
       (profile.first_name && profile.last_name) || profile.agency_name
     );
+    const hasAvatar = Boolean(profile.avatar_url);
+    const hasCountry = Boolean(profile.country && String(profile.country).trim());
+    const hasContact = Boolean(profile.contact_email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(profile.contact_email).trim()));
+    return Boolean(hasName && hasAvatar && hasCountry && hasContact);
   }
 
   if (role === 'organization') {
@@ -105,9 +127,12 @@ export function isProfileComplete(profile: any): boolean {
   }
 
   if (role === 'professional') {
-    return Boolean(
-      (profile.first_name && profile.last_name) || profile.agency_name
-    );
+    const hasName = Boolean(profile.first_name && profile.last_name);
+    const hasAvatar = Boolean(profile.avatar_url);
+    const hasCategory = Boolean(profile.profession_category && String(profile.profession_category).trim());
+    const hasCountry = Boolean(profile.country && String(profile.country).trim());
+    const hasContact = Boolean(profile.contact_email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(profile.contact_email).trim()));
+    return Boolean(hasName && hasAvatar && hasCategory && hasCountry && hasContact);
   }
 
   return true;

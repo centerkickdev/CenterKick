@@ -13,10 +13,10 @@ export default async function PlayersPage() {
 
    const [{ navContent, footerContent, siteSettings }, filteredPlayers] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('directory_players_list_v4', async () => {
+      getCachedData('directory_players_list_v5', async () => {
          const { data: players, error } = await adminSupabase
             .from('profiles')
-            .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, position, country, status, role, users:users!profiles_user_id_fkey!inner(role)')
+            .select('id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, position, country, height_cm, foot, is_free_agent, current_club, contract_expiry, status, role, users:users!profiles_user_id_fkey!inner(role)')
             .eq('users.role', 'player')
             .eq('status', 'active')
             .order('created_at', { ascending: false })

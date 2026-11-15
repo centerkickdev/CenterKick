@@ -1092,6 +1092,10 @@ export default function ProfileEditor() {
           year_established: roleData?.year_established ?? profile?.year_established,
           contact_email: profile?.contact_email,
           bio: profile?.bio,
+          height_cm: profile?.height_cm,
+          position: profile?.position,
+          foot: profile?.foot,
+          profession_category: profile?.profession_category,
         }} 
       />
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
