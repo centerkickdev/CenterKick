@@ -9,6 +9,11 @@ export function isProfileComplete(profile: any): boolean {
   // Non-active profiles (pending, suspended, rejected) must never appear publicly
   if (profile.status && profile.status !== 'active') return false;
 
+  // Database-level flag fast-path if available
+  if (profile.is_profile_complete !== undefined && profile.is_profile_complete !== null) {
+    return Boolean(profile.is_profile_complete);
+  }
+
   const rawRole =
     (Array.isArray(profile.users) ? profile.users[0]?.role : profile.users?.role) ||
     profile.userRole ||
