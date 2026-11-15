@@ -32,7 +32,26 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
    }, [profile?.id]);
 
    const mergedLinks = { ...(profile.social_links || {}), ...(profile.official_links || {}) };
+   const stripHtml = (html: string) => html ? html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').trim() : '';
+
+   // Use real stats if available, otherwise fallback to 0
+   const managerialHistory = profile.managerial_history || [];
+   const hasBio = Boolean(profile.bio && stripHtml(profile.bio).length > 0);
+   const hasStatistics = Boolean(managerialHistory && managerialHistory.length > 0);
+   const hasMedia = Boolean(
+      (profile.video_links && profile.video_links.length > 0) ||
+      (profile.gallery_urls && profile.gallery_urls.length > 0)
+   );
+
+   const availableTabs = [
+      "Profile",
+      ...(hasBio ? ["Bio"] : []),
+      ...(hasStatistics ? ["Statistics"] : []),
+      ...(hasMedia ? ["Gallery"] : [])
+   ];
+
    const [activeTab, setActiveTab] = useState("Profile");
+   const currentActiveTab = availableTabs.includes(activeTab) ? activeTab : "Profile";
    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
    const [contactFormData, setContactFormData] = useState({ name: '', email: '', message: '' });
    const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
@@ -76,8 +95,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
       }
    };
 
-   // Use real stats if available, otherwise fallback to 0
-   const managerialHistory = profile.managerial_history || [];
+   // Stats calculation
    const stats = {
       wins: managerialHistory.reduce((acc: number, curr: any) => acc + (curr.wins || 0), 0),
       draws: managerialHistory.reduce((acc: number, curr: any) => acc + (curr.draws || 0), 0),
@@ -281,16 +299,16 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
             <div className="bg-white border-b border-gray-100 shadow-sm z-40">
                <div className="max-w-[1000px] mx-auto flex items-center justify-between px-4 lg:px-0">
                   <div className="flex overflow-x-auto no-scrollbar py-1">
-                     {["Profile", "Bio", "Statistics", "Gallery"].map((tab) => (
+                     {availableTabs.map((tab) => (
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
                            className={`px-8 py-6 text-xs font-bold tracking-[0.2em] transition-all relative shrink-0 ${
- activeTab === tab ? "text-[#a20000]" : "text-gray-400 hover:text-gray-600"
- }`}
+                              currentActiveTab === tab ? "text-[#a20000]" : "text-gray-400 hover:text-gray-600"
+                           }`}
                         >
                            {tab}
-                           {activeTab === tab && (
+                           {currentActiveTab === tab && (
                               <span className="absolute bottom-0 left-0 w-full h-1 bg-[#a20000]"></span>
                            )}
                         </button>
@@ -306,8 +324,8 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
 
             <div className="max-w-[1000px] mx-auto px-4 lg:px-0 py-16">
                
-               {activeTab === "Profile" && (
-                  <div className="flex flex-col space-y-24">
+               {currentActiveTab === "Profile" && (
+                  <div className="flex flex-col space-y-12 sm:space-y-16">
                      
                      
 
@@ -321,15 +339,21 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-16 border border-gray-100 rounded-3xl p-10 bg-gray-50 shadow-sm">
                            {[
-                              { label: "Current League", value: profile.league_name || "N/A" },
-                              { label: "Current Club", value: profile.current_club || "N/A" },
-                              { label: "Contract Expiry", value: profile.contract_expiry ? new Date(profile.contract_expiry).toLocaleDateString() : "N/A" },
-                              { label: "Current Position", value: profile.current_position?.[0] || profile.role || "Head Coach" },
-                              { label: "Coaching Licenses", value: profile.coaching_licenses?.join(', ') || profile.license || "N/A" },
-                              { label: "Specialization", value: profile.specializations?.join(', ') || "N/A" },
-                              { label: "Country", value: profile.country || "N/A" },
-                              { label: "Languages", value: profile.languages_spoken?.join(', ') || "N/A" },
-                           ].map((item, idx) => (
+                              profile.league_name ? { label: "Current League", value: profile.league_name } : null,
+                              profile.current_club ? { label: "Current Club", value: profile.current_club } : null,
+                              profile.contract_expiry ? { label: "Contract Expiry", value: new Date(profile.contract_expiry).toLocaleDateString() } : null,
+                              { label: "Current Position", value: profile.current_position?.[0] || profile.position || profile.role || "Head Coach" },
+                              (profile.coaching_licenses && profile.coaching_licenses.length > 0)
+                                 ? { label: "Coaching Licenses", value: profile.coaching_licenses.join(', ') }
+                                 : (profile.license ? { label: "Coaching Licenses", value: profile.license } : null),
+                              (profile.specializations && profile.specializations.length > 0)
+                                 ? { label: "Specialization", value: profile.specializations.join(', ') }
+                                 : null,
+                              profile.country ? { label: "Country", value: profile.country } : null,
+                              (profile.languages_spoken && profile.languages_spoken.length > 0)
+                                 ? { label: "Languages", value: profile.languages_spoken.join(', ') }
+                                 : null,
+                           ].filter(Boolean).map((item: any, idx) => (
                               <div key={idx} className="flex flex-col md:flex-row md:items-start justify-between border-b border-gray-200/50 pb-4 gap-2">
                                  <span className="text-xs font-bold text-gray-400 tracking-wide md:w-1/3 shrink-0">{item.label}</span>
                                  <span className="text-sm font-bold text-gray-900 md:text-right md:w-2/3 leading-snug">{item.value}</span>
@@ -338,10 +362,10 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                         </div>
                      </section>
 
-                     {/* Honors & Achievements */}
-                     <section>
-                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-600 mb-6">Honours</h2>
-                        {profile.achievements && Array.isArray(profile.achievements) && profile.achievements.length > 0 ? (
+                     {/* Honors & Achievements - Only render if present */}
+                     {profile.achievements && Array.isArray(profile.achievements) && profile.achievements.length > 0 && (
+                        <section>
+                           <h2 className="text-2xl sm:text-3xl font-bold text-gray-600 mb-6">Honours</h2>
                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               {profile.achievements.map((item: any, i: number) => {
                                  const isString = typeof item === 'string';
@@ -366,14 +390,12 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                                  );
                               })}
                            </div>
-                        ) : (
-                           <p className="text-gray-500 text-base font-medium">No honours recorded yet.</p>
-                        )}
-                     </section>
+                        </section>
+                     )}
                   </div>
                )}
 
-               {activeTab === "Bio" && (
+               {currentActiveTab === "Bio" && (
                   <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
                      <div className="mb-12">
                         <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative border-b-4 border-[#a20000] pb-2">
@@ -390,7 +412,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                   </div>
                )}
 
-               {activeTab === "Statistics" && (
+               {currentActiveTab === "Statistics" && (
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                      <div className="mb-12">
                         
@@ -492,7 +514,7 @@ export default function CoachDetailsClient({ profile }: CoachDetailsClientProps)
                   </div>
                )}
             
-               {activeTab === "Gallery" && (
+               {currentActiveTab === "Gallery" && (
                   <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
                      <div className="mb-12">
                         <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative">

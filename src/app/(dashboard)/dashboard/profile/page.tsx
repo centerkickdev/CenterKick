@@ -379,6 +379,16 @@ export default function ProfileEditor() {
       }
     }
 
+    if (role !== 'organization') {
+      const firstName = (formData.get('first_name') as string)?.trim();
+      const lastName = (formData.get('last_name') as string)?.trim();
+      if (!firstName || !lastName) {
+        showToast('First name and last name are required and cannot be empty.', 'error');
+        setIsSaving(false);
+        return;
+      }
+    }
+
     // Boundary & Validation Checks
     const rawHeight = formData.get('height_cm');
     if (rawHeight !== null && rawHeight !== '') {
@@ -411,6 +421,11 @@ export default function ProfileEditor() {
     }
 
     const rawDob = (formData.get('date_of_birth') as string) || originalProfile?.date_of_birth;
+    if (role === 'coach' && !rawDob) {
+      showToast('Date of birth is required for coaches.', 'error');
+      setIsSaving(false);
+      return;
+    }
     if (rawDob) {
       const dobDate = new Date(rawDob);
       const now = new Date();
@@ -434,6 +449,13 @@ export default function ProfileEditor() {
           return;
         }
       }
+    }
+
+    const countryVal = formData.get('country') as string;
+    if (role === 'coach' && (!countryVal || !countryVal.trim())) {
+      showToast('Country of origin is required for coaches.', 'error');
+      setIsSaving(false);
+      return;
     }
     
     const profileData: any = {
@@ -568,8 +590,51 @@ export default function ProfileEditor() {
       }
     }
 
+    const finalClubName = profile?.current_club;
+
     // Role-specific boundary validation
-    if (roleData?.years_of_experience) {
+    if (role === 'coach') {
+      const isFreeAgent = Boolean(profile?.is_free_agent || profile?.current_club === 'Free Agent');
+      if (!isFreeAgent) {
+        if (!finalClubName || finalClubName.trim() === '') {
+          showToast('Please select or enter your Current Club, or toggle Free Agent.', 'error');
+          setIsSaving(false);
+          return;
+        }
+        const contractExpiry = formData.get('contract_expiry') || profile?.contract_expiry;
+        if (!contractExpiry) {
+          showToast('Contract expiry date is required when under contract with a club.', 'error');
+          setIsSaving(false);
+          return;
+        }
+      }
+
+      if (!roleData?.formation || !roleData.formation.trim()) {
+        showToast('Primary formation is required for coaches.', 'error');
+        setIsSaving(false);
+        return;
+      }
+
+      const exp = Number(roleData?.years_of_experience);
+      if (roleData?.years_of_experience === undefined || roleData?.years_of_experience === '' || isNaN(exp) || exp < 0 || exp > 60) {
+        showToast('Years of experience is required and must be an integer between 0 and 60.', 'error');
+        setIsSaving(false);
+        return;
+      }
+
+      const currentPos = Array.isArray(roleData?.current_position) ? roleData.current_position[0] : roleData?.current_position;
+      if (!currentPos || !currentPos.trim()) {
+        showToast('Current position is required for coaches.', 'error');
+        setIsSaving(false);
+        return;
+      }
+
+      if (!Array.isArray(roleData?.languages_spoken) || roleData.languages_spoken.length === 0) {
+        showToast('Please select or enter at least one language spoken.', 'error');
+        setIsSaving(false);
+        return;
+      }
+    } else if (roleData?.years_of_experience) {
       const exp = Number(roleData.years_of_experience);
       if (!isNaN(exp) && (exp < 0 || exp > 60)) {
         showToast('Years of experience must be an integer between 0 and 60.', 'error');
@@ -620,7 +685,6 @@ export default function ProfileEditor() {
       }
     }
 
-    const finalClubName = profile?.current_club;
     if (finalClubName && finalLeagueId && !clubsList.some(c => c.name === finalClubName && c.league_id === finalLeagueId)) {
        await submitUserClub(finalClubName, finalLeagueId);
     }
@@ -641,13 +705,15 @@ export default function ProfileEditor() {
       }
     }
 
+    const isFreeAgent = Boolean(profile?.is_free_agent || profile?.current_club === 'Free Agent');
     const profileData: any = {
       id: profile?.id,
       user_id: user.id,
       achievements: achievements,
-      league: finalLeagueId || null,
-      current_club: finalClubName || null,
-      contract_expiry: formData.get('contract_expiry') || profile?.contract_expiry || null,
+      league: isFreeAgent ? null : (finalLeagueId || null),
+      current_club: isFreeAgent ? 'Free Agent' : (finalClubName || null),
+      is_free_agent: isFreeAgent,
+      contract_expiry: isFreeAgent ? null : (formData.get('contract_expiry') || profile?.contract_expiry || null),
       updated_at: new Date().toISOString()
     };
     
@@ -969,7 +1035,16 @@ export default function ProfileEditor() {
           first_name: profile?.first_name,
           last_name: profile?.last_name,
           gallery_urls: galleryUrls,
-          video_links: videoLinks
+          video_links: videoLinks,
+          date_of_birth: profile?.date_of_birth,
+          years_of_experience: roleData?.years_of_experience ?? profile?.years_of_experience,
+          formation: roleData?.formation || profile?.formation,
+          current_club: profile?.current_club,
+          is_free_agent: profile?.is_free_agent,
+          country: profile?.country,
+          contract_expiry: profile?.contract_expiry,
+          languages_spoken: roleData?.languages_spoken || profile?.languages_spoken,
+          current_position: roleData?.current_position || profile?.current_position
         }} 
       />
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
@@ -1484,67 +1559,102 @@ export default function ProfileEditor() {
               <form onSubmit={saveCareerData} onChange={() => setIsDirty(true)} className="space-y-8 animate-in fade-in duration-500">
                 {role !== 'organization' && role !== 'agent' && role !== 'scout' && role !== 'professional' && (
                   <>
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-2 h-10 bg-[#b50a0a] rounded-full"></div>
-                      <div>
-                        <h3 className="text-base font-bold tracking-wide text-gray-900">Current Club</h3>
-                        <p className="text-xs font-bold text-gray-500 tracking-wide mt-0.5">Where the player is currently playing</p>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-2 h-10 bg-[#b50a0a] rounded-full"></div>
+                        <div>
+                          <h3 className="text-base font-bold tracking-wide text-gray-900">Current Club</h3>
+                          <p className="text-xs font-bold text-gray-500 tracking-wide mt-0.5">
+                            {role === 'coach' ? 'Where the coach is currently managing (or select Free Agent)' : 'Where the player is currently playing (or select Free Agent)'}
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2">
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Current League</label>
-                        <SearchableCombobox
+                      {/* 1-Click Free Agent Toggle */}
+                      <label className="inline-flex items-center gap-2 cursor-pointer bg-gray-50 hover:bg-gray-100 border border-gray-200 px-4 py-2 rounded-xl transition-colors self-start sm:self-auto">
+                        <input
+                          type="checkbox"
                           disabled={!isEditing}
-                          options={leaguesList}
-                          value={profile?.league || ''}
-                          onChange={(val, isNew, newName) => {
-                             if (isNew && newName) {
-                                setProfile({...profile, league: `NEW:${newName}`, current_club: ''});
-                             } else {
-                                setProfile({...profile, league: val, current_club: ''});
-                             }
+                          checked={Boolean(profile?.is_free_agent || profile?.current_club === 'Free Agent')}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            setProfile({
+                              ...profile,
+                              is_free_agent: checked,
+                              current_club: checked ? 'Free Agent' : '',
+                              league: checked ? '' : profile?.league,
+                              contract_expiry: checked ? '' : profile?.contract_expiry
+                            });
                           }}
-                          placeholder="Select League"
+                          className="w-4 h-4 text-[#b50a0a] rounded border-gray-300 focus:ring-[#b50a0a]"
                         />
-                        {profile?.league?.startsWith('NEW:') && (
-                           <div className="mt-2 animate-in fade-in zoom-in duration-300">
-                             <label className="text-xs font-bold text-red-600 uppercase tracking-wide">Required: Select Country for New League</label>
-                             <select 
-                               className="w-full bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-red-500 transition-all outline-none text-red-900"
-                               onChange={(e) => setProfile({...profile, new_league_country: e.target.value})}
-                               value={profile?.new_league_country || ''}
-                               required
-                             >
-                               <option value="">Select Country</option>
-                               {countriesList.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                             </select>
-                           </div>
-                        )}
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Current Club</label>
-                        <SearchableCombobox
-                          disabled={!isEditing || !profile?.league}
-                          options={clubsList.filter(c => c.league_id === profile?.league || profile?.league?.startsWith('NEW:'))}
-                          value={profile?.current_club || ''}
-                          valueField="name"
-                          displayField="name"
-                          onChange={(val, isNew, newName) => {
-                             setProfile({...profile, current_club: isNew ? newName : val});
-                          }}
-                          placeholder="Select Club"
-                        />
-                      </div>
+                        <span className="text-xs font-bold text-gray-900">Free Agent</span>
+                      </label>
                     </div>
 
-                    <div className="flex flex-col space-y-1.5 md:p-2">
-                      <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">
-                        Contract Expiry Date {!!profile?.current_club && <span className="text-red-500">*</span>}
-                      </label>
-                      <input required={!!profile?.current_club} disabled={!isEditing} name="contract_expiry" type="date" min={new Date().toISOString().split('T')[0]} defaultValue={profile?.contract_expiry} className="w-full md:w-1/2 bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
-                    </div>
+                    {Boolean(profile?.is_free_agent || profile?.current_club === 'Free Agent') ? (
+                      <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs font-bold text-emerald-800 flex items-center gap-2">
+                        ✓ Designated as Free Agent (Available for new club signings)
+                      </div>
+                    ) : (
+                      <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2">
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Current League</label>
+                            <SearchableCombobox
+                              disabled={!isEditing}
+                              options={leaguesList}
+                              value={profile?.league || ''}
+                              onChange={(val, isNew, newName) => {
+                                 if (isNew && newName) {
+                                    setProfile({...profile, league: `NEW:${newName}`, current_club: ''});
+                                 } else {
+                                    setProfile({...profile, league: val, current_club: ''});
+                                 }
+                              }}
+                              placeholder="Select League"
+                            />
+                            {profile?.league?.startsWith('NEW:') && (
+                               <div className="mt-2 animate-in fade-in zoom-in duration-300">
+                                 <label className="text-xs font-bold text-red-600 uppercase tracking-wide">Required: Select Country for New League</label>
+                                 <select 
+                                   className="w-full bg-red-50 border border-red-200 rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-red-500 transition-all outline-none text-red-900"
+                                   onChange={(e) => setProfile({...profile, new_league_country: e.target.value})}
+                                   value={profile?.new_league_country || ''}
+                                   required
+                                 >
+                                   <option value="">Select Country</option>
+                                   {countriesList.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                 </select>
+                               </div>
+                            )}
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">
+                              Current Club <span className="text-red-500">*</span>
+                            </label>
+                            <SearchableCombobox
+                              disabled={!isEditing || !profile?.league}
+                              options={clubsList.filter(c => c.league_id === profile?.league || profile?.league?.startsWith('NEW:'))}
+                              value={profile?.current_club || ''}
+                              valueField="name"
+                              displayField="name"
+                              onChange={(val, isNew, newName) => {
+                                 setProfile({...profile, current_club: isNew ? newName : val});
+                              }}
+                              placeholder="Select Club"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col space-y-1.5 md:p-2">
+                          <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">
+                            Contract Expiry Date <span className="text-red-500">*</span>
+                          </label>
+                          <input required disabled={!isEditing} name="contract_expiry" type="date" min={new Date().toISOString().split('T')[0]} defaultValue={profile?.contract_expiry} className="w-full md:w-1/2 bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
 

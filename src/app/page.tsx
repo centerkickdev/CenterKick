@@ -8,7 +8,7 @@ import { isProfileComplete } from '@/lib/utils/profile';
 export const revalidate = 120;
 
 // Common projection to avoid selecting heavy unneeded columns (bio, large documents, notes, etc.)
-const HOME_PROFILE_FIELDS = 'id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, position, current_position, country, agency_name, profession_title, status, role, users:users!profiles_user_id_fkey!inner(role)';
+const HOME_PROFILE_FIELDS = 'id, slug, first_name, last_name, avatar_url, cover_url, gallery_urls, video_links, position, current_position, country, agency_name, profession_title, status, role, date_of_birth, years_of_experience, formation, current_club, is_free_agent, contract_expiry, languages_spoken, users:users!profiles_user_id_fkey!inner(role)';
 const HOME_POST_FIELDS = 'id, title, slug, type, cover_image_url, excerpt, published_at, category:blog_categories(name), post_tags(tag:blog_tags(name))';
 
 export default async function Home() {
@@ -66,7 +66,7 @@ export default async function Home() {
          });
          return filtered;
       }, 600),
-      getCachedData('home_coaches_list_v4', async () => {
+      getCachedData('home_coaches_list_v5', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
             .select(HOME_PROFILE_FIELDS)

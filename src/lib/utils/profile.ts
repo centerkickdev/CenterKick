@@ -38,8 +38,42 @@ export function isProfileComplete(profile: any): boolean {
   }
 
   if (role === 'coach' || role === 'coachs') {
+    const hasCoachName = Boolean(profile.first_name && profile.last_name);
+    if (!hasCoachName) return false;
+
+    let hasValidAge = false;
+    if (profile.date_of_birth) {
+      const dobDate = new Date(profile.date_of_birth);
+      if (!isNaN(dobDate.getTime())) {
+        const ageDiff = Date.now() - dobDate.getTime();
+        const age = Math.floor(ageDiff / (365.25 * 24 * 60 * 60 * 1000));
+        hasValidAge = age >= 18 && age <= 90;
+      }
+    }
+    if (!hasValidAge) return false;
+
+    const hasFreeAgent = Boolean(profile.is_free_agent || profile.current_club === 'Free Agent');
+    const hasValidContract = hasFreeAgent || Boolean(profile.current_club && profile.contract_expiry);
+    const hasLanguages = Array.isArray(profile.languages_spoken) && profile.languages_spoken.length > 0;
+    const hasPosition = Array.isArray(profile.current_position)
+      ? profile.current_position.length > 0
+      : Boolean(profile.current_position || profile.position);
+    const hasValidExp = profile.years_of_experience !== null &&
+      profile.years_of_experience !== undefined &&
+      profile.years_of_experience !== '' &&
+      !isNaN(Number(profile.years_of_experience)) &&
+      Number(profile.years_of_experience) >= 0;
+    const hasFormation = Boolean(profile.formation && String(profile.formation).trim());
+    const hasCountry = Boolean(profile.country && String(profile.country).trim());
+
     return Boolean(
-      (profile.first_name && profile.last_name) || profile.agency_name
+      profile.avatar_url &&
+      hasValidExp &&
+      hasFormation &&
+      hasValidContract &&
+      hasCountry &&
+      hasLanguages &&
+      hasPosition
     );
   }
 

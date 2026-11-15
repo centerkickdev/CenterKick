@@ -12,6 +12,15 @@ interface ProfileCompletenessWidgetProps {
     last_name?: string;
     gallery_urls?: string[];
     video_links?: string[];
+    date_of_birth?: string;
+    years_of_experience?: string | number;
+    formation?: string;
+    current_club?: string;
+    is_free_agent?: boolean;
+    country?: string;
+    contract_expiry?: string;
+    languages_spoken?: string[];
+    current_position?: string | string[];
   };
 }
 
@@ -20,8 +29,38 @@ export function ProfileCompletenessWidget({ role, formData }: ProfileCompletenes
   const [isDismissed, setIsDismissed] = useState(false);
 
   const isPlayer = role === 'player' || role === 'athlete';
+  const isCoach = role === 'coach' || role === 'coachs';
 
-  const checks = [
+  const isFreeAgent = Boolean(formData.is_free_agent || formData.current_club === 'Free Agent');
+  const hasValidContract = isFreeAgent || Boolean(formData.contract_expiry);
+  const hasClubStatus = isFreeAgent || Boolean(formData.current_club && formData.current_club !== 'Free Agent');
+
+  const hasValidAge = Boolean(formData.date_of_birth && (() => {
+    const dob = new Date(formData.date_of_birth);
+    if (isNaN(dob.getTime())) return false;
+    const ageDiff = Date.now() - dob.getTime();
+    const age = Math.floor(ageDiff / (365.25 * 24 * 60 * 60 * 1000));
+    return age >= 18 && age <= 90;
+  })());
+
+  const hasExp = formData.years_of_experience !== null &&
+    formData.years_of_experience !== undefined &&
+    formData.years_of_experience !== '' &&
+    !isNaN(Number(formData.years_of_experience)) &&
+    Number(formData.years_of_experience) >= 0;
+
+  const checks = isCoach ? [
+    { id: 'names', label: 'First & Last Name', completed: Boolean(formData.first_name && formData.last_name) },
+    { id: 'age', label: 'Age (18+)', completed: hasValidAge },
+    { id: 'avatar', label: 'Profile Picture', completed: Boolean(formData.avatar_url) },
+    { id: 'experience', label: 'Years of Experience', completed: hasExp },
+    { id: 'formation', label: 'Primary Formation', completed: Boolean(formData.formation && String(formData.formation).trim()) },
+    { id: 'club_status', label: 'Current Club or Free Agent', completed: hasClubStatus },
+    { id: 'country', label: 'Country of Origin', completed: Boolean(formData.country && String(formData.country).trim()) },
+    { id: 'contract_expiry', label: isFreeAgent ? 'Contract Expiry (Bypassed: Free Agent)' : 'Contract Expiry Date', completed: hasValidContract },
+    { id: 'languages', label: 'Languages Spoken (1+)', completed: Boolean(Array.isArray(formData.languages_spoken) && formData.languages_spoken.length > 0) },
+    { id: 'position', label: 'Current Position', completed: Boolean(Array.isArray(formData.current_position) ? formData.current_position.length > 0 : formData.current_position) },
+  ] : [
     { id: 'avatar', label: 'Profile Picture', completed: Boolean(formData.avatar_url) },
     { id: 'cover', label: 'Cover Image', completed: Boolean(formData.cover_url) },
     { id: 'first_name', label: 'First Name', completed: Boolean(formData.first_name) },

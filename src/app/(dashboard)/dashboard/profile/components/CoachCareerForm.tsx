@@ -8,7 +8,7 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
   const licenses = ['UEFA Pro', 'UEFA A', 'UEFA B', 'UEFA C', 'AFC Pro', 'AFC A', 'CONCACAF Pro', 'National Badge', 'Other(s)'];
   const specializations = ['Youth Development', 'Tactical Analysis', 'Physical Conditioning', 'Goalkeeping', 'Set Pieces', 'Data Analytics', 'Other(s)'];
   const languages = ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Dutch', 'Arabic', 'Chinese', 'Other(s)'];
-  const positions = ['Head Coach', 'Assistant Coach', 'Goalkeeper Coach', 'Academy Director', 'Fitness Coach', 'Free Agent'];
+  const positions = ['Head Coach', 'Assistant Coach', 'Goalkeeper Coach', 'Academy Director', 'Fitness Coach', 'Performance Analyst', 'Technical Director', 'Other(s)'];
   const formations = ['4-3-3', '4-4-2', '4-2-3-1', '3-5-2', '3-4-3', '5-3-2', '4-1-4-1', '4-3-2-1'];
 
   const renderArrayFieldWithOthers = (
@@ -50,7 +50,9 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
 
     return (
       <div className="space-y-3">
-        <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">{label}</label>
+        <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">
+          {label} {field === 'languages_spoken' && <span className="text-red-500">*</span>}
+        </label>
         <div className="flex flex-wrap gap-2">
           {standardItems.map(item => (
             <button
@@ -90,7 +92,7 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
               placeholder={placeholderText}
               className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-900 focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none"
             />
-            <p className="text-[11px] text-gray-400 mt-1 ml-1">Type multiple options separated by commas (e.g. Option 1, Option 2)</p>
+            <p className="text-xs text-gray-400 mt-1 ml-1">Type multiple options separated by commas (e.g. Option 1, Option 2)</p>
           </div>
         )}
       </div>
@@ -150,23 +152,27 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
   return (
     <div className="space-y-8">
       {/* Basic Dropdowns/Multi-selects */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="space-y-3">
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Current Position</label>
+          <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">
+            Current Position <span className="text-red-500">*</span>
+          </label>
           <select 
             className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a]"
             value={(data.current_position && data.current_position[0]) || ''}
             onChange={(e) => onChange({ ...data, current_position: [e.target.value] })}
             disabled={disabled}
+            required
           >
             <option value="">Select current status...</option>
             {positions.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
         </div>
-        
 
         <div className="space-y-3">
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Primary Formation</label>
+          <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">
+            Primary Formation <span className="text-red-500">*</span>
+          </label>
           <SearchableCombobox
              disabled={disabled}
              options={formations.map(f => ({ id: f, name: f }))}
@@ -177,6 +183,24 @@ export function CoachCareerForm({ data, onChange, achievements, onAchievementsCh
              placeholder="Select or enter formation..."
              className="w-full"
           />
+        </div>
+
+        <div className="space-y-3">
+          <label className="text-xs font-bold text-gray-900 uppercase tracking-wider block">
+            Years of Experience <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            min="0"
+            max="60"
+            disabled={disabled}
+            value={data.years_of_experience ?? ''}
+            onChange={(e) => onChange({ ...data, years_of_experience: e.target.value === '' ? '' : parseInt(e.target.value, 10) })}
+            placeholder="e.g. 8"
+            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:border-[#b50a0a] focus:ring-1 focus:ring-[#b50a0a] outline-none"
+            required
+          />
+          <p className="text-xs text-gray-400 font-medium">Active years as a coach (0 - 60)</p>
         </div>
       </div>
 
