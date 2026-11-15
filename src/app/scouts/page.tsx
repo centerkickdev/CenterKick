@@ -13,7 +13,7 @@ export default async function ScoutsPage() {
 
    const [{ navContent, footerContent, siteSettings }, filteredScouts] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('directory_scouts_list_v5', async () => {
+      getCachedData('directory_scouts_list_v6', async () => {
          const { data: scouts, error } = await adminSupabase
             .from('profiles')
             .select('id, slug, first_name, last_name, avatar_url, cover_url, agency_name, country, contact_email, status, role, users:users!profiles_user_id_fkey!inner(role)')
@@ -22,7 +22,10 @@ export default async function ScoutsPage() {
             .order('created_at', { ascending: false })
             .limit(100);
 
-         if (error) console.error('[ScoutsPage] fetch error:', error.message);
+         if (error) {
+            console.error('[ScoutsPage] fetch error:', error.message);
+            throw error;
+         }
 
          return (scouts || []).filter(scout => {
             const userObj = scout.users as any;

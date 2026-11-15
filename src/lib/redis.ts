@@ -96,8 +96,10 @@ export async function getCachedData<T>(
         });
 
         // Save to L2 Redis Cache asynchronously (non-blocking at runtime, bypassed during build-time static prerendering)
+        // If the result is an empty array, cap TTL at 60s to ensure newly completed profiles appear quickly
+        const effectiveTtl = (Array.isArray(data) && data.length === 0) ? Math.min(ttl, 60) : ttl;
         if (isRedisConfigured && process.env.NEXT_PHASE !== 'phase-production-build') {
-          redis.set(key, data, { ex: ttl }).catch(err => {
+          redis.set(key, data, { ex: effectiveTtl }).catch(err => {
             if (err?.digest !== 'DYNAMIC_SERVER_USAGE') {
               console.error(`[Redis L2 Error] Error setting ${key}:`, err);
             }
@@ -106,6 +108,24 @@ export async function getCachedData<T>(
       }
 
       return data;
+    } catch (error) {
+      console.warn(`[getCachedData Error] Error in fetcher for ${key}:`, error);
+      // Graceful degradation: If database is throttled or times out, return stale cache instead of failing or wiping data
+      const staleL1 = l1Cache.get(key);
+      if (staleL1 && staleL1.value !== undefined && staleL1.value !== null) {
+        return staleL1.value as T;
+      }
+      if (isRedisConfigured) {
+        try {
+          const staleL2 = await redis.get(key);
+          if (staleL2 !== undefined && staleL2 !== null) {
+            return staleL2 as T;
+          }
+        } catch {
+          // Ignore secondary Redis read failure
+        }
+      }
+      throw error;
     } finally {
       inFlightRequests.delete(key);
     }

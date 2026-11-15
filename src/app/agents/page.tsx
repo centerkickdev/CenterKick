@@ -13,7 +13,7 @@ export default async function AgentsPage() {
 
    const [{ navContent, footerContent, siteSettings }, filteredAgents] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('directory_agents_list_v5', async () => {
+      getCachedData('directory_agents_list_v6', async () => {
          const { data: agents, error } = await adminSupabase
             .from('profiles')
             .select('id, slug, first_name, last_name, avatar_url, cover_url, agency_name, country, contact_email, status, role, users:users!profiles_user_id_fkey!inner(role)')
@@ -22,7 +22,10 @@ export default async function AgentsPage() {
             .order('created_at', { ascending: false })
             .limit(100);
 
-         if (error) console.error('[AgentsPage] fetch error:', error.message);
+         if (error) {
+            console.error('[AgentsPage] fetch error:', error.message);
+            throw error;
+         }
 
          return (agents || []).filter(agent => {
             const userObj = agent.users as any;

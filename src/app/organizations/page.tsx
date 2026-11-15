@@ -13,7 +13,7 @@ export default async function OrganizationsPage() {
 
    const [{ navContent, footerContent, siteSettings }, filteredOrganizations] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('directory_organizations_list_v5', async () => {
+      getCachedData('directory_organizations_list_v6', async () => {
          const { data: organizations, error } = await adminSupabase
             .from('profiles')
             .select('id, slug, first_name, last_name, avatar_url, cover_url, agency_name, country, status, role, year_established, organization_type, contact_email, bio, users:users!profiles_user_id_fkey!inner(role)')
@@ -22,7 +22,10 @@ export default async function OrganizationsPage() {
             .order('created_at', { ascending: false })
             .limit(100);
 
-         if (error) console.error('[OrganizationsPage] fetch error:', error.message);
+         if (error) {
+            console.error('[OrganizationsPage] fetch error:', error.message);
+            throw error;
+         }
 
          return (organizations || []).filter(org => {
             const userObj = org.users as any;

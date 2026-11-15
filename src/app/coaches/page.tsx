@@ -13,7 +13,7 @@ export default async function CoachesPage() {
 
    const [{ navContent, footerContent, siteSettings }, filteredCoaches] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('directory_coaches_list_v5', async () => {
+      getCachedData('directory_coaches_list_v6', async () => {
          const { data: coaches, error } = await adminSupabase
             .from('profiles')
             .select('id, slug, first_name, last_name, avatar_url, cover_url, position, current_position, country, status, role, date_of_birth, years_of_experience, formation, current_club, is_free_agent, contract_expiry, languages_spoken, users:users!profiles_user_id_fkey!inner(role)')
@@ -22,7 +22,10 @@ export default async function CoachesPage() {
             .order('created_at', { ascending: false })
             .limit(100);
 
-         if (error) console.error('[CoachesPage] fetch error:', error.message);
+         if (error) {
+            console.error('[CoachesPage] fetch error:', error.message);
+            throw error;
+         }
 
          return (coaches || []).filter(coach => {
             const userObj = coach.users as any;

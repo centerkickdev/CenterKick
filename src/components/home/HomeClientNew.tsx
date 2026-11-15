@@ -136,7 +136,8 @@ function ProfileCarousel({ items, renderItem, mobileLimit }: ProfileCarouselProp
 
 const getDisplayName = (profile: any) => {
   if (!profile) return '';
-  return profile.full_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Anonymous';
+  const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+  return profile.agency_name || profile.full_name || (fullName.length > 0 ? fullName : null) || 'Anonymous';
 };
 
 export function HomeClient({
