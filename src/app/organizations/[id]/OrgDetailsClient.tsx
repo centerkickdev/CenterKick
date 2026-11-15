@@ -31,7 +31,21 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
    const [contactStatus, setContactStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
    const router = useRouter();
 
-   const displayName = profile.full_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Anonymous Organization';
+   const displayName = profile.agency_name || `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Anonymous Organization';
+   
+   const stripHtml = (html: string) => (html || '').replace(/<[^>]*>?/gm, '').trim();
+   const hasAboutContent = Boolean(stripHtml(profile.bio || '').length > 0 || (profile.key_personnel && profile.key_personnel.length > 0));
+   const hasAccountsContent = Boolean(members && members.length > 0);
+   const hasGalleryContent = Boolean((profile.video_links && profile.video_links.length > 0) || (profile.gallery_urls && profile.gallery_urls.length > 0));
+
+   const availableTabs = [
+      "Profile",
+      ...(hasAboutContent ? ["About Us"] : []),
+      ...(hasAccountsContent ? ["Accounts"] : []),
+      ...(hasGalleryContent ? ["Gallery"] : [])
+   ];
+
+   const currentTab = availableTabs.includes(activeTab) ? activeTab : "Profile";
    
    const handleShareProfile = async () => {
       const currentUrl = window.location.href;
@@ -233,16 +247,16 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
             <div className="bg-white border-b border-gray-100 shadow-sm z-40">
                <div className="max-w-[1000px] mx-auto flex items-center justify-between px-4 lg:px-0">
                   <div className="flex overflow-x-auto no-scrollbar py-1">
-                     {["Profile", "About Us", "Accounts", "Gallery"].map((tab) => (
+                     {availableTabs.map((tab) => (
                         <button
                            key={tab}
                            onClick={() => setActiveTab(tab)}
                            className={`px-8 py-6 text-xs font-bold tracking-[0.2em] transition-all relative shrink-0 ${
- activeTab === tab ? "text-[#a20000]" : "text-gray-400 hover:text-gray-600"
- }`}
+                              currentTab === tab ? "text-[#a20000]" : "text-gray-400 hover:text-gray-600"
+                           }`}
                         >
                            {tab}
-                           {activeTab === tab && (
+                           {currentTab === tab && (
                               <span className="absolute bottom-0 left-0 w-full h-1 bg-[#a20000]"></span>
                            )}
                         </button>
@@ -257,10 +271,10 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
             </div>
 
             {/* Content Body */}
-            <div className="max-w-[1000px] mx-auto px-4 lg:px-0 py-8 sm:py-16">
-                              {activeTab === "Profile" && (
-                  <div className="animate-in fade-in duration-500">
-                     <section className="mb-12">
+            <div className="max-w-[1000px] mx-auto px-4 lg:px-0 py-8 sm:py-16 space-y-12 sm:space-y-16">
+               {currentTab === "Profile" && (
+                  <div className="animate-in fade-in duration-500 space-y-12 sm:space-y-16">
+                     <section>
                         <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative mb-8">
                            Overview Info
                            <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-[#b50a0a]"></span>
@@ -268,12 +282,12 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-16 border border-gray-100 rounded-3xl p-10 bg-gray-50 shadow-sm">
                            {[
-                              { label: "Organization Type", value: profile.organization_type || "N/A" },
+                              { label: "Organization Type", value: profile.organization_type },
                               { label: "Country / Region", value: profile.country || "Global" },
-                              { label: "Training Ground Details", value: profile.facilities_infrastructure?.training_ground || "N/A" },
-                              { label: "Stadium Capacity", value: profile.facilities_infrastructure?.stadium_capacity || "N/A" },
-                              { label: "Youth Academy Level", value: profile.facilities_infrastructure?.academy_level || "N/A" },
-                           ].map((item, idx) => (
+                              { label: "Training Ground Details", value: profile.facilities_infrastructure?.training_ground },
+                              { label: "Stadium Capacity", value: profile.facilities_infrastructure?.stadium_capacity },
+                              { label: "Youth Academy Level", value: profile.facilities_infrastructure?.academy_level },
+                           ].filter(item => item.value && String(item.value).trim() && String(item.value).trim() !== "N/A").map((item, idx) => (
                               <div key={idx} className="flex flex-col md:flex-row md:items-start justify-between border-b border-gray-200/50 pb-4 gap-2">
                                  <span className="text-xs font-bold text-gray-400 tracking-wide md:w-1/3 shrink-0">{item.label}</span>
                                  <span className="text-sm font-bold text-gray-900 md:text-right md:w-2/3 leading-snug">{item.value}</span>
@@ -283,12 +297,12 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                      </section>
 
                      {/* Honors & Achievements */}
-                     <section className="mb-12">
-                        <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative mb-8">
-                           Achievements & Honors
-                           <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-gray-300"></span>
-                        </h2>
-                        {combinedAchievements.length > 0 ? (
+                     {combinedAchievements.length > 0 && (
+                        <section>
+                           <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative mb-8">
+                              Achievements & Honors
+                              <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-gray-300"></span>
+                           </h2>
                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                               {combinedAchievements.map((honour: any, idx: number) => (
                                  <div key={idx} className="bg-white border border-gray-100 rounded-2xl p-5 flex items-start gap-4 hover:shadow-lg hover:border-amber-200 transition-all group">
@@ -302,36 +316,31 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                                  </div>
                               ))}
                            </div>
-                        ) : (
-                           <div className="bg-gray-50 h-48 rounded-3xl border border-dashed border-gray-300 flex items-center justify-center">
-                              <div className="text-center space-y-4">
-                                 <Award className="w-10 h-10 text-gray-300 mx-auto" />
-                                 <p className="text-gray-400 font-bold tracking-wide text-sm">No achievements recorded yet.</p>
-                              </div>
-                           </div>
-                        )}
-                     </section>
+                        </section>
+                     )}
                   </div>
                )}
 
-               {activeTab === "About Us" && (
-                  <div className="animate-in fade-in duration-500">
-                     <section className="mb-12">
-                        <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative mb-8">
-                           About Our Academy
-                           <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-[#b50a0a]"></span>
-                        </h2>
-                        <div className="text-gray-600 text-base leading-relaxed font-medium prose prose-sm max-w-none prose-a:text-[#b50a0a]">
-                           {profile.bio ? parse(profile.bio) : 'Premium sports organization committed to developing academy prospects and providing professional infrastructure.'}
-                        </div>
-                     </section>
+               {currentTab === "About Us" && (
+                  <div className="animate-in fade-in duration-500 space-y-12 sm:space-y-16">
+                     {stripHtml(profile.bio || '').length > 0 && (
+                        <section>
+                           <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative mb-8">
+                              About Us
+                              <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-[#b50a0a]"></span>
+                           </h2>
+                           <div className="text-gray-600 text-base leading-relaxed font-medium prose prose-sm max-w-none prose-a:text-[#b50a0a]">
+                              {parse(profile.bio)}
+                           </div>
+                        </section>
+                     )}
 
-                     <section className="mb-12">
-                        <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative mb-8">
-                           Key Personnel
-                           <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-gray-300"></span>
-                        </h2>
-                        {profile.key_personnel && profile.key_personnel.length > 0 ? (
+                     {profile.key_personnel && profile.key_personnel.length > 0 && (
+                        <section>
+                           <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative mb-8">
+                              Key Personnel
+                              <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-gray-300"></span>
+                           </h2>
                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                               {profile.key_personnel.map((person: any, idx: number) => (
                                  <div key={idx} className="bg-gray-50 rounded-3xl p-6 border border-gray-100 flex items-center gap-4">
@@ -350,64 +359,52 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                                  </div>
                               ))}
                            </div>
-                        ) : (
-                           <div className="py-16 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                              <Users2 className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                              <p className="text-gray-500 text-sm font-bold tracking-wide">No key personnel linked to this organization yet.</p>
-                           </div>
-                        )}
-                     </section>
+                        </section>
+                     )}
                   </div>
                )}
 
-               {activeTab === "Accounts" && (
+               {currentTab === "Accounts" && members && members.length > 0 && (
                   <div className="animate-in fade-in duration-500">
-                     <section className="mb-12">
+                     <section>
                         <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative mb-8">
                            Linked Accounts & Members
                            <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-[#b50a0a]"></span>
                         </h2>
-                        {members && members.length > 0 ? (
-                           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                              {members.map((member: any) => (
-                                 <Link href={"/" + (member.role === 'player' ? 'players' : member.role === 'coach' ? 'coaches' : 'agents') + "/" + member.slug} key={member.id}>
-                                    <div className="bg-gray-50 rounded-3xl p-6 border border-gray-100 hover:border-[#a20000] hover:shadow-xl transition-all group cursor-pointer">
-                                       <div className="flex items-center gap-4">
-                                          <div className="w-16 h-16 rounded-2xl overflow-hidden border border-gray-200">
-                                             {member.avatar_url ? (
-                                                <img src={member.avatar_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                                             ) : (
-                                                <div className="w-full h-full bg-white flex items-center justify-center">
-                                                   <Users2 className="w-6 h-6 text-gray-300" />
-                                                </div>
-                                             )}
-                                          </div>
-                                          <div>
-                                             <h3 className="text-base font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-[#a20000] transition-colors">
-                                                {member.first_name} {member.last_name}
-                                             </h3>
-                                             <p className="text-xs font-bold text-gray-500 tracking-wide mt-1 capitalize">
-                                                {member.role} • {member.position || member.country || 'Global'}
-                                             </p>
-                                          </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                           {members.map((member: any) => (
+                              <Link href={"/" + (member.role === 'player' ? 'players' : member.role === 'coach' ? 'coaches' : 'agents') + "/" + member.slug} key={member.id}>
+                                 <div className="bg-gray-50 rounded-3xl p-6 border border-gray-100 hover:border-[#a20000] hover:shadow-xl transition-all group cursor-pointer">
+                                    <div className="flex items-center gap-4">
+                                       <div className="w-16 h-16 rounded-2xl overflow-hidden border border-gray-200">
+                                          {member.avatar_url ? (
+                                             <img src={member.avatar_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                          ) : (
+                                             <div className="w-full h-full bg-white flex items-center justify-center">
+                                                <Users2 className="w-6 h-6 text-gray-300" />
+                                             </div>
+                                          )}
+                                       </div>
+                                       <div>
+                                          <h3 className="text-base font-bold text-gray-900 tracking-tight line-clamp-1 group-hover:text-[#a20000] transition-colors">
+                                             {member.first_name} {member.last_name}
+                                          </h3>
+                                          <p className="text-xs font-bold text-gray-500 tracking-wide mt-1 capitalize">
+                                             {member.role} • {member.position || member.country || 'Global'}
+                                          </p>
                                        </div>
                                     </div>
-                                 </Link>
-                              ))}
-                           </div>
-                        ) : (
-                           <div className="py-16 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                              <Users2 className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                              <p className="text-gray-500 text-sm font-bold tracking-wide">No accounts linked to this organization yet.</p>
-                           </div>
-                        )}
+                                 </div>
+                              </Link>
+                           ))}
+                        </div>
                      </section>
                   </div>
                )}
 
-               {activeTab === "Gallery" && (
-                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                     <div className="mb-12">
+               {currentTab === "Gallery" && (
+                  <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-12 sm:space-y-16">
+                     <div>
                         <h2 className="text-3xl font-bold text-gray-700 tracking-tighter inline-block relative">
                            Media Gallery
                            <span className="absolute -bottom-3 left-0 w-12 border-b-2 border-gray-300"></span>
@@ -415,7 +412,7 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                      </div>
                      {/* Videos Section */}
                      {profile.video_links && profile.video_links.length > 0 && (
-                        <div className="mb-12">
+                        <div>
                            <h3 className="text-sm font-bold text-gray-500 tracking-[0.2em] mb-6 uppercase">Featured Videos</h3>
                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                               {profile.video_links.map((url: string, i: number) => {
@@ -459,15 +456,6 @@ export default function OrgDetailsClient({ profile, members = [] }: OrgDetailsCl
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500"></div>
                                  </div>
                               ))}
-                           </div>
-                        </div>
-                     )}
-                     
-                     {(!profile.video_links || profile.video_links.length === 0) && (!profile.gallery_urls || profile.gallery_urls.length === 0) && (
-                        <div className="bg-gray-50 h-96 rounded-3xl border border-dashed border-gray-300 flex items-center justify-center">
-                           <div className="text-center space-y-4">
-                              <Trophy className="w-12 h-12 text-gray-300 mx-auto" />
-                              <p className="text-gray-400 font-bold tracking-wide text-sm">No media gallery available yet.</p>
                            </div>
                         </div>
                      )}

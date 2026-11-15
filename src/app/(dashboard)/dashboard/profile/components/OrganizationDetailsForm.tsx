@@ -6,7 +6,7 @@ import { HybridLinkInput } from './HybridLinkInput';
 
 export function OrganizationDetailsForm({ data, onChange, onUploadImage }: { data: any, onChange: (val: any) => void, disabled?: boolean, onUploadImage?: (file: File) => Promise<string | null> }) {
   const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
-  const orgTypes = ['Pro Club', 'Semi-Pro Club', 'Academy', 'Agency', 'Scouting Network', 'Football Association'];
+  const orgTypes = ['Pro Club', 'Semi-Pro Club', 'Academy', 'Agency', 'Scouting Network', 'Football Association', 'Other'];
 
   const addPersonnel = () => {
     const personnel = data.key_personnel || [];
@@ -78,8 +78,9 @@ export function OrganizationDetailsForm({ data, onChange, onUploadImage }: { dat
       {/* Basic Org Info */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-3">
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Organization Type</label>
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block">Organization Type <span className="text-[#b50a0a]">*</span></label>
           <select 
+            required
             className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-900 focus:border-[#b50a0a]"
             value={data.organization_type || ''}
             onChange={(e) => onChange({ ...data, organization_type: e.target.value })}

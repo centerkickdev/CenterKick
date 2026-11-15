@@ -84,9 +84,24 @@ export function isProfileComplete(profile: any): boolean {
   }
 
   if (role === 'organization') {
-    return Boolean(
-      profile.agency_name || (profile.first_name && profile.last_name) || profile.full_name
+    const hasOrgName = Boolean(
+      (profile.agency_name && String(profile.agency_name).trim().length >= 2) ||
+      (profile.first_name && profile.last_name)
     );
+    const hasLogo = Boolean(profile.avatar_url);
+    const hasCountry = Boolean(profile.country && String(profile.country).trim());
+    const hasYear = profile.year_established !== null &&
+      profile.year_established !== undefined &&
+      profile.year_established !== '' &&
+      !isNaN(Number(profile.year_established)) &&
+      Number(profile.year_established) >= 1800 &&
+      Number(profile.year_established) <= new Date().getFullYear();
+    const hasType = Boolean(profile.organization_type && String(profile.organization_type).trim());
+    const hasContact = Boolean(profile.contact_email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(profile.contact_email).trim()));
+    const bioText = profile.bio ? String(profile.bio).replace(/<[^>]*>?/gm, '').trim() : '';
+    const hasBio = Boolean(bioText.length >= 10);
+
+    return Boolean(hasOrgName && hasLogo && hasCountry && hasYear && hasType && hasContact && hasBio);
   }
 
   if (role === 'professional') {

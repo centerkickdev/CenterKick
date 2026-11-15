@@ -457,6 +457,26 @@ export default function ProfileEditor() {
       setIsSaving(false);
       return;
     }
+
+    if (role === 'organization') {
+      const orgName = ((formData.get('agency_name') as string) || (formData.get('full_name') as string) || '').trim();
+      if (!orgName || orgName.length < 2) {
+        showToast('Organization / Club Name is required (minimum 2 characters).', 'error');
+        setIsSaving(false);
+        return;
+      }
+      if (!countryVal || !countryVal.trim()) {
+        showToast('Base Country of Operation is required for organizations.', 'error');
+        setIsSaving(false);
+        return;
+      }
+      const contactEmail = ((formData.get('contact_email') as string) || '').trim();
+      if (!contactEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
+        showToast('A valid Official Contact Email is required for organizations.', 'error');
+        setIsSaving(false);
+        return;
+      }
+    }
     
     const profileData: any = {
       gender: formData.get('gender') || null,
@@ -744,6 +764,18 @@ export default function ProfileEditor() {
       profileData.current_affiliation = roleData.current_affiliation;
       profileData.past_discoveries = roleData.past_discoveries;
     } else if (role === 'organization') {
+      if (!roleData.organization_type || !String(roleData.organization_type).trim()) {
+        showToast('Organization Type is required.', 'error');
+        setIsSaving(false);
+        return;
+      }
+      const yearNum = Number(roleData.year_established);
+      const currentYear = new Date().getFullYear();
+      if (!roleData.year_established || isNaN(yearNum) || yearNum < 1800 || yearNum > currentYear) {
+        showToast(`Year Established is required and must be between 1800 and ${currentYear}.`, 'error');
+        setIsSaving(false);
+        return;
+      }
       profileData.organization_type = roleData.organization_type;
       profileData.year_established = roleData.year_established;
       profileData.facilities_infrastructure = roleData.facilities_infrastructure;
@@ -780,6 +812,16 @@ export default function ProfileEditor() {
     }
     const { supabase, user } = await getSupabaseAndUser();
     if (!user) { showToast('You must be logged in', 'error'); setIsSaving(false); return; }
+
+    const stripHtml = (html: string) => (html || '').replace(/<[^>]*>?/gm, '').trim();
+    if (role === 'organization') {
+      const bioText = stripHtml(profile?.bio || '');
+      if (!bioText || bioText.length < 10) {
+        showToast('Organization Bio (About Us) is required (minimum 10 characters).', 'error');
+        setIsSaving(false);
+        return;
+      }
+    }
 
     const profileData: any = {
       bio: profile?.bio,
@@ -1034,6 +1076,7 @@ export default function ProfileEditor() {
           cover_url: profile?.cover_url,
           first_name: profile?.first_name,
           last_name: profile?.last_name,
+          agency_name: profile?.agency_name,
           gallery_urls: galleryUrls,
           video_links: videoLinks,
           date_of_birth: profile?.date_of_birth,
@@ -1044,7 +1087,11 @@ export default function ProfileEditor() {
           country: profile?.country,
           contract_expiry: profile?.contract_expiry,
           languages_spoken: roleData?.languages_spoken || profile?.languages_spoken,
-          current_position: roleData?.current_position || profile?.current_position
+          current_position: roleData?.current_position || profile?.current_position,
+          organization_type: roleData?.organization_type || profile?.organization_type,
+          year_established: roleData?.year_established ?? profile?.year_established,
+          contact_email: profile?.contact_email,
+          bio: profile?.bio,
         }} 
       />
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8">
@@ -1189,16 +1236,41 @@ export default function ProfileEditor() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">First Name</label>
-                    <input disabled={!isEditing} name="first_name" type="text" pattern="[a-zA-Z0-9'\+\-\s]+" title="Letters, numbers, spaces, and symbols ' + - are allowed" defaultValue={profile?.first_name} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                {role === 'organization' ? (
+                  <div className="space-y-1.5 md:p-2">
+                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">
+                      Organization / Club Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      disabled={!isEditing}
+                      name="agency_name"
+                      type="text"
+                      required
+                      placeholder="e.g. Barcelona Academy Lagos, Prime Talent Agency"
+                      defaultValue={profile?.agency_name || ''}
+                      onChange={(e) => {
+                        setProfile({ ...profile, agency_name: e.target.value });
+                        setIsDirty(true);
+                      }}
+                      className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100"
+                    />
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Last Name</label>
-                    <input disabled={!isEditing} name="last_name" type="text" pattern="[a-zA-Z0-9'\+\-\s]+" title="Letters, numbers, spaces, and symbols ' + - are allowed" defaultValue={profile?.last_name} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">
+                        First Name <span className="text-red-500">*</span>
+                      </label>
+                      <input disabled={!isEditing} name="first_name" type="text" pattern="[a-zA-Z0-9'\+\-\s]+" title="Letters, numbers, spaces, and symbols ' + - are allowed" defaultValue={profile?.first_name} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">
+                        Last Name <span className="text-red-500">*</span>
+                      </label>
+                      <input disabled={!isEditing} name="last_name" type="text" pattern="[a-zA-Z0-9'\+\-\s]+" title="Letters, numbers, spaces, and symbols ' + - are allowed" defaultValue={profile?.last_name} className="w-full bg-gray-50 border-none rounded-2xl px-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {role === 'professional' && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2">
@@ -1299,7 +1371,10 @@ export default function ProfileEditor() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">{role === 'organization' ? 'Base Country of Operation' : 'Country of Origin'}</label>
+                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">
+                      {role === 'organization' ? 'Base Country of Operation' : 'Country of Origin'}{' '}
+                      {(role === 'coach' || role === 'organization') && <span className="text-red-500">*</span>}
+                    </label>
                     <div className="relative">
                       <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                       <select disabled={!isEditing} name="country" defaultValue={profile?.country} className="w-full bg-gray-50 border-none rounded-2xl pl-10 pr-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none appearance-none cursor-pointer text-black disabled:opacity-70 disabled:bg-gray-100">
@@ -1455,7 +1530,10 @@ export default function ProfileEditor() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 md:p-2 pt-8 border-t border-gray-50">
                   <div className="space-y-1.5 h-full flex flex-col justify-end">
-                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Public Contact Email</label>
+                    <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">
+                      {role === 'organization' ? 'Official Contact Email' : 'Public Contact Email'}{' '}
+                      {role === 'organization' && <span className="text-red-500">*</span>}
+                    </label>
                     <p className="text-xs text-gray-500 font-medium ml-1">This can be your sign-up email or a dedicated public email.</p>
                     <div className="relative">
                       <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -1788,7 +1866,10 @@ export default function ProfileEditor() {
               <form onSubmit={saveBioAndPortfolio} onChange={() => setIsDirty(true)} className="space-y-6 animate-in fade-in duration-500">
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center ml-1 mb-2">
-                    <label className="text-xs font-bold text-gray-900 tracking-wide">Professional Bio</label>
+                    <label className="text-xs font-bold text-gray-900 tracking-wide">
+                      {role === 'organization' ? 'Organization Bio (About Us)' : 'Professional Bio'}{' '}
+                      {role === 'organization' && <span className="text-red-500">*</span>}
+                    </label>
                   </div>
                   <div className="bg-gray-50 rounded-3xl p-4 md:p-8">
                     <div className={!isEditing ? 'pointer-events-none opacity-80' : ''}>

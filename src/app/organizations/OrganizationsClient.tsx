@@ -44,7 +44,7 @@ export default function OrganizationsClient({ organizations }: { organizations: 
          ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                {filtered.map((org, index) => {
-                  const name = org.full_name || `${org.first_name || ''} ${org.last_name || ''}`.trim() || 'Organization';
+                  const name = org.agency_name || `${org.first_name || ''} ${org.last_name || ''}`.trim() || 'Organization';
                   return (
                      <Link href={`/organizations/${org.slug}`} key={org.id}
                         className="group relative h-[260px] sm:h-[340px] rounded-2xl overflow-hidden bg-gray-950 block shadow-md hover:shadow-xl transition-all duration-300">

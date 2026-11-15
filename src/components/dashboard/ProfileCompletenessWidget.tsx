@@ -10,6 +10,8 @@ interface ProfileCompletenessWidgetProps {
     cover_url?: string;
     first_name?: string;
     last_name?: string;
+    agency_name?: string;
+    full_name?: string;
     gallery_urls?: string[];
     video_links?: string[];
     date_of_birth?: string;
@@ -21,6 +23,10 @@ interface ProfileCompletenessWidgetProps {
     contract_expiry?: string;
     languages_spoken?: string[];
     current_position?: string | string[];
+    organization_type?: string;
+    year_established?: string | number;
+    contact_email?: string;
+    bio?: string;
   };
 }
 
@@ -30,6 +36,7 @@ export function ProfileCompletenessWidget({ role, formData }: ProfileCompletenes
 
   const isPlayer = role === 'player' || role === 'athlete';
   const isCoach = role === 'coach' || role === 'coachs';
+  const isOrganization = role === 'organization';
 
   const isFreeAgent = Boolean(formData.is_free_agent || formData.current_club === 'Free Agent');
   const hasValidContract = isFreeAgent || Boolean(formData.contract_expiry);
@@ -49,6 +56,23 @@ export function ProfileCompletenessWidget({ role, formData }: ProfileCompletenes
     !isNaN(Number(formData.years_of_experience)) &&
     Number(formData.years_of_experience) >= 0;
 
+  const hasOrgName = Boolean(
+    (formData.agency_name && String(formData.agency_name).trim().length >= 2) ||
+    (formData.first_name && formData.last_name)
+  );
+  const hasOrgType = Boolean(formData.organization_type && String(formData.organization_type).trim());
+  const hasOrgYear = formData.year_established !== null &&
+    formData.year_established !== undefined &&
+    formData.year_established !== '' &&
+    !isNaN(Number(formData.year_established)) &&
+    Number(formData.year_established) >= 1800 &&
+    Number(formData.year_established) <= new Date().getFullYear();
+  const hasOrgCountry = Boolean(formData.country && String(formData.country).trim());
+  const hasOrgLogo = Boolean(formData.avatar_url);
+  const hasOrgContact = Boolean(formData.contact_email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(formData.contact_email).trim()));
+  const bioClean = formData.bio ? String(formData.bio).replace(/<[^>]*>?/gm, '').trim() : '';
+  const hasOrgBio = Boolean(bioClean.length >= 10);
+
   const checks = isCoach ? [
     { id: 'names', label: 'First & Last Name', completed: Boolean(formData.first_name && formData.last_name) },
     { id: 'age', label: 'Age (18+)', completed: hasValidAge },
@@ -60,6 +84,14 @@ export function ProfileCompletenessWidget({ role, formData }: ProfileCompletenes
     { id: 'contract_expiry', label: isFreeAgent ? 'Contract Expiry (Bypassed: Free Agent)' : 'Contract Expiry Date', completed: hasValidContract },
     { id: 'languages', label: 'Languages Spoken (1+)', completed: Boolean(Array.isArray(formData.languages_spoken) && formData.languages_spoken.length > 0) },
     { id: 'position', label: 'Current Position', completed: Boolean(Array.isArray(formData.current_position) ? formData.current_position.length > 0 : formData.current_position) },
+  ] : isOrganization ? [
+    { id: 'name', label: 'Organization / Club Name', completed: hasOrgName },
+    { id: 'type', label: 'Organization Type', completed: hasOrgType },
+    { id: 'year', label: 'Year Established', completed: hasOrgYear },
+    { id: 'country', label: 'Base Country of Operation', completed: hasOrgCountry },
+    { id: 'logo', label: 'Organization Logo', completed: hasOrgLogo },
+    { id: 'contact', label: 'Official Contact Email', completed: hasOrgContact },
+    { id: 'bio', label: 'Organization Bio (About Us)', completed: hasOrgBio },
   ] : [
     { id: 'avatar', label: 'Profile Picture', completed: Boolean(formData.avatar_url) },
     { id: 'cover', label: 'Cover Image', completed: Boolean(formData.cover_url) },
