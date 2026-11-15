@@ -143,9 +143,9 @@ export default async function Home() {
             .eq('is_draft', false);
 
          if (highlightCatIds.length > 0) {
-            query = query.or(`category_id.in.(${highlightCatIds.join(',')}),type.eq.highlight,excerpt.ilike.%youtube%`);
+            query = query.or(`category_id.in.(${highlightCatIds.join(',')}),type.eq.highlight,excerpt.ilike.%youtu%`);
          } else {
-            query = query.or('type.eq.highlight,excerpt.ilike.%youtube%');
+            query = query.or('type.eq.highlight,excerpt.ilike.%youtu%');
          }
 
          const { data, error } = await query
@@ -161,7 +161,7 @@ export default async function Home() {
             const catName = (post.category as any)?.name?.toLowerCase() || '';
             const tags = (post.post_tags as any[])?.map(pt => pt.tag?.name?.toLowerCase()) || [];
             const isHighlight = catName.includes('highlight') || tags.some((t: string) => t?.includes('highlight')) || post.type === 'highlight';
-            const hasVideoLink = post.excerpt?.startsWith('http') || post.excerpt?.includes('youtube.com');
+            const hasVideoLink = post.excerpt?.startsWith('http') || post.excerpt?.includes('youtu');
             return isHighlight && hasVideoLink;
          });
          

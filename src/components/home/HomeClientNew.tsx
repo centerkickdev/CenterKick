@@ -630,9 +630,15 @@ export function HomeClient({
             renderItem={(org) => (
               <div className="group bg-white border border-gray-100 rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 shadow-md hover:shadow-xl hover:border-amber-500/10 transition-all duration-500 h-full flex flex-col justify-between">
                 <div>
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-2 sm:mb-4 border border-amber-100 group-hover:scale-105 transition-transform overflow-hidden shrink-0">
+                  <div className="relative w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-2 sm:mb-4 border border-amber-100 group-hover:scale-105 transition-transform overflow-hidden shrink-0">
                     {(org.avatar_url || org.logo_url) ? (
-                      <img src={org.avatar_url || org.logo_url} alt={getDisplayName(org)} className="w-full h-full object-cover" />
+                      <Image 
+                        src={getOptimizedImageUrl(org.avatar_url || org.logo_url, { width: 128, height: 128 })} 
+                        alt={getDisplayName(org)} 
+                        fill
+                        sizes="64px"
+                        className="object-cover" 
+                      />
                     ) : (
                       <Building className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
                     )}
