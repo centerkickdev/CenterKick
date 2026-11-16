@@ -4,7 +4,9 @@ import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { isProfileComplete } from '@/lib/utils/profile';
 import { getCachedData } from '@/lib/redis';
+import { cache } from 'react';
 import type { Metadata } from 'next';
+import { getProfileOgImage, getBaseSiteUrl } from '@/lib/utils/og';
 
 export const revalidate = 120;
 
@@ -17,22 +19,26 @@ function stripHtml(html: string): string {
    return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-import { getProfileOgImage, getBaseSiteUrl } from '@/lib/utils/og';
+const getPlayerBySlug = cache(async (slug: string) => {
+   return getCachedData(`player_profile_${slug}`, async () => {
+      const supabaseAdmin = createAdminClient();
+      const { data, error } = await supabaseAdmin
+         .from('profiles')
+         .select('*, agent:users!profiles_agent_id_fkey(id, role, email)')
+         .eq('slug', slug)
+         .limit(1);
+      if (error || !data || data.length === 0) return null;
+      return data[0];
+   }, 600);
+});
 
 export async function generateMetadata({ params }: AthletePageProps): Promise<Metadata> {
    const { id } = await params;
-   const supabaseAdmin = createAdminClient();
 
    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
    if (isUuid) return {};
 
-   const { data } = await supabaseAdmin
-      .from('profiles')
-      .select('first_name, last_name, position, country, avatar_url, cover_url, gallery_urls, bio')
-      .eq('slug', id)
-      .limit(1);
-
-   const athlete = data?.[0];
+   const athlete = await getPlayerBySlug(id);
    if (!athlete) return {};
 
    const firstName = (athlete.first_name || '').trim();
@@ -87,17 +93,10 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
       return notFound();
    }
 
-   const { data, error } = await supabaseAdmin
-      .from('profiles')
-      .select('*, agent:users!profiles_agent_id_fkey(id, role, email)')
-      .eq('slug', id)
-      .limit(1);
-
-   const athlete = data?.[0];
+   const athlete = await getPlayerBySlug(id);
 
    // If not found or restricted
-   if (error || !athlete) {
-      if (error) console.error('Athlete fetch database error:', error.message);
+   if (!athlete) {
       return notFound();
    }
 
@@ -166,7 +165,7 @@ export default async function AthleteDetailsPage({ params }: AthletePageProps) {
       .map((stat: any) => {
          const clubName = stat.club_name || stat.club || '';
          const rawLeague = stat.league_name || stat.league || '';
-         const resolvedLeague = leagues?.find(l => l.id === rawLeague || l.name === rawLeague)?.name || (rawLeague.startsWith('NEW:') ? rawLeague.replace('NEW:', '') : rawLeague);
+         const resolvedLeague = leagues?.find((l: any) => l.id === rawLeague || l.name === rawLeague)?.name || (rawLeague.startsWith('NEW:') ? rawLeague.replace('NEW:', '') : rawLeague);
 
          return {
             ...stat,

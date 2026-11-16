@@ -3,7 +3,10 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import OrgDetailsClient from './OrgDetailsClient';
 import { isProfileComplete } from '@/lib/utils/profile';
+import { getCachedData } from '@/lib/redis';
+import { cache } from 'react';
 import type { Metadata } from 'next';
+import { getProfileOgImage, getBaseSiteUrl } from '@/lib/utils/og';
 
 export const revalidate = 120;
 
@@ -12,21 +15,26 @@ function stripHtml(html: string): string {
    return html.replace(/<[^>]*>?/gm, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-import { getProfileOgImage, getBaseSiteUrl } from '@/lib/utils/og';
+const getOrgBySlug = cache(async (slug: string) => {
+   return getCachedData(`org_profile_${slug}`, async () => {
+      const supabaseAdmin = createAdminClient();
+      const { data, error } = await supabaseAdmin
+         .from('profiles')
+         .select('*, users!profiles_user_id_fkey!inner(role)')
+         .eq('slug', slug)
+         .maybeSingle();
+      if (error || !data) return null;
+      return data;
+   }, 600);
+});
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
    const { id } = await params;
-   const supabaseAdmin = createAdminClient();
 
    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
    if (isUuid) return {};
 
-   const { data: profile } = await supabaseAdmin
-      .from('profiles')
-      .select('first_name, last_name, agency_name, current_club, country, avatar_url, cover_url, gallery_urls, bio')
-      .eq('slug', id)
-      .maybeSingle();
-
+   const profile = await getOrgBySlug(id);
    if (!profile) return {};
 
    const firstName = (profile.first_name || '').trim();
@@ -82,14 +90,9 @@ export default async function OrgPage({ params }: { params: Promise<{ id: string
       return notFound();
    }
 
-   const { data: profile, error } = await supabaseAdmin
-      .from('profiles')
-      .select('*, users!profiles_user_id_fkey!inner(role)')
-      .eq('slug', id)
-      .single();
+   const profile = await getOrgBySlug(id);
 
-   if (error || !profile) {
-      if (error) console.error('Org fetch database error:', error.message);
+   if (!profile) {
       notFound();
    }
 

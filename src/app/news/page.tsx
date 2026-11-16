@@ -49,17 +49,17 @@ export default async function NewsPage() {
          
          return filtered;
       }, 600),
-      getCachedData('blog_categories', async () => {
+      getCachedData('blog_categories_v2', async () => {
          const { data } = await supabase
             .from('blog_categories')
-            .select('*')
+            .select('id, name, slug')
             .order('name');
          return data || [];
       }, 3600),
-      getCachedData('blog_tags', async () => {
+      getCachedData('blog_tags_v2', async () => {
          const { data } = await supabase
             .from('blog_tags')
-            .select('*')
+            .select('id, name, slug')
             .order('name');
          return data || [];
       }, 3600)

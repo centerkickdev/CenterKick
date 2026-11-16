@@ -2,6 +2,8 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { getGlobalCMSData } from '@/lib/cms';
+import { getCachedData } from '@/lib/redis';
+import { cache } from 'react';
 import { Calendar as CalendarIcon, User, Tag, Share2, ArrowLeft, ChevronRight, Newspaper, Clock } from "lucide-react";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -15,18 +17,41 @@ interface Props {
    params: Promise<{ slug: string }>;
 }
 
+const CMS_POST_DETAIL_FIELDS = 'id, title, slug, excerpt, content, cover_image_url, published_at, created_at, updated_at, category_id, meta_title, meta_description, og_image_url, category:blog_categories(name), post_tags(tag:blog_tags(name))';
+
+const getPostBySlug = cache(async (slug: string) => {
+   return getCachedData(`news_post_detail_${slug}`, async () => {
+      const supabase = createAdminClient();
+      const { data } = await supabase
+         .from('cms_posts')
+         .select(CMS_POST_DETAIL_FIELDS)
+         .eq('slug', slug)
+         .limit(1)
+         .maybeSingle();
+      return data;
+   }, 1800);
+});
+
+const getRelatedPosts = cache(async (categoryId: string, excludeId: string) => {
+   return getCachedData(`news_related_${categoryId}`, async () => {
+      const supabase = createAdminClient();
+      const { data } = await supabase
+         .from('cms_posts')
+         .select('id, slug, title, cover_image_url, published_at, created_at, category:blog_categories(name)')
+         .eq('category_id', categoryId)
+         .eq('is_draft', false)
+         .neq('id', excludeId)
+         .limit(3);
+      return data || [];
+   }, 1800);
+});
+
 export async function generateMetadata(
    { params }: Props,
    parent: ResolvingMetadata
 ): Promise<Metadata> {
    const { slug } = await params;
-   const supabase = createAdminClient();
-   const { data: post } = await supabase
-      .from('cms_posts')
-      .select('meta_title, title, meta_description, excerpt, og_image_url, cover_image_url, published_at, created_at')
-      .eq('slug', slug)
-      .limit(1)
-      .maybeSingle();
+   const post = await getPostBySlug(slug);
 
    if (!post) return { title: 'Post Not Found' };
 
@@ -51,30 +76,19 @@ export async function generateMetadata(
 
 export default async function PostPage({ params }: Props) {
    const { slug } = await params;
-   const supabase = createAdminClient();
 
-   const [globalCms, { data: post }] = await Promise.all([
+   const [globalCms, post] = await Promise.all([
       getGlobalCMSData(),
-      supabase
-         .from('cms_posts')
-         .select('*, author:users(email), category:blog_categories(name), post_tags(tag:blog_tags(name))')
-         .eq('slug', slug)
-         .limit(1)
-         .maybeSingle()
+      getPostBySlug(slug)
    ]);
 
    if (!post) notFound();
 
    const { navContent, footerContent, siteSettings } = globalCms;
+   const categoryName = Array.isArray(post.category) ? (post.category as any)[0]?.name : (post.category as any)?.name;
 
-   // Fetch related posts (same category)
-   const { data: relatedPosts } = await supabase
-      .from('cms_posts')
-      .select('id, slug, title, cover_image_url, published_at, created_at, category:blog_categories(name)')
-      .eq('category_id', post.category_id)
-      .eq('is_draft', false)
-      .neq('id', post.id)
-      .limit(3);
+   // Fetch related posts (cached)
+   const relatedPosts = post.category_id ? await getRelatedPosts(post.category_id, post.id) : [];
 
    const jsonLd = {
       '@context': 'https://schema.org',
@@ -117,9 +131,9 @@ export default async function PostPage({ params }: Props) {
                      <p className="text-lg lg:text-xl text-gray-500 font-bold leading-relaxed lg:max-w-3xl">
                         {post.excerpt}
                      </p>
-                     {post.category && (
+                     {categoryName && (
                         <span className="text-xs font-bold tracking-[0.3em] text-[#b50a0a] bg-red-50 px-4 py-1.5 rounded-full inline-block">
-                           {post.category.name}
+                           {categoryName}
                         </span>
                      )}
                   </div>

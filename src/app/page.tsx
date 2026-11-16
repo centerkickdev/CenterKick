@@ -50,100 +50,100 @@ export default async function Home() {
          
          return filtered.slice(0, 16);
       }, 300),
-      getCachedData('home_players_list_v6', async () => {
+      getCachedData('home_players_list_v7', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
             .select(HOME_PROFILE_FIELDS)
+            .eq('is_profile_complete', true)
             .eq('users.role', 'player')
             .eq('status', 'active')
             .order('created_at', { ascending: false })
-            .limit(150);
+            .limit(25);
          if (error) {
             console.error('home_players_list error:', error);
             throw error;
          }
-         const filtered = (data || []).filter(p => {
+         return (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
             return isProfileComplete(p);
          });
-         return filtered;
       }, 600),
-      getCachedData('home_coaches_list_v6', async () => {
+      getCachedData('home_coaches_list_v7', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
             .select(HOME_PROFILE_FIELDS)
+            .eq('is_profile_complete', true)
             .eq('users.role', 'coach')
             .eq('status', 'active')
             .order('created_at', { ascending: false })
-            .limit(150);
+            .limit(25);
          if (error) {
             console.error('home_coaches_list error:', error);
             throw error;
          }
-         const filtered = (data || []).filter(p => {
+         return (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
             return isProfileComplete(p);
          });
-         return filtered;
       }, 600),
-      getCachedData('home_agents_scouts_list_v6', async () => {
+      getCachedData('home_agents_scouts_list_v7', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
             .select(HOME_PROFILE_FIELDS)
+            .eq('is_profile_complete', true)
             .in('users.role', ['agent', 'scout'])
             .eq('status', 'active')
             .order('created_at', { ascending: false })
-            .limit(150);
+            .limit(25);
          if (error) {
             console.error('home_agents_scouts_list error:', error);
             throw error;
          }
-         const filtered = (data || []).filter(p => {
+         return (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
             return isProfileComplete(p);
          });
-         return filtered;
       }, 600),
-      getCachedData('home_organizations_list_v6', async () => {
+      getCachedData('home_organizations_list_v7', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
             .select(HOME_PROFILE_FIELDS)
+            .eq('is_profile_complete', true)
             .eq('users.role', 'organization')
             .eq('status', 'active')
             .order('created_at', { ascending: false })
-            .limit(150);
+            .limit(25);
          if (error) {
             console.error('home_organizations_list error:', error);
             throw error;
          }
-         const filtered = (data || []).filter(p => {
+         return (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
             return isProfileComplete(p);
          });
-         return filtered;
       }, 600),
-      getCachedData('home_professionals_list_v6', async () => {
+      getCachedData('home_professionals_list_v7', async () => {
          const { data, error } = await adminSupabase
             .from('profiles')
             .select(HOME_PROFILE_FIELDS)
+            .eq('is_profile_complete', true)
             .eq('users.role', 'professional')
             .eq('status', 'active')
             .order('created_at', { ascending: false })
-            .limit(150);
+            .limit(25);
          if (error) {
             console.error('home_professionals_list error:', error);
             throw error;
          }
-         const filtered = (data || []).filter(p => {
+         return (data || []).filter(p => {
             const userRole = (p.users as any)?.role;
             if (['admin', 'superadmin', 'blogger', 'operations', 'finance'].includes(userRole)) return false;
             return isProfileComplete(p);
          });
-         return filtered;
       }, 600),
       getCachedData('home_highlight_posts_v7', async () => {
          const { data: catData } = await adminSupabase

@@ -14,7 +14,7 @@ export default async function TransferFocusPage() {
 
    const [{ navContent, footerContent, siteSettings }, { profiles, newsPosts }] = await Promise.all([
       getGlobalCMSData(),
-      getCachedData('transfer_focus_data_v3', async () => {
+      getCachedData('transfer_focus_data_v4', async () => {
          let pList: any[] = [];
          let nList: any[] = [];
 
@@ -23,10 +23,11 @@ export default async function TransferFocusPage() {
                adminSupabase
                   .from('profiles')
                   .select('id, slug, first_name, last_name, role, position, agency_name, current_club, country, date_of_birth, avatar_url, cover_url, gallery_urls, video_links, contract_expiry, tactics, formation, license, managerial_history, users:users!profiles_user_id_fkey!inner(role)')
+                  .eq('is_profile_complete', true)
                   .in('users.role', ['player', 'coach'])
                   .eq('status', 'active')
                   .order('created_at', { ascending: false })
-                  .limit(100),
+                  .limit(50),
 
                adminSupabase
                   .from('cms_posts')
