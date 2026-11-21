@@ -420,7 +420,8 @@ export default function ProfileEditor() {
       }
     }
 
-    const rawDob = (formData.get('date_of_birth') as string) || originalProfile?.date_of_birth;
+    const dobInput = formData.get('date_of_birth');
+    const rawDob = dobInput !== null ? (dobInput as string) : (originalProfile?.date_of_birth || '');
     if (role === 'coach' && !rawDob) {
       showToast('Date of birth is required for coaches.', 'error');
       setIsSaving(false);
@@ -509,9 +510,9 @@ export default function ProfileEditor() {
        const newVal = formField === 'id_number' && isIdNotAvailable ? 'Not Available' : (formData.get(formField) as string);
        if (newVal !== undefined && newVal !== null && newVal !== (originalProfile?.[field] || '')) {
           if (!originalProfile?.[field]) {
-             profileData[field] = newVal;
+             profileData[field] = (field === 'date_of_birth' && !newVal) ? null : newVal;
           } else {
-             sensitiveChanges[label] = { old: originalProfile?.[field], new: newVal };
+             sensitiveChanges[label] = { old: originalProfile?.[field], new: newVal || 'Cleared' };
           }
        }
     };
@@ -1366,8 +1367,32 @@ export default function ProfileEditor() {
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-gray-900 tracking-wide ml-1">Date of Birth {profile?.date_of_birth && <span className="text-gray-500 font-bold ml-1">({calculateAge(profile.date_of_birth)} yrs)</span>}</label>
                       <div className="relative">
-                        <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                        <input disabled={!isEditing} name="date_of_birth" type="date" defaultValue={profile?.date_of_birth} onChange={(e) => setProfile({...profile, date_of_birth: e.target.value})} className="w-full bg-gray-50 border-none rounded-2xl pl-10 pr-4 py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100" />
+                        <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                        <input 
+                          disabled={!isEditing} 
+                          name="date_of_birth" 
+                          type="date" 
+                          value={profile?.date_of_birth || ''} 
+                          onChange={(e) => {
+                            setProfile({ ...profile, date_of_birth: e.target.value });
+                            setIsDirty(true);
+                          }} 
+                          className={`w-full bg-gray-50 border-none rounded-2xl pl-10 ${isEditing && profile?.date_of_birth ? 'pr-10' : 'pr-4'} py-3 text-sm font-bold focus:ring-2 focus:ring-[#b50a0a] focus:bg-white transition-all outline-none text-black disabled:opacity-70 disabled:bg-gray-100`} 
+                        />
+                        {isEditing && profile?.date_of_birth && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setProfile({ ...profile, date_of_birth: '' });
+                              setIsDirty(true);
+                            }}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-[#b50a0a] hover:bg-red-50 rounded-full transition-all flex items-center justify-center cursor-pointer"
+                            title="Clear Date of Birth"
+                            aria-label="Clear Date of Birth"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

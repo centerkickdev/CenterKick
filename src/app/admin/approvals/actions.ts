@@ -206,6 +206,8 @@ export async function approveProfileEdit(editId: string, reason: string = '') {
   let finalValue = edit.new_value;
   if (edit.field_name.includes('Verification')) {
     finalValue = true;
+  } else if (dbField === 'date_of_birth' && (finalValue === 'Cleared' || !finalValue)) {
+    finalValue = null;
   }
 
   // Update profile field and set edit status to approved
